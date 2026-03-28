@@ -1,0 +1,666 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dashboard – Abhitech Pelletization Simulator</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=DM+Sans:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --cream:#fdf8f0;--cream2:#f5ede0;
+  --gold:#c8912a;--gold-light:#e8b84b;
+  --navy:#1a3057;--navy2:#0f1f3a;--navy3:#253d5e;
+  --blue:#2d5fa6;--blue-light:#4a7fc1;
+  --text:#2a2015;--text-mid:#5a4a30;--text-dim:#9a8a70;
+  --border:rgba(200,145,42,0.2);
+  --green:#2a7a4a;--green-light:#3aaa6a;
+  --red:#c0392b;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'DM Sans',sans-serif;background:var(--cream2);color:var(--text);min-height:100vh;overflow-x:hidden;}
+
+/* ── NAVBAR ── */
+nav{
+  position:sticky;top:0;z-index:100;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 1.5rem;height:62px;
+  background:rgba(253,248,240,0.97);
+  backdrop-filter:blur(20px);
+  border-bottom:1px solid var(--border);
+  box-shadow:0 2px 16px rgba(26,48,87,0.07);
+}
+.nav-logo{display:flex;align-items:center;gap:10px;text-decoration:none;}
+.nav-logo img{height:32px;width:auto;object-fit:contain;}
+.logo-text .l1{font-family:'Cormorant Garamond',serif;font-size:1.05rem;font-weight:700;color:var(--navy);}
+.logo-text .l2{font-family:'JetBrains Mono';font-size:0.48rem;letter-spacing:2px;color:var(--gold);text-transform:uppercase;}
+
+.nav-right{display:flex;align-items:center;gap:1rem;}
+.nav-badge{font-family:'JetBrains Mono';font-size:0.6rem;letter-spacing:1px;color:var(--green-light);display:flex;align-items:center;gap:6px;}
+.nav-badge::before{content:'';width:7px;height:7px;background:var(--green-light);border-radius:50%;animation:blink 1.5s infinite;}
+@keyframes blink{0%,100%{opacity:1;}50%{opacity:0.3;}}
+.nav-btn{font-size:0.78rem;font-weight:500;color:var(--text-mid);background:none;border:1px solid var(--border);padding:6px 14px;border-radius:2px;cursor:pointer;transition:all 0.3s;text-decoration:none;}
+.nav-btn:hover{border-color:var(--gold);color:var(--gold);}
+
+/* Mobile sidebar toggle */
+.sidebar-toggle{
+  display:none;background:var(--navy);color:#fff;border:none;
+  padding:7px 12px;border-radius:2px;font-size:0.78rem;font-weight:500;
+  cursor:pointer;gap:6px;align-items:center;white-space:nowrap;
+}
+
+/* ── LAYOUT ── */
+.dash-layout{
+  display:grid;
+  grid-template-columns:320px 1fr;
+  grid-template-rows:auto 1fr;
+  min-height:calc(100vh - 62px);
+}
+
+/* ── SIDEBAR ── */
+.sidebar{
+  grid-row:1/3;
+  background:#fff;border-right:1px solid var(--border);
+  overflow-y:auto;display:flex;flex-direction:column;
+  transition:transform 0.3s ease;
+}
+.sidebar-header{padding:1.3rem;border-bottom:1px solid var(--border);background:var(--navy2);}
+.sidebar-title{font-family:'Cormorant Garamond',serif;font-size:1.05rem;font-weight:700;color:#fff;margin-bottom:3px;}
+.sidebar-sub{font-family:'JetBrains Mono';font-size:0.55rem;letter-spacing:1.5px;color:rgba(255,255,255,0.35);text-transform:uppercase;}
+.sidebar-body{padding:1.3rem;flex:1;}
+
+.input-group{margin-bottom:1.4rem;}
+.input-label{font-family:'JetBrains Mono';font-size:0.58rem;letter-spacing:1.5px;text-transform:uppercase;color:var(--gold);margin-bottom:0.5rem;display:flex;align-items:center;gap:6px;}
+.input-label::before{content:'◈';font-size:0.52rem;}
+
+select.sel{
+  width:100%;background:#fdf8f0;border:1.5px solid var(--border);border-radius:2px;
+  padding:9px 12px;color:var(--text);font-family:'DM Sans';font-size:0.83rem;
+  outline:none;cursor:pointer;transition:border-color 0.3s;appearance:none;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23c8912a' stroke-width='1.5' fill='none'/%3E%3C/svg%3E");
+  background-repeat:no-repeat;background-position:right 10px center;padding-right:28px;
+}
+select.sel:focus{border-color:var(--gold);}
+
+.chip-wrap{display:flex;flex-wrap:wrap;gap:6px;margin-top:7px;}
+.chip{display:flex;align-items:center;gap:6px;background:rgba(200,145,42,0.1);border:1px solid rgba(200,145,42,0.3);border-radius:2px;padding:3px 9px;font-size:0.72rem;color:var(--gold);font-weight:500;animation:chipIn 0.3s ease;}
+@keyframes chipIn{from{opacity:0;transform:scale(0.8);}to{opacity:1;transform:scale(1);}}
+.chip button{background:none;border:none;color:var(--text-dim);cursor:pointer;font-size:0.88rem;line-height:1;padding:0;transition:color 0.2s;}
+.chip button:hover{color:var(--red);}
+
+.slider-wrap{margin-top:0.4rem;}
+.slider-top{display:flex;justify-content:space-between;margin-bottom:5px;}
+.slider-top span{font-size:0.75rem;color:var(--text-dim);}
+.slider-top .sv{color:var(--gold);font-family:'JetBrains Mono';font-weight:500;}
+input[type=range].rng{width:100%;appearance:none;height:3px;background:linear-gradient(to right,var(--gold) var(--pct,50%),rgba(200,145,42,0.15) var(--pct,50%));border-radius:0;outline:none;cursor:pointer;}
+input[type=range].rng::-webkit-slider-thumb{appearance:none;width:14px;height:14px;background:var(--gold);border-radius:2px;transform:rotate(45deg);cursor:pointer;box-shadow:0 0 6px rgba(200,145,42,0.4);}
+
+.run-btn{width:100%;margin-top:0.8rem;background:linear-gradient(135deg,var(--navy),var(--blue));color:#fff;border:none;border-radius:2px;padding:13px;font-family:'DM Sans';font-size:0.88rem;font-weight:600;cursor:pointer;letter-spacing:0.3px;transition:all 0.3s;display:flex;align-items:center;justify-content:center;gap:8px;}
+.run-btn:hover{background:linear-gradient(135deg,var(--gold),var(--gold-light));transform:translateY(-2px);box-shadow:0 6px 20px rgba(200,145,42,0.4);}
+.run-btn:disabled{opacity:0.5;pointer-events:none;}
+
+.reset-btn{width:100%;margin-top:0.5rem;background:transparent;color:var(--text-dim);border:1px solid var(--border);border-radius:2px;padding:9px;font-family:'DM Sans';font-size:0.8rem;cursor:pointer;transition:all 0.3s;}
+.reset-btn:hover{border-color:var(--red);color:var(--red);}
+
+.params-display{margin-top:1.2rem;padding-top:1.2rem;border-top:1px solid var(--border);}
+.params-grid{display:grid;grid-template-columns:1fr 1fr;gap:7px;}
+.param-box{background:var(--cream2);border:1px solid var(--border);border-radius:2px;padding:9px;}
+.param-box-label{font-family:'JetBrains Mono';font-size:0.54rem;letter-spacing:1px;color:var(--text-dim);margin-bottom:3px;}
+.param-box-val{font-family:'Cormorant Garamond',serif;font-size:1.25rem;font-weight:700;color:var(--navy);line-height:1;}
+.param-box-val.good{color:var(--green);}
+.param-box-val.warn{color:var(--gold);}
+
+/* ── MAIN AREA ── */
+.main-area{display:flex;flex-direction:column;overflow:hidden;}
+.main-top{padding:0.8rem 1.5rem;background:rgba(253,248,240,0.8);border-bottom:1px solid var(--border);display:flex;align-items:center;gap:0.75rem;flex-wrap:wrap;}
+.step-indicator{display:flex;align-items:center;gap:3px;flex-wrap:wrap;}
+.step-pill{padding:4px 10px;font-family:'JetBrains Mono';font-size:0.58rem;letter-spacing:1px;border:1px solid var(--border);border-radius:20px;color:var(--text-dim);transition:all 0.4s;white-space:nowrap;}
+.step-pill.active{background:var(--gold);border-color:var(--gold);color:#fff;box-shadow:0 2px 10px rgba(200,145,42,0.4);}
+.step-pill.done{background:rgba(42,122,74,0.1);border-color:var(--green);color:var(--green);}
+
+/* Machine canvas */
+.machine-area{flex:1;background:var(--cream2);position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center;}
+#machineCanvas{max-width:100%;max-height:100%;border:1px solid var(--border);background:#fff;box-shadow:0 4px 30px rgba(26,48,87,0.08);border-radius:3px;}
+
+.idle-overlay{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;pointer-events:none;transition:opacity 0.5s;}
+.idle-overlay.hidden{opacity:0;}
+.idle-icon{font-size:2.5rem;margin-bottom:0.8rem;opacity:0.3;}
+.idle-text{font-family:'Cormorant Garamond',serif;font-size:1rem;font-weight:600;color:var(--text-dim);}
+.idle-sub{font-size:0.75rem;color:var(--text-dim);margin-top:0.25rem;font-family:'JetBrains Mono';}
+
+/* Log panel */
+.log-panel{height:160px;border-top:1px solid var(--border);background:#fff;overflow:hidden;display:flex;flex-direction:column;}
+.log-header{padding:0.5rem 1.2rem;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;background:var(--cream2);flex-shrink:0;}
+.log-title{font-family:'JetBrains Mono';font-size:0.58rem;letter-spacing:2px;color:var(--gold);text-transform:uppercase;}
+.log-clear{font-size:0.68rem;color:var(--text-dim);cursor:pointer;background:none;border:none;transition:color 0.3s;}
+.log-clear:hover{color:var(--red);}
+.log-body{flex:1;overflow-y:auto;padding:0.4rem 1.2rem;}
+.log-entry{font-family:'JetBrains Mono';font-size:0.63rem;padding:3px 0;border-bottom:1px solid rgba(200,145,42,0.06);color:var(--text-dim);animation:logSlide 0.3s ease;}
+@keyframes logSlide{from{opacity:0;transform:translateX(8px);}to{opacity:1;transform:translateX(0);}}
+.tag{font-weight:500;}
+.tag-init{color:var(--blue);}
+.tag-step{color:var(--gold);}
+.tag-ok{color:var(--green-light);}
+.tag-warn{color:#e67e22;}
+.tag-err{color:var(--red);}
+
+/* Mobile sidebar overlay */
+.sidebar-overlay{
+  display:none;position:fixed;inset:0;background:rgba(15,31,58,0.5);
+  z-index:149;backdrop-filter:blur(2px);
+}
+.sidebar-overlay.active{display:block;}
+
+/* ════════════════════════════
+   MOBILE RESPONSIVE
+════════════════════════════ */
+@media(max-width:900px){
+  .sidebar-toggle{display:flex;}
+  .nav-badge{display:none;}
+
+  .dash-layout{
+    grid-template-columns:1fr;
+    grid-template-rows:auto 1fr;
+  }
+
+  .sidebar{
+    position:fixed;left:0;top:62px;bottom:0;
+    width:min(320px, 85vw);
+    z-index:150;
+    transform:translateX(-110%);
+    box-shadow:4px 0 30px rgba(26,48,87,0.2);
+  }
+  .sidebar.open{transform:translateX(0);}
+
+  .main-area{grid-column:1;grid-row:1;}
+  .main-area:last-child{grid-row:2;}
+
+  .main-top{padding:0.7rem 1rem;}
+  .step-pill{font-size:0.52rem;padding:3px 8px;}
+
+  .machine-area{min-height:280px;}
+
+  .log-panel{height:140px;}
+  .log-body{padding:0.35rem 1rem;}
+}
+
+@media(max-width:500px){
+  nav{padding:0 1rem;height:58px;}
+  .nav-logo img{height:28px;}
+  .logo-text .l1{font-size:0.95rem;}
+  .logo-text .l2{display:none;}
+  .nav-btn{display:none;}
+
+  .sidebar{top:58px;width:90vw;}
+
+  .step-indicator{gap:2px;}
+  .step-pill{font-size:0.48rem;padding:3px 6px;letter-spacing:0.5px;}
+
+  .machine-area{min-height:220px;}
+
+  .params-grid{grid-template-columns:1fr 1fr;}
+  .param-box-val{font-size:1.1rem;}
+
+  .log-panel{height:120px;}
+  .log-entry{font-size:0.58rem;}
+}
+</style>
+</head>
+<body>
+
+<!-- Sidebar overlay (mobile) -->
+<div class="sidebar-overlay" id="sidebarOverlay" onclick="closeSidebar()"></div>
+
+<!-- ── NAVBAR ── -->
+<nav>
+  <a href="index.html" class="nav-logo">
+    <img src="abhitech-logo.png" alt="Abhitech Energycon">
+    <div class="logo-text">
+      <span class="l1">ABHITECH</span>
+      <span class="l2">Pelletization Simulator</span>
+    </div>
+  </a>
+  <div class="nav-right">
+    <div class="nav-badge">System Online</div>
+    <button class="sidebar-toggle" onclick="toggleSidebar()">⚙ Configure</button>
+    <a href="index.html" class="nav-btn">← Home</a>
+    <a href="login.html" class="nav-btn">Sign Out</a>
+  </div>
+</nav>
+
+<!-- ── DASHBOARD ── -->
+<div class="dash-layout">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+      <div class="sidebar-title">Raw Material Configuration</div>
+      <div class="sidebar-sub">// Configure inputs & run simulation</div>
+    </div>
+    <div class="sidebar-body">
+
+      <div class="input-group">
+        <div class="input-label">Iron Ore Grade</div>
+        <select class="sel" id="dd-ore" onchange="addChip('ore',this)">
+          <option value="">— Select Grade —</option>
+          <option value="Hematite (65–68% Fe)">Hematite — 65–68% Fe (High Grade)</option>
+          <option value="Magnetite (68–72% Fe)">Magnetite — 68–72% Fe (High Grade)</option>
+          <option value="Goethite (55–60% Fe)">Goethite — 55–60% Fe (Low Grade)</option>
+          <option value="Limonite (50–55% Fe)">Limonite — 50–55% Fe (Low Grade)</option>
+          <option value="Blend 70:30 HG:LG">Blend 70:30 High:Low Grade</option>
+          <option value="Blend 50:50 HG:LG">Blend 50:50 High:Low Grade</option>
+          <option value="Blend 30:70 HG:LG">Blend 30:70 High:Low Grade</option>
+        </select>
+        <div class="chip-wrap" id="chips-ore"></div>
+      </div>
+
+      <div class="input-group">
+        <div class="input-label">Binder</div>
+        <select class="sel" id="dd-binder" onchange="addChip('binder',this)">
+          <option value="">— Select Binder —</option>
+          <option value="OB-1205 (0.5 GPT)">OB-1205 Organic Binder — 0.5 GPT</option>
+          <option value="OB-1205 (1.0 GPT)">OB-1205 Organic Binder — 1.0 GPT</option>
+          <option value="Bentonite (6 kg/t)">Bentonite Only — 6 kg/ton</option>
+          <option value="OB-1205 + Bentonite">OB-1205 + Reduced Bentonite</option>
+        </select>
+        <div class="chip-wrap" id="chips-binder"></div>
+      </div>
+
+      <div class="input-group">
+        <div class="input-label">Flux / Additives</div>
+        <select class="sel" id="dd-flux" onchange="addChip('flux',this)">
+          <option value="">— Select Flux —</option>
+          <option value="Limestone (CaCO₃)">Limestone — CaCO₃</option>
+          <option value="Dolomite">Dolomite — CaMg(CO₃)₂</option>
+          <option value="Olivine">Olivine</option>
+          <option value="No Flux">No Flux Added</option>
+        </select>
+        <div class="chip-wrap" id="chips-flux"></div>
+      </div>
+
+      <div class="input-group">
+        <div class="input-label">Fuel / Reductant</div>
+        <select class="sel" id="dd-fuel" onchange="addChip('fuel',this)">
+          <option value="">— Select Fuel —</option>
+          <option value="Anthracite Coal">Anthracite Coal</option>
+          <option value="Pet Coke">Petroleum Coke</option>
+          <option value="Low-S Charcoal">Low-Sulphur Charcoal</option>
+        </select>
+        <div class="chip-wrap" id="chips-fuel"></div>
+      </div>
+
+      <div class="input-group">
+        <div class="input-label">Filter Cake Moisture</div>
+        <div class="slider-wrap">
+          <div class="slider-top"><span>Moisture %</span><span class="sv" id="sv-moisture">9.5%</span></div>
+          <input type="range" class="rng" id="sl-moisture" min="8" max="14" step="0.25" value="9.5" oninput="updateSlider(this,'sv-moisture','%','',true)">
+        </div>
+      </div>
+
+      <div class="input-group">
+        <div class="input-label">Blain Number</div>
+        <div class="slider-wrap">
+          <div class="slider-top"><span>cm²/g</span><span class="sv" id="sv-blain">2000</span></div>
+          <input type="range" class="rng" id="sl-blain" min="1200" max="3000" step="100" value="2000" oninput="updateSlider(this,'sv-blain',' cm²/g','',false)">
+        </div>
+      </div>
+
+      <div class="input-group">
+        <div class="input-label">Induration Temperature</div>
+        <div class="slider-wrap">
+          <div class="slider-top"><span>°C</span><span class="sv" id="sv-temp">1280°C</span></div>
+          <input type="range" class="rng" id="sl-temp" min="1100" max="1400" step="10" value="1280" oninput="updateSlider(this,'sv-temp','°C','',false)">
+        </div>
+      </div>
+
+      <button class="run-btn" id="runBtn" onclick="runSimulation()">▶ Run Pelletization Simulation</button>
+      <button class="reset-btn" onclick="resetAll()">↺ Reset All</button>
+
+      <div class="params-display">
+        <div style="font-family:'JetBrains Mono';font-size:0.58rem;letter-spacing:1.5px;color:var(--text-dim);margin-bottom:0.6rem;text-transform:uppercase;">Estimated Parameters</div>
+        <div class="params-grid">
+          <div class="param-box"><div class="param-box-label">Pellet Size</div><div class="param-box-val" id="p-size">—</div></div>
+          <div class="param-box"><div class="param-box-label">OB Dosage</div><div class="param-box-val warn" id="p-ob">—</div></div>
+          <div class="param-box"><div class="param-box-label">Yield Est.</div><div class="param-box-val good" id="p-yield">—</div></div>
+          <div class="param-box"><div class="param-box-label">Basicity</div><div class="param-box-val" id="p-basicity">—</div></div>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- MAIN TOP -->
+  <div class="main-area" style="grid-column:2;grid-row:1;">
+    <div class="main-top">
+      <div class="step-indicator" id="stepIndicator">
+        <div class="step-pill" data-step="0">Feed</div>
+        <div class="step-pill" data-step="1">Crushing</div>
+        <div class="step-pill" data-step="2">Mixing</div>
+        <div class="step-pill" data-step="3">Balling</div>
+        <div class="step-pill" data-step="4">Induration</div>
+        <div class="step-pill" data-step="5">Cooling</div>
+        <div class="step-pill" data-step="6">Pellets</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MAIN CANVAS + LOG -->
+  <div class="main-area" style="grid-column:2;grid-row:2;display:flex;flex-direction:column;">
+    <div class="machine-area">
+      <canvas id="machineCanvas"></canvas>
+      <div class="idle-overlay" id="idleOverlay">
+        <div class="idle-icon">⚙️</div>
+        <div class="idle-text">Select raw materials and run simulation</div>
+        <div class="idle-sub">// machine visualization will appear here</div>
+      </div>
+    </div>
+    <div class="log-panel">
+      <div class="log-header">
+        <div class="log-title">Process Log</div>
+        <button class="log-clear" onclick="clearLog()">Clear</button>
+      </div>
+      <div class="log-body" id="logBody">
+        <div class="log-entry"><span class="tag tag-init">[INIT]</span> System ready. Configure raw materials in the sidebar.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ── SIDEBAR MOBILE ──
+function toggleSidebar(){
+  const s=document.getElementById('sidebar');
+  const o=document.getElementById('sidebarOverlay');
+  s.classList.toggle('open');
+  o.classList.toggle('active');
+}
+function closeSidebar(){
+  document.getElementById('sidebar').classList.remove('open');
+  document.getElementById('sidebarOverlay').classList.remove('active');
+}
+
+// ── STATE ──
+const selected={ore:null,binder:null,flux:null,fuel:null};
+let simRunning=false,simFrame=0,simStep=-1,animId=null;
+
+// ── CHIPS ──
+function addChip(type,sel){
+  const val=sel.value;if(!val)return;
+  selected[type]=val;
+  const wrap=document.getElementById('chips-'+type);
+  wrap.innerHTML=`<div class="chip">${val} <button onclick="removeChip('${type}')">✕</button></div>`;
+  updateParams();addLog('[ADD]','step',`${type.toUpperCase()} → ${val}`);
+  sel.value='';drawIdle();
+}
+function removeChip(type){
+  selected[type]=null;document.getElementById('chips-'+type).innerHTML='';
+  updateParams();drawIdle();
+}
+
+// ── SLIDERS ──
+function updateSlider(input,valId,suffix,prefix,isDecimal){
+  const pct=((input.value-input.min)/(input.max-input.min))*100;
+  input.style.setProperty('--pct',pct+'%');
+  const v=isDecimal?parseFloat(input.value).toFixed(1):input.value;
+  document.getElementById(valId).textContent=prefix+v+suffix;
+  updateParams();
+}
+['sl-moisture','sl-blain','sl-temp'].forEach(id=>{
+  const el=document.getElementById(id);
+  const pct=((el.value-el.min)/(el.max-el.min))*100;
+  el.style.setProperty('--pct',pct+'%');
+});
+
+// ── PARAMS ──
+function updateParams(){
+  const hasOb=selected.binder&&selected.binder.includes('OB');
+  const hasFlux=!!selected.flux&&selected.flux!=='No Flux';
+  const moisture=parseFloat(document.getElementById('sl-moisture').value);
+  const sizeLow=moisture>10.5?14:10;const sizeHigh=moisture>10.5?18:16;
+  document.getElementById('p-size').textContent=`${sizeLow}–${sizeHigh}mm`;
+  if(hasOb){const ob=selected.binder.includes('0.5')?'0.5':'1.0';document.getElementById('p-ob').textContent=`${ob} GPT`;document.getElementById('p-ob').className='param-box-val good';}
+  else{document.getElementById('p-ob').textContent=selected.binder?'—':'None';document.getElementById('p-ob').className='param-box-val warn';}
+  const yieldPct=selected.ore?(hasOb?(82+Math.floor(Math.random()*8)):(70+Math.floor(Math.random()*8))):'—';
+  document.getElementById('p-yield').textContent=selected.ore?yieldPct+'%':'—';
+  const basicity=hasFlux?(0.9+Math.random()*0.5).toFixed(2):'0.35';
+  document.getElementById('p-basicity').textContent=basicity;
+}
+
+// ── LOG ──
+function addLog(tag,type,msg){
+  const body=document.getElementById('logBody');
+  const el=document.createElement('div');el.className='log-entry';
+  el.innerHTML=`<span class="tag tag-${type}">${tag}</span> ${msg}`;
+  body.appendChild(el);body.scrollTop=body.scrollHeight;
+}
+function clearLog(){document.getElementById('logBody').innerHTML='<div class="log-entry"><span class="tag tag-init">[INIT]</span> Log cleared.</div>';}
+
+// ── STEP PILLS ──
+function setStep(idx){
+  simStep=idx;
+  document.querySelectorAll('.step-pill').forEach((p,i)=>{p.className='step-pill'+(i<idx?' done':i===idx?' active':'');});
+}
+
+// ── RESET ──
+function resetAll(){
+  ['ore','binder','flux','fuel'].forEach(t=>{selected[t]=null;document.getElementById('chips-'+t).innerHTML='';});
+  simRunning=false;simStep=-1;simFrame=0;cancelAnimationFrame(animId);
+  document.querySelectorAll('.step-pill').forEach(p=>p.className='step-pill');
+  document.getElementById('idleOverlay').classList.remove('hidden');
+  document.getElementById('runBtn').disabled=false;
+  ['p-size','p-ob','p-yield','p-basicity'].forEach(id=>document.getElementById(id).textContent='—');
+  drawIdle();addLog('[RESET]','init','All parameters cleared. Ready for new simulation.');
+}
+
+// ── CANVAS ──
+const canvas=document.getElementById('machineCanvas');
+const ctx=canvas.getContext('2d');
+function sizeCanvas(){
+  const area=canvas.parentElement;
+  const w=area.clientWidth-40;const h=area.clientHeight-30;
+  canvas.width=Math.min(w,900);canvas.height=Math.min(h,500);
+}
+sizeCanvas();
+window.addEventListener('resize',()=>{sizeCanvas();if(!simRunning)drawIdle();});
+
+// ── IDLE DRAW ──
+function drawIdle(){
+  sizeCanvas();ctx.clearRect(0,0,canvas.width,canvas.height);
+  const W=canvas.width,H=canvas.height;
+  ctx.fillStyle='#fff';ctx.fillRect(0,0,W,H);
+  ctx.strokeStyle='rgba(200,145,42,0.06)';ctx.lineWidth=1;
+  for(let x=0;x<W;x+=40){ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x,H);ctx.stroke();}
+  for(let y=0;y<H;y+=40){ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(W,y);ctx.stroke();}
+  const steps=[
+    {x:W*0.12,label:'Iron Ore Fines',color:'rgba(139,69,19,0.15)'},
+    {x:W*0.26,label:'Crushing',color:'rgba(200,145,42,0.15)'},
+    {x:W*0.40,label:'Mixing+OB',color:'rgba(200,145,42,0.15)'},
+    {x:W*0.54,label:'Balling',color:'rgba(45,95,166,0.15)'},
+    {x:W*0.68,label:'Induration',color:'rgba(192,64,16,0.15)'},
+    {x:W*0.82,label:'Cooling',color:'rgba(42,122,74,0.15)'},
+  ];
+  const cy=H*0.5;
+  ctx.strokeStyle='rgba(200,145,42,0.08)';ctx.lineWidth=2;ctx.setLineDash([8,8]);
+  ctx.beginPath();ctx.moveTo(steps[0].x,cy);ctx.lineTo(steps[steps.length-1].x+60,cy);ctx.stroke();ctx.setLineDash([]);
+  steps.forEach(s=>{
+    ctx.fillStyle=s.color;ctx.beginPath();ctx.roundRect(s.x-44,cy-22,88,44,4);ctx.fill();
+    ctx.strokeStyle='rgba(200,145,42,0.12)';ctx.lineWidth=1;ctx.stroke();
+    ctx.fillStyle='rgba(90,74,48,0.35)';ctx.font='500 10px DM Sans';ctx.textAlign='center';ctx.fillText(s.label,s.x,cy+4);
+  });
+  Object.entries(selected).forEach(([k,v],i)=>{
+    if(!v)return;
+    ctx.fillStyle='rgba(200,145,42,0.08)';ctx.fillRect(20,20+i*22,160,18);
+    ctx.fillStyle='rgba(200,145,42,0.6)';ctx.font='500 9px JetBrains Mono';ctx.textAlign='left';
+    ctx.fillText(`◈ ${k.toUpperCase()}: ${v.substring(0,22)}`,28,32+i*22);
+  });
+}
+drawIdle();
+
+// ── SIMULATION ──
+function runSimulation(){
+  if(!selected.ore){addLog('[ERROR]','err','Iron ore grade is required. Please select an ore type.');return;}
+  simRunning=true;simFrame=0;simStep=0;
+  document.getElementById('idleOverlay').classList.add('hidden');
+  document.getElementById('runBtn').disabled=true;
+  closeSidebar();
+  const logSteps=[
+    {delay:0,step:0,tag:'[FEED]',type:'step',msg:`Iron ore feed configured: ${selected.ore}`},
+    {delay:600,step:1,tag:'[CRUSH]',type:'step',msg:`Crushing & grinding — target Blain ${document.getElementById('sl-blain').value} cm²/g`},
+    {delay:1300,step:2,tag:'[MIX]',type:'step',msg:`Mixing with ${selected.binder||'binder'}${selected.flux?' + '+selected.flux:''} — moisture ${document.getElementById('sl-moisture').value}%`},
+    {delay:2100,step:3,tag:'[BALL]',type:'step',msg:'Balling disc rotating — green pellet formation in progress'},
+    {delay:3000,step:4,tag:'[INDU]',type:'step',msg:`Induration furnace at ${document.getElementById('sl-temp').value}°C — drying → preheating → firing → after-firing`},
+    {delay:4000,step:5,tag:'[COOL]',type:'step',msg:'Forced air cooling — pellet temperature reducing to <100°C'},
+    {delay:4800,step:6,tag:'[DONE]',type:'ok',msg:`Simulation complete — Yield: ${document.getElementById('p-yield').textContent} | Pellets: ${document.getElementById('p-size').textContent} | OB: ${document.getElementById('p-ob').textContent}`},
+    {delay:5000,step:6,tag:'[QC]',type:'ok',msg:'Quality check — CCS >200 kg/pellet | Tumble Index >92% | BI <5%'},
+  ];
+  logSteps.forEach(l=>{setTimeout(()=>{setStep(l.step);addLog(l.tag,l.type,l.msg);},l.delay);});
+  setTimeout(()=>{simRunning=false;document.getElementById('runBtn').disabled=false;updateParams();},5200);
+  animateMachine();
+}
+
+// ── ANIMATION ──
+function animateMachine(){
+  cancelAnimationFrame(animId);
+  function frame(){drawMachine(simFrame,simStep);simFrame++;animId=requestAnimationFrame(frame);}
+  frame();
+}
+
+function drawMachine(frame,activeStep){
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+  const W=canvas.width,H=canvas.height;
+  ctx.fillStyle='#fff';ctx.fillRect(0,0,W,H);
+  ctx.strokeStyle='rgba(200,145,42,0.05)';ctx.lineWidth=1;
+  for(let x=0;x<W;x+=40){ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x,H);ctx.stroke();}
+  for(let y=0;y<H;y+=40){ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(W,y);ctx.stroke();}
+
+  const stages=[
+    {id:0,label:'IRON ORE\nFEED',x:W*0.06,color:'#8b4513',icon:'feed'},
+    {id:1,label:'CRUSHING\n& GRINDING',x:W*0.20,color:'#7a5a30',icon:'crush'},
+    {id:2,label:'MIXING\n+ OB-1205',x:W*0.37,color:'#c8912a',icon:'mix'},
+    {id:3,label:'BALLING\nDISC',x:W*0.54,color:'#2d5fa6',icon:'ball'},
+    {id:4,label:'INDURATION\nFURNACE',x:W*0.70,color:'#c04010',icon:'indu'},
+    {id:5,label:'COOLING',x:W*0.83,color:'#2a7a4a',icon:'cool'},
+    {id:6,label:'FINISHED\nPELLETS',x:W*0.94,color:'#1a3057',icon:'pellet'},
+  ];
+  const mcy=H*0.48,machH=H*0.32,machW=W*0.1;
+
+  ctx.fillStyle='rgba(200,145,42,0.08)';
+  ctx.fillRect(stages[0].x-20,mcy+machH/2,stages[stages.length-1].x-stages[0].x+50,14);
+  ctx.strokeStyle='rgba(200,145,42,0.2)';ctx.lineWidth=1;ctx.setLineDash([12,12]);
+  ctx.beginPath();ctx.moveTo(stages[0].x-20,mcy+machH/2+7);ctx.lineTo(stages[stages.length-1].x+30,mcy+machH/2+7);ctx.stroke();ctx.setLineDash([]);
+
+  stages.forEach((s,i)=>{
+    const isActive=i===activeStep,isDone=i<activeStep;
+    const opacity=isDone?1:isActive?1:0.3;
+    ctx.globalAlpha=opacity;
+    drawMachineStage(ctx,s,mcy,machH,machW,isActive,isDone,frame,W,H);
+    ctx.globalAlpha=opacity;
+    ctx.fillStyle=isActive?s.color:isDone?s.color:'#9a8a70';
+    ctx.font=`${isActive?'600':'400'} 9px JetBrains Mono`;ctx.textAlign='center';
+    const lines=s.label.split('\n');
+    lines.forEach((l,li)=>ctx.fillText(l,s.x,mcy+machH/2+28+li*12));
+    ctx.globalAlpha=1;
+    if(i<stages.length-1){
+      const nx=stages[i+1].x,isConnActive=i<activeStep;
+      ctx.strokeStyle=isConnActive?s.color:'rgba(200,145,42,0.15)';ctx.lineWidth=isConnActive?2.5:1;ctx.globalAlpha=isConnActive?0.7:0.3;
+      ctx.beginPath();ctx.moveTo(s.x+machW/2,mcy);ctx.lineTo(nx-machW/2,mcy);ctx.stroke();ctx.globalAlpha=1;
+      if(i===activeStep-1){
+        const t=(frame%60)/60;const px=s.x+machW/2+(nx-machW/2-s.x-machW/2)*t;
+        const r=5;const g=ctx.createRadialGradient(px-r*0.3,mcy-r*0.3,0,px,mcy,r);
+        g.addColorStop(0,'#e8b84b');g.addColorStop(1,s.color);
+        ctx.beginPath();ctx.arc(px,mcy,r,0,Math.PI*2);ctx.fillStyle=g;ctx.fill();
+      }
+      ctx.fillStyle=isConnActive?s.color:'rgba(200,145,42,0.2)';ctx.globalAlpha=isConnActive?0.8:0.2;
+      const ax=nx-machW/2-6;ctx.beginPath();ctx.moveTo(ax,mcy-5);ctx.lineTo(ax+8,mcy);ctx.lineTo(ax,mcy+5);ctx.fill();ctx.globalAlpha=1;
+    }
+  });
+
+  if(activeStep>=2){
+    const mx=stages[2].x;ctx.save();ctx.globalAlpha=0.8;
+    ctx.fillStyle='rgba(200,145,42,0.1)';ctx.strokeStyle='rgba(200,145,42,0.5)';ctx.lineWidth=1;
+    ctx.beginPath();ctx.roundRect(mx-35,mcy-machH/2-55,70,28,3);ctx.fill();ctx.stroke();
+    ctx.fillStyle='#c8912a';ctx.font='600 9px Cormorant Garamond';ctx.textAlign='center';
+    ctx.fillText('OB-1205 DOSING',mx,mcy-machH/2-38);
+    const dropY=mcy-machH/2-26+(frame%30)*0.8;
+    ctx.beginPath();ctx.arc(mx,dropY,3,0,Math.PI*2);ctx.fillStyle='rgba(200,145,42,0.6)';ctx.fill();
+    ctx.strokeStyle='rgba(200,145,42,0.3)';ctx.lineWidth=1;ctx.setLineDash([3,3]);
+    ctx.beginPath();ctx.moveTo(mx,mcy-machH/2-27);ctx.lineTo(mx,mcy-machH/2);ctx.stroke();ctx.setLineDash([]);ctx.restore();
+  }
+
+  if(activeStep>=0){
+    const info=[
+      {label:'Ore',val:selected.ore?selected.ore.substring(0,20):'—'},
+      {label:'Binder',val:selected.binder?selected.binder.substring(0,20):'—'},
+      {label:'Moisture',val:document.getElementById('sl-moisture').value+'%'},
+      {label:'Temp',val:document.getElementById('sl-temp').value+'°C'},
+      {label:'Blain',val:document.getElementById('sl-blain').value+' cm²/g'},
+    ];
+    ctx.fillStyle='rgba(253,248,240,0.95)';ctx.strokeStyle='rgba(200,145,42,0.2)';ctx.lineWidth=1;
+    ctx.beginPath();ctx.roundRect(12,12,220,info.length*18+20,3);ctx.fill();ctx.stroke();
+    info.forEach((item,i)=>{
+      ctx.fillStyle='#9a8a70';ctx.font='400 9px JetBrains Mono';ctx.textAlign='left';ctx.fillText(item.label+':',22,28+i*18);
+      ctx.fillStyle='#1a3057';ctx.font='500 9px JetBrains Mono';ctx.fillText(item.val,80,28+i*18);
+    });
+  }
+
+  if(activeStep===6){
+    const s=stages[6];
+    for(let j=0;j<8;j++){
+      const ang=(frame*0.03)+j*Math.PI*2/8,r2=28;
+      const px2=s.x+Math.cos(ang)*r2,py2=mcy+Math.sin(ang)*r2*0.5,pelR=6+j%2;
+      const pg=ctx.createRadialGradient(px2-pelR*0.4,py2-pelR*0.4,0,px2,py2,pelR);
+      pg.addColorStop(0,'#8ba3b5');pg.addColorStop(1,'#2a4a5a');
+      ctx.beginPath();ctx.arc(px2,py2,pelR,0,Math.PI*2);ctx.fillStyle=pg;ctx.fill();
+      ctx.strokeStyle='rgba(90,122,138,0.3)';ctx.lineWidth=0.5;ctx.stroke();
+    }
+    ctx.fillStyle='#2a7a4a';ctx.font='600 10px JetBrains Mono';ctx.textAlign='center';
+    ctx.fillText('PELLETS READY',s.x,mcy+machH/2+56);
+  }
+}
+
+function drawMachineStage(ctx,s,mcy,machH,machW,isActive,isDone,frame,W,H){
+  const x=s.x,r=machW/2,y=mcy,col=s.color;
+  switch(s.icon){
+    case 'feed':
+      ctx.fillStyle=isDone||isActive?col:'#d4c8b0';ctx.strokeStyle=isActive?col:'rgba(200,145,42,0.3)';ctx.lineWidth=isActive?2:1;
+      ctx.beginPath();ctx.moveTo(x-28,y-machH/2);ctx.lineTo(x+28,y-machH/2);ctx.lineTo(x+14,y);ctx.lineTo(x-14,y);ctx.closePath();ctx.fill();ctx.stroke();
+      if(isActive){for(let p=0;p<3;p++){const fy=y-machH/2+(frame*2+p*20)%(machH);ctx.beginPath();ctx.arc(x+(p-1)*6,fy,3,0,Math.PI*2);ctx.fillStyle='#cd7f32';ctx.fill();}}
+      break;
+    case 'crush':
+      ctx.fillStyle=isDone||isActive?col:'#d4c8b0';ctx.strokeStyle=isActive?col:'rgba(200,145,42,0.3)';ctx.lineWidth=isActive?2:1;
+      ctx.beginPath();ctx.roundRect(x-26,y-machH/3,52,machH*0.66,4);ctx.fill();ctx.stroke();
+      if(isActive||isDone){ctx.save();ctx.translate(x,y);ctx.rotate(isActive?frame*0.08:0);ctx.strokeStyle='rgba(255,255,255,0.4)';ctx.lineWidth=1.5;for(let k=0;k<4;k++){const a=k*Math.PI/2;ctx.beginPath();ctx.moveTo(0,0);ctx.lineTo(Math.cos(a)*18,Math.sin(a)*18);ctx.stroke();}ctx.restore();}
+      break;
+    case 'mix':
+      ctx.fillStyle=isDone||isActive?col:'#d4c8b0';ctx.strokeStyle=isActive?col:'rgba(200,145,42,0.3)';ctx.lineWidth=isActive?2:1;
+      ctx.beginPath();ctx.ellipse(x,y,32,machH*0.35,0,0,Math.PI*2);ctx.fill();ctx.stroke();
+      if(isActive||isDone){ctx.save();ctx.translate(x,y);ctx.rotate(isActive?frame*0.06:0.5);ctx.strokeStyle='rgba(255,255,255,0.5)';ctx.lineWidth=2;for(let k=0;k<3;k++){const a=k*Math.PI*2/3;ctx.beginPath();ctx.moveTo(0,0);ctx.lineTo(Math.cos(a)*22,Math.sin(a)*22);ctx.stroke();}ctx.restore();}
+      if(isActive){ctx.shadowColor=col;ctx.shadowBlur=15;ctx.beginPath();ctx.ellipse(x,y,32,machH*0.35,0,0,Math.PI*2);ctx.stroke();ctx.shadowBlur=0;}
+      break;
+    case 'ball':
+      ctx.fillStyle=isDone||isActive?col:'#d4c8b0';ctx.strokeStyle=isActive?col:'rgba(200,145,42,0.3)';ctx.lineWidth=isActive?2:1;
+      ctx.beginPath();ctx.arc(x,y,30,0,Math.PI*2);ctx.fill();ctx.stroke();
+      if(isActive||isDone){ctx.save();ctx.translate(x,y);ctx.rotate(isActive?-frame*0.05:-0.3);ctx.strokeStyle='rgba(255,255,255,0.4)';ctx.lineWidth=1;for(let k=0;k<6;k++){const a=k*Math.PI/3;ctx.beginPath();ctx.moveTo(8,0);ctx.rotate(a);ctx.arc(0,0,22,a,a+Math.PI/3-0.1);ctx.stroke();}ctx.restore();
+        if(isActive){for(let p=0;p<4;p++){const a2=(frame*0.05)+p*Math.PI/2;const px3=x+Math.cos(a2)*18,py3=y+Math.sin(a2)*18;ctx.beginPath();ctx.arc(px3,py3,4+p%2,0,Math.PI*2);ctx.fillStyle='#8ba3b5';ctx.fill();}}}
+      break;
+    case 'indu':
+      ctx.fillStyle=isDone||isActive?col:'#d4c8b0';ctx.strokeStyle=isActive?col:'rgba(200,145,42,0.3)';ctx.lineWidth=isActive?2:1;
+      ctx.beginPath();ctx.roundRect(x-32,y-machH*0.45,64,machH*0.9,4);ctx.fill();ctx.stroke();
+      if(isActive||isDone){const fg=ctx.createRadialGradient(x,y,0,x,y,28);fg.addColorStop(0,'rgba(255,150,30,0.6)');fg.addColorStop(1,'rgba(255,50,0,0)');ctx.fillStyle=fg;ctx.beginPath();ctx.ellipse(x,y,28,machH*0.38,0,0,Math.PI*2);ctx.fill();}
+      if(isActive){for(let f=0;f<3;f++){const fx=x+(f-1)*12,fh=14+Math.sin(frame*0.15+f)*6;ctx.fillStyle=`rgba(255,${140+f*30},0,0.7)`;ctx.beginPath();ctx.moveTo(fx-5,y-8);ctx.quadraticCurveTo(fx,y-8-fh,fx+5,y-8);ctx.fill();}ctx.shadowColor='#ff6b1a';ctx.shadowBlur=20;ctx.beginPath();ctx.roundRect(x-32,y-machH*0.45,64,machH*0.9,4);ctx.stroke();ctx.shadowBlur=0;}
+      break;
+    case 'cool':
+      ctx.fillStyle=isDone||isActive?col:'#d4c8b0';ctx.strokeStyle=isActive?col:'rgba(200,145,42,0.3)';ctx.lineWidth=isActive?2:1;
+      ctx.beginPath();ctx.moveTo(x-24,y-machH*0.4);ctx.lineTo(x+24,y-machH*0.4);ctx.lineTo(x+30,y+machH*0.35);ctx.lineTo(x-30,y+machH*0.35);ctx.closePath();ctx.fill();ctx.stroke();
+      if(isActive){for(let w=0;w<3;w++){const wy=y-machH*0.3+w*12+(frame*1.5+w*8)%30;ctx.strokeStyle=`rgba(150,220,255,${0.5-w*0.15})`;ctx.lineWidth=1.5;ctx.beginPath();ctx.moveTo(x-18,wy);ctx.quadraticCurveTo(x,wy-4,x+18,wy);ctx.stroke();}ctx.fillStyle='rgba(150,220,255,0.4)';ctx.font='12px sans-serif';ctx.textAlign='center';ctx.fillText('↑',x-16,y+machH*0.1);ctx.fillText('↑',x+16,y+machH*0.1);}
+      break;
+    case 'pellet':
+      if(isDone||isActive){
+        for(let p=0;p<5;p++){const angle=(p/5)*Math.PI*2+(isActive?frame*0.02:0),pr=14;const px4=x+Math.cos(angle)*pr,py4=y+Math.sin(angle)*pr*0.5;const pg2=ctx.createRadialGradient(px4-3,py4-3,0,px4,py4,8);pg2.addColorStop(0,'#8ba3b5');pg2.addColorStop(1,'#2a4a5a');ctx.beginPath();ctx.arc(px4,py4,7+p%2,0,Math.PI*2);ctx.fillStyle=pg2;ctx.fill();ctx.strokeStyle='rgba(90,122,138,0.4)';ctx.lineWidth=0.5;ctx.stroke();}
+        const cpg=ctx.createRadialGradient(x-3,y-3,0,x,y,10);cpg.addColorStop(0,'#9ab3c5');cpg.addColorStop(1,'#1a3a5a');ctx.beginPath();ctx.arc(x,y,10,0,Math.PI*2);ctx.fillStyle=cpg;ctx.fill();
+      }else{ctx.fillStyle='#d4c8b0';ctx.beginPath();ctx.arc(x,y,18,0,Math.PI*2);ctx.fill();}
+      break;
+  }
+}
+drawIdle();
+</script>
+</body>
+</html>
