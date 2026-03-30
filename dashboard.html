@@ -674,7 +674,7 @@ const MODAL_CONFIGS={
       <div class="field-group"><div class="field-label">Binder Type</div>
         <select class="fsel" id="m-binder">
           <option value="">— Select Binder —</option>
-          ${['OB-1205 Organic','Bentonite (6 kg/t)','OB-1205 + Bentonite'].map(v=>`<option value="${v}"${stageParams.mix.binder===v?' selected':''}>${v}</option>`).join('')}
+          ${['OB-1205 Organic','Bentonite (6 kg/t)','OB-1205 + Bentonite','OB-1206'].map(v=>`<option value="${v}"${stageParams.mix.binder===v?' selected':''}>${v}</option>`).join('')}
         </select></div>
       <div class="field-group"><div class="field-label">Binder Dosage (GPT)</div>
         <div class="slider-wrap"><div class="slider-top"><span>g/t</span><span class="sv" id="sv-dose">${stageParams.mix.bindDosage.toFixed(2)} GPT</span></div>
