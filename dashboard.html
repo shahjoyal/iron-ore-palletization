@@ -5,663 +5,856 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Dashboard – Abhitech Pelletization Simulator</title>
 <link rel="icon" type="image/x-icon" href="abhitech-logo.png">
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=DM+Sans:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=DM+Sans:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
-:root{
+:root {
   --cream:#fdf8f0;--cream2:#f5ede0;
   --gold:#c8912a;--gold-light:#e8b84b;
   --navy:#1a3057;--navy2:#0f1f3a;--navy3:#253d5e;
-  --blue:#2d5fa6;--blue-light:#4a7fc1;
-  --text:#2a2015;--text-mid:#5a4a30;--text-dim:#9a8a70;
-  --border:rgba(200,145,42,0.2);
-  --green:#2a7a4a;--green-light:#3aaa6a;
-  --red:#c0392b;
+  --blue:#2d5fa6;
+  --text:#1e1a10;--text-mid:#5a4a30;--text-dim:#8a7a60;
+  --border:rgba(200,145,42,0.22);--border-strong:rgba(200,145,42,0.5);
+  --green:#2a7a4a;--green-light:#3aaa6a;--red:#c0392b;
+  --shadow-navy:0 8px 40px rgba(26,48,87,0.14);
 }
-*{margin:0;padding:0;box-sizing:border-box;}
-body{font-family:'DM Sans',sans-serif;background:var(--cream2);color:var(--text);min-height:100vh;overflow-x:hidden;}
-
-/* ── NAVBAR ── */
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+body{
+  font-family:'DM Sans',sans-serif;background:var(--cream2);color:var(--text);
+  min-height:100vh;overflow-x:hidden;
+  background-image:
+    radial-gradient(ellipse 80% 60% at 50% -10%,rgba(200,145,42,0.07) 0%,transparent 70%),
+    repeating-linear-gradient(0deg,transparent,transparent 39px,rgba(200,145,42,0.04) 39px,rgba(200,145,42,0.04) 40px),
+    repeating-linear-gradient(90deg,transparent,transparent 39px,rgba(200,145,42,0.04) 39px,rgba(200,145,42,0.04) 40px);
+}
 nav{
-  position:sticky;top:0;z-index:100;
-  display:flex;align-items:center;justify-content:space-between;
-  padding:0 1.5rem;height:62px;
-  background:rgba(253,248,240,0.97);
-  backdrop-filter:blur(20px);
-  border-bottom:1px solid var(--border);
-  box-shadow:0 2px 16px rgba(26,48,87,0.07);
+  position:sticky;top:0;z-index:100;display:flex;align-items:center;justify-content:space-between;
+  padding:0 2rem;height:64px;background:rgba(253,248,240,0.96);
+  backdrop-filter:blur(24px) saturate(1.5);border-bottom:1px solid var(--border);
+  box-shadow:0 1px 0 var(--border),0 4px 24px rgba(26,48,87,0.06);
 }
-.nav-logo{display:flex;align-items:center;gap:10px;text-decoration:none;}
-.nav-logo img{height:32px;width:auto;object-fit:contain;}
-.logo-text .l1{font-family:'Cormorant Garamond',serif;font-size:1.05rem;font-weight:700;color:var(--navy);}
-.logo-text .l2{font-family:'JetBrains Mono';font-size:0.48rem;letter-spacing:2px;color:var(--gold);text-transform:uppercase;}
-
-.nav-right{display:flex;align-items:center;gap:1rem;}
-.nav-badge{font-family:'JetBrains Mono';font-size:0.6rem;letter-spacing:1px;color:var(--green-light);display:flex;align-items:center;gap:6px;}
-.nav-badge::before{content:'';width:7px;height:7px;background:var(--green-light);border-radius:50%;animation:blink 1.5s infinite;}
-@keyframes blink{0%,100%{opacity:1;}50%{opacity:0.3;}}
-.nav-btn{font-size:0.78rem;font-weight:500;color:var(--text-mid);background:none;border:1px solid var(--border);padding:6px 14px;border-radius:2px;cursor:pointer;transition:all 0.3s;text-decoration:none;}
-.nav-btn:hover{border-color:var(--gold);color:var(--gold);}
-
-/* Mobile sidebar toggle */
-.sidebar-toggle{
-  display:none;background:var(--navy);color:#fff;border:none;
-  padding:7px 12px;border-radius:2px;font-size:0.78rem;font-weight:500;
-  cursor:pointer;gap:6px;align-items:center;white-space:nowrap;
+.nav-logo{display:flex;align-items:center;gap:12px;text-decoration:none;}
+.nav-logo img{height:34px;width:auto;object-fit:contain;}
+.logo-text .l1{font-family:'Cormorant Garamond',serif;font-size:1.12rem;font-weight:700;color:var(--navy);letter-spacing:.5px;display:block;}
+.logo-text .l2{font-family:'JetBrains Mono';font-size:.5rem;letter-spacing:2.5px;color:var(--gold);text-transform:uppercase;display:block;margin-top:1px;}
+.nav-center{position:absolute;left:50%;transform:translateX(-50%);display:flex;align-items:center;}
+.nav-badge{
+  font-family:'JetBrains Mono';font-size:.58rem;letter-spacing:1.5px;color:var(--green-light);
+  display:flex;align-items:center;gap:7px;
+  background:rgba(42,122,74,.08);border:1px solid rgba(58,170,106,.25);padding:5px 14px;border-radius:20px;
 }
+.nav-badge::before{content:'';width:6px;height:6px;background:var(--green-light);border-radius:50%;animation:blink 1.8s ease-in-out infinite;}
+@keyframes blink{0%,100%{opacity:1;}50%{opacity:.4;}}
+.nav-right{display:flex;align-items:center;gap:.75rem;}
+.nav-btn{font-size:.78rem;font-weight:500;color:var(--text-mid);background:none;border:1px solid var(--border);padding:7px 16px;border-radius:3px;cursor:pointer;transition:all .25s;text-decoration:none;font-family:'DM Sans';}
+.nav-btn:hover{border-color:var(--gold);color:var(--gold);background:rgba(200,145,42,.05);}
 
-/* ── LAYOUT ── */
-.dash-layout{
-  display:grid;
-  grid-template-columns:320px 1fr;
-  grid-template-rows:auto 1fr;
-  min-height:calc(100vh - 62px);
-}
+.page-wrap{display:flex;flex-direction:column;align-items:center;min-height:calc(100vh - 64px);padding:2rem 1.5rem 3rem;}
+.page-header{text-align:center;margin-bottom:2rem;}
+.page-title{font-family:'Cormorant Garamond',serif;font-size:clamp(1.6rem,3vw,2.4rem);font-weight:700;color:var(--navy);letter-spacing:.5px;line-height:1.2;}
+.page-sub{font-family:'JetBrains Mono';font-size:.6rem;letter-spacing:2px;color:var(--text-dim);text-transform:uppercase;margin-top:.5rem;}
+.page-hint{font-size:.78rem;color:var(--text-dim);margin-top:.75rem;display:flex;align-items:center;gap:6px;justify-content:center;}
+.page-hint::before{content:'◈';color:var(--gold);font-size:.65rem;}
 
-/* ── SIDEBAR ── */
-.sidebar{
-  grid-row:1/3;
-  background:#fff;border-right:1px solid var(--border);
-  overflow-y:auto;display:flex;flex-direction:column;
-  transition:transform 0.3s ease;
-}
-.sidebar-header{padding:1.3rem;border-bottom:1px solid var(--border);background:var(--navy2);}
-.sidebar-title{font-family:'Cormorant Garamond',serif;font-size:1.05rem;font-weight:700;color:#fff;margin-bottom:3px;}
-.sidebar-sub{font-family:'JetBrains Mono';font-size:0.55rem;letter-spacing:1.5px;color:rgba(255,255,255,0.35);text-transform:uppercase;}
-.sidebar-body{padding:1.3rem;flex:1;}
+.canvas-wrap{width:100%;max-width:1200px;background:#fff;border:1px solid var(--border);border-radius:8px;box-shadow:var(--shadow-navy),inset 0 1px 0 rgba(255,255,255,.8);overflow:hidden;position:relative;}
+#processCanvas{display:block;width:100%;height:auto;cursor:default;}
 
-.input-group{margin-bottom:1.4rem;}
-.input-label{font-family:'JetBrains Mono';font-size:0.58rem;letter-spacing:1.5px;text-transform:uppercase;color:var(--gold);margin-bottom:0.5rem;display:flex;align-items:center;gap:6px;}
-.input-label::before{content:'◈';font-size:0.52rem;}
+.step-bar{display:flex;align-items:center;gap:5px;justify-content:center;padding:.65rem 1rem;border-top:1px solid var(--border);background:rgba(253,248,240,.7);flex-wrap:wrap;}
+.step-pill{padding:3px 10px;font-family:'JetBrains Mono';font-size:.52rem;letter-spacing:1px;border:1px solid var(--border);border-radius:20px;color:var(--text-dim);transition:all .35s;white-space:nowrap;cursor:pointer;user-select:none;}
+.step-pill:hover{border-color:var(--gold);color:var(--gold);}
+.step-pill.active{background:var(--gold);border-color:var(--gold);color:#fff;box-shadow:0 2px 10px rgba(200,145,42,.4);}
+.step-pill.done{background:rgba(42,122,74,.09);border-color:var(--green);color:var(--green);}
 
-select.sel{
-  width:100%;background:#fdf8f0;border:1.5px solid var(--border);border-radius:2px;
-  padding:9px 12px;color:var(--text);font-family:'DM Sans';font-size:0.83rem;
-  outline:none;cursor:pointer;transition:border-color 0.3s;appearance:none;
-  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23c8912a' stroke-width='1.5' fill='none'/%3E%3C/svg%3E");
-  background-repeat:no-repeat;background-position:right 10px center;padding-right:28px;
-}
-select.sel:focus{border-color:var(--gold);}
-
-.chip-wrap{display:flex;flex-wrap:wrap;gap:6px;margin-top:7px;}
-.chip{display:flex;align-items:center;gap:6px;background:rgba(200,145,42,0.1);border:1px solid rgba(200,145,42,0.3);border-radius:2px;padding:3px 9px;font-size:0.72rem;color:var(--gold);font-weight:500;animation:chipIn 0.3s ease;}
-@keyframes chipIn{from{opacity:0;transform:scale(0.8);}to{opacity:1;transform:scale(1);}}
-.chip button{background:none;border:none;color:var(--text-dim);cursor:pointer;font-size:0.88rem;line-height:1;padding:0;transition:color 0.2s;}
-.chip button:hover{color:var(--red);}
-
-.slider-wrap{margin-top:0.4rem;}
-.slider-top{display:flex;justify-content:space-between;margin-bottom:5px;}
-.slider-top span{font-size:0.75rem;color:var(--text-dim);}
-.slider-top .sv{color:var(--gold);font-family:'JetBrains Mono';font-weight:500;}
-input[type=range].rng{width:100%;appearance:none;height:3px;background:linear-gradient(to right,var(--gold) var(--pct,50%),rgba(200,145,42,0.15) var(--pct,50%));border-radius:0;outline:none;cursor:pointer;}
-input[type=range].rng::-webkit-slider-thumb{appearance:none;width:14px;height:14px;background:var(--gold);border-radius:2px;transform:rotate(45deg);cursor:pointer;box-shadow:0 0 6px rgba(200,145,42,0.4);}
-
-.run-btn{width:100%;margin-top:0.8rem;background:linear-gradient(135deg,var(--navy),var(--blue));color:#fff;border:none;border-radius:2px;padding:13px;font-family:'DM Sans';font-size:0.88rem;font-weight:600;cursor:pointer;letter-spacing:0.3px;transition:all 0.3s;display:flex;align-items:center;justify-content:center;gap:8px;}
-.run-btn:hover{background:linear-gradient(135deg,var(--gold),var(--gold-light));transform:translateY(-2px);box-shadow:0 6px 20px rgba(200,145,42,0.4);}
-.run-btn:disabled{opacity:0.5;pointer-events:none;}
-
-.reset-btn{width:100%;margin-top:0.5rem;background:transparent;color:var(--text-dim);border:1px solid var(--border);border-radius:2px;padding:9px;font-family:'DM Sans';font-size:0.8rem;cursor:pointer;transition:all 0.3s;}
+.action-row{display:flex;align-items:center;gap:1rem;margin-top:1.5rem;justify-content:center;}
+.run-btn{background:linear-gradient(135deg,var(--navy),var(--blue));color:#fff;border:none;border-radius:4px;padding:13px 32px;font-family:'DM Sans';font-size:.9rem;font-weight:600;cursor:pointer;letter-spacing:.3px;transition:all .3s;display:flex;align-items:center;gap:8px;box-shadow:0 4px 16px rgba(26,48,87,.25);}
+.run-btn:hover:not(:disabled){background:linear-gradient(135deg,var(--gold),var(--gold-light));transform:translateY(-2px);box-shadow:0 6px 24px rgba(200,145,42,.4);}
+.run-btn:disabled{opacity:.45;pointer-events:none;}
+.reset-btn{background:transparent;color:var(--text-dim);border:1px solid var(--border);border-radius:4px;padding:13px 20px;font-family:'DM Sans';font-size:.85rem;cursor:pointer;transition:all .25s;}
 .reset-btn:hover{border-color:var(--red);color:var(--red);}
 
-.params-display{margin-top:1.2rem;padding-top:1.2rem;border-top:1px solid var(--border);}
-.params-grid{display:grid;grid-template-columns:1fr 1fr;gap:7px;}
-.param-box{background:var(--cream2);border:1px solid var(--border);border-radius:2px;padding:9px;}
-.param-box-label{font-family:'JetBrains Mono';font-size:0.54rem;letter-spacing:1px;color:var(--text-dim);margin-bottom:3px;}
-.param-box-val{font-family:'Cormorant Garamond',serif;font-size:1.25rem;font-weight:700;color:var(--navy);line-height:1;}
-.param-box-val.good{color:var(--green);}
-.param-box-val.warn{color:var(--gold);}
+.params-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:8px;width:100%;max-width:1200px;margin-top:1.2rem;}
+.param-box{background:#fff;border:1px solid var(--border);border-radius:6px;padding:10px 14px;text-align:center;box-shadow:0 2px 8px rgba(26,48,87,.04);}
+.param-box-label{font-family:'JetBrains Mono';font-size:.52rem;letter-spacing:1.2px;color:var(--text-dim);text-transform:uppercase;margin-bottom:4px;}
+.param-box-val{font-family:'Cormorant Garamond',serif;font-size:1.3rem;font-weight:700;color:var(--navy);line-height:1;}
+.param-box-val.good{color:var(--green);}.param-box-val.warn{color:var(--gold);}
 
-/* ── MAIN AREA ── */
-.main-area{display:flex;flex-direction:column;overflow:hidden;}
-.main-top{padding:0.8rem 1.5rem;background:rgba(253,248,240,0.8);border-bottom:1px solid var(--border);display:flex;align-items:center;gap:0.75rem;flex-wrap:wrap;}
-.step-indicator{display:flex;align-items:center;gap:3px;flex-wrap:wrap;}
-.step-pill{padding:4px 10px;font-family:'JetBrains Mono';font-size:0.58rem;letter-spacing:1px;border:1px solid var(--border);border-radius:20px;color:var(--text-dim);transition:all 0.4s;white-space:nowrap;}
-.step-pill.active{background:var(--gold);border-color:var(--gold);color:#fff;box-shadow:0 2px 10px rgba(200,145,42,0.4);}
-.step-pill.done{background:rgba(42,122,74,0.1);border-color:var(--green);color:var(--green);}
-
-/* Machine canvas */
-.machine-area{flex:1;background:var(--cream2);position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center;}
-#machineCanvas{max-width:100%;max-height:100%;border:1px solid var(--border);background:#fff;box-shadow:0 4px 30px rgba(26,48,87,0.08);border-radius:3px;}
-
-.idle-overlay{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;pointer-events:none;transition:opacity 0.5s;}
-.idle-overlay.hidden{opacity:0;}
-.idle-icon{font-size:2.5rem;margin-bottom:0.8rem;opacity:0.3;}
-.idle-text{font-family:'Cormorant Garamond',serif;font-size:1rem;font-weight:600;color:var(--text-dim);}
-.idle-sub{font-size:0.75rem;color:var(--text-dim);margin-top:0.25rem;font-family:'JetBrains Mono';}
-
-/* Log panel */
-.log-panel{height:160px;border-top:1px solid var(--border);background:#fff;overflow:hidden;display:flex;flex-direction:column;}
-.log-header{padding:0.5rem 1.2rem;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;background:var(--cream2);flex-shrink:0;}
-.log-title{font-family:'JetBrains Mono';font-size:0.58rem;letter-spacing:2px;color:var(--gold);text-transform:uppercase;}
-.log-clear{font-size:0.68rem;color:var(--text-dim);cursor:pointer;background:none;border:none;transition:color 0.3s;}
+.log-panel{width:100%;max-width:1200px;background:#fff;border:1px solid var(--border);border-radius:8px;box-shadow:0 2px 12px rgba(26,48,87,.05);overflow:hidden;margin-top:1.2rem;}
+.log-header{padding:.6rem 1.3rem;border-bottom:1px solid var(--border);background:rgba(253,248,240,.8);display:flex;align-items:center;justify-content:space-between;}
+.log-title{font-family:'JetBrains Mono';font-size:.58rem;letter-spacing:2px;color:var(--gold);text-transform:uppercase;}
+.log-clear{font-size:.68rem;color:var(--text-dim);cursor:pointer;background:none;border:none;transition:color .2s;}
 .log-clear:hover{color:var(--red);}
-.log-body{flex:1;overflow-y:auto;padding:0.4rem 1.2rem;}
-.log-entry{font-family:'JetBrains Mono';font-size:0.63rem;padding:3px 0;border-bottom:1px solid rgba(200,145,42,0.06);color:var(--text-dim);animation:logSlide 0.3s ease;}
+.log-body{height:110px;overflow-y:auto;padding:.5rem 1.3rem;}
+.log-entry{font-family:'JetBrains Mono';font-size:.62rem;padding:3px 0;border-bottom:1px solid rgba(200,145,42,.06);color:var(--text-dim);animation:logSlide .3s ease;}
 @keyframes logSlide{from{opacity:0;transform:translateX(8px);}to{opacity:1;transform:translateX(0);}}
-.tag{font-weight:500;}
-.tag-init{color:var(--blue);}
-.tag-step{color:var(--gold);}
-.tag-ok{color:var(--green-light);}
-.tag-warn{color:#e67e22;}
-.tag-err{color:var(--red);}
+.tag{font-weight:600;}.tag-init{color:var(--blue);}.tag-step{color:var(--gold);}.tag-ok{color:var(--green-light);}.tag-warn{color:#e67e22;}.tag-err{color:var(--red);}
 
-/* Mobile sidebar overlay */
-.sidebar-overlay{
-  display:none;position:fixed;inset:0;background:rgba(15,31,58,0.5);
-  z-index:149;backdrop-filter:blur(2px);
-}
-.sidebar-overlay.active{display:block;}
-
-/* ════════════════════════════
-   MOBILE RESPONSIVE
-════════════════════════════ */
-@media(max-width:900px){
-  .sidebar-toggle{display:flex;}
-  .nav-badge{display:none;}
-
-  .dash-layout{
-    grid-template-columns:1fr;
-    grid-template-rows:auto 1fr;
-  }
-
-  .sidebar{
-    position:fixed;left:0;top:62px;bottom:0;
-    width:min(320px, 85vw);
-    z-index:150;
-    transform:translateX(-110%);
-    box-shadow:4px 0 30px rgba(26,48,87,0.2);
-  }
-  .sidebar.open{transform:translateX(0);}
-
-  .main-area{grid-column:1;grid-row:1;}
-  .main-area:last-child{grid-row:2;}
-
-  .main-top{padding:0.7rem 1rem;}
-  .step-pill{font-size:0.52rem;padding:3px 8px;}
-
-  .machine-area{min-height:280px;}
-
-  .log-panel{height:140px;}
-  .log-body{padding:0.35rem 1rem;}
-}
-
-@media(max-width:500px){
-  nav{padding:0 1rem;height:58px;}
-  .nav-logo img{height:28px;}
-  .logo-text .l1{font-size:0.95rem;}
-  .logo-text .l2{display:none;}
-  .nav-btn{display:none;}
-
-  .sidebar{top:58px;width:90vw;}
-
-  .step-indicator{gap:2px;}
-  .step-pill{font-size:0.48rem;padding:3px 6px;letter-spacing:0.5px;}
-
-  .machine-area{min-height:220px;}
-
-  .params-grid{grid-template-columns:1fr 1fr;}
-  .param-box-val{font-size:1.1rem;}
-
-  .log-panel{height:120px;}
-  .log-entry{font-size:0.58rem;}
-}
+.modal-overlay{position:fixed;inset:0;z-index:200;background:rgba(15,31,58,.55);backdrop-filter:blur(6px) saturate(1.2);display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .3s ease;}
+.modal-overlay.open{opacity:1;pointer-events:all;}
+.modal-card{background:#fff;border:1px solid var(--border-strong);border-radius:10px;box-shadow:0 24px 80px rgba(26,48,87,.25);width:min(460px,92vw);max-height:88vh;overflow-y:auto;transform:translateY(16px) scale(.97);transition:transform .35s cubic-bezier(.22,1,.36,1);position:relative;}
+.modal-overlay.open .modal-card{transform:translateY(0) scale(1);}
+.modal-header{padding:1.4rem 1.6rem 1rem;border-bottom:1px solid var(--border);background:linear-gradient(135deg,var(--navy2) 0%,var(--navy3) 100%);border-radius:10px 10px 0 0;position:relative;}
+.modal-stage-tag{font-family:'JetBrains Mono';font-size:.52rem;letter-spacing:2.5px;color:rgba(200,145,42,.7);text-transform:uppercase;margin-bottom:5px;}
+.modal-title{font-family:'Cormorant Garamond',serif;font-size:1.5rem;font-weight:700;color:#fff;line-height:1.2;}
+.modal-desc{font-size:.78rem;color:rgba(255,255,255,.45);margin-top:5px;}
+.modal-close{position:absolute;top:1.1rem;right:1.2rem;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);color:rgba(255,255,255,.6);width:30px;height:30px;border-radius:50%;font-size:.9rem;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s;}
+.modal-close:hover{background:rgba(200,145,42,.3);color:#fff;}
+.modal-body{padding:1.4rem 1.6rem;}
+.field-group{margin-bottom:1.3rem;}
+.field-label{font-family:'JetBrains Mono';font-size:.56rem;letter-spacing:1.5px;color:var(--gold);text-transform:uppercase;margin-bottom:.5rem;display:flex;align-items:center;gap:6px;}
+.field-label::before{content:'◈';font-size:.5rem;}
+select.fsel,input.finp{width:100%;background:var(--cream);border:1.5px solid var(--border);border-radius:4px;padding:9px 12px;color:var(--text);font-family:'DM Sans';font-size:.84rem;outline:none;cursor:pointer;transition:border-color .25s;appearance:none;}
+select.fsel{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23c8912a' stroke-width='1.5' fill='none'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 10px center;padding-right:30px;}
+select.fsel:focus,input.finp:focus{border-color:var(--gold);background:#fff;}
+.slider-wrap{margin-top:.35rem;}
+.slider-top{display:flex;justify-content:space-between;margin-bottom:5px;}
+.slider-top span{font-size:.74rem;color:var(--text-dim);}
+.slider-top .sv{color:var(--gold);font-family:'JetBrains Mono';font-weight:500;font-size:.78rem;}
+input[type=range].rng{width:100%;appearance:none;height:3px;background:linear-gradient(to right,var(--gold) var(--pct,50%),rgba(200,145,42,.12) var(--pct,50%));border-radius:0;outline:none;cursor:pointer;}
+input[type=range].rng::-webkit-slider-thumb{appearance:none;width:14px;height:14px;background:var(--gold);border-radius:3px;transform:rotate(45deg);cursor:pointer;box-shadow:0 0 8px rgba(200,145,42,.5);}
+.modal-footer{padding:1rem 1.6rem 1.4rem;border-top:1px solid var(--border);display:flex;gap:8px;}
+.btn-save{flex:1;background:linear-gradient(135deg,var(--navy),var(--blue));color:#fff;border:none;border-radius:4px;padding:11px;font-family:'DM Sans';font-size:.85rem;font-weight:600;cursor:pointer;transition:all .25s;}
+.btn-save:hover{background:linear-gradient(135deg,var(--gold),var(--gold-light));}
+.btn-cancel{background:transparent;color:var(--text-dim);border:1px solid var(--border);border-radius:4px;padding:11px 16px;font-family:'DM Sans';font-size:.85rem;cursor:pointer;transition:all .25s;}
+.btn-cancel:hover{border-color:var(--red);color:var(--red);}
+@media(max-width:640px){nav{padding:0 1rem;height:58px;}.nav-center{display:none;}.logo-text .l2{display:none;}.page-wrap{padding:1.25rem .75rem 2.5rem;}.params-row{grid-template-columns:1fr 1fr;}}
 </style>
 </head>
 <body>
 
-<!-- Sidebar overlay (mobile) -->
-<div class="sidebar-overlay" id="sidebarOverlay" onclick="closeSidebar()"></div>
+<div class="modal-overlay" id="modalOverlay">
+  <div class="modal-card">
+    <div class="modal-header">
+      <div class="modal-stage-tag" id="modalTag">STAGE 01</div>
+      <div class="modal-title" id="modalTitle">Iron Ore Feed</div>
+      <div class="modal-desc" id="modalDesc">Configure inputs</div>
+      <button class="modal-close" onclick="closeModal()">✕</button>
+    </div>
+    <div class="modal-body" id="modalBody"></div>
+    <div class="modal-footer">
+      <button class="btn-save" onclick="saveModal()">Save Parameters</button>
+      <button class="btn-cancel" onclick="closeModal()">Cancel</button>
+    </div>
+  </div>
+</div>
 
-<!-- ── NAVBAR ── -->
 <nav>
   <a href="index.html" class="nav-logo">
     <img src="abhitech-logo.png" alt="Abhitech Energycon">
-    <div class="logo-text">
-      <span class="l1">ABHITECH</span>
-      <span class="l2">Pelletization Simulator</span>
-    </div>
+    <div class="logo-text"><span class="l1">ABHITECH</span><span class="l2">Pelletization Simulator</span></div>
   </a>
+  <div class="nav-center"><div class="nav-badge">System Online</div></div>
   <div class="nav-right">
-    <div class="nav-badge">System Online</div>
-    <button class="sidebar-toggle" onclick="toggleSidebar()">⚙ Configure</button>
     <a href="index.html" class="nav-btn">← Home</a>
     <a href="login.html" class="nav-btn">Sign Out</a>
   </div>
 </nav>
 
-<!-- ── DASHBOARD ── -->
-<div class="dash-layout">
+<div class="page-wrap">
+  <div class="page-header">
+    <div class="page-title">Pelletization Process Simulator</div>
+    <div class="page-sub">// Iron Ore Pelletization — Wet Grinding Route</div>
+    <div class="page-hint">Click any process stage to configure its parameters</div>
+  </div>
 
-  <!-- SIDEBAR -->
-  <aside class="sidebar" id="sidebar">
-    <div class="sidebar-header">
-      <div class="sidebar-title">Raw Material Configuration</div>
-      <div class="sidebar-sub">// Configure inputs & run simulation</div>
-    </div>
-    <div class="sidebar-body">
-
-      <div class="input-group">
-        <div class="input-label">Iron Ore Grade</div>
-        <select class="sel" id="dd-ore" onchange="addChip('ore',this)">
-          <option value="">— Select Grade —</option>
-          <option value="Hematite (65–68% Fe)">Hematite — 65–68% Fe (High Grade)</option>
-          <option value="Magnetite (68–72% Fe)">Magnetite — 68–72% Fe (High Grade)</option>
-          <option value="Goethite (55–60% Fe)">Goethite — 55–60% Fe (Low Grade)</option>
-          <option value="Limonite (50–55% Fe)">Limonite — 50–55% Fe (Low Grade)</option>
-          <option value="Blend 70:30 HG:LG">Blend 70:30 High:Low Grade</option>
-          <option value="Blend 50:50 HG:LG">Blend 50:50 High:Low Grade</option>
-          <option value="Blend 30:70 HG:LG">Blend 30:70 High:Low Grade</option>
-        </select>
-        <div class="chip-wrap" id="chips-ore"></div>
-      </div>
-
-      <div class="input-group">
-        <div class="input-label">Binder</div>
-        <select class="sel" id="dd-binder" onchange="addChip('binder',this)">
-          <option value="">— Select Binder —</option>
-          <option value="OB-1205 (0.5 GPT)">OB-1205 Organic Binder — 0.5 GPT</option>
-          <option value="OB-1205 (1.0 GPT)">OB-1205 Organic Binder — 1.0 GPT</option>
-          <option value="Bentonite (6 kg/t)">Bentonite Only — 6 kg/ton</option>
-          <option value="OB-1205 + Bentonite">OB-1205 + Reduced Bentonite</option>
-        </select>
-        <div class="chip-wrap" id="chips-binder"></div>
-      </div>
-
-      <div class="input-group">
-        <div class="input-label">Flux / Additives</div>
-        <select class="sel" id="dd-flux" onchange="addChip('flux',this)">
-          <option value="">— Select Flux —</option>
-          <option value="Limestone (CaCO₃)">Limestone — CaCO₃</option>
-          <option value="Dolomite">Dolomite — CaMg(CO₃)₂</option>
-          <option value="Olivine">Olivine</option>
-          <option value="No Flux">No Flux Added</option>
-        </select>
-        <div class="chip-wrap" id="chips-flux"></div>
-      </div>
-
-      <div class="input-group">
-        <div class="input-label">Fuel / Reductant</div>
-        <select class="sel" id="dd-fuel" onchange="addChip('fuel',this)">
-          <option value="">— Select Fuel —</option>
-          <option value="Anthracite Coal">Anthracite Coal</option>
-          <option value="Pet Coke">Petroleum Coke</option>
-          <option value="Low-S Charcoal">Low-Sulphur Charcoal</option>
-        </select>
-        <div class="chip-wrap" id="chips-fuel"></div>
-      </div>
-
-      <div class="input-group">
-        <div class="input-label">Filter Cake Moisture</div>
-        <div class="slider-wrap">
-          <div class="slider-top"><span>Moisture %</span><span class="sv" id="sv-moisture">9.5%</span></div>
-          <input type="range" class="rng" id="sl-moisture" min="8" max="14" step="0.25" value="9.5" oninput="updateSlider(this,'sv-moisture','%','',true)">
-        </div>
-      </div>
-
-      <div class="input-group">
-        <div class="input-label">Blain Number</div>
-        <div class="slider-wrap">
-          <div class="slider-top"><span>cm²/g</span><span class="sv" id="sv-blain">2000</span></div>
-          <input type="range" class="rng" id="sl-blain" min="1200" max="3000" step="100" value="2000" oninput="updateSlider(this,'sv-blain',' cm²/g','',false)">
-        </div>
-      </div>
-
-      <div class="input-group">
-        <div class="input-label">Induration Temperature</div>
-        <div class="slider-wrap">
-          <div class="slider-top"><span>°C</span><span class="sv" id="sv-temp">1280°C</span></div>
-          <input type="range" class="rng" id="sl-temp" min="1100" max="1400" step="10" value="1280" oninput="updateSlider(this,'sv-temp','°C','',false)">
-        </div>
-      </div>
-
-      <button class="run-btn" id="runBtn" onclick="runSimulation()">▶ Run Pelletization Simulation</button>
-      <button class="reset-btn" onclick="resetAll()">↺ Reset All</button>
-
-      <div class="params-display">
-        <div style="font-family:'JetBrains Mono';font-size:0.58rem;letter-spacing:1.5px;color:var(--text-dim);margin-bottom:0.6rem;text-transform:uppercase;">Estimated Parameters</div>
-        <div class="params-grid">
-          <div class="param-box"><div class="param-box-label">Pellet Size</div><div class="param-box-val" id="p-size">—</div></div>
-          <div class="param-box"><div class="param-box-label">OB Dosage</div><div class="param-box-val warn" id="p-ob">—</div></div>
-          <div class="param-box"><div class="param-box-label">Yield Est.</div><div class="param-box-val good" id="p-yield">—</div></div>
-          <div class="param-box"><div class="param-box-label">Basicity</div><div class="param-box-val" id="p-basicity">—</div></div>
-        </div>
-      </div>
-    </div>
-  </aside>
-
-  <!-- MAIN TOP -->
-  <div class="main-area" style="grid-column:2;grid-row:1;">
-    <div class="main-top">
-      <div class="step-indicator" id="stepIndicator">
-        <div class="step-pill" data-step="0">Feed</div>
-        <div class="step-pill" data-step="1">Crushing</div>
-        <div class="step-pill" data-step="2">Mixing</div>
-        <div class="step-pill" data-step="3">Balling</div>
-        <div class="step-pill" data-step="4">Induration</div>
-        <div class="step-pill" data-step="5">Cooling</div>
-        <div class="step-pill" data-step="6">Pellets</div>
-      </div>
+  <div class="canvas-wrap">
+    <canvas id="processCanvas"></canvas>
+    <div class="step-bar">
+      <div class="step-pill" data-step="0">Feed</div>
+      <div class="step-pill" data-step="1">Wet Grinding</div>
+      <div class="step-pill" data-step="2">Thickener</div>
+      <div class="step-pill" data-step="3">Filter Cake</div>
+      <div class="step-pill" data-step="4">Mixing</div>
+      <div class="step-pill" data-step="5">Balling</div>
+      <div class="step-pill" data-step="6">Screening</div>
+      <div class="step-pill" data-step="7">Induration</div>
+      <div class="step-pill" data-step="8">Cooling</div>
+      <div class="step-pill" data-step="9">Pellets</div>
     </div>
   </div>
 
-  <!-- MAIN CANVAS + LOG -->
-  <div class="main-area" style="grid-column:2;grid-row:2;display:flex;flex-direction:column;">
-    <div class="machine-area">
-      <canvas id="machineCanvas"></canvas>
-      <div class="idle-overlay" id="idleOverlay">
-        <div class="idle-icon">⚙️</div>
-        <div class="idle-text">Select raw materials and run simulation</div>
-        <div class="idle-sub">// machine visualization will appear here</div>
-      </div>
+  <div class="action-row">
+    <button class="run-btn" id="runBtn" onclick="runSimulation()">▶ Run Pelletization Simulation</button>
+    <button class="reset-btn" onclick="resetAll()">↺ Reset</button>
+  </div>
+
+  <div class="params-row">
+    <div class="param-box"><div class="param-box-label">Pellet Size</div><div class="param-box-val" id="p-size">—</div></div>
+    <div class="param-box"><div class="param-box-label">OB / Binder</div><div class="param-box-val warn" id="p-ob">—</div></div>
+    <div class="param-box"><div class="param-box-label">Yield Est.</div><div class="param-box-val good" id="p-yield">—</div></div>
+    <div class="param-box"><div class="param-box-label">Basicity</div><div class="param-box-val" id="p-basicity">—</div></div>
+    <div class="param-box"><div class="param-box-label">Induration Temp</div><div class="param-box-val" id="p-temp">—</div></div>
+    <div class="param-box"><div class="param-box-label">Moisture</div><div class="param-box-val" id="p-moist">—</div></div>
+  </div>
+
+  <div class="log-panel">
+    <div class="log-header">
+      <div class="log-title">Process Log</div>
+      <button class="log-clear" onclick="clearLog()">Clear</button>
     </div>
-    <div class="log-panel">
-      <div class="log-header">
-        <div class="log-title">Process Log</div>
-        <button class="log-clear" onclick="clearLog()">Clear</button>
-      </div>
-      <div class="log-body" id="logBody">
-        <div class="log-entry"><span class="tag tag-init">[INIT]</span> System ready. Configure raw materials in the sidebar.</div>
-      </div>
+    <div class="log-body" id="logBody">
+      <div class="log-entry"><span class="tag tag-init">[INIT]</span> System ready. Click a process node to configure parameters, then run simulation.</div>
     </div>
   </div>
 </div>
 
 <script>
-// ── SIDEBAR MOBILE ──
-function toggleSidebar(){
-  const s=document.getElementById('sidebar');
-  const o=document.getElementById('sidebarOverlay');
-  s.classList.toggle('open');
-  o.classList.toggle('active');
-}
-function closeSidebar(){
-  document.getElementById('sidebar').classList.remove('open');
-  document.getElementById('sidebarOverlay').classList.remove('active');
+// ═══════ STATE ═══════
+const stageParams = {
+  feed:    {ore:'',limestone:'',coal:''},
+  grind:   {blain:2000,moisture:30},
+  thickner:{underflow:65},
+  filter:  {cakeMoisture:9.5},
+  mix:     {binder:'',flux:'',bindDosage:0.5},
+  ball:    {discAngle:48,rpm:14},
+  screen:  {upperMesh:18,lowerMesh:5},
+  indu:    {temp:1280,airFlow:'Forced Draft'},
+  cool:    {duration:40,targetTemp:80},
+  pellet:  {}
+};
+let simRunning=false,simFrame=0,simStep=-1,animId=null,currentModalStage=null;
+
+// ═══════ STAGES ═══════
+const STAGES=[
+  {id:'feed',    label:'IRON ORE\nFEED',       tag:'STAGE 01',shape:'hopper',   color:'#8b4513',step:0},
+  {id:'grind',   label:'WET\nGRINDING',        tag:'STAGE 02',shape:'drum',     color:'#7a5a30',step:1},
+  {id:'thickner',label:'THICKENER',            tag:'STAGE 03',shape:'conetank', color:'#2d5fa6',step:2},
+  {id:'filter',  label:'FILTER\nCAKE',         tag:'STAGE 04',shape:'press',    color:'#5a3d8a',step:3},
+  {id:'mix',     label:'MIXING\n+ BINDER',     tag:'STAGE 05',shape:'ellipse',  color:'#c8912a',step:4},
+  {id:'ball',    label:'BALLING\nDISC',        tag:'STAGE 06',shape:'circle',   color:'#3a7abf',step:5},
+  {id:'screen',  label:'SCREENING',            tag:'STAGE 07',shape:'screen',   color:'#6a5a2a',step:6},
+  {id:'indu',    label:'INDURATION\nFURNACE',  tag:'STAGE 08',shape:'furnace',  color:'#c04010',step:7},
+  {id:'cool',    label:'COOLING',              tag:'STAGE 09',shape:'trapezoid',color:'#2a7a4a',step:8},
+  {id:'pellet',  label:'FINISHED\nPELLETS',   tag:'STAGE 10',shape:'pellets',  color:'#1a3057',step:9},
+];
+
+// ═══════ CANVAS ═══════
+const canvas=document.getElementById('processCanvas');
+const ctx=canvas.getContext('2d');
+let hitZones=[];
+
+function sizeCanvas(){
+  const W=canvas.parentElement.clientWidth;
+  const ratio=window.devicePixelRatio||1;
+  const H=Math.max(230,Math.min(W*0.36,350));
+  canvas.width=W*ratio; canvas.height=H*ratio;
+  canvas.style.width=W+'px'; canvas.style.height=H+'px';
+  ctx.scale(ratio,ratio);
+  return{W,H};
 }
 
-// ── STATE ──
-const selected={ore:null,binder:null,flux:null,fuel:null};
-let simRunning=false,simFrame=0,simStep=-1,animId=null;
+// ═══════ MAIN DRAW ═══════
+function draw(frame,activeStep){
+  const{W,H}=sizeCanvas();
+  ctx.clearRect(0,0,W,H);
+  ctx.fillStyle='#fff'; ctx.fillRect(0,0,W,H);
+  // grid
+  ctx.strokeStyle='rgba(200,145,42,0.035)'; ctx.lineWidth=1;
+  for(let x=0;x<W;x+=36){ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x,H);ctx.stroke();}
+  for(let y=0;y<H;y+=36){ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(W,y);ctx.stroke();}
 
-// ── CHIPS ──
-function addChip(type,sel){
-  const val=sel.value;if(!val)return;
-  selected[type]=val;
-  const wrap=document.getElementById('chips-'+type);
-  wrap.innerHTML=`<div class="chip">${val} <button onclick="removeChip('${type}')">✕</button></div>`;
-  updateParams();addLog('[ADD]','step',`${type.toUpperCase()} → ${val}`);
-  sel.value='';drawIdle();
-}
-function removeChip(type){
-  selected[type]=null;document.getElementById('chips-'+type).innerHTML='';
-  updateParams();drawIdle();
+  hitZones=[];
+  const n=STAGES.length;
+  const padX=W*0.022;
+  const slotW=(W-padX*2)/n;
+  const midY=H*0.43;
+  const mH=H*0.50;
+  const mW=slotW*0.68;
+  const labelY=midY+mH*0.55+18;
+
+  // Info box
+  if(activeStep>=0){
+    const info=[
+      {k:'Ore:',    v:stageParams.feed.ore?stageParams.feed.ore.substring(0,22):'—'},
+      {k:'Binder:', v:stageParams.mix.binder?stageParams.mix.binder.substring(0,22):'—'},
+      {k:'Moisture:',v:stageParams.filter.cakeMoisture+'%'},
+      {k:'Temp:',    v:stageParams.indu.temp+'°C'},
+      {k:'Blain:',   v:stageParams.grind.blain+' cm²/g'},
+    ];
+    const bw=210,bh=info.length*17+18;
+    ctx.fillStyle='rgba(253,248,240,0.95)'; ctx.strokeStyle='rgba(200,145,42,0.22)'; ctx.lineWidth=1;
+    ctx.beginPath(); ctx.roundRect(14,14,bw,bh,4); ctx.fill(); ctx.stroke();
+    info.forEach((item,i)=>{
+      ctx.fillStyle='#9a8a70'; ctx.font='400 9px JetBrains Mono'; ctx.textAlign='left'; ctx.fillText(item.k,24,28+i*17);
+      ctx.fillStyle='#1a3057'; ctx.font='500 9px JetBrains Mono'; ctx.fillText(item.v,78,28+i*17);
+    });
+  }
+
+  // Binder dosing annotation
+  if(activeStep>=4||activeStep<0){
+    const mcx=padX+4*slotW+slotW/2;
+    ctx.save(); ctx.globalAlpha=activeStep<0?0.3:0.88;
+    ctx.fillStyle='rgba(200,145,42,0.1)'; ctx.strokeStyle='rgba(200,145,42,0.45)'; ctx.lineWidth=1;
+    ctx.beginPath(); ctx.roundRect(mcx-40,midY-mH*0.52-46,80,26,3); ctx.fill(); ctx.stroke();
+    ctx.fillStyle='#c8912a'; ctx.font='600 8px JetBrains Mono'; ctx.textAlign='center';
+    ctx.fillText('OB-1205 DOSING',mcx,midY-mH*0.52-30);
+    if(activeStep>=4){
+      const dy=midY-mH*0.52-22+(frame%32)*0.72;
+      ctx.strokeStyle='rgba(200,145,42,0.3)'; ctx.lineWidth=0.8; ctx.setLineDash([2,3]);
+      ctx.beginPath(); ctx.moveTo(mcx,midY-mH*0.52-23); ctx.lineTo(mcx,midY-mH*0.52); ctx.stroke(); ctx.setLineDash([]);
+      ctx.beginPath(); ctx.arc(mcx,dy,2.5,0,Math.PI*2); ctx.fillStyle='rgba(200,145,42,0.75)'; ctx.fill();
+    }
+    ctx.restore();
+  }
+
+  // ── Connectors ──
+  for(let i=0;i<n-1;i++){
+    const s=STAGES[i];
+    const cx1=padX+i*slotW+slotW/2;
+    const cx2=padX+(i+1)*slotW+slotW/2;
+    const lit=s.step<activeStep||s.step===activeStep;
+    const x1=cx1+mW*0.46, x2=cx2-mW*0.46;
+
+    ctx.save();
+    ctx.strokeStyle=lit?s.color:'rgba(200,145,42,0.15)';
+    ctx.lineWidth=lit?2.5:1.5; ctx.globalAlpha=lit?0.8:0.38;
+    ctx.setLineDash(lit?[]:[5,5]);
+    ctx.beginPath(); ctx.moveTo(x1,midY); ctx.lineTo(x2,midY); ctx.stroke(); ctx.setLineDash([]);
+    // arrowhead
+    ctx.fillStyle=lit?s.color:'rgba(200,145,42,0.22)'; ctx.globalAlpha=lit?0.9:0.65;
+    ctx.beginPath(); ctx.moveTo(x2,midY-5); ctx.lineTo(x2+9,midY); ctx.lineTo(x2,midY+5); ctx.fill();
+    ctx.restore();
+    // particle
+    if(lit){
+      const t=(frame%60)/60;
+      const px=x1+(x2-x1)*t;
+      const rg=ctx.createRadialGradient(px,midY,0,px,midY,7);
+      rg.addColorStop(0,'rgba(232,184,75,0.95)'); rg.addColorStop(1,'rgba(200,145,42,0)');
+      ctx.beginPath(); ctx.arc(px,midY,7,0,Math.PI*2); ctx.fillStyle=rg; ctx.fill();
+    }
+  }
+
+  // ── Stage machines ──
+  STAGES.forEach((s,i)=>{
+    const cx=padX+i*slotW+slotW/2;
+    const isActive=s.step===activeStep;
+    const isDone=s.step<activeStep;
+    const isConfig=isStageConfigured(s.id);
+    const lit=isActive||isDone;
+    const alpha=activeStep>=0?(lit?1:0.33):1;
+
+    ctx.save(); ctx.globalAlpha=alpha;
+    if(isActive){ctx.shadowColor=s.color; ctx.shadowBlur=22;}
+
+    const col=lit?s.color:(isConfig?s.color:'#c0ae90');
+    const strokeCol=isActive?s.color:(isDone?s.color:(isConfig?'rgba(200,145,42,0.55)':'rgba(200,145,42,0.22)'));
+    const strokeW=isActive?2.5:(isConfig?1.8:1.2);
+
+    const bounds=drawMachineShape(s.shape,cx,midY,mW,mH,col,strokeCol,strokeW,isActive,isDone,frame,s);
+    ctx.shadowBlur=0;
+    hitZones.push({id:s.id,...bounds});
+
+    // label
+    const lines=s.label.split('\n');
+    const fs=slotW<100?7:8;
+    ctx.font=`600 ${fs}px JetBrains Mono`; ctx.textAlign='center';
+    ctx.fillStyle=lit?s.color:(isConfig?s.color:'#8a7a60');
+    lines.forEach((line,li)=>ctx.fillText(line,cx,labelY+li*(fs+3)));
+
+    if(s.id==='pellet'&&activeStep===9){
+      ctx.fillStyle='#2a7a4a'; ctx.font='700 8px JetBrains Mono';
+      ctx.fillText('✓ PELLETS READY',cx,labelY+lines.length*(fs+3)+12);
+    }
+
+    if(isConfig&&activeStep<0){
+      ctx.fillStyle='#3aaa6a'; ctx.beginPath(); ctx.arc(bounds.x+bounds.w-6,bounds.y+6,4.5,0,Math.PI*2); ctx.fill();
+    }
+    if(activeStep<0){
+      ctx.fillStyle=isConfig?'rgba(58,170,106,0.6)':'rgba(200,145,42,0.42)';
+      ctx.font='400 6.5px DM Sans'; ctx.textAlign='center';
+      ctx.fillText(isConfig?'✓ configured':'⊕ configure',cx,bounds.y+bounds.h+13);
+    }
+    ctx.restore();
+  });
+
+  // final pellet burst
+  if(activeStep===9){
+    const pi=STAGES.findIndex(s=>s.id==='pellet');
+    drawPelletBurst(padX+pi*slotW+slotW/2,midY,frame,mW*0.48);
+  }
 }
 
-// ── SLIDERS ──
-function updateSlider(input,valId,suffix,prefix,isDecimal){
-  const pct=((input.value-input.min)/(input.max-input.min))*100;
-  input.style.setProperty('--pct',pct+'%');
-  const v=isDecimal?parseFloat(input.value).toFixed(1):input.value;
-  document.getElementById(valId).textContent=prefix+v+suffix;
-  updateParams();
+// ═══════ MACHINE SHAPES ═══════
+function drawMachineShape(shape,cx,cy,mW,mH,col,strokeCol,strokeW,isActive,isDone,frame,stage){
+  const lit=isActive||isDone;
+  ctx.fillStyle=col; ctx.strokeStyle=strokeCol; ctx.lineWidth=strokeW;
+
+  switch(shape){
+
+    case 'hopper':{
+      // Wider-top ore feed hopper (trapezoid, wide at top)
+      const tw=mW*0.60,th=mH*0.58;
+      const top=cy-th/2,bot=cy+th/2;
+      ctx.beginPath();
+      ctx.moveTo(cx-tw/2,top); ctx.lineTo(cx+tw/2,top);
+      ctx.lineTo(cx+tw*0.22,bot); ctx.lineTo(cx-tw*0.22,bot);
+      ctx.closePath(); ctx.fill(); ctx.stroke();
+      if(isActive){
+        for(let p=0;p<4;p++){
+          const fy=top+6+(frame*2.2+p*18)%(th*0.8);
+          ctx.beginPath(); ctx.arc(cx+(p-1.5)*7,fy,2.5+p%2,0,Math.PI*2);
+          ctx.fillStyle=p%2?'#cd7f32':'rgba(255,255,255,0.4)'; ctx.fill();
+        }
+      }
+      return{x:cx-tw/2,y:top,w:tw,h:th};
+    }
+
+    case 'drum':{
+      // Horizontal ellipse drum (ball mill)
+      const rw=mW*0.46,rh=mH*0.34;
+      ctx.beginPath(); ctx.ellipse(cx,cy,rw,rh,0,0,Math.PI*2); ctx.fill(); ctx.stroke();
+      ctx.save(); ctx.translate(cx,cy); ctx.rotate(isActive?frame*0.07:0.4);
+      ctx.strokeStyle='rgba(255,255,255,0.42)'; ctx.lineWidth=1.5;
+      for(let k=0;k<6;k++){
+        const a=k*Math.PI/3;
+        ctx.beginPath(); ctx.moveTo(Math.cos(a)*rw*0.35,Math.sin(a)*rh*0.35);
+        ctx.lineTo(Math.cos(a)*rw*0.88,Math.sin(a)*rh*0.88); ctx.stroke();
+      }
+      for(let b=0;b<3;b++){
+        const ba=frame*0.055+b*Math.PI*2/3;
+        ctx.beginPath(); ctx.arc(Math.cos(ba)*rw*0.44,Math.sin(ba)*rh*0.44,3,0,Math.PI*2);
+        ctx.fillStyle='rgba(255,255,255,0.5)'; ctx.fill();
+      }
+      ctx.restore();
+      if(isActive){const dy=cy-rh-5+(frame%22)*1;ctx.beginPath();ctx.arc(cx+rw*0.55,dy,2.5,0,Math.PI*2);ctx.fillStyle='rgba(100,180,255,0.7)';ctx.fill();}
+      return{x:cx-rw,y:cy-rh,w:rw*2,h:rh*2};
+    }
+
+    case 'conetank':{
+      // Thickener: flat-topped cylinder narrowing to cone at bottom
+      const rr=mW*0.36,th=mH*0.62;
+      const top=cy-th/2,mid2=cy+th*0.18;
+      // cylinder walls + cone bottom
+      ctx.beginPath();
+      ctx.moveTo(cx-rr,top); ctx.lineTo(cx+rr,top);
+      ctx.lineTo(cx+rr,mid2); ctx.lineTo(cx,cy+th/2);
+      ctx.lineTo(cx-rr,mid2); ctx.closePath(); ctx.fill(); ctx.stroke();
+      // elliptical top
+      ctx.beginPath(); ctx.ellipse(cx,top,rr,rr*0.2,0,0,Math.PI*2); ctx.fill(); ctx.stroke();
+      // settling rings
+      ctx.strokeStyle='rgba(255,255,255,0.2)'; ctx.lineWidth=0.8;
+      for(let r=1;r<=2;r++){ctx.beginPath();ctx.ellipse(cx,top+r*(th*0.23),rr*0.68,rr*0.1,0,0,Math.PI*2);ctx.stroke();}
+      // rake
+      ctx.save(); ctx.translate(cx,top+th*0.26); ctx.rotate(isActive?-frame*0.022:-0.2);
+      ctx.strokeStyle='rgba(255,255,255,0.55)'; ctx.lineWidth=2;
+      ctx.beginPath(); ctx.moveTo(-rr*0.85,0); ctx.lineTo(rr*0.85,0); ctx.stroke();
+      ctx.restore();
+      return{x:cx-rr,y:top,w:rr*2,h:th};
+    }
+
+    case 'press':{
+      // Filter press — tall upright rectangle
+      const fw=mW*0.46,fh=mH*0.58;
+      const top=cy-fh/2;
+      ctx.beginPath(); ctx.roundRect(cx-fw/2,top,fw,fh,3); ctx.fill(); ctx.stroke();
+      for(let p=0;p<4;p++){
+        const py=top+5+p*(fh-10)/4;
+        ctx.fillStyle='rgba(255,255,255,0.14)'; ctx.fillRect(cx-fw/2+4,py,fw-8,fh/4-6);
+        ctx.strokeStyle='rgba(255,255,255,0.2)'; ctx.lineWidth=0.7; ctx.strokeRect(cx-fw/2+4,py,fw-8,fh/4-6);
+      }
+      if(isActive){
+        for(let d=0;d<3;d++){
+          const dy=cy+fh/2+2+(frame*1.8+d*14)%22;
+          ctx.beginPath(); ctx.arc(cx+(d-1)*10,dy,2,0,Math.PI*2);
+          ctx.fillStyle='rgba(100,160,255,0.65)'; ctx.fill();
+        }
+      }
+      return{x:cx-fw/2,y:top,w:fw,h:fh};
+    }
+
+    case 'ellipse':{
+      // Mixing vessel — wide horizontal ellipse (like reference)
+      const rw=mW*0.50,rh=mH*0.35;
+      ctx.beginPath(); ctx.ellipse(cx,cy,rw,rh,0,0,Math.PI*2); ctx.fill(); ctx.stroke();
+      ctx.save(); ctx.translate(cx,cy); ctx.rotate(isActive?frame*0.065:0.5);
+      ctx.strokeStyle='rgba(255,255,255,0.55)'; ctx.lineWidth=2;
+      for(let k=0;k<3;k++){
+        const a=k*Math.PI*2/3;
+        ctx.beginPath(); ctx.moveTo(0,0); ctx.lineTo(Math.cos(a)*rw*0.78,Math.sin(a)*rh*0.78); ctx.stroke();
+        ctx.beginPath(); ctx.arc(Math.cos(a)*rw*0.78,Math.sin(a)*rh*0.78,4,0,Math.PI*2);
+        ctx.fillStyle='rgba(255,255,255,0.35)'; ctx.fill();
+      }
+      ctx.restore();
+      if(isActive){ctx.shadowColor=col;ctx.shadowBlur=14;ctx.strokeStyle='rgba(255,255,255,0.2)';ctx.lineWidth=1.5;ctx.beginPath();ctx.ellipse(cx,cy,rw,rh,0,0,Math.PI*2);ctx.stroke();ctx.shadowBlur=0;}
+      return{x:cx-rw,y:cy-rh,w:rw*2,h:rh*2};
+    }
+
+    case 'circle':{
+      // Balling disc — perfect circle
+      const r=mW*0.40;
+      ctx.beginPath(); ctx.arc(cx,cy,r,0,Math.PI*2); ctx.fill(); ctx.stroke();
+      ctx.save(); ctx.translate(cx,cy); ctx.rotate(isActive?-frame*0.045:-0.3);
+      ctx.strokeStyle='rgba(255,255,255,0.35)'; ctx.lineWidth=1.5;
+      ctx.beginPath(); ctx.arc(0,0,r*0.92,0,Math.PI*2); ctx.stroke();
+      for(let k=0;k<5;k++){
+        const a=k*Math.PI*2/5;
+        ctx.beginPath(); ctx.moveTo(0,0); ctx.lineTo(Math.cos(a)*r*0.86,Math.sin(a)*r*0.86); ctx.stroke();
+      }
+      ctx.restore();
+      for(let p=0;p<5;p++){
+        const ang=(isActive?frame*0.05:0)+p*Math.PI*2/5;
+        const pr=r*0.64,pelR=3.5+p%2;
+        const px=cx+Math.cos(ang)*pr,py=cy+Math.sin(ang)*pr*0.6;
+        const pg=ctx.createRadialGradient(px-pelR*0.4,py-pelR*0.4,0,px,py,pelR);
+        pg.addColorStop(0,'#8ba3b5'); pg.addColorStop(1,'#2a4a5a');
+        ctx.beginPath(); ctx.arc(px,py,pelR,0,Math.PI*2); ctx.fillStyle=pg; ctx.fill();
+      }
+      return{x:cx-r,y:cy-r,w:r*2,h:r*2};
+    }
+
+    case 'screen':{
+      // Vibrating screen deck — slightly wider rectangle
+      const sw=mW*0.58,sh=mH*0.46;
+      const top=cy-sh/2;
+      const vib=isActive?Math.sin(frame*0.5)*2:0;
+      ctx.save(); ctx.translate(0,vib);
+      ctx.beginPath(); ctx.roundRect(cx-sw/2,top,sw,sh,3); ctx.fill(); ctx.stroke();
+      ctx.strokeStyle='rgba(255,255,255,0.22)'; ctx.lineWidth=0.8;
+      for(let g=1;g<5;g++){ctx.beginPath();ctx.moveTo(cx-sw/2,top+g*sh/5);ctx.lineTo(cx+sw/2,top+g*sh/5);ctx.stroke();}
+      for(let g=1;g<7;g++){ctx.beginPath();ctx.moveTo(cx-sw/2+g*sw/7,top);ctx.lineTo(cx-sw/2+g*sw/7,top+sh);ctx.stroke();}
+      ctx.restore();
+      if(isActive){
+        for(let p=0;p<3;p++){
+          const py2=cy+sh/2+1+(frame*2+p*18)%(sh*0.5);
+          const pg=ctx.createRadialGradient(cx+(p-1)*12,py2,0,cx+(p-1)*12,py2,3.5);
+          pg.addColorStop(0,'#8ba3b5'); pg.addColorStop(1,'#2a4a5a');
+          ctx.beginPath(); ctx.arc(cx+(p-1)*12,py2,3.5,0,Math.PI*2); ctx.fillStyle=pg; ctx.fill();
+        }
+      }
+      return{x:cx-sw/2,y:top,w:sw,h:sh};
+    }
+
+    case 'furnace':{
+      // Induration furnace — tall upright rectangle (like the orange block in reference)
+      const fw=mW*0.50,fh=mH*0.72;
+      const top=cy-fh/2;
+      ctx.beginPath(); ctx.roundRect(cx-fw/2,top,fw,fh,3); ctx.fill(); ctx.stroke();
+      const fg=ctx.createRadialGradient(cx,cy,0,cx,cy,fw*0.65);
+      fg.addColorStop(0,'rgba(255,150,30,0.5)'); fg.addColorStop(1,'rgba(200,60,0,0)');
+      ctx.fillStyle=fg; ctx.beginPath(); ctx.ellipse(cx,cy,fw*0.52,fh*0.32,0,0,Math.PI*2); ctx.fill();
+      if(isActive){
+        for(let f=0;f<3;f++){
+          const fx=cx+(f-1)*12,fh2=12+Math.sin(frame*0.18+f*1.2)*7;
+          ctx.fillStyle=`rgba(255,${120+f*40},0,0.8)`;
+          ctx.beginPath(); ctx.moveTo(fx-6,cy); ctx.quadraticCurveTo(fx,cy-fh2-6,fx+6,cy); ctx.closePath(); ctx.fill();
+        }
+        ctx.shadowColor='#ff6b1a'; ctx.shadowBlur=18;
+        ctx.strokeStyle='rgba(255,140,0,0.35)'; ctx.lineWidth=1.5;
+        ctx.beginPath(); ctx.roundRect(cx-fw/2,top,fw,fh,3); ctx.stroke();
+        ctx.shadowBlur=0;
+      }
+      return{x:cx-fw/2,y:top,w:fw,h:fh};
+    }
+
+    case 'trapezoid':{
+      // Cooling tower — wider at top, narrower at bottom (like reference "COOLING" shape)
+      const tw=mW*0.60,th=mH*0.62;
+      const top=cy-th/2,bot=cy+th/2;
+      ctx.beginPath();
+      ctx.moveTo(cx-tw/2,top); ctx.lineTo(cx+tw/2,top);
+      ctx.lineTo(cx+tw*0.28,bot); ctx.lineTo(cx-tw*0.28,bot);
+      ctx.closePath(); ctx.fill(); ctx.stroke();
+      if(isActive){
+        for(let w=0;w<3;w++){
+          const wy=bot-6-((frame*1.6+w*18)%(th*0.78));
+          ctx.strokeStyle=`rgba(150,220,255,${0.5-w*0.12})`; ctx.lineWidth=1.5;
+          ctx.beginPath(); ctx.moveTo(cx-tw*0.28,wy); ctx.quadraticCurveTo(cx,wy-5,cx+tw*0.28,wy); ctx.stroke();
+        }
+      }
+      for(let p=0;p<4;p++){
+        const px2=cx-tw*0.2+p*(tw*0.14),py2=bot-15;
+        const pg=ctx.createRadialGradient(px2-2,py2-2,0,px2,py2,4.5);
+        pg.addColorStop(0,'#8ba3b5'); pg.addColorStop(1,'#2a4a5a');
+        ctx.beginPath(); ctx.arc(px2,py2,4.5,0,Math.PI*2); ctx.fillStyle=pg; ctx.fill();
+      }
+      return{x:cx-tw/2,y:top,w:tw,h:th};
+    }
+
+    case 'pellets':{
+      // Pellet cluster — no background shape, just spheres
+      const r=mW*0.42;
+      const pelletDefs=[
+        {ox:0,  oy:0,  rr:11},{ox:-14,oy:-7,rr:8.5},{ox:14,oy:-5,rr:8.5},
+        {ox:-9, oy:12, rr:7.5},{ox:11, oy:12,rr:7.5},{ox:-19,oy:5,rr:6.5},
+        {ox:19, oy:4,  rr:6.5},{ox:0,  oy:-17,rr:6},{ox:-4, oy:21,rr:5.5},
+      ];
+      const ang=isActive?frame*0.022:0;
+      pelletDefs.forEach(pd=>{
+        const px=cx+pd.ox*Math.cos(ang)-pd.oy*Math.sin(ang)*0.3;
+        const py=cy+pd.ox*Math.sin(ang)*0.3+pd.oy*Math.cos(ang);
+        const pg=ctx.createRadialGradient(px-pd.rr*0.35,py-pd.rr*0.35,0,px,py,pd.rr);
+        pg.addColorStop(0,'#9ab8cc'); pg.addColorStop(0.6,'#4a7a9a'); pg.addColorStop(1,'#1a3a5a');
+        ctx.beginPath(); ctx.arc(px,py,pd.rr,0,Math.PI*2); ctx.fillStyle=pg; ctx.fill();
+        ctx.strokeStyle='rgba(140,175,200,0.35)'; ctx.lineWidth=0.7; ctx.stroke();
+      });
+      return{x:cx-r,y:cy-r,w:r*2,h:r*2};
+    }
+  }
+  return{x:cx-mW/2,y:cy-mH/2,w:mW,h:mH};
 }
-['sl-moisture','sl-blain','sl-temp'].forEach(id=>{
-  const el=document.getElementById(id);
-  const pct=((el.value-el.min)/(el.max-el.min))*100;
-  el.style.setProperty('--pct',pct+'%');
+
+function drawPelletBurst(cx,cy,frame,r){
+  const count=12;
+  for(let p=0;p<count;p++){
+    const ang=(frame*0.03)+p*Math.PI*2/count;
+    const dist=r+16+Math.sin(frame*0.08+p)*7;
+    const pr=5+p%3;
+    const px=cx+Math.cos(ang)*dist,py=cy+Math.sin(ang)*dist*0.5;
+    const pg=ctx.createRadialGradient(px-pr*0.4,py-pr*0.4,0,px,py,pr);
+    pg.addColorStop(0,'#9ab8cc'); pg.addColorStop(1,'#1a3a5a');
+    ctx.beginPath(); ctx.arc(px,py,pr,0,Math.PI*2); ctx.fillStyle=pg; ctx.fill();
+    ctx.strokeStyle='rgba(140,175,200,0.4)'; ctx.lineWidth=0.6; ctx.stroke();
+  }
+}
+
+// ═══════ HIT TEST ═══════
+canvas.addEventListener('click',function(e){
+  if(simRunning)return;
+  const rect=canvas.getBoundingClientRect();
+  const mx=e.clientX-rect.left,my=e.clientY-rect.top;
+  for(const z of hitZones){if(mx>=z.x&&mx<=z.x+z.w&&my>=z.y&&my<=z.y+z.h){openModal(z.id);return;}}
+});
+canvas.addEventListener('mousemove',function(e){
+  if(simRunning){canvas.style.cursor='default';return;}
+  const rect=canvas.getBoundingClientRect();
+  const mx=e.clientX-rect.left,my=e.clientY-rect.top;
+  canvas.style.cursor=hitZones.some(z=>mx>=z.x&&mx<=z.x+z.w&&my>=z.y&&my<=z.y+z.h)?'pointer':'default';
 });
 
-// ── PARAMS ──
-function updateParams(){
-  const hasOb=selected.binder&&selected.binder.includes('OB');
-  const hasFlux=!!selected.flux&&selected.flux!=='No Flux';
-  const moisture=parseFloat(document.getElementById('sl-moisture').value);
-  const sizeLow=moisture>10.5?14:10;const sizeHigh=moisture>10.5?18:16;
-  document.getElementById('p-size').textContent=`${sizeLow}–${sizeHigh}mm`;
-  if(hasOb){const ob=selected.binder.includes('0.5')?'0.5':'1.0';document.getElementById('p-ob').textContent=`${ob} GPT`;document.getElementById('p-ob').className='param-box-val good';}
-  else{document.getElementById('p-ob').textContent=selected.binder?'—':'None';document.getElementById('p-ob').className='param-box-val warn';}
-  const yieldPct=selected.ore?(hasOb?(82+Math.floor(Math.random()*8)):(70+Math.floor(Math.random()*8))):'—';
-  document.getElementById('p-yield').textContent=selected.ore?yieldPct+'%':'—';
-  const basicity=hasFlux?(0.9+Math.random()*0.5).toFixed(2):'0.35';
-  document.getElementById('p-basicity').textContent=basicity;
+// ═══════ MODALS ═══════
+const MODAL_CONFIGS={
+  feed:{
+    title:'Iron Ore Feed',desc:'Configure raw material grades and additives loaded into the process',
+    fields:()=>`
+      <div class="field-group"><div class="field-label">Iron Ore Grade</div>
+        <select class="fsel" id="m-ore">
+          <option value="">— Select Grade —</option>
+          ${['Hematite (65–68% Fe)','Magnetite (68–72% Fe)','Goethite (55–60% Fe)','Limonite (50–55% Fe)','Blend 70:30 HG:LG','Blend 50:50 HG:LG','Blend 30:70 HG:LG'].map(v=>`<option value="${v}"${stageParams.feed.ore===v?' selected':''}>${v}</option>`).join('')}
+        </select></div>
+      <div class="field-group"><div class="field-label">Limestone / Flux</div>
+        <select class="fsel" id="m-limestone">
+          <option value="">— Select —</option>
+          ${['Limestone (CaCO₃)','Dolomite','Olivine','No Flux'].map(v=>`<option value="${v}"${stageParams.feed.limestone===v?' selected':''}>${v}</option>`).join('')}
+        </select></div>
+      <div class="field-group"><div class="field-label">Fuel / Reductant</div>
+        <select class="fsel" id="m-coal">
+          <option value="">— Select —</option>
+          ${['Anthracite Coal','Pet Coke','Low-S Charcoal'].map(v=>`<option value="${v}"${stageParams.feed.coal===v?' selected':''}>${v}</option>`).join('')}
+        </select></div>`,
+    save:()=>{stageParams.feed.ore=document.getElementById('m-ore').value;stageParams.feed.limestone=document.getElementById('m-limestone').value;stageParams.feed.coal=document.getElementById('m-coal').value;}
+  },
+  grind:{
+    title:'Wet Grinding',desc:'Set grinding fineness (Blain) and feed moisture for the wet grinding circuit',
+    fields:()=>`
+      <div class="field-group"><div class="field-label">Target Blain Number</div>
+        <div class="slider-wrap"><div class="slider-top"><span>cm²/g</span><span class="sv" id="sv-blain">${stageParams.grind.blain} cm²/g</span></div>
+        <input type="range" class="rng" id="m-blain" min="1200" max="3200" step="100" value="${stageParams.grind.blain}" oninput="setSV('sv-blain',this,' cm²/g');setPct(this)"></div></div>
+      <div class="field-group"><div class="field-label">Feed Moisture %</div>
+        <div class="slider-wrap"><div class="slider-top"><span>%</span><span class="sv" id="sv-gmoist">${stageParams.grind.moisture}%</span></div>
+        <input type="range" class="rng" id="m-gmoist" min="20" max="45" step="1" value="${stageParams.grind.moisture}" oninput="setSV('sv-gmoist',this,'%');setPct(this)"></div></div>`,
+    save:()=>{stageParams.grind.blain=+document.getElementById('m-blain').value;stageParams.grind.moisture=+document.getElementById('m-gmoist').value;}
+  },
+  thickner:{
+    title:'Thickener',desc:'Configure thickener underflow density for the slurry circuit',
+    fields:()=>`
+      <div class="field-group"><div class="field-label">Underflow Density (% Solids)</div>
+        <div class="slider-wrap"><div class="slider-top"><span>% Solids</span><span class="sv" id="sv-uf">${stageParams.thickner.underflow}%</span></div>
+        <input type="range" class="rng" id="m-uf" min="55" max="80" step="1" value="${stageParams.thickner.underflow}" oninput="setSV('sv-uf',this,'%');setPct(this)"></div></div>`,
+    save:()=>{stageParams.thickner.underflow=+document.getElementById('m-uf').value;}
+  },
+  filter:{
+    title:'Filter Cake',desc:'Set the moisture content of the filter cake going into the mixing stage',
+    fields:()=>`
+      <div class="field-group"><div class="field-label">Filter Cake Moisture (%)</div>
+        <div class="slider-wrap"><div class="slider-top"><span>%</span><span class="sv" id="sv-fcm">${stageParams.filter.cakeMoisture}%</span></div>
+        <input type="range" class="rng" id="m-fcm" min="7" max="14" step="0.25" value="${stageParams.filter.cakeMoisture}" oninput="setSVDec('sv-fcm',this,'%');setPct(this)"></div></div>`,
+    save:()=>{stageParams.filter.cakeMoisture=+document.getElementById('m-fcm').value;}
+  },
+  mix:{
+    title:'Mixing + Binder',desc:'Select binder type, dosage and flux for the mixing circuit',
+    fields:()=>`
+      <div class="field-group"><div class="field-label">Binder Type</div>
+        <select class="fsel" id="m-binder">
+          <option value="">— Select Binder —</option>
+          ${['OB-1205 Organic','Bentonite (6 kg/t)','OB-1205 + Bentonite'].map(v=>`<option value="${v}"${stageParams.mix.binder===v?' selected':''}>${v}</option>`).join('')}
+        </select></div>
+      <div class="field-group"><div class="field-label">Binder Dosage (GPT)</div>
+        <div class="slider-wrap"><div class="slider-top"><span>g/t</span><span class="sv" id="sv-dose">${stageParams.mix.bindDosage.toFixed(2)} GPT</span></div>
+        <input type="range" class="rng" id="m-dose" min="0.25" max="2.0" step="0.25" value="${stageParams.mix.bindDosage}" oninput="setSVDec('sv-dose',this,' GPT');setPct(this)"></div></div>
+      <div class="field-group"><div class="field-label">Flux / Additive</div>
+        <select class="fsel" id="m-flux">
+          <option value="">— Select Flux —</option>
+          ${['Limestone (CaCO₃)','Dolomite','Olivine','No Flux'].map(v=>`<option value="${v}"${stageParams.mix.flux===v?' selected':''}>${v}</option>`).join('')}
+        </select></div>`,
+    save:()=>{stageParams.mix.binder=document.getElementById('m-binder').value;stageParams.mix.bindDosage=+document.getElementById('m-dose').value;stageParams.mix.flux=document.getElementById('m-flux').value;}
+  },
+  ball:{
+    title:'Balling Disc',desc:'Configure disc inclination and rotation speed for green pellet formation',
+    fields:()=>`
+      <div class="field-group"><div class="field-label">Disc Inclination Angle (°)</div>
+        <div class="slider-wrap"><div class="slider-top"><span>degrees</span><span class="sv" id="sv-angle">${stageParams.ball.discAngle}°</span></div>
+        <input type="range" class="rng" id="m-angle" min="40" max="55" step="1" value="${stageParams.ball.discAngle}" oninput="setSV('sv-angle',this,'°');setPct(this)"></div></div>
+      <div class="field-group"><div class="field-label">Disc Rotation Speed (RPM)</div>
+        <div class="slider-wrap"><div class="slider-top"><span>RPM</span><span class="sv" id="sv-rpm">${stageParams.ball.rpm} RPM</span></div>
+        <input type="range" class="rng" id="m-rpm" min="8" max="22" step="1" value="${stageParams.ball.rpm}" oninput="setSV('sv-rpm',this,' RPM');setPct(this)"></div></div>`,
+    save:()=>{stageParams.ball.discAngle=+document.getElementById('m-angle').value;stageParams.ball.rpm=+document.getElementById('m-rpm').value;}
+  },
+  screen:{
+    title:'Screening',desc:'Set upper and lower screen mesh sizes for size classification',
+    fields:()=>`
+      <div class="field-group"><div class="field-label">Upper Screen Mesh (mm)</div>
+        <div class="slider-wrap"><div class="slider-top"><span>mm</span><span class="sv" id="sv-upper">${stageParams.screen.upperMesh} mm</span></div>
+        <input type="range" class="rng" id="m-upper" min="16" max="22" step="1" value="${stageParams.screen.upperMesh}" oninput="setSV('sv-upper',this,' mm');setPct(this)"></div></div>
+      <div class="field-group"><div class="field-label">Lower Screen Mesh (mm)</div>
+        <div class="slider-wrap"><div class="slider-top"><span>mm</span><span class="sv" id="sv-lower">${stageParams.screen.lowerMesh} mm</span></div>
+        <input type="range" class="rng" id="m-lower" min="3" max="7" step="1" value="${stageParams.screen.lowerMesh}" oninput="setSV('sv-lower',this,' mm');setPct(this)"></div></div>
+      <div style="padding:10px 12px;background:rgba(200,145,42,0.07);border:1px solid var(--border);border-radius:4px;font-size:.74rem;color:var(--text-dim);margin-top:.5rem;">
+        Oversize (+${stageParams.screen.upperMesh}mm) → recirculates to Balling Disc.<br>Undersize (-${stageParams.screen.lowerMesh}mm) = return fines.
+      </div>`,
+    save:()=>{stageParams.screen.upperMesh=+document.getElementById('m-upper').value;stageParams.screen.lowerMesh=+document.getElementById('m-lower').value;}
+  },
+  indu:{
+    title:'Induration Furnace',desc:'Set firing temperature and air flow mode for the induration furnace',
+    fields:()=>`
+      <div class="field-group"><div class="field-label">Induration Temperature (°C)</div>
+        <div class="slider-wrap"><div class="slider-top"><span>°C</span><span class="sv" id="sv-temp">${stageParams.indu.temp}°C</span></div>
+        <input type="range" class="rng" id="m-temp" min="1100" max="1400" step="10" value="${stageParams.indu.temp}" oninput="setSV('sv-temp',this,'°C');setPct(this)"></div></div>
+      <div class="field-group"><div class="field-label">Air Flow Mode</div>
+        <select class="fsel" id="m-airflow">
+          ${['Forced Draft','Induced Draft','Balanced Draft'].map(v=>`<option value="${v}"${stageParams.indu.airFlow===v?' selected':''}>${v}</option>`).join('')}
+        </select></div>
+      <div style="padding:10px 12px;background:rgba(192,64,16,0.06);border:1px solid rgba(192,64,16,0.2);border-radius:4px;font-size:.74rem;color:var(--text-dim);margin-top:.5rem;">
+        Zones: Drying → Preheating → Firing → After-Firing. ESP captures exhaust dust before stack.
+      </div>`,
+    save:()=>{stageParams.indu.temp=+document.getElementById('m-temp').value;stageParams.indu.airFlow=document.getElementById('m-airflow').value;}
+  },
+  cool:{
+    title:'Cooling',desc:'Configure forced air cooling duration and target exit temperature',
+    fields:()=>`
+      <div class="field-group"><div class="field-label">Cooling Duration (min)</div>
+        <div class="slider-wrap"><div class="slider-top"><span>min</span><span class="sv" id="sv-cdur">${stageParams.cool.duration} min</span></div>
+        <input type="range" class="rng" id="m-cdur" min="20" max="60" step="5" value="${stageParams.cool.duration}" oninput="setSV('sv-cdur',this,' min');setPct(this)"></div></div>
+      <div class="field-group"><div class="field-label">Target Exit Temperature (°C)</div>
+        <div class="slider-wrap"><div class="slider-top"><span>°C</span><span class="sv" id="sv-texit">${stageParams.cool.targetTemp}°C</span></div>
+        <input type="range" class="rng" id="m-texit" min="60" max="150" step="5" value="${stageParams.cool.targetTemp}" oninput="setSV('sv-texit',this,'°C');setPct(this)"></div></div>`,
+    save:()=>{stageParams.cool.duration=+document.getElementById('m-cdur').value;stageParams.cool.targetTemp=+document.getElementById('m-texit').value;}
+  },
+  pellet:{
+    title:'Finished Pellets',desc:'Quality targets for the final pellet product',
+    fields:()=>`
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:1rem;">
+        ${[['Target Size','10–16 mm'],['Min. CCS','>200 kg/p'],['Tumble Index','>92%'],['Abrasion Index','<5%'],['Fe Content','>62%'],['Porosity','~25%']].map(([l,v])=>`
+          <div style="background:var(--cream);border:1px solid var(--border);border-radius:4px;padding:10px 12px;text-align:center;">
+            <div style="font-family:'JetBrains Mono';font-size:.52rem;letter-spacing:1px;color:var(--text-dim);text-transform:uppercase;margin-bottom:4px;">${l}</div>
+            <div style="font-family:'Cormorant Garamond',serif;font-size:1.2rem;font-weight:700;color:var(--navy);">${v}</div>
+          </div>`).join('')}
+      </div>
+      <div style="padding:10px 12px;background:rgba(42,122,74,0.07);border:1px solid rgba(58,170,106,0.25);border-radius:4px;font-size:.74rem;color:var(--text-dim);">
+        Quality targets per IS 11283 / ASTM E877. Configure upstream stages to optimise pellet properties.
+      </div>`,
+    save:()=>{}
+  }
+};
+
+function isStageConfigured(id){
+  if(id==='feed')   return!!stageParams.feed.ore;
+  if(id==='grind')  return true;
+  if(id==='filter') return true;
+  if(id==='mix')    return!!stageParams.mix.binder;
+  if(id==='pellet') return false;
+  return false;
+}
+function openModal(stageId){
+  currentModalStage=stageId;
+  const s=STAGES.find(st=>st.id===stageId);
+  const cfg=MODAL_CONFIGS[stageId];
+  if(!cfg)return;
+  document.getElementById('modalTag').textContent=s.tag;
+  document.getElementById('modalTitle').textContent=cfg.title;
+  document.getElementById('modalDesc').textContent=cfg.desc;
+  document.getElementById('modalBody').innerHTML=cfg.fields();
+  document.querySelectorAll('#modalBody input[type=range]').forEach(setPct);
+  document.getElementById('modalOverlay').classList.add('open');
+  addLog('[CONFIG]','step',`Opened: ${cfg.title}`);
+}
+function closeModal(){document.getElementById('modalOverlay').classList.remove('open');currentModalStage=null;}
+function saveModal(){
+  if(!currentModalStage)return;
+  const cfg=MODAL_CONFIGS[currentModalStage]; cfg.save(); closeModal(); updateSummaryParams();
+  addLog('[SAVE]','ok',`Saved: ${cfg.title}`);
+}
+document.getElementById('modalOverlay').addEventListener('click',function(e){if(e.target===this)closeModal();});
+function setSV(id,el,suffix){document.getElementById(id).textContent=el.value+suffix;}
+function setSVDec(id,el,suffix){document.getElementById(id).textContent=parseFloat(el.value).toFixed(2)+suffix;}
+function setPct(el){el.style.setProperty('--pct',((el.value-el.min)/(el.max-el.min)*100)+'%');}
+
+function updateSummaryParams(){
+  const hasOb=stageParams.mix.binder&&stageParams.mix.binder.includes('OB');
+  const hasFlux=stageParams.mix.flux&&stageParams.mix.flux!=='No Flux';
+  const moist=stageParams.filter.cakeMoisture;
+  document.getElementById('p-size').textContent=moist>10.5?'14–18mm':'10–16mm';
+  document.getElementById('p-ob').textContent=hasOb?stageParams.mix.bindDosage.toFixed(2)+' GPT':(stageParams.mix.binder||'—');
+  document.getElementById('p-ob').className='param-box-val '+(hasOb?'good':'warn');
+  const yieldV=stageParams.feed.ore?(hasOb?82+Math.floor(Math.random()*8):70+Math.floor(Math.random()*8)):null;
+  document.getElementById('p-yield').textContent=yieldV?yieldV+'%':'—';
+  document.getElementById('p-basicity').textContent=hasFlux?(0.9+Math.random()*0.5).toFixed(2):'0.35';
+  document.getElementById('p-temp').textContent=stageParams.indu.temp+'°C';
+  document.getElementById('p-moist').textContent=stageParams.filter.cakeMoisture+'%';
 }
 
-// ── LOG ──
 function addLog(tag,type,msg){
   const body=document.getElementById('logBody');
-  const el=document.createElement('div');el.className='log-entry';
+  const el=document.createElement('div'); el.className='log-entry';
   el.innerHTML=`<span class="tag tag-${type}">${tag}</span> ${msg}`;
-  body.appendChild(el);body.scrollTop=body.scrollHeight;
+  body.appendChild(el); body.scrollTop=body.scrollHeight;
 }
 function clearLog(){document.getElementById('logBody').innerHTML='<div class="log-entry"><span class="tag tag-init">[INIT]</span> Log cleared.</div>';}
 
-// ── STEP PILLS ──
 function setStep(idx){
   simStep=idx;
   document.querySelectorAll('.step-pill').forEach((p,i)=>{p.className='step-pill'+(i<idx?' done':i===idx?' active':'');});
 }
 
-// ── RESET ──
-function resetAll(){
-  ['ore','binder','flux','fuel'].forEach(t=>{selected[t]=null;document.getElementById('chips-'+t).innerHTML='';});
-  simRunning=false;simStep=-1;simFrame=0;cancelAnimationFrame(animId);
-  document.querySelectorAll('.step-pill').forEach(p=>p.className='step-pill');
-  document.getElementById('idleOverlay').classList.remove('hidden');
-  document.getElementById('runBtn').disabled=false;
-  ['p-size','p-ob','p-yield','p-basicity'].forEach(id=>document.getElementById(id).textContent='—');
-  drawIdle();addLog('[RESET]','init','All parameters cleared. Ready for new simulation.');
-}
-
-// ── CANVAS ──
-const canvas=document.getElementById('machineCanvas');
-const ctx=canvas.getContext('2d');
-function sizeCanvas(){
-  const area=canvas.parentElement;
-  const w=area.clientWidth-40;const h=area.clientHeight-30;
-  canvas.width=Math.min(w,900);canvas.height=Math.min(h,500);
-}
-sizeCanvas();
-window.addEventListener('resize',()=>{sizeCanvas();if(!simRunning)drawIdle();});
-
-// ── IDLE DRAW ──
-function drawIdle(){
-  sizeCanvas();ctx.clearRect(0,0,canvas.width,canvas.height);
-  const W=canvas.width,H=canvas.height;
-  ctx.fillStyle='#fff';ctx.fillRect(0,0,W,H);
-  ctx.strokeStyle='rgba(200,145,42,0.06)';ctx.lineWidth=1;
-  for(let x=0;x<W;x+=40){ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x,H);ctx.stroke();}
-  for(let y=0;y<H;y+=40){ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(W,y);ctx.stroke();}
-  const steps=[
-    {x:W*0.12,label:'Iron Ore Fines',color:'rgba(139,69,19,0.15)'},
-    {x:W*0.26,label:'Crushing',color:'rgba(200,145,42,0.15)'},
-    {x:W*0.40,label:'Mixing+OB',color:'rgba(200,145,42,0.15)'},
-    {x:W*0.54,label:'Balling',color:'rgba(45,95,166,0.15)'},
-    {x:W*0.68,label:'Induration',color:'rgba(192,64,16,0.15)'},
-    {x:W*0.82,label:'Cooling',color:'rgba(42,122,74,0.15)'},
-  ];
-  const cy=H*0.5;
-  ctx.strokeStyle='rgba(200,145,42,0.08)';ctx.lineWidth=2;ctx.setLineDash([8,8]);
-  ctx.beginPath();ctx.moveTo(steps[0].x,cy);ctx.lineTo(steps[steps.length-1].x+60,cy);ctx.stroke();ctx.setLineDash([]);
-  steps.forEach(s=>{
-    ctx.fillStyle=s.color;ctx.beginPath();ctx.roundRect(s.x-44,cy-22,88,44,4);ctx.fill();
-    ctx.strokeStyle='rgba(200,145,42,0.12)';ctx.lineWidth=1;ctx.stroke();
-    ctx.fillStyle='rgba(90,74,48,0.35)';ctx.font='500 10px DM Sans';ctx.textAlign='center';ctx.fillText(s.label,s.x,cy+4);
-  });
-  Object.entries(selected).forEach(([k,v],i)=>{
-    if(!v)return;
-    ctx.fillStyle='rgba(200,145,42,0.08)';ctx.fillRect(20,20+i*22,160,18);
-    ctx.fillStyle='rgba(200,145,42,0.6)';ctx.font='500 9px JetBrains Mono';ctx.textAlign='left';
-    ctx.fillText(`◈ ${k.toUpperCase()}: ${v.substring(0,22)}`,28,32+i*22);
-  });
-}
-drawIdle();
-
-// ── SIMULATION ──
 function runSimulation(){
-  if(!selected.ore){addLog('[ERROR]','err','Iron ore grade is required. Please select an ore type.');return;}
-  simRunning=true;simFrame=0;simStep=0;
-  document.getElementById('idleOverlay').classList.add('hidden');
+  if(!stageParams.feed.ore){addLog('[ERROR]','err','Iron ore grade required — click the Feed node to configure.');return;}
+  simRunning=true; simFrame=0; simStep=0;
   document.getElementById('runBtn').disabled=true;
-  closeSidebar();
-  const logSteps=[
-    {delay:0,step:0,tag:'[FEED]',type:'step',msg:`Iron ore feed configured: ${selected.ore}`},
-    {delay:600,step:1,tag:'[CRUSH]',type:'step',msg:`Crushing & grinding — target Blain ${document.getElementById('sl-blain').value} cm²/g`},
-    {delay:1300,step:2,tag:'[MIX]',type:'step',msg:`Mixing with ${selected.binder||'binder'}${selected.flux?' + '+selected.flux:''} — moisture ${document.getElementById('sl-moisture').value}%`},
-    {delay:2100,step:3,tag:'[BALL]',type:'step',msg:'Balling disc rotating — green pellet formation in progress'},
-    {delay:3000,step:4,tag:'[INDU]',type:'step',msg:`Induration furnace at ${document.getElementById('sl-temp').value}°C — drying → preheating → firing → after-firing`},
-    {delay:4000,step:5,tag:'[COOL]',type:'step',msg:'Forced air cooling — pellet temperature reducing to <100°C'},
-    {delay:4800,step:6,tag:'[DONE]',type:'ok',msg:`Simulation complete — Yield: ${document.getElementById('p-yield').textContent} | Pellets: ${document.getElementById('p-size').textContent} | OB: ${document.getElementById('p-ob').textContent}`},
-    {delay:5000,step:6,tag:'[QC]',type:'ok',msg:'Quality check — CCS >200 kg/pellet | Tumble Index >92% | BI <5%'},
+  const ls=[
+    {delay:0,   step:0,tag:'[FEED]',  type:'step',msg:`Ore: ${stageParams.feed.ore}`},
+    {delay:650, step:1,tag:'[GRIND]', type:'step',msg:`Wet grinding → Blain ${stageParams.grind.blain} cm²/g`},
+    {delay:1300,step:2,tag:'[THICK]', type:'step',msg:`Thickening — underflow ${stageParams.thickner.underflow}% solids`},
+    {delay:1950,step:3,tag:'[FILTER]',type:'step',msg:`Filter cake moisture ${stageParams.filter.cakeMoisture}%`},
+    {delay:2600,step:4,tag:'[MIX]',   type:'step',msg:`Mixing — ${stageParams.mix.binder||'binder'} @ ${stageParams.mix.bindDosage} GPT`},
+    {delay:3350,step:5,tag:'[BALL]',  type:'step',msg:`Balling disc — ${stageParams.ball.rpm} RPM, ${stageParams.ball.discAngle}°`},
+    {delay:4100,step:6,tag:'[SCREEN]',type:'step',msg:`Screening ${stageParams.screen.lowerMesh}–${stageParams.screen.upperMesh}mm fraction`},
+    {delay:4900,step:7,tag:'[INDU]',  type:'step',msg:`Induration ${stageParams.indu.temp}°C — Dry→Preheat→Fire→After-Fire`},
+    {delay:5800,step:8,tag:'[COOL]',  type:'step',msg:`Cooling to <${stageParams.cool.targetTemp}°C (${stageParams.cool.duration} min)`},
+    {delay:6600,step:9,tag:'[DONE]',  type:'ok',  msg:`Complete — Yield: ${document.getElementById('p-yield').textContent} | ${document.getElementById('p-size').textContent}`},
+    {delay:6800,step:9,tag:'[QC]',    type:'ok',  msg:'Quality — CCS >200 kg/p | TI >92% | AI <5%'},
   ];
-  logSteps.forEach(l=>{setTimeout(()=>{setStep(l.step);addLog(l.tag,l.type,l.msg);},l.delay);});
-  setTimeout(()=>{simRunning=false;document.getElementById('runBtn').disabled=false;updateParams();},5200);
-  animateMachine();
+  ls.forEach(l=>setTimeout(()=>{setStep(l.step);addLog(l.tag,l.type,l.msg);},l.delay));
+  setTimeout(()=>{simRunning=false;document.getElementById('runBtn').disabled=false;updateSummaryParams();},7200);
 }
 
-// ── ANIMATION ──
-function animateMachine(){
-  cancelAnimationFrame(animId);
-  function frame(){drawMachine(simFrame,simStep);simFrame++;animId=requestAnimationFrame(frame);}
-  frame();
-}
-
-function drawMachine(frame,activeStep){
-  ctx.clearRect(0,0,canvas.width,canvas.height);
-  const W=canvas.width,H=canvas.height;
-  ctx.fillStyle='#fff';ctx.fillRect(0,0,W,H);
-  ctx.strokeStyle='rgba(200,145,42,0.05)';ctx.lineWidth=1;
-  for(let x=0;x<W;x+=40){ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x,H);ctx.stroke();}
-  for(let y=0;y<H;y+=40){ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(W,y);ctx.stroke();}
-
-  const stages=[
-    {id:0,label:'IRON ORE\nFEED',x:W*0.06,color:'#8b4513',icon:'feed'},
-    {id:1,label:'CRUSHING\n& GRINDING',x:W*0.20,color:'#7a5a30',icon:'crush'},
-    {id:2,label:'MIXING\n+ OB-1205',x:W*0.37,color:'#c8912a',icon:'mix'},
-    {id:3,label:'BALLING\nDISC',x:W*0.54,color:'#2d5fa6',icon:'ball'},
-    {id:4,label:'INDURATION\nFURNACE',x:W*0.70,color:'#c04010',icon:'indu'},
-    {id:5,label:'COOLING',x:W*0.83,color:'#2a7a4a',icon:'cool'},
-    {id:6,label:'FINISHED\nPELLETS',x:W*0.94,color:'#1a3057',icon:'pellet'},
-  ];
-  const mcy=H*0.48,machH=H*0.32,machW=W*0.1;
-
-  ctx.fillStyle='rgba(200,145,42,0.08)';
-  ctx.fillRect(stages[0].x-20,mcy+machH/2,stages[stages.length-1].x-stages[0].x+50,14);
-  ctx.strokeStyle='rgba(200,145,42,0.2)';ctx.lineWidth=1;ctx.setLineDash([12,12]);
-  ctx.beginPath();ctx.moveTo(stages[0].x-20,mcy+machH/2+7);ctx.lineTo(stages[stages.length-1].x+30,mcy+machH/2+7);ctx.stroke();ctx.setLineDash([]);
-
-  stages.forEach((s,i)=>{
-    const isActive=i===activeStep,isDone=i<activeStep;
-    const opacity=isDone?1:isActive?1:0.3;
-    ctx.globalAlpha=opacity;
-    drawMachineStage(ctx,s,mcy,machH,machW,isActive,isDone,frame,W,H);
-    ctx.globalAlpha=opacity;
-    ctx.fillStyle=isActive?s.color:isDone?s.color:'#9a8a70';
-    ctx.font=`${isActive?'600':'400'} 9px JetBrains Mono`;ctx.textAlign='center';
-    const lines=s.label.split('\n');
-    lines.forEach((l,li)=>ctx.fillText(l,s.x,mcy+machH/2+28+li*12));
-    ctx.globalAlpha=1;
-    if(i<stages.length-1){
-      const nx=stages[i+1].x,isConnActive=i<activeStep;
-      ctx.strokeStyle=isConnActive?s.color:'rgba(200,145,42,0.15)';ctx.lineWidth=isConnActive?2.5:1;ctx.globalAlpha=isConnActive?0.7:0.3;
-      ctx.beginPath();ctx.moveTo(s.x+machW/2,mcy);ctx.lineTo(nx-machW/2,mcy);ctx.stroke();ctx.globalAlpha=1;
-      if(i===activeStep-1){
-        const t=(frame%60)/60;const px=s.x+machW/2+(nx-machW/2-s.x-machW/2)*t;
-        const r=5;const g=ctx.createRadialGradient(px-r*0.3,mcy-r*0.3,0,px,mcy,r);
-        g.addColorStop(0,'#e8b84b');g.addColorStop(1,s.color);
-        ctx.beginPath();ctx.arc(px,mcy,r,0,Math.PI*2);ctx.fillStyle=g;ctx.fill();
-      }
-      ctx.fillStyle=isConnActive?s.color:'rgba(200,145,42,0.2)';ctx.globalAlpha=isConnActive?0.8:0.2;
-      const ax=nx-machW/2-6;ctx.beginPath();ctx.moveTo(ax,mcy-5);ctx.lineTo(ax+8,mcy);ctx.lineTo(ax,mcy+5);ctx.fill();ctx.globalAlpha=1;
-    }
+function resetAll(){
+  simRunning=false; simStep=-1; simFrame=0;
+  Object.assign(stageParams.feed,   {ore:'',limestone:'',coal:''});
+  Object.assign(stageParams.grind,  {blain:2000,moisture:30});
+  Object.assign(stageParams.filter, {cakeMoisture:9.5});
+  Object.assign(stageParams.mix,    {binder:'',flux:'',bindDosage:0.5});
+  Object.assign(stageParams.ball,   {discAngle:48,rpm:14});
+  Object.assign(stageParams.screen, {upperMesh:18,lowerMesh:5});
+  Object.assign(stageParams.indu,   {temp:1280,airFlow:'Forced Draft'});
+  Object.assign(stageParams.cool,   {duration:40,targetTemp:80});
+  document.querySelectorAll('.step-pill').forEach(p=>p.className='step-pill');
+  ['p-size','p-ob','p-yield','p-basicity','p-temp','p-moist'].forEach(id=>{
+    document.getElementById(id).textContent='—';
+    document.getElementById(id).className='param-box-val';
   });
-
-  if(activeStep>=2){
-    const mx=stages[2].x;ctx.save();ctx.globalAlpha=0.8;
-    ctx.fillStyle='rgba(200,145,42,0.1)';ctx.strokeStyle='rgba(200,145,42,0.5)';ctx.lineWidth=1;
-    ctx.beginPath();ctx.roundRect(mx-35,mcy-machH/2-55,70,28,3);ctx.fill();ctx.stroke();
-    ctx.fillStyle='#c8912a';ctx.font='600 9px Cormorant Garamond';ctx.textAlign='center';
-    ctx.fillText('OB-1205 DOSING',mx,mcy-machH/2-38);
-    const dropY=mcy-machH/2-26+(frame%30)*0.8;
-    ctx.beginPath();ctx.arc(mx,dropY,3,0,Math.PI*2);ctx.fillStyle='rgba(200,145,42,0.6)';ctx.fill();
-    ctx.strokeStyle='rgba(200,145,42,0.3)';ctx.lineWidth=1;ctx.setLineDash([3,3]);
-    ctx.beginPath();ctx.moveTo(mx,mcy-machH/2-27);ctx.lineTo(mx,mcy-machH/2);ctx.stroke();ctx.setLineDash([]);ctx.restore();
-  }
-
-  if(activeStep>=0){
-    const info=[
-      {label:'Ore',val:selected.ore?selected.ore.substring(0,20):'—'},
-      {label:'Binder',val:selected.binder?selected.binder.substring(0,20):'—'},
-      {label:'Moisture',val:document.getElementById('sl-moisture').value+'%'},
-      {label:'Temp',val:document.getElementById('sl-temp').value+'°C'},
-      {label:'Blain',val:document.getElementById('sl-blain').value+' cm²/g'},
-    ];
-    ctx.fillStyle='rgba(253,248,240,0.95)';ctx.strokeStyle='rgba(200,145,42,0.2)';ctx.lineWidth=1;
-    ctx.beginPath();ctx.roundRect(12,12,220,info.length*18+20,3);ctx.fill();ctx.stroke();
-    info.forEach((item,i)=>{
-      ctx.fillStyle='#9a8a70';ctx.font='400 9px JetBrains Mono';ctx.textAlign='left';ctx.fillText(item.label+':',22,28+i*18);
-      ctx.fillStyle='#1a3057';ctx.font='500 9px JetBrains Mono';ctx.fillText(item.val,80,28+i*18);
-    });
-  }
-
-  if(activeStep===6){
-    const s=stages[6];
-    for(let j=0;j<8;j++){
-      const ang=(frame*0.03)+j*Math.PI*2/8,r2=28;
-      const px2=s.x+Math.cos(ang)*r2,py2=mcy+Math.sin(ang)*r2*0.5,pelR=6+j%2;
-      const pg=ctx.createRadialGradient(px2-pelR*0.4,py2-pelR*0.4,0,px2,py2,pelR);
-      pg.addColorStop(0,'#8ba3b5');pg.addColorStop(1,'#2a4a5a');
-      ctx.beginPath();ctx.arc(px2,py2,pelR,0,Math.PI*2);ctx.fillStyle=pg;ctx.fill();
-      ctx.strokeStyle='rgba(90,122,138,0.3)';ctx.lineWidth=0.5;ctx.stroke();
-    }
-    ctx.fillStyle='#2a7a4a';ctx.font='600 10px JetBrains Mono';ctx.textAlign='center';
-    ctx.fillText('PELLETS READY',s.x,mcy+machH/2+56);
-  }
+  document.getElementById('runBtn').disabled=false;
+  addLog('[RESET]','init','All parameters cleared. Click process nodes to reconfigure.');
 }
 
-function drawMachineStage(ctx,s,mcy,machH,machW,isActive,isDone,frame,W,H){
-  const x=s.x,r=machW/2,y=mcy,col=s.color;
-  switch(s.icon){
-    case 'feed':
-      ctx.fillStyle=isDone||isActive?col:'#d4c8b0';ctx.strokeStyle=isActive?col:'rgba(200,145,42,0.3)';ctx.lineWidth=isActive?2:1;
-      ctx.beginPath();ctx.moveTo(x-28,y-machH/2);ctx.lineTo(x+28,y-machH/2);ctx.lineTo(x+14,y);ctx.lineTo(x-14,y);ctx.closePath();ctx.fill();ctx.stroke();
-      if(isActive){for(let p=0;p<3;p++){const fy=y-machH/2+(frame*2+p*20)%(machH);ctx.beginPath();ctx.arc(x+(p-1)*6,fy,3,0,Math.PI*2);ctx.fillStyle='#cd7f32';ctx.fill();}}
-      break;
-    case 'crush':
-      ctx.fillStyle=isDone||isActive?col:'#d4c8b0';ctx.strokeStyle=isActive?col:'rgba(200,145,42,0.3)';ctx.lineWidth=isActive?2:1;
-      ctx.beginPath();ctx.roundRect(x-26,y-machH/3,52,machH*0.66,4);ctx.fill();ctx.stroke();
-      if(isActive||isDone){ctx.save();ctx.translate(x,y);ctx.rotate(isActive?frame*0.08:0);ctx.strokeStyle='rgba(255,255,255,0.4)';ctx.lineWidth=1.5;for(let k=0;k<4;k++){const a=k*Math.PI/2;ctx.beginPath();ctx.moveTo(0,0);ctx.lineTo(Math.cos(a)*18,Math.sin(a)*18);ctx.stroke();}ctx.restore();}
-      break;
-    case 'mix':
-      ctx.fillStyle=isDone||isActive?col:'#d4c8b0';ctx.strokeStyle=isActive?col:'rgba(200,145,42,0.3)';ctx.lineWidth=isActive?2:1;
-      ctx.beginPath();ctx.ellipse(x,y,32,machH*0.35,0,0,Math.PI*2);ctx.fill();ctx.stroke();
-      if(isActive||isDone){ctx.save();ctx.translate(x,y);ctx.rotate(isActive?frame*0.06:0.5);ctx.strokeStyle='rgba(255,255,255,0.5)';ctx.lineWidth=2;for(let k=0;k<3;k++){const a=k*Math.PI*2/3;ctx.beginPath();ctx.moveTo(0,0);ctx.lineTo(Math.cos(a)*22,Math.sin(a)*22);ctx.stroke();}ctx.restore();}
-      if(isActive){ctx.shadowColor=col;ctx.shadowBlur=15;ctx.beginPath();ctx.ellipse(x,y,32,machH*0.35,0,0,Math.PI*2);ctx.stroke();ctx.shadowBlur=0;}
-      break;
-    case 'ball':
-      ctx.fillStyle=isDone||isActive?col:'#d4c8b0';ctx.strokeStyle=isActive?col:'rgba(200,145,42,0.3)';ctx.lineWidth=isActive?2:1;
-      ctx.beginPath();ctx.arc(x,y,30,0,Math.PI*2);ctx.fill();ctx.stroke();
-      if(isActive||isDone){ctx.save();ctx.translate(x,y);ctx.rotate(isActive?-frame*0.05:-0.3);ctx.strokeStyle='rgba(255,255,255,0.4)';ctx.lineWidth=1;for(let k=0;k<6;k++){const a=k*Math.PI/3;ctx.beginPath();ctx.moveTo(8,0);ctx.rotate(a);ctx.arc(0,0,22,a,a+Math.PI/3-0.1);ctx.stroke();}ctx.restore();
-        if(isActive){for(let p=0;p<4;p++){const a2=(frame*0.05)+p*Math.PI/2;const px3=x+Math.cos(a2)*18,py3=y+Math.sin(a2)*18;ctx.beginPath();ctx.arc(px3,py3,4+p%2,0,Math.PI*2);ctx.fillStyle='#8ba3b5';ctx.fill();}}}
-      break;
-    case 'indu':
-      ctx.fillStyle=isDone||isActive?col:'#d4c8b0';ctx.strokeStyle=isActive?col:'rgba(200,145,42,0.3)';ctx.lineWidth=isActive?2:1;
-      ctx.beginPath();ctx.roundRect(x-32,y-machH*0.45,64,machH*0.9,4);ctx.fill();ctx.stroke();
-      if(isActive||isDone){const fg=ctx.createRadialGradient(x,y,0,x,y,28);fg.addColorStop(0,'rgba(255,150,30,0.6)');fg.addColorStop(1,'rgba(255,50,0,0)');ctx.fillStyle=fg;ctx.beginPath();ctx.ellipse(x,y,28,machH*0.38,0,0,Math.PI*2);ctx.fill();}
-      if(isActive){for(let f=0;f<3;f++){const fx=x+(f-1)*12,fh=14+Math.sin(frame*0.15+f)*6;ctx.fillStyle=`rgba(255,${140+f*30},0,0.7)`;ctx.beginPath();ctx.moveTo(fx-5,y-8);ctx.quadraticCurveTo(fx,y-8-fh,fx+5,y-8);ctx.fill();}ctx.shadowColor='#ff6b1a';ctx.shadowBlur=20;ctx.beginPath();ctx.roundRect(x-32,y-machH*0.45,64,machH*0.9,4);ctx.stroke();ctx.shadowBlur=0;}
-      break;
-    case 'cool':
-      ctx.fillStyle=isDone||isActive?col:'#d4c8b0';ctx.strokeStyle=isActive?col:'rgba(200,145,42,0.3)';ctx.lineWidth=isActive?2:1;
-      ctx.beginPath();ctx.moveTo(x-24,y-machH*0.4);ctx.lineTo(x+24,y-machH*0.4);ctx.lineTo(x+30,y+machH*0.35);ctx.lineTo(x-30,y+machH*0.35);ctx.closePath();ctx.fill();ctx.stroke();
-      if(isActive){for(let w=0;w<3;w++){const wy=y-machH*0.3+w*12+(frame*1.5+w*8)%30;ctx.strokeStyle=`rgba(150,220,255,${0.5-w*0.15})`;ctx.lineWidth=1.5;ctx.beginPath();ctx.moveTo(x-18,wy);ctx.quadraticCurveTo(x,wy-4,x+18,wy);ctx.stroke();}ctx.fillStyle='rgba(150,220,255,0.4)';ctx.font='12px sans-serif';ctx.textAlign='center';ctx.fillText('↑',x-16,y+machH*0.1);ctx.fillText('↑',x+16,y+machH*0.1);}
-      break;
-    case 'pellet':
-      if(isDone||isActive){
-        for(let p=0;p<5;p++){const angle=(p/5)*Math.PI*2+(isActive?frame*0.02:0),pr=14;const px4=x+Math.cos(angle)*pr,py4=y+Math.sin(angle)*pr*0.5;const pg2=ctx.createRadialGradient(px4-3,py4-3,0,px4,py4,8);pg2.addColorStop(0,'#8ba3b5');pg2.addColorStop(1,'#2a4a5a');ctx.beginPath();ctx.arc(px4,py4,7+p%2,0,Math.PI*2);ctx.fillStyle=pg2;ctx.fill();ctx.strokeStyle='rgba(90,122,138,0.4)';ctx.lineWidth=0.5;ctx.stroke();}
-        const cpg=ctx.createRadialGradient(x-3,y-3,0,x,y,10);cpg.addColorStop(0,'#9ab3c5');cpg.addColorStop(1,'#1a3a5a');ctx.beginPath();ctx.arc(x,y,10,0,Math.PI*2);ctx.fillStyle=cpg;ctx.fill();
-      }else{ctx.fillStyle='#d4c8b0';ctx.beginPath();ctx.arc(x,y,18,0,Math.PI*2);ctx.fill();}
-      break;
-  }
-}
-drawIdle();
+// ═══════ LOOP ═══════
+(function loop(){draw(simFrame,simStep);simFrame++;animId=requestAnimationFrame(loop);})();
 </script>
 </body>
 </html>
