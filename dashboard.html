@@ -49,11 +49,32 @@ nav{
 .nav-btn:hover{border-color:var(--gold);color:var(--gold);background:rgba(200,145,42,.05);}
 
 .page-wrap{display:flex;flex-direction:column;align-items:center;min-height:calc(100vh - 64px);padding:2rem 1.5rem 3rem;}
-.page-header{text-align:center;margin-bottom:2rem;}
+
+/* ── PAGE HEADER with capacity box ── */
+.page-header{text-align:center;margin-bottom:2rem;width:100%;max-width:1200px;position:relative;}
+.page-header-inner{display:flex;align-items:center;justify-content:center;gap:1.25rem;flex-wrap:wrap;}
 .page-title{font-family:'Cormorant Garamond',serif;font-size:clamp(1.6rem,3vw,2.4rem);font-weight:700;color:var(--navy);letter-spacing:.5px;line-height:1.2;}
 .page-sub{font-family:'JetBrains Mono';font-size:.6rem;letter-spacing:2px;color:var(--text-dim);text-transform:uppercase;margin-top:.5rem;}
 .page-hint{font-size:.78rem;color:var(--text-dim);margin-top:.75rem;display:flex;align-items:center;gap:6px;justify-content:center;}
 .page-hint::before{content:'◈';color:var(--gold);font-size:.65rem;}
+
+/* Plant Capacity Box */
+.capacity-box{
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  background:#fff;border:1.5px solid var(--border-strong);border-radius:7px;
+  padding:10px 18px 10px 14px;min-width:170px;
+  box-shadow:0 3px 14px rgba(26,48,87,0.09);
+  flex-shrink:0;
+}
+.capacity-box-label{font-family:'JetBrains Mono';font-size:.52rem;letter-spacing:1.8px;color:var(--gold);text-transform:uppercase;margin-bottom:5px;white-space:nowrap;}
+.capacity-box-input-wrap{display:flex;align-items:center;gap:6px;}
+.capacity-box-input{
+  width:80px;background:var(--cream);border:1.5px solid var(--border);border-radius:4px;
+  padding:6px 8px;color:var(--navy);font-family:'Cormorant Garamond',serif;font-size:1.22rem;font-weight:700;
+  outline:none;text-align:center;transition:border-color .22s;
+}
+.capacity-box-input:focus{border-color:var(--gold);background:#fff;}
+.capacity-box-unit{font-family:'JetBrains Mono';font-size:.6rem;letter-spacing:1px;color:var(--text-dim);white-space:nowrap;}
 
 .canvas-wrap{width:100%;max-width:1200px;background:#fff;border:1px solid var(--border);border-radius:8px;box-shadow:var(--shadow-navy),inset 0 1px 0 rgba(255,255,255,.8);overflow:hidden;position:relative;}
 #processCanvas{display:block;width:100%;height:auto;cursor:default;}
@@ -123,7 +144,25 @@ input.finp{cursor:text;}
 /* Size distribution grid */
 .size-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
 
-@media(max-width:640px){nav{padding:0 1rem;height:58px;}.nav-center{display:none;}.logo-text .l2{display:none;}.page-wrap{padding:1.25rem .75rem 2.5rem;}.params-row{grid-template-columns:1fr 1fr;}.size-grid{grid-template-columns:1fr;}}
+/* Multi-flux rows */
+.flux-list{display:flex;flex-direction:column;gap:8px;margin-bottom:8px;}
+.flux-row{display:flex;align-items:center;gap:6px;}
+.flux-row select.fsel{flex:1;}
+.flux-row input.finp{width:80px;flex:0 0 80px;}
+.flux-row .flux-unit{font-family:'JetBrains Mono';font-size:.62rem;color:var(--text-dim);white-space:nowrap;}
+.flux-row .btn-remove-flux{background:none;border:1px solid rgba(192,57,43,.3);color:var(--red);border-radius:3px;width:26px;height:26px;cursor:pointer;font-size:.85rem;display:flex;align-items:center;justify-content:center;transition:all .2s;flex-shrink:0;}
+.flux-row .btn-remove-flux:hover{background:rgba(192,57,43,.08);}
+.btn-add-flux{display:flex;align-items:center;gap:6px;background:rgba(200,145,42,.06);border:1px dashed var(--border-strong);border-radius:4px;padding:7px 12px;color:var(--gold);font-family:'DM Sans';font-size:.78rem;font-weight:500;cursor:pointer;transition:all .22s;width:100%;}
+.btn-add-flux:hover{background:rgba(200,145,42,.12);border-color:var(--gold);}
+
+@media(max-width:640px){
+  nav{padding:0 1rem;height:58px;}.nav-center{display:none;}.logo-text .l2{display:none;}
+  .page-wrap{padding:1.25rem .75rem 2.5rem;}
+  .page-header-inner{flex-direction:column;gap:.75rem;}
+  .capacity-box{width:100%;max-width:320px;}
+  .params-row{grid-template-columns:1fr 1fr;}
+  .size-grid{grid-template-columns:1fr;}
+}
 </style>
 </head>
 <body>
@@ -158,8 +197,20 @@ input.finp{cursor:text;}
 
 <div class="page-wrap">
   <div class="page-header">
-    <div class="page-title">Pelletization Process Simulator</div>
-    <div class="page-sub">// Iron Ore Pelletization — Wet Grinding Route</div>
+    <!-- CHANGE 1: Header with capacity box beside heading -->
+    <div class="page-header-inner">
+      <div>
+        <div class="page-title">Pelletization Process Simulator</div>
+        <div class="page-sub">// Iron Ore Pelletization — Wet Grinding Route</div>
+      </div>
+      <div class="capacity-box">
+        <div class="capacity-box-label">Plant Capacity</div>
+        <div class="capacity-box-input-wrap">
+          <input type="number" class="capacity-box-input" id="plantCapacity" min="1" max="9999" step="0.1" placeholder="—" title="Enter plant capacity">
+          <span class="capacity-box-unit">TPH</span>
+        </div>
+      </div>
+    </div>
     <div class="page-hint">Click any process stage to configure its parameters</div>
   </div>
 
@@ -208,11 +259,11 @@ input.finp{cursor:text;}
 <script>
 // ═══════ STATE ═══════
 const stageParams = {
-  feed:      {ore:'',orePercent:'',limestone:'',limestonePercent:'',coal:'',coalPercent:''},
+  feed:      {ore:'',orePercent:'',feedRate:'',fluxes:[],coal:'',coalPercent:''},
   grind:     {rawFeedMoisture:'',blain:''},
   thickner:  {},
   filter:    {cakeMoisture:''},
-  mix:       {binder:'',dosageValue:'',dosageUnit:'kg',flux:'',mixMoisture:''},
+  mix:       {binder:'',bentoniteDosageValue:'',bentoniteDosageUnit:'kg',dosageValue:'',dosageUnit:'GPT',fluxes:[],mixMoisture:''},
   ball:      {angle:'',motorRpm:'',discRpm:'',greenBallMoisture:''},
   greenball: {moisture:'',dropNumber:'',gcs:''},
   screen:    {s8_10:'',s10_12:'',s12_14:'',s14_16:'',recycled:'',recycledUnit:'%'},
@@ -599,6 +650,68 @@ function numField(id, label, val, min, max, unit, step){
     </div>`;
 }
 
+// ═══════ FLUX HELPER: render multi-flux list HTML ═══════
+const FLUX_OPTIONS = ['Limestone','Dolomite','Pyroxenite'];
+
+function fluxListHTML(listId, fluxes){
+  const rows = (fluxes && fluxes.length > 0 ? fluxes : []).map((f,i)=>`
+    <div class="flux-row" id="${listId}-row-${i}">
+      <select class="fsel" id="${listId}-type-${i}">
+        <option value="">— Select Flux —</option>
+        ${FLUX_OPTIONS.map(v=>`<option value="${v}"${f.type===v?' selected':''}>${v}</option>`).join('')}
+      </select>
+      <input type="number" class="finp" id="${listId}-pct-${i}" value="${f.pct||''}" min="0" max="100" step="0.1" placeholder="%" style="width:72px;flex:0 0 72px;">
+      <span class="flux-unit">%</span>
+      <button class="btn-remove-flux" onclick="removeFluxRow('${listId}',${i})" title="Remove">✕</button>
+    </div>`).join('');
+  return `
+    <div class="flux-list" id="${listId}-list">${rows}</div>
+    <button class="btn-add-flux" onclick="addFluxRow('${listId}')">＋ Add Flux / Additive</button>`;
+}
+
+function addFluxRow(listId){
+  const list = document.getElementById(listId+'-list');
+  const i = list.children.length;
+  const div = document.createElement('div');
+  div.className = 'flux-row';
+  div.id = `${listId}-row-${i}`;
+  div.innerHTML = `
+    <select class="fsel" id="${listId}-type-${i}">
+      <option value="">— Select Flux —</option>
+      ${FLUX_OPTIONS.map(v=>`<option value="${v}">${v}</option>`).join('')}
+    </select>
+    <input type="number" class="finp" id="${listId}-pct-${i}" value="" min="0" max="100" step="0.1" placeholder="%" style="width:72px;flex:0 0 72px;">
+    <span class="flux-unit">%</span>
+    <button class="btn-remove-flux" onclick="removeFluxRow('${listId}',${i})" title="Remove">✕</button>`;
+  list.appendChild(div);
+}
+
+function removeFluxRow(listId, idx){
+  const row = document.getElementById(`${listId}-row-${idx}`);
+  if(row) row.remove();
+  // re-index remaining rows
+  const list = document.getElementById(listId+'-list');
+  Array.from(list.children).forEach((r,newIdx)=>{
+    r.id = `${listId}-row-${newIdx}`;
+    const sel = r.querySelector('select');
+    const inp = r.querySelector('input');
+    const btn = r.querySelector('button');
+    if(sel) sel.id = `${listId}-type-${newIdx}`;
+    if(inp) inp.id = `${listId}-pct-${newIdx}`;
+    if(btn) btn.setAttribute('onclick',`removeFluxRow('${listId}',${newIdx})`);
+  });
+}
+
+function readFluxList(listId){
+  const list = document.getElementById(listId+'-list');
+  if(!list) return [];
+  return Array.from(list.children).map((r,i)=>{
+    const sel = document.getElementById(`${listId}-type-${i}`);
+    const inp = document.getElementById(`${listId}-pct-${i}`);
+    return {type: sel?sel.value:'', pct: inp?inp.value:''};
+  }).filter(f=>f.type);
+}
+
 // ═══════ MODALS ═══════
 const MODAL_CONFIGS={
 
@@ -619,16 +732,13 @@ const MODAL_CONFIGS={
         <div class="input-hint">Range: 55 – 65 %</div>
       </div>
       <div class="field-group">
-        <div class="field-label">Limestone / Flux</div>
-        <select class="fsel" id="m-limestone">
-          <option value="">— Select —</option>
-          ${['Limestone','Dolomite','Pyroxenite'].map(v=>`<option value="${v}"${stageParams.feed.limestone===v?' selected':''}>${v}</option>`).join('')}
-        </select>
+        <div class="field-label">Feed Rate (TPH)</div>
+        <input type="number" class="finp" id="m-feedrate" value="${stageParams.feed.feedRate||''}" min="1" max="9999" step="0.1" placeholder="Enter feed rate">
+        <div class="input-hint">Tonnes per hour</div>
       </div>
       <div class="field-group">
-        <div class="field-label">Limestone Percentage (%)</div>
-        <input type="number" class="finp" id="m-limestone-pct" value="${stageParams.feed.limestonePercent||''}" min="0" max="20" step="0.1" placeholder="Enter %">
-        <div class="input-hint">Enter percentage of limestone/flux</div>
+        <div class="field-label">Flux / Additive (one or more)</div>
+        ${fluxListHTML('feed-flux', stageParams.feed.fluxes)}
       </div>
       <div class="field-group">
         <div class="field-label">Fuel / Reductant</div>
@@ -645,8 +755,8 @@ const MODAL_CONFIGS={
     save:()=>{
       stageParams.feed.ore=document.getElementById('m-ore').value;
       stageParams.feed.orePercent=document.getElementById('m-ore-pct').value;
-      stageParams.feed.limestone=document.getElementById('m-limestone').value;
-      stageParams.feed.limestonePercent=document.getElementById('m-limestone-pct').value;
+      stageParams.feed.feedRate=document.getElementById('m-feedrate').value;
+      stageParams.feed.fluxes=readFluxList('feed-flux');
       stageParams.feed.coal=document.getElementById('m-coal').value;
       stageParams.feed.coalPercent=document.getElementById('m-coal-pct').value;
     }
@@ -695,29 +805,38 @@ const MODAL_CONFIGS={
         </select>
       </div>
       <div class="field-group">
+        <div class="field-label">Bentonite Dosage</div>
+        <div class="input-row">
+          <input type="number" class="finp" id="m-bento-dose" value="${stageParams.mix.bentoniteDosageValue||''}" min="0" step="0.01" placeholder="Enter value">
+          <select class="fsel" id="m-bento-dose-unit" style="width:80px;flex:0 0 80px;">
+            <option value="kg"${stageParams.mix.bentoniteDosageUnit==='kg'?' selected':''}>kg/t</option>
+            <option value="%"${stageParams.mix.bentoniteDosageUnit==='%'?' selected':''}>%</option>
+          </select>
+        </div>
+        <div class="input-hint">Bentonite dosage in kg/t or %</div>
+      </div>
+      <div class="field-group">
         <div class="field-label">Binder Dosage</div>
         <div class="input-row">
           <input type="number" class="finp" id="m-dose" value="${stageParams.mix.dosageValue||''}" min="0" step="0.01" placeholder="Enter value">
           <select class="fsel" id="m-dose-unit" style="width:80px;flex:0 0 80px;">
-            <option value="kg"${stageParams.mix.dosageUnit==='kg'?' selected':''}>kg/t</option>
-            <option value="%"${stageParams.mix.dosageUnit==='%'?' selected':''}>%</option>
+            <option value="GPT"${stageParams.mix.dosageUnit==='GPT'?' selected':''}>GPT</option>
           </select>
         </div>
-        <div class="input-hint">Enter dosage in kg/t or %</div>
+        <div class="input-hint">Binder dosage in GPT</div>
       </div>
       <div class="field-group">
-        <div class="field-label">Flux / Additive</div>
-        <select class="fsel" id="m-flux">
-          <option value="">— Select Flux —</option>
-          ${['Limestone','Dolomite','Pyroxenite'].map(v=>`<option value="${v}"${stageParams.mix.flux===v?' selected':''}>${v}</option>`).join('')}
-        </select>
+        <div class="field-label">Flux / Additive (one or more)</div>
+        ${fluxListHTML('mix-flux', stageParams.mix.fluxes)}
       </div>
       ${numField('m-mmoist','Mix Material Moisture (%)',stageParams.mix.mixMoisture,0,20,'%',0.1)}`,
     save:()=>{
       stageParams.mix.binder=document.getElementById('m-binder').value;
+      stageParams.mix.bentoniteDosageValue=document.getElementById('m-bento-dose').value;
+      stageParams.mix.bentoniteDosageUnit=document.getElementById('m-bento-dose-unit').value;
       stageParams.mix.dosageValue=document.getElementById('m-dose').value;
-      stageParams.mix.dosageUnit=document.getElementById('m-dose-unit').value;
-      stageParams.mix.flux=document.getElementById('m-flux').value;
+      stageParams.mix.dosageUnit='GPT';
+      stageParams.mix.fluxes=readFluxList('mix-flux');
       stageParams.mix.mixMoisture=document.getElementById('m-mmoist').value;
     }
   },
@@ -927,7 +1046,6 @@ function switchInduMode(mode){
   document.getElementById('btn-furnace').className=mode==='furnace'?'active':'';
   document.getElementById('btn-grate').className=mode==='grate'?'active':'';
   document.getElementById('indu-params-area').innerHTML=getInduFields(mode);
-  // Update canvas label
   const s=STAGES.find(st=>st.id==='indu');
   if(s) s.label=mode==='furnace'?'INDURATION\nFURNACE':'GRATE\nKILN';
 }
@@ -964,7 +1082,7 @@ document.getElementById('modalOverlay').addEventListener('click',function(e){if(
 
 function updateSummaryParams(){
   const hasOb=stageParams.mix.binder&&stageParams.mix.binder.includes('OB');
-  const hasFlux=stageParams.mix.flux&&stageParams.mix.flux!=='';
+  const hasFlux=stageParams.mix.fluxes&&stageParams.mix.fluxes.length>0;
   const moist=stageParams.filter.cakeMoisture;
   document.getElementById('p-size').textContent=moist>10.5?'14–18mm':'10–16mm';
   const dosageLabel=stageParams.mix.dosageValue?(stageParams.mix.dosageValue+' '+stageParams.mix.dosageUnit):(stageParams.mix.binder||'—');
@@ -997,12 +1115,13 @@ function runSimulation(){
   simRunning=true; simFrame=0; simStep=0;
   document.getElementById('runBtn').disabled=true;
   const induMode=stageParams.indu.mode||'furnace';
+  const fluxSummary=(arr)=>arr&&arr.length?arr.map(f=>f.type+(f.pct?' '+f.pct+'%':'')).join(', '):'—';
   const ls=[
-    {delay:0,   step:0,tag:'[FEED]',  type:'step',msg:`Ore: ${stageParams.feed.ore}${stageParams.feed.orePercent?' ('+stageParams.feed.orePercent+'%)':''}`},
+    {delay:0,   step:0,tag:'[FEED]',  type:'step',msg:`Ore: ${stageParams.feed.ore}${stageParams.feed.orePercent?' ('+stageParams.feed.orePercent+'%)':''}${stageParams.feed.feedRate?' | Feed Rate: '+stageParams.feed.feedRate+' TPH':''}`},
     {delay:650, step:1,tag:'[GRIND]', type:'step',msg:`Grinding → Blain ${stageParams.grind.blain||'—'} cm²/g | Feed moisture ${stageParams.grind.rawFeedMoisture||'—'}%`},
     {delay:1300,step:2,tag:'[THICK]', type:'step',msg:'Thickener — automatic settling'},
     {delay:1950,step:3,tag:'[FILTER]',type:'step',msg:`Filter cake moisture ${stageParams.filter.cakeMoisture||'—'}%`},
-    {delay:2600,step:4,tag:'[MIX]',   type:'step',msg:`Mixing — ${stageParams.mix.binder||'binder'} @ ${stageParams.mix.dosageValue||'—'} ${stageParams.mix.dosageUnit}`},
+    {delay:2600,step:4,tag:'[MIX]',   type:'step',msg:`Mixing — ${stageParams.mix.binder||'binder'} @ ${stageParams.mix.dosageValue||'—'} ${stageParams.mix.dosageUnit} | Flux: ${fluxSummary(stageParams.mix.fluxes)}`},
     {delay:3350,step:5,tag:'[BALL]',  type:'step',msg:`Balling disc — ${stageParams.ball.discRpm||'—'} RPM disc, ${stageParams.ball.angle||'—'}°`},
     {delay:4100,step:6,tag:'[SCREEN]',type:'step',msg:`Screening 8–16mm | Recycled: ${stageParams.screen.recycled||'—'} ${stageParams.screen.recycledUnit}`},
     {delay:4900,step:7,tag:'[INDU]',  type:'step',msg:`${induMode==='furnace'?'Induration Furnace':'Grate Kiln'} — BTT/MC: ${induMode==='furnace'?stageParams.indu.btt:stageParams.indu.mcTemp||'—'}°C`},
@@ -1016,10 +1135,10 @@ function runSimulation(){
 
 function resetAll(){
   simRunning=false; simStep=-1; simFrame=0;
-  Object.assign(stageParams.feed,{ore:'',orePercent:'',limestone:'',limestonePercent:'',coal:'',coalPercent:''});
+  Object.assign(stageParams.feed,{ore:'',orePercent:'',feedRate:'',fluxes:[],coal:'',coalPercent:''});
   Object.assign(stageParams.grind,{rawFeedMoisture:'',blain:''});
   Object.assign(stageParams.filter,{cakeMoisture:''});
-  Object.assign(stageParams.mix,{binder:'',dosageValue:'',dosageUnit:'kg',flux:'',mixMoisture:''});
+  Object.assign(stageParams.mix,{binder:'',bentoniteDosageValue:'',bentoniteDosageUnit:'kg',dosageValue:'',dosageUnit:'GPT',fluxes:[],mixMoisture:''});
   Object.assign(stageParams.ball,{angle:'',motorRpm:'',discRpm:'',greenBallMoisture:''});
   Object.assign(stageParams.greenball,{moisture:'',dropNumber:'',gcs:''});
   Object.assign(stageParams.screen,{s8_10:'',s10_12:'',s12_14:'',s14_16:'',recycled:'',recycledUnit:'%'});
