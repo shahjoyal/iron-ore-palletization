@@ -89,7 +89,7 @@ nav{
 
 .modal-overlay{position:fixed;inset:0;z-index:200;background:rgba(15,31,58,.55);backdrop-filter:blur(6px) saturate(1.2);display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .3s ease;}
 .modal-overlay.open{opacity:1;pointer-events:all;}
-.modal-card{background:#fff;border:1px solid var(--border-strong);border-radius:10px;box-shadow:0 24px 80px rgba(26,48,87,.25);width:min(460px,92vw);max-height:88vh;overflow-y:auto;transform:translateY(16px) scale(.97);transition:transform .35s cubic-bezier(.22,1,.36,1);position:relative;}
+.modal-card{background:#fff;border:1px solid var(--border-strong);border-radius:10px;box-shadow:0 24px 80px rgba(26,48,87,.25);width:min(480px,92vw);max-height:88vh;overflow-y:auto;transform:translateY(16px) scale(.97);transition:transform .35s cubic-bezier(.22,1,.36,1);position:relative;}
 .modal-overlay.open .modal-card{transform:translateY(0) scale(1);}
 .modal-header{padding:1.4rem 1.6rem 1rem;border-bottom:1px solid var(--border);background:linear-gradient(135deg,var(--navy2) 0%,var(--navy3) 100%);border-radius:10px 10px 0 0;position:relative;}
 .modal-stage-tag{font-family:'JetBrains Mono';font-size:.52rem;letter-spacing:2.5px;color:rgba(200,145,42,.7);text-transform:uppercase;margin-bottom:5px;}
@@ -104,18 +104,26 @@ nav{
 select.fsel,input.finp{width:100%;background:var(--cream);border:1.5px solid var(--border);border-radius:4px;padding:9px 12px;color:var(--text);font-family:'DM Sans';font-size:.84rem;outline:none;cursor:pointer;transition:border-color .25s;appearance:none;}
 select.fsel{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23c8912a' stroke-width='1.5' fill='none'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 10px center;padding-right:30px;}
 select.fsel:focus,input.finp:focus{border-color:var(--gold);background:#fff;}
-.slider-wrap{margin-top:.35rem;}
-.slider-top{display:flex;justify-content:space-between;margin-bottom:5px;}
-.slider-top span{font-size:.74rem;color:var(--text-dim);}
-.slider-top .sv{color:var(--gold);font-family:'JetBrains Mono';font-weight:500;font-size:.78rem;}
-input[type=range].rng{width:100%;appearance:none;height:3px;background:linear-gradient(to right,var(--gold) var(--pct,50%),rgba(200,145,42,.12) var(--pct,50%));border-radius:0;outline:none;cursor:pointer;}
-input[type=range].rng::-webkit-slider-thumb{appearance:none;width:14px;height:14px;background:var(--gold);border-radius:3px;transform:rotate(45deg);cursor:pointer;box-shadow:0 0 8px rgba(200,145,42,.5);}
+input.finp{cursor:text;}
+.input-hint{font-size:.68rem;color:var(--text-dim);margin-top:4px;font-family:'JetBrains Mono';}
+.input-row{display:flex;gap:8px;align-items:center;}
+.input-row input.finp{flex:1;}
+.input-row select.fsel{width:auto;flex:0 0 70px;}
 .modal-footer{padding:1rem 1.6rem 1.4rem;border-top:1px solid var(--border);display:flex;gap:8px;}
 .btn-save{flex:1;background:linear-gradient(135deg,var(--navy),var(--blue));color:#fff;border:none;border-radius:4px;padding:11px;font-family:'DM Sans';font-size:.85rem;font-weight:600;cursor:pointer;transition:all .25s;}
 .btn-save:hover{background:linear-gradient(135deg,var(--gold),var(--gold-light));}
 .btn-cancel{background:transparent;color:var(--text-dim);border:1px solid var(--border);border-radius:4px;padding:11px 16px;font-family:'DM Sans';font-size:.85rem;cursor:pointer;transition:all .25s;}
 .btn-cancel:hover{border-color:var(--red);color:var(--red);}
-@media(max-width:640px){nav{padding:0 1rem;height:58px;}.nav-center{display:none;}.logo-text .l2{display:none;}.page-wrap{padding:1.25rem .75rem 2.5rem;}.params-row{grid-template-columns:1fr 1fr;}}
+
+/* Induration toggle */
+.mode-toggle{display:flex;gap:0;border:1.5px solid var(--border-strong);border-radius:4px;overflow:hidden;margin-bottom:1rem;}
+.mode-toggle button{flex:1;background:transparent;border:none;padding:9px 10px;font-family:'DM Sans';font-size:.8rem;font-weight:500;color:var(--text-dim);cursor:pointer;transition:all .22s;}
+.mode-toggle button.active{background:var(--navy);color:#fff;}
+
+/* Size distribution grid */
+.size-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+
+@media(max-width:640px){nav{padding:0 1rem;height:58px;}.nav-center{display:none;}.logo-text .l2{display:none;}.page-wrap{padding:1.25rem .75rem 2.5rem;}.params-row{grid-template-columns:1fr 1fr;}.size-grid{grid-template-columns:1fr;}}
 </style>
 </head>
 <body>
@@ -159,11 +167,12 @@ input[type=range].rng::-webkit-slider-thumb{appearance:none;width:14px;height:14
     <canvas id="processCanvas"></canvas>
     <div class="step-bar">
       <div class="step-pill" data-step="0">Feed</div>
-      <div class="step-pill" data-step="1">Wet Grinding</div>
+      <div class="step-pill" data-step="1">Grinding</div>
       <div class="step-pill" data-step="2">Thickener</div>
       <div class="step-pill" data-step="3">Filter Cake</div>
       <div class="step-pill" data-step="4">Mixing</div>
       <div class="step-pill" data-step="5">Balling</div>
+      <div class="step-pill" data-step="5b">Green Ball</div>
       <div class="step-pill" data-step="6">Screening</div>
       <div class="step-pill" data-step="7">Induration</div>
       <div class="step-pill" data-step="8">Cooling</div>
@@ -199,31 +208,33 @@ input[type=range].rng::-webkit-slider-thumb{appearance:none;width:14px;height:14
 <script>
 // ═══════ STATE ═══════
 const stageParams = {
-  feed:    {ore:'',limestone:'',coal:''},
-  grind:   {blain:2000,moisture:30},
-  thickner:{underflow:65},
-  filter:  {cakeMoisture:9.5},
-  mix:     {binder:'',flux:'',bindDosage:0.5},
-  ball:    {discAngle:48,rpm:14},
-  screen:  {upperMesh:18,lowerMesh:5},
-  indu:    {temp:1280,airFlow:'Forced Draft'},
-  cool:    {duration:40,targetTemp:80},
-  pellet:  {}
+  feed:      {ore:'',orePercent:'',limestone:'',limestonePercent:'',coal:'',coalPercent:''},
+  grind:     {rawFeedMoisture:'',blain:''},
+  thickner:  {},
+  filter:    {cakeMoisture:''},
+  mix:       {binder:'',dosageValue:'',dosageUnit:'kg',flux:'',mixMoisture:''},
+  ball:      {angle:'',motorRpm:'',discRpm:'',greenBallMoisture:''},
+  greenball: {moisture:'',dropNumber:'',gcs:''},
+  screen:    {s8_10:'',s10_12:'',s12_14:'',s14_16:'',recycled:'',recycledUnit:'%'},
+  indu:      {mode:'furnace',rpm:'',btt:'',drm:'',exhaust:'',tgRpm:'',mcTemp:'',tgDischarge:'',tgExhaust:''},
+  cool:      {zone1:'',zone2:'',zone3:'',zone4:''},
+  pellet:    {size8_10:'',size10_12:'',size12_14:'',size14_16:'',cracked:'',ccs:'',tumbler:'',abrasion:'',fe:''}
 };
 let simRunning=false,simFrame=0,simStep=-1,animId=null,currentModalStage=null;
 
 // ═══════ STAGES ═══════
 const STAGES=[
-  {id:'feed',    label:'IRON ORE\nFEED',       tag:'STAGE 01',shape:'hopper',   color:'#8b4513',step:0},
-  {id:'grind',   label:'WET\nGRINDING',        tag:'STAGE 02',shape:'drum',     color:'#7a5a30',step:1},
-  {id:'thickner',label:'THICKENER',            tag:'STAGE 03',shape:'conetank', color:'#2d5fa6',step:2},
-  {id:'filter',  label:'FILTER\nCAKE',         tag:'STAGE 04',shape:'press',    color:'#5a3d8a',step:3},
-  {id:'mix',     label:'MIXING\n+ BINDER',     tag:'STAGE 05',shape:'ellipse',  color:'#c8912a',step:4},
-  {id:'ball',    label:'BALLING\nDISC',        tag:'STAGE 06',shape:'circle',   color:'#3a7abf',step:5},
-  {id:'screen',  label:'SCREENING',            tag:'STAGE 07',shape:'screen',   color:'#6a5a2a',step:6},
-  {id:'indu',    label:'INDURATION\nFURNACE',  tag:'STAGE 08',shape:'furnace',  color:'#c04010',step:7},
-  {id:'cool',    label:'COOLING',              tag:'STAGE 09',shape:'trapezoid',color:'#2a7a4a',step:8},
-  {id:'pellet',  label:'FINISHED\nPELLETS',   tag:'STAGE 10',shape:'pellets',  color:'#1a3057',step:9},
+  {id:'feed',     label:'IRON ORE\nFEED',       tag:'STAGE 01',shape:'hopper',   color:'#8b4513',step:0},
+  {id:'grind',    label:'GRINDING',              tag:'STAGE 02',shape:'drum',     color:'#7a5a30',step:1},
+  {id:'thickner', label:'THICKENER',             tag:'STAGE 03',shape:'conetank', color:'#2d5fa6',step:2},
+  {id:'filter',   label:'FILTER\nCAKE',          tag:'STAGE 04',shape:'press',    color:'#5a3d8a',step:3},
+  {id:'mix',      label:'MIXING\n+ BINDER',      tag:'STAGE 05',shape:'ellipse',  color:'#c8912a',step:4},
+  {id:'ball',     label:'BALLING\nDISC',         tag:'STAGE 06',shape:'circle',   color:'#3a7abf',step:5},
+  {id:'greenball',label:'GREEN\nBALL PROP',      tag:'STAGE 06B',shape:'screen',  color:'#5a8a3a',step:5},
+  {id:'screen',   label:'SCREENING',             tag:'STAGE 07',shape:'screen',   color:'#6a5a2a',step:6},
+  {id:'indu',     label:'INDURATION\nFURNACE',   tag:'STAGE 08',shape:'furnace',  color:'#c04010',step:7},
+  {id:'cool',     label:'COOLING',               tag:'STAGE 09',shape:'trapezoid',color:'#2a7a4a',step:8},
+  {id:'pellet',   label:'FINISHED\nPELLETS',    tag:'STAGE 10',shape:'pellets',  color:'#1a3057',step:9},
 ];
 
 // ═══════ CANVAS ═══════
@@ -246,7 +257,6 @@ function draw(frame,activeStep){
   const{W,H}=sizeCanvas();
   ctx.clearRect(0,0,W,H);
   ctx.fillStyle='#fff'; ctx.fillRect(0,0,W,H);
-  // grid
   ctx.strokeStyle='rgba(200,145,42,0.035)'; ctx.lineWidth=1;
   for(let x=0;x<W;x+=36){ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x,H);ctx.stroke();}
   for(let y=0;y<H;y+=36){ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(W,y);ctx.stroke();}
@@ -260,14 +270,12 @@ function draw(frame,activeStep){
   const mW=slotW*0.68;
   const labelY=midY+mH*0.55+18;
 
-  // Info box
   if(activeStep>=0){
     const info=[
-      {k:'Ore:',    v:stageParams.feed.ore?stageParams.feed.ore.substring(0,22):'—'},
-      {k:'Binder:', v:stageParams.mix.binder?stageParams.mix.binder.substring(0,22):'—'},
-      {k:'Moisture:',v:stageParams.filter.cakeMoisture+'%'},
-      {k:'Temp:',    v:stageParams.indu.temp+'°C'},
-      {k:'Blain:',   v:stageParams.grind.blain+' cm²/g'},
+      {k:'Ore:',     v:stageParams.feed.ore?stageParams.feed.ore.substring(0,22):'—'},
+      {k:'Binder:',  v:stageParams.mix.binder?stageParams.mix.binder.substring(0,22):'—'},
+      {k:'Moisture:', v:stageParams.filter.cakeMoisture?stageParams.filter.cakeMoisture+'%':'—'},
+      {k:'Blain:',    v:stageParams.grind.blain?stageParams.grind.blain+' cm²/g':'—'},
     ];
     const bw=210,bh=info.length*17+18;
     ctx.fillStyle='rgba(253,248,240,0.95)'; ctx.strokeStyle='rgba(200,145,42,0.22)'; ctx.lineWidth=1;
@@ -278,14 +286,13 @@ function draw(frame,activeStep){
     });
   }
 
-  // Binder dosing annotation
   if(activeStep>=4||activeStep<0){
     const mcx=padX+4*slotW+slotW/2;
     ctx.save(); ctx.globalAlpha=activeStep<0?0.3:0.88;
     ctx.fillStyle='rgba(200,145,42,0.1)'; ctx.strokeStyle='rgba(200,145,42,0.45)'; ctx.lineWidth=1;
     ctx.beginPath(); ctx.roundRect(mcx-40,midY-mH*0.52-46,80,26,3); ctx.fill(); ctx.stroke();
     ctx.fillStyle='#c8912a'; ctx.font='600 8px JetBrains Mono'; ctx.textAlign='center';
-    ctx.fillText('OB-1205 DOSING',mcx,midY-mH*0.52-30);
+    ctx.fillText('OB DOSING',mcx,midY-mH*0.52-30);
     if(activeStep>=4){
       const dy=midY-mH*0.52-22+(frame%32)*0.72;
       ctx.strokeStyle='rgba(200,145,42,0.3)'; ctx.lineWidth=0.8; ctx.setLineDash([2,3]);
@@ -295,24 +302,20 @@ function draw(frame,activeStep){
     ctx.restore();
   }
 
-  // ── Connectors ──
   for(let i=0;i<n-1;i++){
     const s=STAGES[i];
     const cx1=padX+i*slotW+slotW/2;
     const cx2=padX+(i+1)*slotW+slotW/2;
     const lit=s.step<activeStep||s.step===activeStep;
     const x1=cx1+mW*0.46, x2=cx2-mW*0.46;
-
     ctx.save();
     ctx.strokeStyle=lit?s.color:'rgba(200,145,42,0.15)';
     ctx.lineWidth=lit?2.5:1.5; ctx.globalAlpha=lit?0.8:0.38;
     ctx.setLineDash(lit?[]:[5,5]);
     ctx.beginPath(); ctx.moveTo(x1,midY); ctx.lineTo(x2,midY); ctx.stroke(); ctx.setLineDash([]);
-    // arrowhead
     ctx.fillStyle=lit?s.color:'rgba(200,145,42,0.22)'; ctx.globalAlpha=lit?0.9:0.65;
     ctx.beginPath(); ctx.moveTo(x2,midY-5); ctx.lineTo(x2+9,midY); ctx.lineTo(x2,midY+5); ctx.fill();
     ctx.restore();
-    // particle
     if(lit){
       const t=(frame%60)/60;
       const px=x1+(x2-x1)*t;
@@ -322,7 +325,6 @@ function draw(frame,activeStep){
     }
   }
 
-  // ── Stage machines ──
   STAGES.forEach((s,i)=>{
     const cx=padX+i*slotW+slotW/2;
     const isActive=s.step===activeStep;
@@ -330,30 +332,23 @@ function draw(frame,activeStep){
     const isConfig=isStageConfigured(s.id);
     const lit=isActive||isDone;
     const alpha=activeStep>=0?(lit?1:0.33):1;
-
     ctx.save(); ctx.globalAlpha=alpha;
     if(isActive){ctx.shadowColor=s.color; ctx.shadowBlur=22;}
-
     const col=lit?s.color:(isConfig?s.color:'#c0ae90');
     const strokeCol=isActive?s.color:(isDone?s.color:(isConfig?'rgba(200,145,42,0.55)':'rgba(200,145,42,0.22)'));
     const strokeW=isActive?2.5:(isConfig?1.8:1.2);
-
     const bounds=drawMachineShape(s.shape,cx,midY,mW,mH,col,strokeCol,strokeW,isActive,isDone,frame,s);
     ctx.shadowBlur=0;
     hitZones.push({id:s.id,...bounds});
-
-    // label
     const lines=s.label.split('\n');
     const fs=slotW<100?7:8;
     ctx.font=`600 ${fs}px JetBrains Mono`; ctx.textAlign='center';
     ctx.fillStyle=lit?s.color:(isConfig?s.color:'#8a7a60');
     lines.forEach((line,li)=>ctx.fillText(line,cx,labelY+li*(fs+3)));
-
     if(s.id==='pellet'&&activeStep===9){
       ctx.fillStyle='#2a7a4a'; ctx.font='700 8px JetBrains Mono';
       ctx.fillText('✓ PELLETS READY',cx,labelY+lines.length*(fs+3)+12);
     }
-
     if(isConfig&&activeStep<0){
       ctx.fillStyle='#3aaa6a'; ctx.beginPath(); ctx.arc(bounds.x+bounds.w-6,bounds.y+6,4.5,0,Math.PI*2); ctx.fill();
     }
@@ -365,7 +360,6 @@ function draw(frame,activeStep){
     ctx.restore();
   });
 
-  // final pellet burst
   if(activeStep===9){
     const pi=STAGES.findIndex(s=>s.id==='pellet');
     drawPelletBurst(padX+pi*slotW+slotW/2,midY,frame,mW*0.48);
@@ -376,11 +370,8 @@ function draw(frame,activeStep){
 function drawMachineShape(shape,cx,cy,mW,mH,col,strokeCol,strokeW,isActive,isDone,frame,stage){
   const lit=isActive||isDone;
   ctx.fillStyle=col; ctx.strokeStyle=strokeCol; ctx.lineWidth=strokeW;
-
   switch(shape){
-
     case 'hopper':{
-      // Wider-top ore feed hopper (trapezoid, wide at top)
       const tw=mW*0.60,th=mH*0.58;
       const top=cy-th/2,bot=cy+th/2;
       ctx.beginPath();
@@ -396,9 +387,7 @@ function drawMachineShape(shape,cx,cy,mW,mH,col,strokeCol,strokeW,isActive,isDon
       }
       return{x:cx-tw/2,y:top,w:tw,h:th};
     }
-
     case 'drum':{
-      // Horizontal ellipse drum (ball mill)
       const rw=mW*0.46,rh=mH*0.34;
       ctx.beginPath(); ctx.ellipse(cx,cy,rw,rh,0,0,Math.PI*2); ctx.fill(); ctx.stroke();
       ctx.save(); ctx.translate(cx,cy); ctx.rotate(isActive?frame*0.07:0.4);
@@ -417,31 +406,23 @@ function drawMachineShape(shape,cx,cy,mW,mH,col,strokeCol,strokeW,isActive,isDon
       if(isActive){const dy=cy-rh-5+(frame%22)*1;ctx.beginPath();ctx.arc(cx+rw*0.55,dy,2.5,0,Math.PI*2);ctx.fillStyle='rgba(100,180,255,0.7)';ctx.fill();}
       return{x:cx-rw,y:cy-rh,w:rw*2,h:rh*2};
     }
-
     case 'conetank':{
-      // Thickener: flat-topped cylinder narrowing to cone at bottom
       const rr=mW*0.36,th=mH*0.62;
       const top=cy-th/2,mid2=cy+th*0.18;
-      // cylinder walls + cone bottom
       ctx.beginPath();
       ctx.moveTo(cx-rr,top); ctx.lineTo(cx+rr,top);
       ctx.lineTo(cx+rr,mid2); ctx.lineTo(cx,cy+th/2);
       ctx.lineTo(cx-rr,mid2); ctx.closePath(); ctx.fill(); ctx.stroke();
-      // elliptical top
       ctx.beginPath(); ctx.ellipse(cx,top,rr,rr*0.2,0,0,Math.PI*2); ctx.fill(); ctx.stroke();
-      // settling rings
       ctx.strokeStyle='rgba(255,255,255,0.2)'; ctx.lineWidth=0.8;
       for(let r=1;r<=2;r++){ctx.beginPath();ctx.ellipse(cx,top+r*(th*0.23),rr*0.68,rr*0.1,0,0,Math.PI*2);ctx.stroke();}
-      // rake
       ctx.save(); ctx.translate(cx,top+th*0.26); ctx.rotate(isActive?-frame*0.022:-0.2);
       ctx.strokeStyle='rgba(255,255,255,0.55)'; ctx.lineWidth=2;
       ctx.beginPath(); ctx.moveTo(-rr*0.85,0); ctx.lineTo(rr*0.85,0); ctx.stroke();
       ctx.restore();
       return{x:cx-rr,y:top,w:rr*2,h:th};
     }
-
     case 'press':{
-      // Filter press — tall upright rectangle
       const fw=mW*0.46,fh=mH*0.58;
       const top=cy-fh/2;
       ctx.beginPath(); ctx.roundRect(cx-fw/2,top,fw,fh,3); ctx.fill(); ctx.stroke();
@@ -459,9 +440,7 @@ function drawMachineShape(shape,cx,cy,mW,mH,col,strokeCol,strokeW,isActive,isDon
       }
       return{x:cx-fw/2,y:top,w:fw,h:fh};
     }
-
     case 'ellipse':{
-      // Mixing vessel — wide horizontal ellipse (like reference)
       const rw=mW*0.50,rh=mH*0.35;
       ctx.beginPath(); ctx.ellipse(cx,cy,rw,rh,0,0,Math.PI*2); ctx.fill(); ctx.stroke();
       ctx.save(); ctx.translate(cx,cy); ctx.rotate(isActive?frame*0.065:0.5);
@@ -476,9 +455,7 @@ function drawMachineShape(shape,cx,cy,mW,mH,col,strokeCol,strokeW,isActive,isDon
       if(isActive){ctx.shadowColor=col;ctx.shadowBlur=14;ctx.strokeStyle='rgba(255,255,255,0.2)';ctx.lineWidth=1.5;ctx.beginPath();ctx.ellipse(cx,cy,rw,rh,0,0,Math.PI*2);ctx.stroke();ctx.shadowBlur=0;}
       return{x:cx-rw,y:cy-rh,w:rw*2,h:rh*2};
     }
-
     case 'circle':{
-      // Balling disc — perfect circle
       const r=mW*0.40;
       ctx.beginPath(); ctx.arc(cx,cy,r,0,Math.PI*2); ctx.fill(); ctx.stroke();
       ctx.save(); ctx.translate(cx,cy); ctx.rotate(isActive?-frame*0.045:-0.3);
@@ -499,9 +476,7 @@ function drawMachineShape(shape,cx,cy,mW,mH,col,strokeCol,strokeW,isActive,isDon
       }
       return{x:cx-r,y:cy-r,w:r*2,h:r*2};
     }
-
     case 'screen':{
-      // Vibrating screen deck — slightly wider rectangle
       const sw=mW*0.58,sh=mH*0.46;
       const top=cy-sh/2;
       const vib=isActive?Math.sin(frame*0.5)*2:0;
@@ -521,9 +496,7 @@ function drawMachineShape(shape,cx,cy,mW,mH,col,strokeCol,strokeW,isActive,isDon
       }
       return{x:cx-sw/2,y:top,w:sw,h:sh};
     }
-
     case 'furnace':{
-      // Induration furnace — tall upright rectangle (like the orange block in reference)
       const fw=mW*0.50,fh=mH*0.72;
       const top=cy-fh/2;
       ctx.beginPath(); ctx.roundRect(cx-fw/2,top,fw,fh,3); ctx.fill(); ctx.stroke();
@@ -543,9 +516,7 @@ function drawMachineShape(shape,cx,cy,mW,mH,col,strokeCol,strokeW,isActive,isDon
       }
       return{x:cx-fw/2,y:top,w:fw,h:fh};
     }
-
     case 'trapezoid':{
-      // Cooling tower — wider at top, narrower at bottom (like reference "COOLING" shape)
       const tw=mW*0.60,th=mH*0.62;
       const top=cy-th/2,bot=cy+th/2;
       ctx.beginPath();
@@ -567,14 +538,12 @@ function drawMachineShape(shape,cx,cy,mW,mH,col,strokeCol,strokeW,isActive,isDon
       }
       return{x:cx-tw/2,y:top,w:tw,h:th};
     }
-
     case 'pellets':{
-      // Pellet cluster — no background shape, just spheres
       const r=mW*0.42;
       const pelletDefs=[
-        {ox:0,  oy:0,  rr:11},{ox:-14,oy:-7,rr:8.5},{ox:14,oy:-5,rr:8.5},
-        {ox:-9, oy:12, rr:7.5},{ox:11, oy:12,rr:7.5},{ox:-19,oy:5,rr:6.5},
-        {ox:19, oy:4,  rr:6.5},{ox:0,  oy:-17,rr:6},{ox:-4, oy:21,rr:5.5},
+        {ox:0,oy:0,rr:11},{ox:-14,oy:-7,rr:8.5},{ox:14,oy:-5,rr:8.5},
+        {ox:-9,oy:12,rr:7.5},{ox:11,oy:12,rr:7.5},{ox:-19,oy:5,rr:6.5},
+        {ox:19,oy:4,rr:6.5},{ox:0,oy:-17,rr:6},{ox:-4,oy:21,rr:5.5},
       ];
       const ang=isActive?frame*0.022:0;
       pelletDefs.forEach(pd=>{
@@ -619,149 +588,360 @@ canvas.addEventListener('mousemove',function(e){
   canvas.style.cursor=hitZones.some(z=>mx>=z.x&&mx<=z.x+z.w&&my>=z.y&&my<=z.y+z.h)?'pointer':'default';
 });
 
+// ═══════ HELPER: number input field ═══════
+function numField(id, label, val, min, max, unit, step){
+  step = step || 'any';
+  return `
+    <div class="field-group">
+      <div class="field-label">${label}</div>
+      <input type="number" class="finp" id="${id}" value="${val||''}" min="${min}" max="${max}" step="${step}" placeholder="${min} – ${max}">
+      <div class="input-hint">Range: ${min} – ${max}${unit?' '+unit:''}</div>
+    </div>`;
+}
+
 // ═══════ MODALS ═══════
 const MODAL_CONFIGS={
+
+  // ─── FEED ───
   feed:{
-    title:'Iron Ore Feed',desc:'Configure raw material grades and additives loaded into the process',
+    title:'Iron Ore Feed',desc:'Configure raw material grades and additives',
     fields:()=>`
-      <div class="field-group"><div class="field-label">Iron Ore Grade</div>
+      <div class="field-group">
+        <div class="field-label">Iron Ore Grade</div>
         <select class="fsel" id="m-ore">
           <option value="">— Select Grade —</option>
-          ${['Hematite (65–68% Fe)','Magnetite (68–72% Fe)','Goethite (55–60% Fe)','Limonite (50–55% Fe)','Blend 70:30 HG:LG','Blend 50:50 HG:LG','Blend 30:70 HG:LG'].map(v=>`<option value="${v}"${stageParams.feed.ore===v?' selected':''}>${v}</option>`).join('')}
-        </select></div>
-      <div class="field-group"><div class="field-label">Limestone / Flux</div>
+          ${['Magnetite','Hematite','Limonite','Goethite'].map(v=>`<option value="${v}"${stageParams.feed.ore===v?' selected':''}>${v}</option>`).join('')}
+        </select>
+      </div>
+      <div class="field-group">
+        <div class="field-label">Iron Ore Percentage (%)</div>
+        <input type="number" class="finp" id="m-ore-pct" value="${stageParams.feed.orePercent||''}" min="55" max="65" step="0.1" placeholder="55 – 65">
+        <div class="input-hint">Range: 55 – 65 %</div>
+      </div>
+      <div class="field-group">
+        <div class="field-label">Limestone / Flux</div>
         <select class="fsel" id="m-limestone">
           <option value="">— Select —</option>
-          ${['Limestone (CaCO₃)','Dolomite','Olivine','No Flux'].map(v=>`<option value="${v}"${stageParams.feed.limestone===v?' selected':''}>${v}</option>`).join('')}
-        </select></div>
-      <div class="field-group"><div class="field-label">Fuel / Reductant</div>
+          ${['Limestone','Dolomite','Pyroxenite'].map(v=>`<option value="${v}"${stageParams.feed.limestone===v?' selected':''}>${v}</option>`).join('')}
+        </select>
+      </div>
+      <div class="field-group">
+        <div class="field-label">Limestone Percentage (%)</div>
+        <input type="number" class="finp" id="m-limestone-pct" value="${stageParams.feed.limestonePercent||''}" min="0" max="20" step="0.1" placeholder="Enter %">
+        <div class="input-hint">Enter percentage of limestone/flux</div>
+      </div>
+      <div class="field-group">
+        <div class="field-label">Fuel / Reductant</div>
         <select class="fsel" id="m-coal">
           <option value="">— Select —</option>
-          ${['Anthracite Coal','Pet Coke','Low-S Charcoal'].map(v=>`<option value="${v}"${stageParams.feed.coal===v?' selected':''}>${v}</option>`).join('')}
-        </select></div>`,
-    save:()=>{stageParams.feed.ore=document.getElementById('m-ore').value;stageParams.feed.limestone=document.getElementById('m-limestone').value;stageParams.feed.coal=document.getElementById('m-coal').value;}
-  },
-  grind:{
-    title:'Wet Grinding',desc:'Set grinding fineness (Blain) and feed moisture for the wet grinding circuit',
-    fields:()=>`
-      <div class="field-group"><div class="field-label">Target Blain Number</div>
-        <div class="slider-wrap"><div class="slider-top"><span>cm²/g</span><span class="sv" id="sv-blain">${stageParams.grind.blain} cm²/g</span></div>
-        <input type="range" class="rng" id="m-blain" min="1200" max="3200" step="100" value="${stageParams.grind.blain}" oninput="setSV('sv-blain',this,' cm²/g');setPct(this)"></div></div>
-      <div class="field-group"><div class="field-label">Feed Moisture %</div>
-        <div class="slider-wrap"><div class="slider-top"><span>%</span><span class="sv" id="sv-gmoist">${stageParams.grind.moisture}%</span></div>
-        <input type="range" class="rng" id="m-gmoist" min="20" max="45" step="1" value="${stageParams.grind.moisture}" oninput="setSV('sv-gmoist',this,'%');setPct(this)"></div></div>`,
-    save:()=>{stageParams.grind.blain=+document.getElementById('m-blain').value;stageParams.grind.moisture=+document.getElementById('m-gmoist').value;}
-  },
-  thickner:{
-    title:'Thickener',desc:'Configure thickener underflow density for the slurry circuit',
-    fields:()=>`
-      <div class="field-group"><div class="field-label">Underflow Density (% Solids)</div>
-        <div class="slider-wrap"><div class="slider-top"><span>% Solids</span><span class="sv" id="sv-uf">${stageParams.thickner.underflow}%</span></div>
-        <input type="range" class="rng" id="m-uf" min="55" max="80" step="1" value="${stageParams.thickner.underflow}" oninput="setSV('sv-uf',this,'%');setPct(this)"></div></div>`,
-    save:()=>{stageParams.thickner.underflow=+document.getElementById('m-uf').value;}
-  },
-  filter:{
-    title:'Filter Cake',desc:'Set the moisture content of the filter cake going into the mixing stage',
-    fields:()=>`
-      <div class="field-group"><div class="field-label">Filter Cake Moisture (%)</div>
-        <div class="slider-wrap"><div class="slider-top"><span>%</span><span class="sv" id="sv-fcm">${stageParams.filter.cakeMoisture}%</span></div>
-        <input type="range" class="rng" id="m-fcm" min="7" max="14" step="0.25" value="${stageParams.filter.cakeMoisture}" oninput="setSVDec('sv-fcm',this,'%');setPct(this)"></div></div>`,
-    save:()=>{stageParams.filter.cakeMoisture=+document.getElementById('m-fcm').value;}
-  },
-  mix:{
-    title:'Mixing + Binder',desc:'Select binder type, dosage and flux for the mixing circuit',
-    fields:()=>`
-      <div class="field-group"><div class="field-label">Binder Type</div>
-        <select class="fsel" id="m-binder">
-          <option value="">— Select Binder —</option>
-          ${['OB-1205 Organic','Bentonite (6 kg/t)','OB-1205 + Bentonite','OB-1206'].map(v=>`<option value="${v}"${stageParams.mix.binder===v?' selected':''}>${v}</option>`).join('')}
-        </select></div>
-      <div class="field-group"><div class="field-label">Binder Dosage (GPT)</div>
-        <div class="slider-wrap"><div class="slider-top"><span>g/t</span><span class="sv" id="sv-dose">${stageParams.mix.bindDosage.toFixed(2)} GPT</span></div>
-        <input type="range" class="rng" id="m-dose" min="0.25" max="2.0" step="0.25" value="${stageParams.mix.bindDosage}" oninput="setSVDec('sv-dose',this,' GPT');setPct(this)"></div></div>
-      <div class="field-group"><div class="field-label">Flux / Additive</div>
-        <select class="fsel" id="m-flux">
-          <option value="">— Select Flux —</option>
-          ${['Limestone (CaCO₃)','Dolomite','Olivine','No Flux'].map(v=>`<option value="${v}"${stageParams.mix.flux===v?' selected':''}>${v}</option>`).join('')}
-        </select></div>`,
-    save:()=>{stageParams.mix.binder=document.getElementById('m-binder').value;stageParams.mix.bindDosage=+document.getElementById('m-dose').value;stageParams.mix.flux=document.getElementById('m-flux').value;}
-  },
-  ball:{
-    title:'Balling Disc',desc:'Configure disc inclination and rotation speed for green pellet formation',
-    fields:()=>`
-      <div class="field-group"><div class="field-label">Disc Inclination Angle (°)</div>
-        <div class="slider-wrap"><div class="slider-top"><span>degrees</span><span class="sv" id="sv-angle">${stageParams.ball.discAngle}°</span></div>
-        <input type="range" class="rng" id="m-angle" min="40" max="55" step="1" value="${stageParams.ball.discAngle}" oninput="setSV('sv-angle',this,'°');setPct(this)"></div></div>
-      <div class="field-group"><div class="field-label">Disc Rotation Speed (RPM)</div>
-        <div class="slider-wrap"><div class="slider-top"><span>RPM</span><span class="sv" id="sv-rpm">${stageParams.ball.rpm} RPM</span></div>
-        <input type="range" class="rng" id="m-rpm" min="8" max="22" step="1" value="${stageParams.ball.rpm}" oninput="setSV('sv-rpm',this,' RPM');setPct(this)"></div></div>`,
-    save:()=>{stageParams.ball.discAngle=+document.getElementById('m-angle').value;stageParams.ball.rpm=+document.getElementById('m-rpm').value;}
-  },
-  screen:{
-    title:'Screening',desc:'Set upper and lower screen mesh sizes for size classification',
-    fields:()=>`
-      <div class="field-group"><div class="field-label">Upper Screen Mesh (mm)</div>
-        <div class="slider-wrap"><div class="slider-top"><span>mm</span><span class="sv" id="sv-upper">${stageParams.screen.upperMesh} mm</span></div>
-        <input type="range" class="rng" id="m-upper" min="16" max="22" step="1" value="${stageParams.screen.upperMesh}" oninput="setSV('sv-upper',this,' mm');setPct(this)"></div></div>
-      <div class="field-group"><div class="field-label">Lower Screen Mesh (mm)</div>
-        <div class="slider-wrap"><div class="slider-top"><span>mm</span><span class="sv" id="sv-lower">${stageParams.screen.lowerMesh} mm</span></div>
-        <input type="range" class="rng" id="m-lower" min="3" max="7" step="1" value="${stageParams.screen.lowerMesh}" oninput="setSV('sv-lower',this,' mm');setPct(this)"></div></div>
-      <div style="padding:10px 12px;background:rgba(200,145,42,0.07);border:1px solid var(--border);border-radius:4px;font-size:.74rem;color:var(--text-dim);margin-top:.5rem;">
-        Oversize (+${stageParams.screen.upperMesh}mm) → recirculates to Balling Disc.<br>Undersize (-${stageParams.screen.lowerMesh}mm) = return fines.
-      </div>`,
-    save:()=>{stageParams.screen.upperMesh=+document.getElementById('m-upper').value;stageParams.screen.lowerMesh=+document.getElementById('m-lower').value;}
-  },
-  indu:{
-    title:'Induration Furnace',desc:'Set firing temperature and air flow mode for the induration furnace',
-    fields:()=>`
-      <div class="field-group"><div class="field-label">Induration Temperature (°C)</div>
-        <div class="slider-wrap"><div class="slider-top"><span>°C</span><span class="sv" id="sv-temp">${stageParams.indu.temp}°C</span></div>
-        <input type="range" class="rng" id="m-temp" min="1100" max="1400" step="10" value="${stageParams.indu.temp}" oninput="setSV('sv-temp',this,'°C');setPct(this)"></div></div>
-      <div class="field-group"><div class="field-label">Air Flow Mode</div>
-        <select class="fsel" id="m-airflow">
-          ${['Forced Draft','Induced Draft','Balanced Draft'].map(v=>`<option value="${v}"${stageParams.indu.airFlow===v?' selected':''}>${v}</option>`).join('')}
-        </select></div>
-      <div style="padding:10px 12px;background:rgba(192,64,16,0.06);border:1px solid rgba(192,64,16,0.2);border-radius:4px;font-size:.74rem;color:var(--text-dim);margin-top:.5rem;">
-        Zones: Drying → Preheating → Firing → After-Firing. ESP captures exhaust dust before stack.
-      </div>`,
-    save:()=>{stageParams.indu.temp=+document.getElementById('m-temp').value;stageParams.indu.airFlow=document.getElementById('m-airflow').value;}
-  },
-  cool:{
-    title:'Cooling',desc:'Configure forced air cooling duration and target exit temperature',
-    fields:()=>`
-      <div class="field-group"><div class="field-label">Cooling Duration (min)</div>
-        <div class="slider-wrap"><div class="slider-top"><span>min</span><span class="sv" id="sv-cdur">${stageParams.cool.duration} min</span></div>
-        <input type="range" class="rng" id="m-cdur" min="20" max="60" step="5" value="${stageParams.cool.duration}" oninput="setSV('sv-cdur',this,' min');setPct(this)"></div></div>
-      <div class="field-group"><div class="field-label">Target Exit Temperature (°C)</div>
-        <div class="slider-wrap"><div class="slider-top"><span>°C</span><span class="sv" id="sv-texit">${stageParams.cool.targetTemp}°C</span></div>
-        <input type="range" class="rng" id="m-texit" min="60" max="150" step="5" value="${stageParams.cool.targetTemp}" oninput="setSV('sv-texit',this,'°C');setPct(this)"></div></div>`,
-    save:()=>{stageParams.cool.duration=+document.getElementById('m-cdur').value;stageParams.cool.targetTemp=+document.getElementById('m-texit').value;}
-  },
-  pellet:{
-    title:'Finished Pellets',desc:'Quality targets for the final pellet product',
-    fields:()=>`
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:1rem;">
-        ${[['Target Size','10–16 mm'],['Min. CCS','>200 kg/p'],['Tumble Index','>92%'],['Abrasion Index','<5%'],['Fe Content','>62%'],['Porosity','~25%']].map(([l,v])=>`
-          <div style="background:var(--cream);border:1px solid var(--border);border-radius:4px;padding:10px 12px;text-align:center;">
-            <div style="font-family:'JetBrains Mono';font-size:.52rem;letter-spacing:1px;color:var(--text-dim);text-transform:uppercase;margin-bottom:4px;">${l}</div>
-            <div style="font-family:'Cormorant Garamond',serif;font-size:1.2rem;font-weight:700;color:var(--navy);">${v}</div>
-          </div>`).join('')}
+          ${['Anthracite Coal'].map(v=>`<option value="${v}"${stageParams.feed.coal===v?' selected':''}>${v}</option>`).join('')}
+        </select>
       </div>
-      <div style="padding:10px 12px;background:rgba(42,122,74,0.07);border:1px solid rgba(58,170,106,0.25);border-radius:4px;font-size:.74rem;color:var(--text-dim);">
-        Quality targets per IS 11283 / ASTM E877. Configure upstream stages to optimise pellet properties.
+      <div class="field-group">
+        <div class="field-label">Fuel Percentage (%)</div>
+        <input type="number" class="finp" id="m-coal-pct" value="${stageParams.feed.coalPercent||''}" min="0.5" max="1.5" step="0.1" placeholder="~1%">
+        <div class="input-hint">Range: ~1 % (0.5 – 1.5)</div>
+      </div>`,
+    save:()=>{
+      stageParams.feed.ore=document.getElementById('m-ore').value;
+      stageParams.feed.orePercent=document.getElementById('m-ore-pct').value;
+      stageParams.feed.limestone=document.getElementById('m-limestone').value;
+      stageParams.feed.limestonePercent=document.getElementById('m-limestone-pct').value;
+      stageParams.feed.coal=document.getElementById('m-coal').value;
+      stageParams.feed.coalPercent=document.getElementById('m-coal-pct').value;
+    }
+  },
+
+  // ─── GRINDING ───
+  grind:{
+    title:'Grinding',desc:'Set raw feed moisture and target Blain fineness',
+    fields:()=>`
+      ${numField('m-rfmoist','Raw Feed Moisture (%)',stageParams.grind.rawFeedMoisture,8,15,'%',0.1)}
+      ${numField('m-blain','Blain Number (cm²/g)',stageParams.grind.blain,1800,3200,'cm²/g',10)}`,
+    save:()=>{
+      stageParams.grind.rawFeedMoisture=document.getElementById('m-rfmoist').value;
+      stageParams.grind.blain=document.getElementById('m-blain').value;
+    }
+  },
+
+  // ─── THICKENER — no parameters ───
+  thickner:{
+    title:'Thickener',desc:'Thickener stage — no configurable parameters at this stage',
+    fields:()=>`
+      <div style="padding:16px;background:rgba(45,95,166,0.06);border:1px solid rgba(45,95,166,0.18);border-radius:6px;text-align:center;color:var(--text-dim);font-size:.8rem;line-height:1.6;">
+        <div style="font-size:1.4rem;margin-bottom:8px;">⚙️</div>
+        Thickener operates automatically based on upstream slurry density.<br>No manual parameters required for this stage.
       </div>`,
     save:()=>{}
+  },
+
+  // ─── FILTER CAKE ───
+  filter:{
+    title:'Filter Cake',desc:'Set filter cake moisture for the mixing stage',
+    fields:()=>`
+      ${numField('m-fcm','Filter Cake Moisture (%)',stageParams.filter.cakeMoisture,8,13,'%',0.1)}`,
+    save:()=>{stageParams.filter.cakeMoisture=document.getElementById('m-fcm').value;}
+  },
+
+  // ─── MIXING ───
+  mix:{
+    title:'Mixing + Binder',desc:'Select binder, dosage and configure mix moisture',
+    fields:()=>`
+      <div class="field-group">
+        <div class="field-label">Binder Type</div>
+        <select class="fsel" id="m-binder">
+          <option value="">— Select Binder —</option>
+          ${['OB-1205 Organic','OB-1206','OB3s','OB Pro','Bentonite (6 kg/t)','OB-1205 + Bentonite'].map(v=>`<option value="${v}"${stageParams.mix.binder===v?' selected':''}>${v}</option>`).join('')}
+        </select>
+      </div>
+      <div class="field-group">
+        <div class="field-label">Binder Dosage</div>
+        <div class="input-row">
+          <input type="number" class="finp" id="m-dose" value="${stageParams.mix.dosageValue||''}" min="0" step="0.01" placeholder="Enter value">
+          <select class="fsel" id="m-dose-unit" style="width:80px;flex:0 0 80px;">
+            <option value="kg"${stageParams.mix.dosageUnit==='kg'?' selected':''}>kg/t</option>
+            <option value="%"${stageParams.mix.dosageUnit==='%'?' selected':''}>%</option>
+          </select>
+        </div>
+        <div class="input-hint">Enter dosage in kg/t or %</div>
+      </div>
+      <div class="field-group">
+        <div class="field-label">Flux / Additive</div>
+        <select class="fsel" id="m-flux">
+          <option value="">— Select Flux —</option>
+          ${['Limestone','Dolomite','Pyroxenite'].map(v=>`<option value="${v}"${stageParams.mix.flux===v?' selected':''}>${v}</option>`).join('')}
+        </select>
+      </div>
+      ${numField('m-mmoist','Mix Material Moisture (%)',stageParams.mix.mixMoisture,0,20,'%',0.1)}`,
+    save:()=>{
+      stageParams.mix.binder=document.getElementById('m-binder').value;
+      stageParams.mix.dosageValue=document.getElementById('m-dose').value;
+      stageParams.mix.dosageUnit=document.getElementById('m-dose-unit').value;
+      stageParams.mix.flux=document.getElementById('m-flux').value;
+      stageParams.mix.mixMoisture=document.getElementById('m-mmoist').value;
+    }
+  },
+
+  // ─── BALLING DISC ───
+  ball:{
+    title:'Balling Disc',desc:'Configure disc angle, motor speed, disc speed and green ball moisture',
+    fields:()=>`
+      ${numField('m-angle','Disc Inclination Angle (°)',stageParams.ball.angle,46,50,'°',0.5)}
+      ${numField('m-motorrpm','Motor Speed (RPM)',stageParams.ball.motorRpm,1100,1400,'RPM',1)}
+      ${numField('m-discrpm','Disc Speed (RPM)',stageParams.ball.discRpm,6,8,'RPM',0.1)}
+      ${numField('m-gbmoist','Green Ball Moisture (%)',stageParams.ball.greenBallMoisture,0,20,'%',0.1)}`,
+    save:()=>{
+      stageParams.ball.angle=document.getElementById('m-angle').value;
+      stageParams.ball.motorRpm=document.getElementById('m-motorrpm').value;
+      stageParams.ball.discRpm=document.getElementById('m-discrpm').value;
+      stageParams.ball.greenBallMoisture=document.getElementById('m-gbmoist').value;
+    }
+  },
+
+  // ─── GREEN BALL PROPERTIES ───
+  greenball:{
+    title:'Green Ball Properties',desc:'Enter measured green ball quality parameters',
+    fields:()=>`
+      ${numField('m-gbp-moist','Green Ball Moisture (%)',stageParams.greenball.moisture,9.5,11,'%',0.1)}
+      ${numField('m-gbp-drop','Drop Number',stageParams.greenball.dropNumber,20,45,'drops',1)}
+      ${numField('m-gbp-gcs','GCS (kg / green pellet)',stageParams.greenball.gcs,1,1.5,'kg',0.05)}`,
+    save:()=>{
+      stageParams.greenball.moisture=document.getElementById('m-gbp-moist').value;
+      stageParams.greenball.dropNumber=document.getElementById('m-gbp-drop').value;
+      stageParams.greenball.gcs=document.getElementById('m-gbp-gcs').value;
+    }
+  },
+
+  // ─── SCREENING ───
+  screen:{
+    title:'Screening',desc:'Enter size distribution percentages and recycle rate',
+    fields:()=>`
+      <div style="margin-bottom:.8rem;padding:8px 12px;background:rgba(106,90,42,0.07);border:1px solid var(--border);border-radius:4px;font-size:.73rem;color:var(--text-dim);">
+        Enter percentage for each size fraction. Remainder = oversize + undersize.
+      </div>
+      <div class="size-grid">
+        ${numField('m-s8','8–10 mm (%)',stageParams.screen.s8_10,0,100,'%',0.1)}
+        ${numField('m-s10','10–12 mm (%)',stageParams.screen.s10_12,0,100,'%',0.1)}
+        ${numField('m-s12','12–14 mm (%)',stageParams.screen.s12_14,0,100,'%',0.1)}
+        ${numField('m-s14','14–16 mm (%)',stageParams.screen.s14_16,0,100,'%',0.1)}
+      </div>
+      <div class="field-group" style="margin-top:.5rem;">
+        <div class="field-label">Recycled Material</div>
+        <div class="input-row">
+          <input type="number" class="finp" id="m-recycled" value="${stageParams.screen.recycled||''}" min="0" step="0.1" placeholder="Enter value">
+          <select class="fsel" id="m-recycled-unit" style="width:80px;flex:0 0 80px;">
+            <option value="%"${stageParams.screen.recycledUnit==='%'?' selected':''}>%</option>
+            <option value="tph"${stageParams.screen.recycledUnit==='tph'?' selected':''}>tph</option>
+          </select>
+        </div>
+        <div class="input-hint">Oversize (+16mm) recirculates to Balling Disc. Undersize (-8mm) = return fines.</div>
+      </div>`,
+    save:()=>{
+      stageParams.screen.s8_10=document.getElementById('m-s8').value;
+      stageParams.screen.s10_12=document.getElementById('m-s10').value;
+      stageParams.screen.s12_14=document.getElementById('m-s12').value;
+      stageParams.screen.s14_16=document.getElementById('m-s14').value;
+      stageParams.screen.recycled=document.getElementById('m-recycled').value;
+      stageParams.screen.recycledUnit=document.getElementById('m-recycled-unit').value;
+    }
+  },
+
+  // ─── INDURATION ───
+  indu:{
+    title:'Induration',desc:'Select machine type and configure process parameters',
+    fields:()=>{
+      const mode=stageParams.indu.mode||'furnace';
+      return `
+        <div class="field-group">
+          <div class="field-label">Machine Type</div>
+          <div class="mode-toggle">
+            <button id="btn-furnace" class="${mode==='furnace'?'active':''}" onclick="switchInduMode('furnace')">Induration Furnace</button>
+            <button id="btn-grate" class="${mode==='grate'?'active':''}" onclick="switchInduMode('grate')">Grate Kiln</button>
+          </div>
+        </div>
+        <div id="indu-params-area">${getInduFields(mode)}</div>`;
+    },
+    save:()=>{
+      const mode=stageParams.indu.mode;
+      if(mode==='furnace'){
+        stageParams.indu.rpm=document.getElementById('m-irpm').value;
+        stageParams.indu.btt=document.getElementById('m-btt').value;
+        stageParams.indu.drm=document.getElementById('m-drm').value;
+        stageParams.indu.exhaust=document.getElementById('m-exhaust').value;
+      } else {
+        stageParams.indu.tgRpm=document.getElementById('m-tgrpm').value;
+        stageParams.indu.mcTemp=document.getElementById('m-mctemp').value;
+        stageParams.indu.tgDischarge=document.getElementById('m-tgdis').value;
+        stageParams.indu.tgExhaust=document.getElementById('m-tgexh').value;
+      }
+      addLog('[INDU]','step',`Machine: ${mode==='furnace'?'Induration Furnace':'Grate Kiln'}`);
+    }
+  },
+
+  // ─── COOLING ───
+  cool:{
+    title:'Cooling',desc:'Enter temperature for each cooling zone',
+    fields:()=>{
+      const mode=stageParams.indu.mode||'furnace';
+      const isGrate=mode==='grate';
+      return `
+        <div style="margin-bottom:.8rem;padding:8px 12px;background:rgba(42,122,74,0.07);border:1px solid rgba(42,122,74,0.2);border-radius:4px;font-size:.73rem;color:var(--text-dim);">
+          ${isGrate?'Grate Kiln: 1–4 cooling zones available.':'Induration Furnace: 4 cooling zones.'}
+        </div>
+        ${numField('m-z1','Zone 1 Temperature (°C)',stageParams.cool.zone1,0,1300,'°C',1)}
+        ${numField('m-z2','Zone 2 Temperature (°C)',stageParams.cool.zone2,0,1000,'°C',1)}
+        ${numField('m-z3','Zone 3 Temperature (°C)',stageParams.cool.zone3,0,700,'°C',1)}
+        ${isGrate?`<div style="margin-bottom:.5rem;padding:7px 10px;background:rgba(200,145,42,0.07);border:1px solid var(--border);border-radius:4px;font-size:.72rem;color:var(--text-dim);">Zone 4 optional for Grate Kiln</div>`:''}
+        ${numField('m-z4','Zone 4 Temperature (°C)',stageParams.cool.zone4,0,400,'°C',1)}`;
+    },
+    save:()=>{
+      stageParams.cool.zone1=document.getElementById('m-z1').value;
+      stageParams.cool.zone2=document.getElementById('m-z2').value;
+      stageParams.cool.zone3=document.getElementById('m-z3').value;
+      stageParams.cool.zone4=document.getElementById('m-z4').value;
+    }
+  },
+
+  // ─── FINISHED PELLETS ───
+  pellet:{
+    title:'Finished Pellets',desc:'Quality targets and measured pellet properties',
+    fields:()=>{
+      const mode=stageParams.indu.mode||'furnace';
+      const isGrate=mode==='grate';
+      const tumblerRange=isGrate?'94–95':'92';
+      const abrasionRange=isGrate?'2.5–3.5':'5–7';
+      const crackedNote=isGrate?'Grate target: 0%':'Lower than 10% is great';
+      return `
+        <div style="margin-bottom:.8rem;padding:8px 12px;background:rgba(26,48,87,0.06);border:1px solid var(--border);border-radius:4px;font-size:.73rem;color:var(--text-dim);">
+          Machine mode: <strong style="color:var(--navy)">${isGrate?'Grate Kiln':'Induration Furnace'}</strong> — ranges adjust accordingly.
+        </div>
+        <div class="field-label" style="margin-bottom:.7rem;">◈ PELLET SIZE DISTRIBUTION (%)</div>
+        <div class="size-grid">
+          ${numField('m-p8','8–10 mm (%)',stageParams.pellet.size8_10,0,100,'%',0.1)}
+          ${numField('m-p10','10–12 mm (%)',stageParams.pellet.size10_12,0,100,'%',0.1)}
+          ${numField('m-p12','12–14 mm (%)',stageParams.pellet.size12_14,0,100,'%',0.1)}
+          ${numField('m-p14','14–16 mm (%)',stageParams.pellet.size14_16,0,100,'%',0.1)}
+        </div>
+        <div class="field-group">
+          <div class="field-label">Cracked Pellets (%)</div>
+          <input type="number" class="finp" id="m-cracked" value="${stageParams.pellet.cracked||''}" min="12" max="15" step="0.1" placeholder="12–15">
+          <div class="input-hint">Range: 12–15% | ${crackedNote}</div>
+        </div>
+        ${numField('m-ccs','Min CCS (kg/pellet)',stageParams.pellet.ccs,180,300,'kg/p',1)}
+        <div class="field-group">
+          <div class="field-label">Tumbler Index (%)</div>
+          <input type="number" class="finp" id="m-tumbler" value="${stageParams.pellet.tumbler||''}" min="${isGrate?94:92}" max="${isGrate?95:95}" step="0.1" placeholder="${tumblerRange}">
+          <div class="input-hint">Range: ${tumblerRange} %</div>
+        </div>
+        <div class="field-group">
+          <div class="field-label">Abrasion Index (%)</div>
+          <input type="number" class="finp" id="m-abrasion" value="${stageParams.pellet.abrasion||''}" min="${isGrate?2.5:5}" max="${isGrate?3.5:7}" step="0.1" placeholder="${abrasionRange}">
+          <div class="input-hint">Range: ${abrasionRange} %</div>
+        </div>
+        ${numField('m-fe','Fe Percentage (%)',stageParams.pellet.fe,59,61,'%',0.1)}
+        <div style="padding:10px 12px;background:rgba(42,122,74,0.07);border:1px solid rgba(58,170,106,0.25);border-radius:4px;font-size:.74rem;color:var(--text-dim);margin-top:.5rem;">
+          Quality targets per IS 11283 / ASTM E877. Configure upstream stages to optimise properties.
+        </div>`;
+    },
+    save:()=>{
+      stageParams.pellet.size8_10=document.getElementById('m-p8').value;
+      stageParams.pellet.size10_12=document.getElementById('m-p10').value;
+      stageParams.pellet.size12_14=document.getElementById('m-p12').value;
+      stageParams.pellet.size14_16=document.getElementById('m-p14').value;
+      stageParams.pellet.cracked=document.getElementById('m-cracked').value;
+      stageParams.pellet.ccs=document.getElementById('m-ccs').value;
+      stageParams.pellet.tumbler=document.getElementById('m-tumbler').value;
+      stageParams.pellet.abrasion=document.getElementById('m-abrasion').value;
+      stageParams.pellet.fe=document.getElementById('m-fe').value;
+    }
   }
 };
 
+// ─── Induration mode helpers ───
+function getInduFields(mode){
+  if(mode==='furnace'){
+    return `
+      ${numField('m-irpm','Induration Machine RPM',stageParams.indu.rpm,2,6,'RPM',0.1)}
+      ${numField('m-btt','Burn-Through Temperature (°C)',stageParams.indu.btt,320,400,'°C',1)}
+      ${numField('m-drm','DRM Temperature (°C)',stageParams.indu.drm,850,950,'°C',1)}
+      <div class="field-group">
+        <div class="field-label">Exhaust Hood Pressure (bar)</div>
+        <input type="number" class="finp" id="m-exhaust" value="${stageParams.indu.exhaust||''}" min="-100" max="150" step="1" placeholder="-100 to 150">
+        <div class="input-hint">Range: -100 – 150 bar</div>
+      </div>`;
+  } else {
+    return `
+      ${numField('m-tgrpm','TG RPM',stageParams.indu.tgRpm,2,6,'RPM',0.1)}
+      ${numField('m-mctemp','Multi Cyclone Temperature (°C)',stageParams.indu.mcTemp,280,350,'°C',1)}
+      ${numField('m-tgdis','TG Discharge Temperature (°C)',stageParams.indu.tgDischarge,0,1200,'°C',1)}
+      <div class="field-group">
+        <div class="field-label">Exhaust Hood Pressure (bar)</div>
+        <input type="number" class="finp" id="m-tgexh" value="${stageParams.indu.tgExhaust||''}" min="-45" max="-20" step="1" placeholder="-20 to -45">
+        <div class="input-hint">Range: -20 – -45 bar</div>
+      </div>`;
+  }
+}
+
+function switchInduMode(mode){
+  stageParams.indu.mode=mode;
+  document.getElementById('btn-furnace').className=mode==='furnace'?'active':'';
+  document.getElementById('btn-grate').className=mode==='grate'?'active':'';
+  document.getElementById('indu-params-area').innerHTML=getInduFields(mode);
+  // Update canvas label
+  const s=STAGES.find(st=>st.id==='indu');
+  if(s) s.label=mode==='furnace'?'INDURATION\nFURNACE':'GRATE\nKILN';
+}
+
 function isStageConfigured(id){
-  if(id==='feed')   return!!stageParams.feed.ore;
-  if(id==='grind')  return true;
-  if(id==='filter') return true;
-  if(id==='mix')    return!!stageParams.mix.binder;
-  if(id==='pellet') return false;
+  if(id==='feed')      return!!stageParams.feed.ore;
+  if(id==='grind')     return!!stageParams.grind.blain;
+  if(id==='filter')    return!!stageParams.filter.cakeMoisture;
+  if(id==='mix')       return!!stageParams.mix.binder;
+  if(id==='greenball') return!!stageParams.greenball.moisture;
+  if(id==='pellet')    return false;
   return false;
 }
+
 function openModal(stageId){
   currentModalStage=stageId;
   const s=STAGES.find(st=>st.id===stageId);
@@ -771,7 +951,6 @@ function openModal(stageId){
   document.getElementById('modalTitle').textContent=cfg.title;
   document.getElementById('modalDesc').textContent=cfg.desc;
   document.getElementById('modalBody').innerHTML=cfg.fields();
-  document.querySelectorAll('#modalBody input[type=range]').forEach(setPct);
   document.getElementById('modalOverlay').classList.add('open');
   addLog('[CONFIG]','step',`Opened: ${cfg.title}`);
 }
@@ -782,22 +961,22 @@ function saveModal(){
   addLog('[SAVE]','ok',`Saved: ${cfg.title}`);
 }
 document.getElementById('modalOverlay').addEventListener('click',function(e){if(e.target===this)closeModal();});
-function setSV(id,el,suffix){document.getElementById(id).textContent=el.value+suffix;}
-function setSVDec(id,el,suffix){document.getElementById(id).textContent=parseFloat(el.value).toFixed(2)+suffix;}
-function setPct(el){el.style.setProperty('--pct',((el.value-el.min)/(el.max-el.min)*100)+'%');}
 
 function updateSummaryParams(){
   const hasOb=stageParams.mix.binder&&stageParams.mix.binder.includes('OB');
-  const hasFlux=stageParams.mix.flux&&stageParams.mix.flux!=='No Flux';
+  const hasFlux=stageParams.mix.flux&&stageParams.mix.flux!=='';
   const moist=stageParams.filter.cakeMoisture;
   document.getElementById('p-size').textContent=moist>10.5?'14–18mm':'10–16mm';
-  document.getElementById('p-ob').textContent=hasOb?stageParams.mix.bindDosage.toFixed(2)+' GPT':(stageParams.mix.binder||'—');
+  const dosageLabel=stageParams.mix.dosageValue?(stageParams.mix.dosageValue+' '+stageParams.mix.dosageUnit):(stageParams.mix.binder||'—');
+  document.getElementById('p-ob').textContent=hasOb?dosageLabel:(stageParams.mix.binder||'—');
   document.getElementById('p-ob').className='param-box-val '+(hasOb?'good':'warn');
   const yieldV=stageParams.feed.ore?(hasOb?82+Math.floor(Math.random()*8):70+Math.floor(Math.random()*8)):null;
   document.getElementById('p-yield').textContent=yieldV?yieldV+'%':'—';
   document.getElementById('p-basicity').textContent=hasFlux?(0.9+Math.random()*0.5).toFixed(2):'0.35';
-  document.getElementById('p-temp').textContent=stageParams.indu.temp+'°C';
-  document.getElementById('p-moist').textContent=stageParams.filter.cakeMoisture+'%';
+  const induMode=stageParams.indu.mode||'furnace';
+  const tempVal=induMode==='furnace'?(stageParams.indu.btt?stageParams.indu.btt+'°C BTT':'—'):(stageParams.indu.mcTemp?stageParams.indu.mcTemp+'°C MC':'—');
+  document.getElementById('p-temp').textContent=tempVal;
+  document.getElementById('p-moist').textContent=stageParams.filter.cakeMoisture?stageParams.filter.cakeMoisture+'%':'—';
 }
 
 function addLog(tag,type,msg){
@@ -817,18 +996,19 @@ function runSimulation(){
   if(!stageParams.feed.ore){addLog('[ERROR]','err','Iron ore grade required — click the Feed node to configure.');return;}
   simRunning=true; simFrame=0; simStep=0;
   document.getElementById('runBtn').disabled=true;
+  const induMode=stageParams.indu.mode||'furnace';
   const ls=[
-    {delay:0,   step:0,tag:'[FEED]',  type:'step',msg:`Ore: ${stageParams.feed.ore}`},
-    {delay:650, step:1,tag:'[GRIND]', type:'step',msg:`Wet grinding → Blain ${stageParams.grind.blain} cm²/g`},
-    {delay:1300,step:2,tag:'[THICK]', type:'step',msg:`Thickening — underflow ${stageParams.thickner.underflow}% solids`},
-    {delay:1950,step:3,tag:'[FILTER]',type:'step',msg:`Filter cake moisture ${stageParams.filter.cakeMoisture}%`},
-    {delay:2600,step:4,tag:'[MIX]',   type:'step',msg:`Mixing — ${stageParams.mix.binder||'binder'} @ ${stageParams.mix.bindDosage} GPT`},
-    {delay:3350,step:5,tag:'[BALL]',  type:'step',msg:`Balling disc — ${stageParams.ball.rpm} RPM, ${stageParams.ball.discAngle}°`},
-    {delay:4100,step:6,tag:'[SCREEN]',type:'step',msg:`Screening ${stageParams.screen.lowerMesh}–${stageParams.screen.upperMesh}mm fraction`},
-    {delay:4900,step:7,tag:'[INDU]',  type:'step',msg:`Induration ${stageParams.indu.temp}°C — Dry→Preheat→Fire→After-Fire`},
-    {delay:5800,step:8,tag:'[COOL]',  type:'step',msg:`Cooling to <${stageParams.cool.targetTemp}°C (${stageParams.cool.duration} min)`},
+    {delay:0,   step:0,tag:'[FEED]',  type:'step',msg:`Ore: ${stageParams.feed.ore}${stageParams.feed.orePercent?' ('+stageParams.feed.orePercent+'%)':''}`},
+    {delay:650, step:1,tag:'[GRIND]', type:'step',msg:`Grinding → Blain ${stageParams.grind.blain||'—'} cm²/g | Feed moisture ${stageParams.grind.rawFeedMoisture||'—'}%`},
+    {delay:1300,step:2,tag:'[THICK]', type:'step',msg:'Thickener — automatic settling'},
+    {delay:1950,step:3,tag:'[FILTER]',type:'step',msg:`Filter cake moisture ${stageParams.filter.cakeMoisture||'—'}%`},
+    {delay:2600,step:4,tag:'[MIX]',   type:'step',msg:`Mixing — ${stageParams.mix.binder||'binder'} @ ${stageParams.mix.dosageValue||'—'} ${stageParams.mix.dosageUnit}`},
+    {delay:3350,step:5,tag:'[BALL]',  type:'step',msg:`Balling disc — ${stageParams.ball.discRpm||'—'} RPM disc, ${stageParams.ball.angle||'—'}°`},
+    {delay:4100,step:6,tag:'[SCREEN]',type:'step',msg:`Screening 8–16mm | Recycled: ${stageParams.screen.recycled||'—'} ${stageParams.screen.recycledUnit}`},
+    {delay:4900,step:7,tag:'[INDU]',  type:'step',msg:`${induMode==='furnace'?'Induration Furnace':'Grate Kiln'} — BTT/MC: ${induMode==='furnace'?stageParams.indu.btt:stageParams.indu.mcTemp||'—'}°C`},
+    {delay:5800,step:8,tag:'[COOL]',  type:'step',msg:`Cooling zones — Z1:${stageParams.cool.zone1||'—'}°C Z2:${stageParams.cool.zone2||'—'}°C Z3:${stageParams.cool.zone3||'—'}°C Z4:${stageParams.cool.zone4||'—'}°C`},
     {delay:6600,step:9,tag:'[DONE]',  type:'ok',  msg:`Complete — Yield: ${document.getElementById('p-yield').textContent} | ${document.getElementById('p-size').textContent}`},
-    {delay:6800,step:9,tag:'[QC]',    type:'ok',  msg:'Quality — CCS >200 kg/p | TI >92% | AI <5%'},
+    {delay:6800,step:9,tag:'[QC]',    type:'ok',  msg:`Quality — CCS: ${stageParams.pellet.ccs||'>200'} kg/p | TI: ${stageParams.pellet.tumbler||'>92'}% | Fe: ${stageParams.pellet.fe||'>59'}%`},
   ];
   ls.forEach(l=>setTimeout(()=>{setStep(l.step);addLog(l.tag,l.type,l.msg);},l.delay));
   setTimeout(()=>{simRunning=false;document.getElementById('runBtn').disabled=false;updateSummaryParams();},7200);
@@ -836,14 +1016,17 @@ function runSimulation(){
 
 function resetAll(){
   simRunning=false; simStep=-1; simFrame=0;
-  Object.assign(stageParams.feed,   {ore:'',limestone:'',coal:''});
-  Object.assign(stageParams.grind,  {blain:2000,moisture:30});
-  Object.assign(stageParams.filter, {cakeMoisture:9.5});
-  Object.assign(stageParams.mix,    {binder:'',flux:'',bindDosage:0.5});
-  Object.assign(stageParams.ball,   {discAngle:48,rpm:14});
-  Object.assign(stageParams.screen, {upperMesh:18,lowerMesh:5});
-  Object.assign(stageParams.indu,   {temp:1280,airFlow:'Forced Draft'});
-  Object.assign(stageParams.cool,   {duration:40,targetTemp:80});
+  Object.assign(stageParams.feed,{ore:'',orePercent:'',limestone:'',limestonePercent:'',coal:'',coalPercent:''});
+  Object.assign(stageParams.grind,{rawFeedMoisture:'',blain:''});
+  Object.assign(stageParams.filter,{cakeMoisture:''});
+  Object.assign(stageParams.mix,{binder:'',dosageValue:'',dosageUnit:'kg',flux:'',mixMoisture:''});
+  Object.assign(stageParams.ball,{angle:'',motorRpm:'',discRpm:'',greenBallMoisture:''});
+  Object.assign(stageParams.greenball,{moisture:'',dropNumber:'',gcs:''});
+  Object.assign(stageParams.screen,{s8_10:'',s10_12:'',s12_14:'',s14_16:'',recycled:'',recycledUnit:'%'});
+  Object.assign(stageParams.indu,{mode:'furnace',rpm:'',btt:'',drm:'',exhaust:'',tgRpm:'',mcTemp:'',tgDischarge:'',tgExhaust:''});
+  Object.assign(stageParams.cool,{zone1:'',zone2:'',zone3:'',zone4:''});
+  Object.assign(stageParams.pellet,{size8_10:'',size10_12:'',size12_14:'',size14_16:'',cracked:'',ccs:'',tumbler:'',abrasion:'',fe:''});
+  const induStage=STAGES.find(s=>s.id==='indu'); if(induStage) induStage.label='INDURATION\nFURNACE';
   document.querySelectorAll('.step-pill').forEach(p=>p.className='step-pill');
   ['p-size','p-ob','p-yield','p-basicity','p-temp','p-moist'].forEach(id=>{
     document.getElementById(id).textContent='—';
