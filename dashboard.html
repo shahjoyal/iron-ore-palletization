@@ -774,7 +774,7 @@ const MODAL_CONFIGS={
             <option value="tph"${stageParams.screen.recycledUnit==='tph'?' selected':''}>tph</option>
           </select>
         </div>
-        <div class="input-hint">Oversize (+16mm) recirculates to Balling Disc. Undersize (-8mm) = return fines.</div>
+        <div class="input-hint">Oversize (>16mm) and Undersize (< 8mm)</div>
       </div>`,
     save:()=>{
       stageParams.screen.s8_10=document.getElementById('m-s8').value;
