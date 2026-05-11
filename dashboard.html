@@ -132,6 +132,31 @@ input.finp{cursor:text;}
 .btn-add-flux{display:flex;align-items:center;gap:6px;background:rgba(200,145,42,.06);border:1px dashed var(--border-strong);border-radius:4px;padding:7px 12px;color:var(--gold);font-family:'DM Sans';font-size:.78rem;font-weight:500;cursor:pointer;transition:all .22s;width:100%;}
 .btn-add-flux:hover{background:rgba(200,145,42,.12);border-color:var(--gold);}
 
+/* ── CHEMISTRY CARD (new) ── */
+.chem-card{
+  background:linear-gradient(135deg,rgba(26,48,87,0.04) 0%,rgba(200,145,42,0.05) 100%);
+  border:1.5px solid var(--border-strong);border-radius:6px;padding:12px 14px;
+  margin-top:4px;animation:chemFadeIn .3s ease;
+}
+@keyframes chemFadeIn{from{opacity:0;transform:translateY(-6px);}to{opacity:1;transform:translateY(0);}}
+.chem-card-title{font-family:'DM Sans',sans-serif;font-size:.78rem;font-weight:600;letter-spacing:.2px;color:var(--gold);text-transform:none;margin-bottom:10px;display:flex;align-items:center;gap:6px;}
+.chem-card-title::before{content:'⬡';font-size:.7rem;}
+.chem-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;}
+.chem-cell{background:#fff;border:1px solid var(--border);border-radius:4px;padding:7px 8px;text-align:center;}
+.chem-cell-label{font-family:'DM Sans',sans-serif;font-size:.72rem;font-weight:500;letter-spacing:.1px;color:var(--text-dim);text-transform:none;margin-bottom:3px;}
+.chem-cell-val{font-family:'DM Sans',sans-serif;font-size:.95rem;font-weight:700;color:var(--navy);line-height:1;}
+.chem-cell-unit{font-family:'JetBrains Mono';font-size:.42rem;color:var(--text-dim);margin-top:1px;}
+.chem-cell.fe-cell .chem-cell-val{color:var(--green);}
+.chem-cell.sio2-cell .chem-cell-val{color:#7a5a30;}
+.chem-cell.al2o3-cell .chem-cell-val{color:var(--blue);}
+.chem-note{font-family:'DM Sans',sans-serif;font-size:.72rem;color:var(--text-dim);margin-top:8px;padding-top:6px;border-top:1px solid var(--border);}
+
+/* zone toggle */
+.zone-toggle{display:flex;gap:0;border:1.5px solid var(--border-strong);border-radius:4px;overflow:hidden;margin-bottom:10px;}
+.zone-toggle button{flex:1;background:transparent;border:none;padding:8px 6px;font-family:'JetBrains Mono';font-size:.62rem;font-weight:600;letter-spacing:1px;color:var(--text-dim);cursor:pointer;transition:all .22s;text-transform:uppercase;}
+.zone-toggle button.active{background:var(--navy);color:#fff;}
+.zone-toggle button:hover:not(.active){background:rgba(200,145,42,.08);color:var(--gold);}
+
 @media(max-width:640px){
   nav{padding:0 1rem;height:58px;}.logo-text .l2{display:none;}
   .page-wrap{padding:1.25rem .75rem 2.5rem;}
@@ -139,6 +164,7 @@ input.finp{cursor:text;}
   .capacity-box{width:100%;max-width:320px;}
   .params-row{grid-template-columns:1fr 1fr;}
   .size-grid{grid-template-columns:1fr;}
+  .chem-grid{grid-template-columns:repeat(2,1fr);}
 }
 </style>
 </head>
@@ -222,9 +248,51 @@ input.finp{cursor:text;}
 </div>
 
 <script>
+// ═══════════════════════════════════════════════════════════
+// ORE CHEMISTRY DATA — keyed by zone → location
+// ═══════════════════════════════════════════════════════════
+const ORE_ZONES = {
+  E: {
+    label: 'East Zone',
+    locations: {
+      'JSW - Jharsugda':  { moisture:11.50, fe:61.85, sio2:4.07,  al2o3:62.92, ccs:210, ti:94.00, ai:4.30 },
+      'Chaliyama Steel - Chaibasa':  { moisture:10.00, fe:61.50, sio2:4.28,  al2o3:3.31,  ccs:198, ti:94.00, ai:4.00 },
+      'Dhenkanal Steel - Dhenkanal':   { moisture:10.05, fe:61.50, sio2:3.60,  al2o3:2.90,  ccs:194, ti:94.00, ai:4.00 },
+      'Kamanada Steel - Joda':   { moisture:9.80,  fe:61.50, sio2:3.90,  al2o3:2.80,  ccs:190, ti:96.00, ai:2.50 },
+      'Gallent Ispat - Gorkhpur':   { moisture:10.50, fe:61.50, sio2:5.50,  al2o3:2.60,  ccs:215, ti:95.50, ai:3.50 },
+      'GR Integrate - Raipur':   { moisture:10.80, fe:62.50, sio2:5.50,  al2o3:2.20,  ccs:198, ti:91.50, ai:6.50 },
+      'Shree Jagnath Steel - Barbil':   { moisture:11.50, fe:61.30, sio2:4.50,  al2o3:3.50,  ccs:195, ti:95.00, ai:3.00 },
+      'Envirocare - Rourkela':   { moisture:11.70, fe:60.50, sio2:3.50,  al2o3:3.70,  ccs:220, ti:95.00, ai:3.00 },
+      'Shree Mahaveer - Rourkel':   { moisture:11.70, fe:60.50, sio2:3.50,  al2o3:3.70,  ccs:220, ti:95.00, ai:2.50 },
+      'Orissa Metalic Pvt. Ltd - Khargpur':   { moisture:12.00, fe:60.50, sio2:4.50,  al2o3:4.00,  ccs:195, ti:95.00, ai:2.50 },
+      'Shyam Metalics - Samblpur':  { moisture:11.80, fe:60.50, sio2:4.50,  al2o3:3.80,  ccs:200, ti:96.00, ai:3.00 },
+      'Super Smelter - Jamuria':  { moisture:11.50, fe:61.50, sio2:3.50,  al2o3:2.30,  ccs:185, ti:96.00, ai:3.00 },
+      'Shyam Sel & Power Ltd. - Jamuria': { moisture:12.00, fe:61.00, sio2:3.50,  al2o3:2.30,  ccs:185, ti:null,  ai:null }
+    }
+  },
+  S: {
+    label: 'South Zone',
+    locations: {
+      'JSW - Bellary':  { moisture:10.50, fe:59.50, sio2:6.90, al2o3:2.50, ccs:250, ti:93.00, ai:5.70 },
+      'Minera Steel- Bellary':  { moisture:9.20,  fe:61.50, sio2:4.50, al2o3:2.00, ccs:180, ti:93.50, ai:4.50 },
+      'MSPL - Baldota':   { moisture:11.00, fe:62.00, sio2:5.00, al2o3:2.00, ccs:200, ti:96.00, ai:2.50 },
+      'Prakash Spong - Chitradurga':  { moisture:8.50,  fe:61.00, sio2:4.50, al2o3:2.30, ccs:210, ti:95.70, ai:3.00 },
+      'BMM Ispat - Hospet':  { moisture:11.00, fe:61.00, sio2:5.50, al2o3:2.00, ccs:220, ti:95.50, ai:3.50 }
+    }
+  },
+  C: {
+    label: 'Central Zone',
+    locations: {
+      'Lloyds Metalics Energy Ltd. - Konsari':  { moisture:9.50,  fe:64.50, sio2:4.00, al2o3:2.20, ccs:220, ti:95.00, ai:3.10 },
+      'Shree Bajrang Power & Ispat Ltd. - Tilda': { moisture:12.00, fe:62.00, sio2:4.50, al2o3:2.50, ccs:210, ti:94.00, ai:4.00 },
+      'Jayswal Neco - Raipur':  { moisture:10.50, fe:61.50, sio2:5.50, al2o3:2.50, ccs:220, ti:93.00, ai:5.00 }
+    }
+  }
+};
+
 // ═══════ STATE ═══════
 const stageParams = {
-  feed:      {ore:'',orePercent:'',feedRate:'',fluxes:[],coal:'',coalPercent:''},
+  feed:      {ore:'',orePercent:'',feedRate:'',fluxes:[],coal:'',coalPercent:'',zone:'',location:''},
   grind:     {rawFeedMoisture:'',blain:''},
   thickner:  {underflowDensity:''},
   filter:    {cakeMoisture:''},
@@ -676,6 +744,99 @@ function readFluxList(listId){
   }).filter(f=>f.type);
 }
 
+// ═══════════════════════════════════════════════════════════
+// FEED — ZONE / LOCATION / CHEMISTRY HELPERS (NEW)
+// ═══════════════════════════════════════════════════════════
+
+// Show/hide zone+location+chem block based on ore grade selection
+function onOreGradeChange(){
+  const ore = document.getElementById('m-ore').value;
+  const block = document.getElementById('feed-zone-location-block');
+  if(!block) return;
+  if(ore === 'Hematite'){
+    block.style.display = '';
+    renderChemCard();
+  } else {
+    block.style.display = 'none';
+  }
+}
+
+// Populate location dropdown when zone changes
+function onFeedZoneChange(){
+  const zone = stageParams.feed.zone || '';
+  const locSel = document.getElementById('m-feed-location');
+  locSel.innerHTML = '<option value="">— Select Location —</option>';
+  if(zone && ORE_ZONES[zone]){
+    Object.keys(ORE_ZONES[zone].locations).forEach(loc=>{
+      const opt = document.createElement('option');
+      opt.value = loc;
+      opt.textContent = loc;
+      if(loc === stageParams.feed.location) opt.selected = true;
+      locSel.appendChild(opt);
+    });
+  }
+  renderChemCard();
+}
+
+// Show/hide chemistry card when location changes
+function onFeedLocationChange(){
+  renderChemCard();
+}
+
+function renderChemCard(){
+  const zone = stageParams.feed.zone || '';
+  const locEl = document.getElementById('m-feed-location');
+  const loc  = locEl ? locEl.value : '';
+  const container = document.getElementById('feed-chem-card');
+  if(!container) return;
+
+  if(!zone || !loc || !ORE_ZONES[zone] || !ORE_ZONES[zone].locations[loc]){
+    container.innerHTML = '';
+    return;
+  }
+
+  const d = ORE_ZONES[zone].locations[loc];
+  const fmt = (v,dec) => (v===null||v===undefined) ? '—' : Number(v).toFixed(dec);
+
+  container.innerHTML = `
+    <div class="chem-card">
+      <div class="chem-card-title">${ORE_ZONES[zone].label} · ${loc} — Average Chemistry</div>
+      <div class="chem-grid">
+        <div class="chem-cell fe-cell">
+          <div class="chem-cell-label">Fe</div>
+          <div class="chem-cell-val">${fmt(d.fe,2)}</div>
+          <div class="chem-cell-unit">%</div>
+        </div>
+        <div class="chem-cell sio2-cell">
+          <div class="chem-cell-label">SiO₂</div>
+          <div class="chem-cell-val">${fmt(d.sio2,2)}</div>
+          <div class="chem-cell-unit">%</div>
+        </div>
+        <div class="chem-cell al2o3-cell">
+          <div class="chem-cell-label">Al₂O₃</div>
+          <div class="chem-cell-val">${fmt(d.al2o3,2)}</div>
+          <div class="chem-cell-unit">%</div>
+        </div>
+        <div class="chem-cell">
+          <div class="chem-cell-label">Moisture</div>
+          <div class="chem-cell-val">${fmt(d.moisture,2)}</div>
+          <div class="chem-cell-unit">%</div>
+        </div>
+        <div class="chem-cell">
+          <div class="chem-cell-label">CCS</div>
+          <div class="chem-cell-val">${fmt(d.ccs,0)}</div>
+          <div class="chem-cell-unit">kg/p</div>
+        </div>
+        <div class="chem-cell">
+          <div class="chem-cell-label">TI / AI</div>
+          <div class="chem-cell-val" style="font-size:.82rem;">${fmt(d.ti,2)} / ${fmt(d.ai,2)}</div>
+          <div class="chem-cell-unit">%</div>
+        </div>
+      </div>
+      <div class="chem-note"></div>
+    </div>`;
+}
+
 // ═══════ DYNAMIC BINDER DOSAGE LABEL ═══════
 function updateBinderDosageLabel(){
   const binderSel = document.getElementById('m-binder');
@@ -697,11 +858,38 @@ const MODAL_CONFIGS={
     fields:()=>`
       <div class="field-group">
         <div class="field-label">Iron Ore Grade</div>
-        <select class="fsel" id="m-ore">
+        <select class="fsel" id="m-ore" onchange="onOreGradeChange()">
           <option value="">— Select Grade —</option>
-          ${['Magnetite','Hematite','Limonite','Goethite'].map(v=>`<option value="${v}"${stageParams.feed.ore===v?' selected':''}>${v}</option>`).join('')}
+          ${['Hematite','Magnetite','Limonite','Goethite'].map(v=>`<option value="${v}"${stageParams.feed.ore===v?' selected':''}>${v}</option>`).join('')}
         </select>
       </div>
+
+      <div id="feed-zone-location-block" style="${stageParams.feed.ore==='Hematite'?'':'display:none'}">
+        <div class="field-group">
+          <div class="field-label">Ore Source Zone</div>
+          <div class="zone-toggle">
+            <button id="zone-btn-E" class="${stageParams.feed.zone==='E'?'active':''}" onclick="selectFeedZone('E')">E — East</button>
+            <button id="zone-btn-S" class="${stageParams.feed.zone==='S'?'active':''}" onclick="selectFeedZone('S')">S — South</button>
+            <button id="zone-btn-C" class="${stageParams.feed.zone==='C'?'active':''}" onclick="selectFeedZone('C')">C — Central</button>
+          </div>
+        </div>
+
+        <div class="field-group">
+          <div class="field-label">Mine Location</div>
+          <select class="fsel" id="m-feed-location" onchange="onFeedLocationChange()">
+            <option value="">— Select Location —</option>
+            ${stageParams.feed.zone && ORE_ZONES[stageParams.feed.zone]
+              ? Object.keys(ORE_ZONES[stageParams.feed.zone].locations).map(loc=>
+                  `<option value="${loc}"${stageParams.feed.location===loc?' selected':''}>${loc}</option>`
+                ).join('')
+              : ''}
+          </select>
+          <div class="input-hint">Select zone first, then pick the mine location</div>
+        </div>
+
+        <div id="feed-chem-card"></div>
+      </div>
+
       <div class="field-group">
         <div class="field-label">Iron Ore Percentage (%)</div>
         <input type="number" class="finp" id="m-ore-pct" value="${stageParams.feed.orePercent||''}" min="55" max="65" step="0.1" placeholder="55 – 65">
@@ -730,6 +918,8 @@ const MODAL_CONFIGS={
       </div>`,
     save:()=>{
       stageParams.feed.ore=document.getElementById('m-ore').value;
+      stageParams.feed.zone=stageParams.feed.zone||'';
+      stageParams.feed.location=document.getElementById('m-feed-location').value;
       stageParams.feed.orePercent=document.getElementById('m-ore-pct').value;
       stageParams.feed.feedRate=document.getElementById('m-feedrate').value;
       stageParams.feed.fluxes=readFluxList('feed-flux');
@@ -750,7 +940,7 @@ const MODAL_CONFIGS={
     }
   },
 
-  // ─── THICKENER — underflow density added ───
+  // ─── THICKENER ───
   thickner:{
     title:'Thickener',desc:'Configure thickener underflow density',
     fields:()=>`
@@ -925,15 +1115,16 @@ const MODAL_CONFIGS={
     fields:()=>{
       const mode=stageParams.indu.mode||'furnace';
       const isGrate=mode==='grate';
+      const coolingName=isGrate?'Circulating Cooling Zone':'Straight Cooling Zone';
       return `
-        <div style="margin-bottom:.8rem;padding:8px 12px;background:rgba(42,122,74,0.07);border:1px solid rgba(42,122,74,0.2);border-radius:4px;font-size:.73rem;color:var(--text-dim);">
-          ${isGrate?'Grate Kiln: 1–4 cooling zones available.':'Induration Furnace: 4 cooling zones.'}
+        <div style="margin-bottom:1rem;padding:10px 14px;background:linear-gradient(135deg,rgba(42,122,74,0.07),rgba(26,48,87,0.05));border:1.5px solid rgba(42,122,74,0.25);border-radius:5px;">
+          <div style="font-family:'JetBrains Mono';font-size:.56rem;letter-spacing:2px;color:var(--green);text-transform:uppercase;margin-bottom:3px;">${isGrate?'Grate Kiln':'Induration Furnace'}</div>
+          <div style="font-family:'Cormorant Garamond',serif;font-size:1.1rem;font-weight:700;color:var(--navy);">${coolingName}</div>
         </div>
-        ${numField('m-z1','Zone 1 Temperature (°C)',stageParams.cool.zone1,0,1300,'°C',1)}
-        ${numField('m-z2','Zone 2 Temperature (°C)',stageParams.cool.zone2,0,1000,'°C',1)}
-        ${numField('m-z3','Zone 3 Temperature (°C)',stageParams.cool.zone3,0,700,'°C',1)}
-        ${isGrate?`<div style="margin-bottom:.5rem;padding:7px 10px;background:rgba(200,145,42,0.07);border:1px solid var(--border);border-radius:4px;font-size:.72rem;color:var(--text-dim);">Zone 4 optional for Grate Kiln</div>`:''}
-        ${numField('m-z4','Zone 4 Temperature (°C)',stageParams.cool.zone4,0,400,'°C',1)}`;
+        ${numField('m-z1','Zone 1 — Combustion (°C)',stageParams.cool.zone1,900,950,'°C',1)}
+        ${numField('m-z2','Zone 2 — UDD Upper Draft Zone (°C)',stageParams.cool.zone2,650,700,'°C',1)}
+        ${numField('m-z3','Zone 3 — DD1 Down Draft Zone (°C)',stageParams.cool.zone3,350,400,'°C',1)}
+        ${numField('m-z4','Zone 4 — Exit (°C)',stageParams.cool.zone4,150,200,'°C',1)}`;
     },
     save:()=>{
       stageParams.cool.zone1=document.getElementById('m-z1').value;
@@ -1032,6 +1223,28 @@ function switchInduMode(mode){
   if(s) s.label=mode==='furnace'?'INDURATION\nFURNACE':'GRATE\nKILN';
 }
 
+// ─── Zone toggle handler (Feed modal) ───
+function selectFeedZone(zone){
+  stageParams.feed.zone = zone;
+  // update button states
+  ['E','S','C'].forEach(z=>{
+    const btn = document.getElementById('zone-btn-'+z);
+    if(btn) btn.className = z===zone ? 'active' : '';
+  });
+  // re-populate location dropdown
+  const locSel = document.getElementById('m-feed-location');
+  if(locSel){
+    locSel.innerHTML = '<option value="">— Select Location —</option>';
+    Object.keys(ORE_ZONES[zone].locations).forEach(loc=>{
+      const opt = document.createElement('option');
+      opt.value = loc; opt.textContent = loc;
+      locSel.appendChild(opt);
+    });
+    stageParams.feed.location = ''; // reset location when zone changes
+  }
+  renderChemCard();
+}
+
 function isStageConfigured(id){
   if(id==='feed')      return!!stageParams.feed.ore;
   if(id==='grind')     return!!stageParams.grind.blain;
@@ -1053,6 +1266,8 @@ function openModal(stageId){
   document.getElementById('modalDesc').textContent=cfg.desc;
   document.getElementById('modalBody').innerHTML=cfg.fields();
   document.getElementById('modalOverlay').classList.add('open');
+  // render chemistry card if zone+location already set
+  if(stageId==='feed') onOreGradeChange();
 }
 function closeModal(){document.getElementById('modalOverlay').classList.remove('open');currentModalStage=null;}
 function saveModal(){
@@ -1086,7 +1301,6 @@ function setStep(idx){
 function runSimulation(){
   simRunning=true; simFrame=0; simStep=0;
   document.getElementById('runBtn').disabled=true;
-  const induMode=stageParams.indu.mode||'furnace';
   const steps=[
     {delay:0,   step:0},
     {delay:650, step:1},
@@ -1105,7 +1319,7 @@ function runSimulation(){
 
 function resetAll(){
   simRunning=false; simStep=-1; simFrame=0;
-  Object.assign(stageParams.feed,{ore:'',orePercent:'',feedRate:'',fluxes:[],coal:'',coalPercent:''});
+  Object.assign(stageParams.feed,{ore:'',orePercent:'',feedRate:'',fluxes:[],coal:'',coalPercent:'',zone:'',location:''});
   Object.assign(stageParams.grind,{rawFeedMoisture:'',blain:''});
   Object.assign(stageParams.thickner,{underflowDensity:''});
   Object.assign(stageParams.filter,{cakeMoisture:''});
