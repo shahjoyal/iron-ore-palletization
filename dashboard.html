@@ -49,14 +49,15 @@ nav{
 .page-hint{font-size:.78rem;color:var(--text-dim);margin-top:.75rem;display:flex;align-items:center;gap:6px;justify-content:center;}
 .page-hint::before{content:'◈';color:var(--gold);font-size:.65rem;}
 
+/* ── CAPACITY BOX (updated for plant name) ── */
 .capacity-box{
-  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  display:flex;flex-direction:column;align-items:stretch;justify-content:center;
   background:#fff;border:1.5px solid var(--border-strong);border-radius:7px;
-  padding:10px 18px 10px 14px;min-width:170px;
+  padding:10px 14px;min-width:190px;
   box-shadow:0 3px 14px rgba(26,48,87,0.09);
-  flex-shrink:0;
+  flex-shrink:0;gap:6px;
 }
-.capacity-box-label{font-family:'JetBrains Mono';font-size:.52rem;letter-spacing:1.8px;color:var(--gold);text-transform:uppercase;margin-bottom:5px;white-space:nowrap;}
+.capacity-box-label{font-family:'JetBrains Mono';font-size:.52rem;letter-spacing:1.8px;color:var(--gold);text-transform:uppercase;white-space:nowrap;}
 .capacity-box-input-wrap{display:flex;align-items:center;gap:6px;}
 .capacity-box-input{
   width:80px;background:var(--cream);border:1.5px solid var(--border);border-radius:4px;
@@ -65,6 +66,15 @@ nav{
 }
 .capacity-box-input:focus{border-color:var(--gold);background:#fff;}
 .capacity-box-unit{font-family:'JetBrains Mono';font-size:.6rem;letter-spacing:1px;color:var(--text-dim);white-space:nowrap;}
+.capacity-box-divider{height:1px;background:var(--border);margin:2px 0;}
+.plant-name-select{
+  width:100%;background:var(--cream);border:1.5px solid var(--border);border-radius:4px;
+  padding:6px 28px 6px 9px;color:var(--navy);font-family:'DM Sans';font-size:.8rem;font-weight:500;
+  outline:none;cursor:pointer;transition:border-color .22s;appearance:none;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23c8912a' stroke-width='1.5' fill='none'/%3E%3C/svg%3E");
+  background-repeat:no-repeat;background-position:right 8px center;
+}
+.plant-name-select:focus{border-color:var(--gold);background-color:#fff;}
 
 .canvas-wrap{width:100%;max-width:1200px;background:#fff;border:1px solid var(--border);border-radius:8px;box-shadow:var(--shadow-navy),inset 0 1px 0 rgba(255,255,255,.8);overflow:hidden;position:relative;}
 #processCanvas{display:block;width:100%;height:auto;cursor:default;}
@@ -132,7 +142,7 @@ input.finp{cursor:text;}
 .btn-add-flux{display:flex;align-items:center;gap:6px;background:rgba(200,145,42,.06);border:1px dashed var(--border-strong);border-radius:4px;padding:7px 12px;color:var(--gold);font-family:'DM Sans';font-size:.78rem;font-weight:500;cursor:pointer;transition:all .22s;width:100%;}
 .btn-add-flux:hover{background:rgba(200,145,42,.12);border-color:var(--gold);}
 
-/* ── CHEMISTRY CARD (new) ── */
+/* ── CHEMISTRY CARD (editable) ── */
 .chem-card{
   background:linear-gradient(135deg,rgba(26,48,87,0.04) 0%,rgba(200,145,42,0.05) 100%);
   border:1.5px solid var(--border-strong);border-radius:6px;padding:12px 14px;
@@ -144,12 +154,24 @@ input.finp{cursor:text;}
 .chem-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;}
 .chem-cell{background:#fff;border:1px solid var(--border);border-radius:4px;padding:7px 8px;text-align:center;}
 .chem-cell-label{font-family:'DM Sans',sans-serif;font-size:.72rem;font-weight:500;letter-spacing:.1px;color:var(--text-dim);text-transform:none;margin-bottom:3px;}
-.chem-cell-val{font-family:'DM Sans',sans-serif;font-size:.95rem;font-weight:700;color:var(--navy);line-height:1;}
-.chem-cell-unit{font-family:'JetBrains Mono';font-size:.42rem;color:var(--text-dim);margin-top:1px;}
-.chem-cell.fe-cell .chem-cell-val{color:var(--green);}
-.chem-cell.sio2-cell .chem-cell-val{color:#7a5a30;}
-.chem-cell.al2o3-cell .chem-cell-val{color:var(--blue);}
-.chem-note{font-family:'DM Sans',sans-serif;font-size:.72rem;color:var(--text-dim);margin-top:8px;padding-top:6px;border-top:1px solid var(--border);}
+/* editable chem input */
+.chem-inp{
+  width:100%;background:transparent;border:none;border-bottom:1.5px solid var(--border);
+  border-radius:0;padding:2px 4px;font-family:'DM Sans',sans-serif;font-size:.95rem;font-weight:700;
+  color:var(--navy);text-align:center;outline:none;transition:border-color .2s;
+  -moz-appearance:textfield;
+}
+.chem-inp::-webkit-outer-spin-button,.chem-inp::-webkit-inner-spin-button{-webkit-appearance:none;margin:0;}
+.chem-inp:focus{border-bottom-color:var(--gold);background:rgba(200,145,42,0.04);}
+.chem-cell.fe-cell .chem-inp{color:var(--green);}
+.chem-cell.sio2-cell .chem-inp{color:#7a5a30;}
+.chem-cell.al2o3-cell .chem-inp{color:var(--blue);}
+.chem-cell-unit{font-family:'JetBrains Mono';font-size:.42rem;color:var(--text-dim);margin-top:2px;}
+.chem-note{font-family:'DM Sans',sans-serif;font-size:.72rem;color:var(--text-dim);margin-top:8px;padding-top:6px;border-top:1px solid var(--border);display:flex;align-items:center;gap:5px;}
+.chem-note::before{content:'✎';font-size:.7rem;color:var(--gold);}
+.ti-ai-row{display:flex;gap:4px;align-items:center;justify-content:center;}
+.ti-ai-row input.chem-inp{width:44%;}
+.ti-ai-sep{font-size:.65rem;color:var(--text-dim);}
 
 /* zone toggle */
 .zone-toggle{display:flex;gap:0;border:1.5px solid var(--border-strong);border-radius:4px;overflow:hidden;margin-bottom:10px;}
@@ -204,7 +226,15 @@ input.finp{cursor:text;}
         <div class="page-title">Pelletization Process Simulator</div>
         <div class="page-sub">// Iron Ore Pelletization — Wet Grinding Route</div>
       </div>
+      <!-- ── CAPACITY BOX: now includes Plant Name dropdown ── -->
       <div class="capacity-box">
+        <div class="capacity-box-label">Plant Name</div>
+        <select class="plant-name-select" id="plantName" onchange="onPlantChange()">
+          <option value="">— Select Plant —</option>
+          <option value="demo1">Demo 1</option>
+          <option value="demo2">Demo 2</option>
+        </select>
+        <div class="capacity-box-divider"></div>
         <div class="capacity-box-label">Plant Capacity</div>
         <div class="capacity-box-input-wrap">
           <input type="number" class="capacity-box-input" id="plantCapacity" min="1" max="9999" step="0.1" placeholder="—" title="Enter plant capacity">
@@ -292,7 +322,8 @@ const ORE_ZONES = {
 
 // ═══════ STATE ═══════
 const stageParams = {
-  feed:      {ore:'',orePercent:'',feedRate:'',fluxes:[],coal:'',coalPercent:'',zone:'',location:''},
+  feed:      {ore:'',orePercent:'',feedRate:'',fluxes:[],coal:'',coalPercent:'',zone:'',location:'',
+              chemFe:'',chemSio2:'',chemAl2o3:'',chemMoisture:'',chemCcs:'',chemTi:'',chemAi:''},
   grind:     {rawFeedMoisture:'',blain:''},
   thickner:  {underflowDensity:''},
   filter:    {cakeMoisture:''},
@@ -320,6 +351,21 @@ const STAGES=[
   {id:'cool',     label:'COOLING',               tag:'STAGE 09',shape:'trapezoid',color:'#2a7a4a',step:8},
   {id:'pellet',   label:'FINISHED\nPELLETS',    tag:'STAGE 10',shape:'pellets',  color:'#1a3057',step:9},
 ];
+
+// ═══════════════════════════════════════════════════════════
+// PLANT NAME HANDLER — Demo 1 = Grate Kiln, Demo 2 = Furnace
+// ═══════════════════════════════════════════════════════════
+function onPlantChange(){
+  const val = document.getElementById('plantName').value;
+  const induStage = STAGES.find(s => s.id === 'indu');
+  if(val === 'demo1'){
+    stageParams.indu.mode = 'grate';
+    if(induStage) induStage.label = 'GRATE\nKILN';
+  } else if(val === 'demo2'){
+    stageParams.indu.mode = 'furnace';
+    if(induStage) induStage.label = 'INDURATION\nFURNACE';
+  }
+}
 
 // ═══════ CANVAS ═══════
 const canvas=document.getElementById('processCanvas');
@@ -745,10 +791,9 @@ function readFluxList(listId){
 }
 
 // ═══════════════════════════════════════════════════════════
-// FEED — ZONE / LOCATION / CHEMISTRY HELPERS (NEW)
+// FEED — ZONE / LOCATION / CHEMISTRY HELPERS
 // ═══════════════════════════════════════════════════════════
 
-// Show/hide zone+location+chem block based on ore grade selection
 function onOreGradeChange(){
   const ore = document.getElementById('m-ore').value;
   const block = document.getElementById('feed-zone-location-block');
@@ -761,11 +806,10 @@ function onOreGradeChange(){
   }
 }
 
-// Populate location dropdown when zone changes
 function onFeedZoneChange(){
-  const zone = stageParams.feed.zone || '';
   const locSel = document.getElementById('m-feed-location');
   locSel.innerHTML = '<option value="">— Select Location —</option>';
+  const zone = stageParams.feed.zone || '';
   if(zone && ORE_ZONES[zone]){
     Object.keys(ORE_ZONES[zone].locations).forEach(loc=>{
       const opt = document.createElement('option');
@@ -778,11 +822,13 @@ function onFeedZoneChange(){
   renderChemCard();
 }
 
-// Show/hide chemistry card when location changes
 function onFeedLocationChange(){
   renderChemCard();
 }
 
+// ═══════════════════════════════════════════════════════════
+// RENDER CHEM CARD — now with EDITABLE inputs
+// ═══════════════════════════════════════════════════════════
 function renderChemCard(){
   const zone = stageParams.feed.zone || '';
   const locEl = document.getElementById('m-feed-location');
@@ -796,7 +842,17 @@ function renderChemCard(){
   }
 
   const d = ORE_ZONES[zone].locations[loc];
-  const fmt = (v,dec) => (v===null||v===undefined) ? '—' : Number(v).toFixed(dec);
+  const fmt = (v, dec) => (v === null || v === undefined) ? '' : Number(v).toFixed(dec);
+
+  // If the same location was previously saved with custom edits, restore those; otherwise use DB values
+  const sameLocation = stageParams.feed.location === loc;
+  const feVal    = (sameLocation && stageParams.feed.chemFe !== '')       ? stageParams.feed.chemFe       : fmt(d.fe, 2);
+  const sio2Val  = (sameLocation && stageParams.feed.chemSio2 !== '')     ? stageParams.feed.chemSio2     : fmt(d.sio2, 2);
+  const al2o3Val = (sameLocation && stageParams.feed.chemAl2o3 !== '')    ? stageParams.feed.chemAl2o3    : fmt(d.al2o3, 2);
+  const moistVal = (sameLocation && stageParams.feed.chemMoisture !== '') ? stageParams.feed.chemMoisture : fmt(d.moisture, 2);
+  const ccsVal   = (sameLocation && stageParams.feed.chemCcs !== '')      ? stageParams.feed.chemCcs      : fmt(d.ccs, 0);
+  const tiVal    = (sameLocation && stageParams.feed.chemTi !== '')       ? stageParams.feed.chemTi       : fmt(d.ti, 2);
+  const aiVal    = (sameLocation && stageParams.feed.chemAi !== '')       ? stageParams.feed.chemAi       : fmt(d.ai, 2);
 
   container.innerHTML = `
     <div class="chem-card">
@@ -804,36 +860,40 @@ function renderChemCard(){
       <div class="chem-grid">
         <div class="chem-cell fe-cell">
           <div class="chem-cell-label">Fe</div>
-          <div class="chem-cell-val">${fmt(d.fe,2)}</div>
+          <input type="number" class="chem-inp" id="chem-fe" value="${feVal}" step="0.01" min="0" max="100" placeholder="—">
           <div class="chem-cell-unit">%</div>
         </div>
         <div class="chem-cell sio2-cell">
           <div class="chem-cell-label">SiO₂</div>
-          <div class="chem-cell-val">${fmt(d.sio2,2)}</div>
+          <input type="number" class="chem-inp" id="chem-sio2" value="${sio2Val}" step="0.01" min="0" max="100" placeholder="—">
           <div class="chem-cell-unit">%</div>
         </div>
         <div class="chem-cell al2o3-cell">
           <div class="chem-cell-label">Al₂O₃</div>
-          <div class="chem-cell-val">${fmt(d.al2o3,2)}</div>
+          <input type="number" class="chem-inp" id="chem-al2o3" value="${al2o3Val}" step="0.01" min="0" max="100" placeholder="—">
           <div class="chem-cell-unit">%</div>
         </div>
         <div class="chem-cell">
           <div class="chem-cell-label">Moisture</div>
-          <div class="chem-cell-val">${fmt(d.moisture,2)}</div>
+          <input type="number" class="chem-inp" id="chem-moisture" value="${moistVal}" step="0.01" min="0" max="100" placeholder="—">
           <div class="chem-cell-unit">%</div>
         </div>
         <div class="chem-cell">
           <div class="chem-cell-label">CCS</div>
-          <div class="chem-cell-val">${fmt(d.ccs,0)}</div>
+          <input type="number" class="chem-inp" id="chem-ccs" value="${ccsVal}" step="1" min="0" placeholder="—">
           <div class="chem-cell-unit">kg/p</div>
         </div>
         <div class="chem-cell">
           <div class="chem-cell-label">TI / AI</div>
-          <div class="chem-cell-val" style="font-size:.82rem;">${fmt(d.ti,2)} / ${fmt(d.ai,2)}</div>
+          <div class="ti-ai-row">
+            <input type="number" class="chem-inp" id="chem-ti" value="${tiVal}" step="0.01" min="0" max="100" placeholder="TI">
+            <span class="ti-ai-sep">/</span>
+            <input type="number" class="chem-inp" id="chem-ai" value="${aiVal}" step="0.01" min="0" max="100" placeholder="AI">
+          </div>
           <div class="chem-cell-unit">%</div>
         </div>
       </div>
-      <div class="chem-note"></div>
+      <div class="chem-note">click any value to edit</div>
     </div>`;
 }
 
@@ -917,14 +977,29 @@ const MODAL_CONFIGS={
         <div class="input-hint">Range: ~1 % (0.5 – 1.5)</div>
       </div>`,
     save:()=>{
-      stageParams.feed.ore=document.getElementById('m-ore').value;
-      stageParams.feed.zone=stageParams.feed.zone||'';
-      stageParams.feed.location=document.getElementById('m-feed-location').value;
-      stageParams.feed.orePercent=document.getElementById('m-ore-pct').value;
-      stageParams.feed.feedRate=document.getElementById('m-feedrate').value;
-      stageParams.feed.fluxes=readFluxList('feed-flux');
-      stageParams.feed.coal=document.getElementById('m-coal').value;
-      stageParams.feed.coalPercent=document.getElementById('m-coal-pct').value;
+      stageParams.feed.ore          = document.getElementById('m-ore').value;
+      stageParams.feed.zone         = stageParams.feed.zone || '';
+      stageParams.feed.location     = document.getElementById('m-feed-location').value;
+      stageParams.feed.orePercent   = document.getElementById('m-ore-pct').value;
+      stageParams.feed.feedRate     = document.getElementById('m-feedrate').value;
+      stageParams.feed.fluxes       = readFluxList('feed-flux');
+      stageParams.feed.coal         = document.getElementById('m-coal').value;
+      stageParams.feed.coalPercent  = document.getElementById('m-coal-pct').value;
+      // Save editable chemistry values
+      const chemFe = document.getElementById('chem-fe');
+      if(chemFe) stageParams.feed.chemFe = chemFe.value;
+      const chemSio2 = document.getElementById('chem-sio2');
+      if(chemSio2) stageParams.feed.chemSio2 = chemSio2.value;
+      const chemAl2o3 = document.getElementById('chem-al2o3');
+      if(chemAl2o3) stageParams.feed.chemAl2o3 = chemAl2o3.value;
+      const chemMoisture = document.getElementById('chem-moisture');
+      if(chemMoisture) stageParams.feed.chemMoisture = chemMoisture.value;
+      const chemCcs = document.getElementById('chem-ccs');
+      if(chemCcs) stageParams.feed.chemCcs = chemCcs.value;
+      const chemTi = document.getElementById('chem-ti');
+      if(chemTi) stageParams.feed.chemTi = chemTi.value;
+      const chemAi = document.getElementById('chem-ai');
+      if(chemAi) stageParams.feed.chemAi = chemAi.value;
     }
   },
 
@@ -1226,12 +1301,10 @@ function switchInduMode(mode){
 // ─── Zone toggle handler (Feed modal) ───
 function selectFeedZone(zone){
   stageParams.feed.zone = zone;
-  // update button states
   ['E','S','C'].forEach(z=>{
     const btn = document.getElementById('zone-btn-'+z);
     if(btn) btn.className = z===zone ? 'active' : '';
   });
-  // re-populate location dropdown
   const locSel = document.getElementById('m-feed-location');
   if(locSel){
     locSel.innerHTML = '<option value="">— Select Location —</option>';
@@ -1240,7 +1313,7 @@ function selectFeedZone(zone){
       opt.value = loc; opt.textContent = loc;
       locSel.appendChild(opt);
     });
-    stageParams.feed.location = ''; // reset location when zone changes
+    stageParams.feed.location = '';
   }
   renderChemCard();
 }
@@ -1266,7 +1339,6 @@ function openModal(stageId){
   document.getElementById('modalDesc').textContent=cfg.desc;
   document.getElementById('modalBody').innerHTML=cfg.fields();
   document.getElementById('modalOverlay').classList.add('open');
-  // render chemistry card if zone+location already set
   if(stageId==='feed') onOreGradeChange();
 }
 function closeModal(){document.getElementById('modalOverlay').classList.remove('open');currentModalStage=null;}
@@ -1319,7 +1391,10 @@ function runSimulation(){
 
 function resetAll(){
   simRunning=false; simStep=-1; simFrame=0;
-  Object.assign(stageParams.feed,{ore:'',orePercent:'',feedRate:'',fluxes:[],coal:'',coalPercent:'',zone:'',location:''});
+  // Reset plant name dropdown
+  document.getElementById('plantName').value = '';
+  Object.assign(stageParams.feed,{ore:'',orePercent:'',feedRate:'',fluxes:[],coal:'',coalPercent:'',zone:'',location:'',
+    chemFe:'',chemSio2:'',chemAl2o3:'',chemMoisture:'',chemCcs:'',chemTi:'',chemAi:''});
   Object.assign(stageParams.grind,{rawFeedMoisture:'',blain:''});
   Object.assign(stageParams.thickner,{underflowDensity:''});
   Object.assign(stageParams.filter,{cakeMoisture:''});
