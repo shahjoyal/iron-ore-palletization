@@ -1,0 +1,1478 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dashboard – Abhitech Pelletization Simulator</title>
+<link rel="icon" type="image/x-icon" href="abhitech-logo.png">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=DM+Sans:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --cream:#fdf8f0;--cream2:#f5ede0;
+  --gold:#c8912a;--gold-light:#e8b84b;
+  --navy:#1a3057;--navy2:#0f1f3a;--navy3:#253d5e;
+  --blue:#2d5fa6;
+  --text:#1e1a10;--text-mid:#5a4a30;--text-dim:#8a7a60;
+  --border:rgba(200,145,42,0.22);--border-strong:rgba(200,145,42,0.5);
+  --green:#2a7a4a;--green-light:#3aaa6a;--red:#c0392b;
+  --shadow-navy:0 8px 40px rgba(26,48,87,0.14);
+}
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+body{
+  font-family:'DM Sans',sans-serif;background:var(--cream2);color:var(--text);
+  min-height:100vh;overflow-x:hidden;
+  background-image:
+    radial-gradient(ellipse 80% 60% at 50% -10%,rgba(200,145,42,0.07) 0%,transparent 70%),
+    repeating-linear-gradient(0deg,transparent,transparent 39px,rgba(200,145,42,0.04) 39px,rgba(200,145,42,0.04) 40px),
+    repeating-linear-gradient(90deg,transparent,transparent 39px,rgba(200,145,42,0.04) 39px,rgba(200,145,42,0.04) 40px);
+}
+nav{
+  position:sticky;top:0;z-index:100;display:flex;align-items:center;justify-content:space-between;
+  padding:0 2rem;height:64px;background:rgba(253,248,240,0.96);
+  backdrop-filter:blur(24px) saturate(1.5);border-bottom:1px solid var(--border);
+  box-shadow:0 1px 0 var(--border),0 4px 24px rgba(26,48,87,0.06);
+}
+.nav-logo{display:flex;align-items:center;gap:12px;text-decoration:none;}
+.nav-logo img{height:34px;width:auto;object-fit:contain;}
+.logo-text .l1{font-family:'Cormorant Garamond',serif;font-size:1.12rem;font-weight:700;color:var(--navy);letter-spacing:.5px;display:block;}
+.logo-text .l2{font-family:'JetBrains Mono';font-size:.5rem;letter-spacing:2.5px;color:var(--gold);text-transform:uppercase;display:block;margin-top:1px;}
+.nav-right{display:flex;align-items:center;gap:.75rem;}
+.nav-btn{font-size:.78rem;font-weight:500;color:var(--text-mid);background:none;border:1px solid var(--border);padding:7px 16px;border-radius:3px;cursor:pointer;transition:all .25s;text-decoration:none;font-family:'DM Sans';}
+.nav-btn:hover{border-color:var(--gold);color:var(--gold);background:rgba(200,145,42,.05);}
+
+.page-wrap{display:flex;flex-direction:column;align-items:center;min-height:calc(100vh - 64px);padding:2rem 1.5rem 3rem;}
+
+.page-header{text-align:center;margin-bottom:2rem;width:100%;max-width:1200px;position:relative;}
+.page-header-inner{display:flex;align-items:center;justify-content:center;gap:1.25rem;flex-wrap:wrap;}
+.page-title{font-family:'Cormorant Garamond',serif;font-size:clamp(1.6rem,3vw,2.4rem);font-weight:700;color:var(--navy);letter-spacing:.5px;line-height:1.2;}
+.page-sub{font-family:'JetBrains Mono';font-size:.6rem;letter-spacing:2px;color:var(--text-dim);text-transform:uppercase;margin-top:.5rem;}
+.page-hint{font-size:.78rem;color:var(--text-dim);margin-top:.75rem;display:flex;align-items:center;gap:6px;justify-content:center;}
+.page-hint::before{content:'◈';color:var(--gold);font-size:.65rem;}
+
+.capacity-box{
+  display:flex;flex-direction:column;align-items:stretch;justify-content:center;
+  background:#fff;border:1.5px solid var(--border-strong);border-radius:7px;
+  padding:10px 14px;min-width:190px;
+  box-shadow:0 3px 14px rgba(26,48,87,0.09);
+  flex-shrink:0;gap:6px;
+}
+.capacity-box-label{font-family:'JetBrains Mono';font-size:.52rem;letter-spacing:1.8px;color:var(--gold);text-transform:uppercase;white-space:nowrap;}
+.capacity-box-input-wrap{display:flex;align-items:center;gap:6px;}
+.capacity-box-input{
+  width:80px;background:var(--cream);border:1.5px solid var(--border);border-radius:4px;
+  padding:6px 8px;color:var(--navy);font-family:'Cormorant Garamond',serif;font-size:1.22rem;font-weight:700;
+  outline:none;text-align:center;transition:border-color .22s;
+}
+.capacity-box-input:focus{border-color:var(--gold);background:#fff;}
+.capacity-box-unit{font-family:'JetBrains Mono';font-size:.6rem;letter-spacing:1px;color:var(--text-dim);white-space:nowrap;}
+.capacity-box-divider{height:1px;background:var(--border);margin:2px 0;}
+.plant-name-select{
+  width:100%;background:var(--cream);border:1.5px solid var(--border);border-radius:4px;
+  padding:6px 28px 6px 9px;color:var(--navy);font-family:'DM Sans';font-size:.8rem;font-weight:500;
+  outline:none;cursor:pointer;transition:border-color .22s;appearance:none;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23c8912a' stroke-width='1.5' fill='none'/%3E%3C/svg%3E");
+  background-repeat:no-repeat;background-position:right 8px center;
+}
+.plant-name-select:focus{border-color:var(--gold);background-color:#fff;}
+
+/* ── CANVAS WRAP + GROUP OVERLAY ── */
+.canvas-wrap{width:100%;max-width:1200px;background:#fff;border:1px solid var(--border);border-radius:8px;box-shadow:var(--shadow-navy),inset 0 1px 0 rgba(255,255,255,.8);overflow:hidden;position:relative;}
+#processCanvas{display:block;width:100%;height:auto;cursor:default;position:relative;z-index:2;}
+
+/* ── GROUP OVERLAY: sits between background and canvas ── */
+#groupOverlay{
+  position:absolute;inset:0;z-index:1;
+  pointer-events:none;
+}
+.stage-group{
+  position:absolute;
+  top:10px;
+  border-radius:10px;
+  display:flex;flex-direction:column;justify-content:flex-start;
+}
+
+/* Group 1 — Wet Preparation (blue-grey tint) */
+.stage-group.grp-wet{
+  background:rgba(45,95,166,0.045);
+  border:1.5px solid rgba(45,95,166,0.22);
+}
+/* Group 2 — Green Ball Formation (gold tint) */
+.stage-group.grp-green{
+  background:rgba(200,145,42,0.045);
+  border:1.5px solid rgba(200,145,42,0.28);
+}
+/* Group 3 — Induration & Finishing (green tint) */
+.stage-group.grp-indu{
+  background:rgba(42,122,74,0.045);
+  border:1.5px solid rgba(42,122,74,0.22);
+}
+
+.group-label{
+  font-family:'JetBrains Mono';
+  font-size:.52rem;
+  letter-spacing:2px;
+  text-transform:uppercase;
+  padding:5px 10px 4px;
+  border-radius:7px 7px 0 0;
+  font-weight:600;
+  line-height:1;
+  white-space:nowrap;
+}
+.grp-wet  .group-label{color:rgba(45,95,166,0.75);}
+.grp-green .group-label{color:rgba(180,120,20,0.85);}
+.grp-indu  .group-label{color:rgba(42,122,74,0.85);}
+
+.step-bar{display:flex;align-items:center;gap:5px;justify-content:center;padding:.65rem 1rem;border-top:1px solid var(--border);background:rgba(253,248,240,.7);flex-wrap:wrap;position:relative;z-index:3;}
+.step-pill{padding:3px 10px;font-family:'JetBrains Mono';font-size:.52rem;letter-spacing:1px;border:1px solid var(--border);border-radius:20px;color:var(--text-dim);transition:all .35s;white-space:nowrap;cursor:pointer;user-select:none;}
+.step-pill:hover{border-color:var(--gold);color:var(--gold);}
+.step-pill.active{background:var(--gold);border-color:var(--gold);color:#fff;box-shadow:0 2px 10px rgba(200,145,42,.4);}
+.step-pill.done{background:rgba(42,122,74,.09);border-color:var(--green);color:var(--green);}
+
+.action-row{display:flex;align-items:center;gap:1rem;margin-top:1.5rem;justify-content:center;}
+.run-btn{background:linear-gradient(135deg,var(--navy),var(--blue));color:#fff;border:none;border-radius:4px;padding:13px 32px;font-family:'DM Sans';font-size:.9rem;font-weight:600;cursor:pointer;letter-spacing:.3px;transition:all .3s;display:flex;align-items:center;gap:8px;box-shadow:0 4px 16px rgba(26,48,87,.25);}
+.run-btn:hover:not(:disabled){background:linear-gradient(135deg,var(--gold),var(--gold-light));transform:translateY(-2px);box-shadow:0 6px 24px rgba(200,145,42,.4);}
+.run-btn:disabled{opacity:.45;pointer-events:none;}
+.reset-btn{background:transparent;color:var(--text-mid);border:1px solid var(--border);border-radius:4px;padding:13px 20px;font-family:'DM Sans';font-size:.85rem;cursor:pointer;transition:all .25s;}
+.reset-btn:hover{border-color:var(--red);color:var(--red);}
+
+.params-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:8px;width:100%;max-width:1200px;margin-top:1.2rem;}
+.param-box{background:#fff;border:1px solid var(--border);border-radius:6px;padding:10px 14px;text-align:center;box-shadow:0 2px 8px rgba(26,48,87,.04);}
+.param-box-label{font-family:'JetBrains Mono';font-size:.52rem;letter-spacing:1.2px;color:var(--text-dim);text-transform:uppercase;margin-bottom:4px;}
+.param-box-val{font-family:'Cormorant Garamond',serif;font-size:1.3rem;font-weight:700;color:var(--navy);line-height:1;}
+.param-box-val.good{color:var(--green);}.param-box-val.warn{color:var(--gold);}
+
+.modal-overlay{position:fixed;inset:0;z-index:200;background:rgba(15,31,58,.55);backdrop-filter:blur(6px) saturate(1.2);display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .3s ease;}
+.modal-overlay.open{opacity:1;pointer-events:all;}
+.modal-card{background:#fff;border:1px solid var(--border-strong);border-radius:10px;box-shadow:0 24px 80px rgba(26,48,87,.25);width:min(480px,92vw);max-height:88vh;overflow-y:auto;transform:translateY(16px) scale(.97);transition:transform .35s cubic-bezier(.22,1,.36,1);position:relative;}
+.modal-overlay.open .modal-card{transform:translateY(0) scale(1);}
+.modal-header{padding:1.4rem 1.6rem 1rem;border-bottom:1px solid var(--border);background:linear-gradient(135deg,var(--navy2) 0%,var(--navy3) 100%);border-radius:10px 10px 0 0;position:relative;}
+.modal-stage-tag{font-family:'JetBrains Mono';font-size:.52rem;letter-spacing:2.5px;color:rgba(200,145,42,.7);text-transform:uppercase;margin-bottom:5px;}
+.modal-title{font-family:'Cormorant Garamond',serif;font-size:1.5rem;font-weight:700;color:#fff;line-height:1.2;}
+.modal-desc{font-size:.78rem;color:rgba(255,255,255,.45);margin-top:5px;}
+.modal-close{position:absolute;top:1.1rem;right:1.2rem;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);color:rgba(255,255,255,.6);width:30px;height:30px;border-radius:50%;font-size:.9rem;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s;}
+.modal-close:hover{background:rgba(200,145,42,.3);color:#fff;}
+.modal-body{padding:1.4rem 1.6rem;}
+.field-group{margin-bottom:1.3rem;}
+.field-label{font-family:'JetBrains Mono';font-size:.56rem;letter-spacing:1.5px;color:var(--gold);text-transform:uppercase;margin-bottom:.5rem;display:flex;align-items:center;gap:6px;}
+.field-label::before{content:'◈';font-size:.5rem;}
+select.fsel,input.finp{width:100%;background:var(--cream);border:1.5px solid var(--border);border-radius:4px;padding:9px 12px;color:var(--text);font-family:'DM Sans';font-size:.84rem;outline:none;cursor:pointer;transition:border-color .25s;appearance:none;}
+select.fsel{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23c8912a' stroke-width='1.5' fill='none'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 10px center;padding-right:30px;}
+select.fsel:focus,input.finp:focus{border-color:var(--gold);background:#fff;}
+input.finp{cursor:text;}
+.input-hint{font-size:.68rem;color:var(--text-dim);margin-top:4px;font-family:'JetBrains Mono';}
+.input-row{display:flex;gap:8px;align-items:center;}
+.input-row input.finp{flex:1;}
+.input-row select.fsel{width:auto;flex:0 0 70px;}
+.modal-footer{padding:1rem 1.6rem 1.4rem;border-top:1px solid var(--border);display:flex;gap:8px;}
+.btn-save{flex:1;background:linear-gradient(135deg,var(--navy),var(--blue));color:#fff;border:none;border-radius:4px;padding:11px;font-family:'DM Sans';font-size:.85rem;font-weight:600;cursor:pointer;transition:all .25s;}
+.btn-save:hover{background:linear-gradient(135deg,var(--gold),var(--gold-light));}
+.btn-cancel{background:transparent;color:var(--text-dim);border:1px solid var(--border);border-radius:4px;padding:11px 16px;font-family:'DM Sans';font-size:.85rem;cursor:pointer;transition:all .25s;}
+.btn-cancel:hover{border-color:var(--red);color:var(--red);}
+
+.mode-toggle{display:flex;gap:0;border:1.5px solid var(--border-strong);border-radius:4px;overflow:hidden;margin-bottom:1rem;}
+.mode-toggle button{flex:1;background:transparent;border:none;padding:9px 10px;font-family:'DM Sans';font-size:.8rem;font-weight:500;color:var(--text-dim);cursor:pointer;transition:all .22s;}
+.mode-toggle button.active{background:var(--navy);color:#fff;}
+
+.size-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+
+.flux-list{display:flex;flex-direction:column;gap:8px;margin-bottom:8px;}
+.flux-row{display:flex;align-items:center;gap:6px;}
+.flux-row select.fsel{flex:1;}
+.flux-row input.finp{width:80px;flex:0 0 80px;}
+.flux-row .flux-unit{font-family:'JetBrains Mono';font-size:.62rem;color:var(--text-dim);white-space:nowrap;}
+.flux-row .btn-remove-flux{background:none;border:1px solid rgba(192,57,43,.3);color:var(--red);border-radius:3px;width:26px;height:26px;cursor:pointer;font-size:.85rem;display:flex;align-items:center;justify-content:center;transition:all .2s;flex-shrink:0;}
+.flux-row .btn-remove-flux:hover{background:rgba(192,57,43,.08);}
+.btn-add-flux{display:flex;align-items:center;gap:6px;background:rgba(200,145,42,.06);border:1px dashed var(--border-strong);border-radius:4px;padding:7px 12px;color:var(--gold);font-family:'DM Sans';font-size:.78rem;font-weight:500;cursor:pointer;transition:all .22s;width:100%;}
+.btn-add-flux:hover{background:rgba(200,145,42,.12);border-color:var(--gold);}
+
+.chem-card{
+  background:linear-gradient(135deg,rgba(26,48,87,0.04) 0%,rgba(200,145,42,0.05) 100%);
+  border:1.5px solid var(--border-strong);border-radius:6px;padding:12px 14px;
+  margin-top:4px;animation:chemFadeIn .3s ease;
+}
+@keyframes chemFadeIn{from{opacity:0;transform:translateY(-6px);}to{opacity:1;transform:translateY(0);}}
+.chem-card-title{font-family:'DM Sans',sans-serif;font-size:.78rem;font-weight:600;letter-spacing:.2px;color:var(--gold);text-transform:none;margin-bottom:10px;display:flex;align-items:center;gap:6px;}
+.chem-card-title::before{content:'⬡';font-size:.7rem;}
+.chem-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;}
+.chem-cell{background:#fff;border:1px solid var(--border);border-radius:4px;padding:7px 8px;text-align:center;}
+.chem-cell-label{font-family:'DM Sans',sans-serif;font-size:.72rem;font-weight:500;letter-spacing:.1px;color:var(--text-dim);text-transform:none;margin-bottom:3px;}
+.chem-inp{
+  width:100%;background:transparent;border:none;border-bottom:1.5px solid var(--border);
+  border-radius:0;padding:2px 4px;font-family:'DM Sans',sans-serif;font-size:.95rem;font-weight:700;
+  color:var(--navy);text-align:center;outline:none;transition:border-color .2s;
+  -moz-appearance:textfield;
+}
+.chem-inp::-webkit-outer-spin-button,.chem-inp::-webkit-inner-spin-button{-webkit-appearance:none;margin:0;}
+.chem-inp:focus{border-bottom-color:var(--gold);background:rgba(200,145,42,0.04);}
+.chem-cell.fe-cell .chem-inp{color:var(--green);}
+.chem-cell.sio2-cell .chem-inp{color:#7a5a30;}
+.chem-cell.al2o3-cell .chem-inp{color:var(--blue);}
+.chem-cell-unit{font-family:'JetBrains Mono';font-size:.42rem;color:var(--text-dim);margin-top:2px;}
+.chem-note{font-family:'DM Sans',sans-serif;font-size:.72rem;color:var(--text-dim);margin-top:8px;padding-top:6px;border-top:1px solid var(--border);display:flex;align-items:center;gap:5px;}
+.chem-note::before{content:'✎';font-size:.7rem;color:var(--gold);}
+.ti-ai-row{display:flex;gap:4px;align-items:center;justify-content:center;}
+.ti-ai-row input.chem-inp{width:44%;}
+.ti-ai-sep{font-size:.65rem;color:var(--text-dim);}
+
+.zone-toggle{display:flex;gap:0;border:1.5px solid var(--border-strong);border-radius:4px;overflow:hidden;margin-bottom:10px;}
+.zone-toggle button{flex:1;background:transparent;border:none;padding:8px 6px;font-family:'JetBrains Mono';font-size:.62rem;font-weight:600;letter-spacing:1px;color:var(--text-dim);cursor:pointer;transition:all .22s;text-transform:uppercase;}
+.zone-toggle button.active{background:var(--navy);color:#fff;}
+.zone-toggle button:hover:not(.active){background:rgba(200,145,42,.08);color:var(--gold);}
+
+@media(max-width:640px){
+  nav{padding:0 1rem;height:58px;}.logo-text .l2{display:none;}
+  .page-wrap{padding:1.25rem .75rem 2.5rem;}
+  .page-header-inner{flex-direction:column;gap:.75rem;}
+  .capacity-box{width:100%;max-width:320px;}
+  .params-row{grid-template-columns:1fr 1fr;}
+  .size-grid{grid-template-columns:1fr;}
+  .chem-grid{grid-template-columns:repeat(2,1fr);}
+}
+</style>
+</head>
+<body>
+
+<div class="modal-overlay" id="modalOverlay">
+  <div class="modal-card">
+    <div class="modal-header">
+      <div class="modal-stage-tag" id="modalTag">STAGE 01</div>
+      <div class="modal-title" id="modalTitle">Iron Ore Feed</div>
+      <div class="modal-desc" id="modalDesc">Configure inputs</div>
+      <button class="modal-close" onclick="closeModal()">✕</button>
+    </div>
+    <div class="modal-body" id="modalBody"></div>
+    <div class="modal-footer">
+      <button class="btn-save" onclick="saveModal()">Save Parameters</button>
+      <button class="btn-cancel" onclick="closeModal()">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<nav>
+  <a href="index.html" class="nav-logo">
+    <img src="abhitech-logo.png" alt="Abhitech Energycon">
+    <div class="logo-text"><span class="l1">ABHITECH</span><span class="l2">Pelletization Simulator</span></div>
+  </a>
+  <div class="nav-right">
+    <a href="index.html" class="nav-btn">← Home</a>
+    <a href="login.html" class="nav-btn">Sign Out</a>
+  </div>
+</nav>
+
+<div class="page-wrap">
+  <div class="page-header">
+    <div class="page-header-inner">
+      <div>
+        <div class="page-title">Pelletization Process Simulator</div>
+        <div class="page-sub">// Iron Ore Pelletization — Wet Grinding Route</div>
+      </div>
+      <div class="capacity-box">
+        <div class="capacity-box-label">Plant Name</div>
+        <select class="plant-name-select" id="plantName" onchange="onPlantChange()">
+          <option value="">— Select Plant —</option>
+          <option value="demo1">Demo 1</option>
+          <option value="demo2">Demo 2</option>
+        </select>
+        <div class="capacity-box-divider"></div>
+        <div class="capacity-box-label">Plant Capacity</div>
+        <div class="capacity-box-input-wrap">
+          <input type="number" class="capacity-box-input" id="plantCapacity" min="1" max="9999" step="0.1" placeholder="—" title="Enter plant capacity">
+          <span class="capacity-box-unit">TPH</span>
+        </div>
+      </div>
+    </div>
+    <div class="page-hint">Click any process stage to configure its parameters</div>
+  </div>
+
+  <div class="canvas-wrap" id="canvasWrap">
+    <!-- Group overlay cards — positioned by JS after layout is known -->
+    <div id="groupOverlay">
+      <div class="stage-group grp-wet" id="grp-wet">
+        <div class="group-label">Wet Preparation</div>
+      </div>
+      <div class="stage-group grp-green" id="grp-green">
+        <div class="group-label">Green Ball Formation</div>
+      </div>
+      <div class="stage-group grp-indu" id="grp-indu">
+        <div class="group-label">Induration &amp; Finishing</div>
+      </div>
+    </div>
+    <canvas id="processCanvas"></canvas>
+    <div class="step-bar">
+      <div class="step-pill" data-step="0">Feed</div>
+      <div class="step-pill" data-step="1">Grinding</div>
+      <div class="step-pill" data-step="2">Thickener</div>
+      <div class="step-pill" data-step="3">Filter Cake</div>
+      <div class="step-pill" data-step="4">Mixing</div>
+      <div class="step-pill" data-step="5">Balling</div>
+      <div class="step-pill" data-step="5b">Green Ball</div>
+      <div class="step-pill" data-step="6">Screening</div>
+      <div class="step-pill" data-step="7">Induration</div>
+      <div class="step-pill" data-step="8">Cooling</div>
+      <div class="step-pill" data-step="9">Pellets</div>
+    </div>
+  </div>
+
+  <div class="action-row">
+    <button class="run-btn" id="runBtn" onclick="runSimulation()">▶ Run Pelletization Simulation</button>
+    <button class="reset-btn" onclick="resetAll()">↺ Reset</button>
+  </div>
+
+  <div class="params-row">
+    <div class="param-box"><div class="param-box-label">Pellet Size</div><div class="param-box-val" id="p-size">—</div></div>
+    <div class="param-box"><div class="param-box-label">OB / Binder</div><div class="param-box-val warn" id="p-ob">—</div></div>
+    <div class="param-box"><div class="param-box-label">Yield Est.</div><div class="param-box-val good" id="p-yield">—</div></div>
+    <div class="param-box"><div class="param-box-label">Basicity</div><div class="param-box-val" id="p-basicity">—</div></div>
+    <div class="param-box"><div class="param-box-label">Induration Temp</div><div class="param-box-val" id="p-temp">—</div></div>
+    <div class="param-box"><div class="param-box-label">Moisture</div><div class="param-box-val" id="p-moist">—</div></div>
+  </div>
+</div>
+
+<script>
+// ═══════════════════════════════════════════════════════════
+// ORE CHEMISTRY DATA
+// ═══════════════════════════════════════════════════════════
+const ORE_ZONES = {
+  E: {
+    label: 'East Zone',
+    locations: {
+      'JSW - Jharsugda':  { moisture:11.50, fe:61.85, sio2:4.07,  al2o3:62.92, ccs:210, ti:null, ai:null },
+      'Chaliyama Steel - Chaibasa':  { moisture:10.00, fe:61.50, sio2:4.28,  al2o3:3.31,  ccs:198, ti:94.00, ai:4.30 },
+      'Dhenkanal Steel - Dhenkanal':   { moisture:10.05, fe:61.50, sio2:3.60,  al2o3:2.90,  ccs:194, ti:94.00, ai:4.00 },
+      'Kamanada Steel - Joda':   { moisture:9.80,  fe:61.50, sio2:3.90,  al2o3:2.80,  ccs:190, ti:94.00, ai:4.00 },
+      'Gallent Ispat - Gorkhpur':   { moisture:10.50, fe:61.50, sio2:5.50,  al2o3:2.60,  ccs:215, ti:96.00, ai:2.50 },
+      'GR Integrate - Raipur':   { moisture:10.80, fe:62.50, sio2:5.50,  al2o3:2.20,  ccs:198, ti:95.50, ai:3.50 },
+      'Shree Jagnath Steel - Barbil':   { moisture:11.50, fe:61.30, sio2:4.50,  al2o3:3.50,  ccs:195,  ti:91.50, ai:6.50 },
+      'Envirocare - Rourkela':   { moisture:11.70, fe:60.50, sio2:3.50,  al2o3:3.70,  ccs:220, ti:95.00, ai:3.00 },
+      'Shree Mahaveer - Rourkel':   { moisture:11.70, fe:60.50, sio2:3.50,  al2o3:3.70,  ccs:220,  ti:95.00, ai:3.00  },
+      'Orissa Metalic Pvt. Ltd - Khargpur':   { moisture:12.00, fe:60.50, sio2:4.50,  al2o3:4.00,  ccs:195, ti:95.00, ai:2.50 },
+      'Shyam Metalics - Samblpur':  { moisture:11.80, fe:60.50, sio2:4.50,  al2o3:3.80,  ccs:200, ti:95.00, ai:2.50 },
+      'Super Smelter - Jamuria':  { moisture:11.50, fe:61.50, sio2:3.50,  al2o3:2.30,  ccs:185, ti:96.00, ai:3.00 },
+      'Shyam Sel & Power Ltd. - Jamuria': { moisture:12.00, fe:61.00, sio2:3.50,  al2o3:2.30,  ccs:185, ti:96.00, ai:3.00 }
+    }
+  },
+  S: {
+    label: 'South Zone',
+    locations: {
+      'JSW - Bellary':  { moisture:10.50, fe:59.50, sio2:6.90, al2o3:2.50, ccs:250, ti:93.00, ai:5.70 },
+      'Minera Steel- Bellary':  { moisture:9.20,  fe:61.50, sio2:4.50, al2o3:2.00, ccs:180, ti:93.50, ai:4.50 },
+      'MSPL - Baldota':   { moisture:11.00, fe:62.00, sio2:5.00, al2o3:2.00, ccs:200, ti:96.00, ai:2.50 },
+      'Prakash Spong - Chitradurga':  { moisture:8.50,  fe:61.00, sio2:4.50, al2o3:2.30, ccs:210, ti:95.70, ai:3.00 },
+      'BMM Ispat - Hospet':  { moisture:11.00, fe:61.00, sio2:5.50, al2o3:2.00, ccs:220, ti:95.50, ai:3.50 }
+    }
+  },
+  C: {
+    label: 'Central Zone',
+    locations: {
+      'Lloyds Metalics Energy Ltd. - Konsari':  { moisture:9.50,  fe:64.50, sio2:4.00, al2o3:2.20, ccs:220, ti:95.00, ai:3.10 },
+      'Shree Bajrang Power & Ispat Ltd. - Tilda': { moisture:12.00, fe:62.00, sio2:4.50, al2o3:2.50, ccs:210, ti:94.00, ai:4.00 },
+      'Jayswal Neco - Raipur':  { moisture:10.50, fe:61.50, sio2:5.50, al2o3:2.50, ccs:220, ti:93.00, ai:5.00 }
+    }
+  }
+};
+
+// ═══════ STATE ═══════
+const stageParams = {
+  feed:      {ore:'',orePercent:'',feedRate:'',fluxes:[],coal:'',coalPercent:'',zone:'',location:'',
+              chemFe:'',chemSio2:'',chemAl2o3:'',chemMoisture:'',chemCcs:'',chemTi:'',chemAi:''},
+  grind:     {rawFeedMoisture:'',blain:''},
+  thickner:  {underflowDensity:''},
+  filter:    {cakeMoisture:''},
+  mix:       {binder:'',bentonite:'',bentoniteDosageValue:'',bentoniteDosageUnit:'kg',dosageValue:'',dosageUnit:'GPT',fluxes:[],mixMoisture:''},
+  ball:      {angle:'',motorRpm:'',discRpm:'',greenBallMoisture:''},
+  greenball: {moisture:'',dropNumber:'',gcs:''},
+  screen:    {s8_10:'',s10_12:'',s12_14:'',s14_16:'',recycled:'',recycledUnit:'%'},
+  indu:      {mode:'furnace',rpm:'',btt:'',drm:'',exhaust:'',tgRpm:'',mcTemp:'',tgDischarge:'',tgExhaust:''},
+  cool:      {zone1:'',zone2:'',zone3:'',zone4:''},
+  pellet:    {size8_10:'',size10_12:'',size12_14:'',size14_16:'',cracked:'',ccs:'',tumbler:'',abrasion:'',fe:''}
+};
+let simRunning=false,simFrame=0,simStep=-1,animId=null,currentModalStage=null;
+
+// ═══════ STAGES ═══════
+const STAGES=[
+  {id:'feed',     label:'IRON ORE\nFEED',       tag:'STAGE 01',shape:'hopper',   color:'#8b4513',step:0},
+  {id:'grind',    label:'GRINDING',              tag:'STAGE 02',shape:'drum',     color:'#7a5a30',step:1},
+  {id:'thickner', label:'THICKENER',             tag:'STAGE 03',shape:'conetank', color:'#2d5fa6',step:2},
+  {id:'filter',   label:'FILTER\nCAKE',          tag:'STAGE 04',shape:'press',    color:'#5a3d8a',step:3},
+  {id:'mix',      label:'MIXING\n+ BINDER',      tag:'STAGE 05',shape:'ellipse',  color:'#c8912a',step:4},
+  {id:'ball',     label:'BALLING\nDISC',         tag:'STAGE 06',shape:'circle',   color:'#3a7abf',step:5},
+  {id:'greenball',label:'GREEN\nBALL PROP',      tag:'STAGE 06B',shape:'screen',  color:'#5a8a3a',step:5},
+  {id:'screen',   label:'SCREENING',             tag:'STAGE 07',shape:'screen',   color:'#6a5a2a',step:6},
+  {id:'indu',     label:'INDURATION\nFURNACE',   tag:'STAGE 08',shape:'furnace',  color:'#c04010',step:7},
+  {id:'cool',     label:'COOLING',               tag:'STAGE 09',shape:'trapezoid',color:'#2a7a4a',step:8},
+  {id:'pellet',   label:'FINISHED\nPELLETS',    tag:'STAGE 10',shape:'pellets',  color:'#1a3057',step:9},
+];
+
+// ═══════════════════════════════════════════════════════════
+// GROUP DEFINITIONS
+// Group 1 (wet):   stages 0–3  (feed, grind, thickner, filter)
+// Group 2 (green): stages 4–7  (mix, ball, greenball, screen)
+// Group 3 (indu):  stages 8–10 (indu, cool, pellet)
+// ═══════════════════════════════════════════════════════════
+const GROUPS = [
+  { id:'grp-wet',   startIdx:0, endIdx:3  },  // Feed, Grind, Thickener, Filter Cake
+  { id:'grp-green', startIdx:4, endIdx:6  },  // Mixing, Balling, Green Ball Prop
+  { id:'grp-indu',  startIdx:7, endIdx:10 },  // Screening, Induration, Cooling, Pellets
+];
+
+function positionGroups(){
+  const wrap = document.getElementById('canvasWrap');
+  const W = wrap.clientWidth;
+  const n = STAGES.length;
+  const padX = W * 0.022;
+  const slotW = (W - padX * 2) / n;
+  // canvas height mirrors the draw() sizeCanvas logic
+  const H = Math.max(230, Math.min(W * 0.36, 350));
+  const PAD_TOP = 10;   // matches .stage-group top
+  const PAD_SIDE = 6;
+  const PAD_BOT = 28;   // room for configure labels below shapes
+
+  GROUPS.forEach(g => {
+    const el = document.getElementById(g.id);
+    if(!el) return;
+    const x1 = padX + g.startIdx * slotW - PAD_SIDE;
+    const x2 = padX + (g.endIdx + 1) * slotW + PAD_SIDE;
+    el.style.left   = x1 + 'px';
+    el.style.top    = PAD_TOP + 'px';
+    el.style.width  = (x2 - x1) + 'px';
+    el.style.height = (H - PAD_TOP - PAD_BOT) + 'px';
+  });
+}
+
+// ═══════════════════════════════════════════════════════════
+// PLANT NAME HANDLER
+// ═══════════════════════════════════════════════════════════
+function onPlantChange(){
+  const val = document.getElementById('plantName').value;
+  const induStage = STAGES.find(s => s.id === 'indu');
+  if(val === 'demo1'){
+    stageParams.indu.mode = 'grate';
+    if(induStage) induStage.label = 'GRATE\nKILN';
+  } else if(val === 'demo2'){
+    stageParams.indu.mode = 'furnace';
+    if(induStage) induStage.label = 'INDURATION\nFURNACE';
+  }
+}
+
+// ═══════ CANVAS ═══════
+const canvas=document.getElementById('processCanvas');
+const ctx=canvas.getContext('2d');
+let hitZones=[];
+
+function sizeCanvas(){
+  const W=canvas.parentElement.clientWidth;
+  const ratio=window.devicePixelRatio||1;
+  const H=Math.max(230,Math.min(W*0.36,350));
+  canvas.width=W*ratio; canvas.height=H*ratio;
+  canvas.style.width=W+'px'; canvas.style.height=H+'px';
+  ctx.scale(ratio,ratio);
+  return{W,H};
+}
+
+// ═══════ MAIN DRAW ═══════
+function draw(frame,activeStep){
+  const{W,H}=sizeCanvas();
+  ctx.clearRect(0,0,W,H);
+  // transparent background so the group cards show through
+  ctx.fillStyle='rgba(255,255,255,0)'; ctx.fillRect(0,0,W,H);
+  ctx.strokeStyle='rgba(200,145,42,0.035)'; ctx.lineWidth=1;
+  for(let x=0;x<W;x+=36){ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x,H);ctx.stroke();}
+  for(let y=0;y<H;y+=36){ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(W,y);ctx.stroke();}
+
+  // reposition group cards whenever draw runs (handles resize)
+  positionGroups();
+
+  hitZones=[];
+  const n=STAGES.length;
+  const padX=W*0.022;
+  const slotW=(W-padX*2)/n;
+  const midY=H*0.43;
+  const mH=H*0.50;
+  const mW=slotW*0.68;
+  const labelY=midY+mH*0.55+18;
+
+  if(activeStep>=0){
+    const info=[
+      {k:'Ore:',     v:stageParams.feed.ore?stageParams.feed.ore.substring(0,22):'—'},
+      {k:'Binder:',  v:stageParams.mix.binder?stageParams.mix.binder.substring(0,22):'—'},
+      {k:'Moisture:', v:stageParams.filter.cakeMoisture?stageParams.filter.cakeMoisture+'%':'—'},
+      {k:'Blain:',    v:stageParams.grind.blain?stageParams.grind.blain+' cm²/g':'—'},
+    ];
+    const bw=210,bh=info.length*17+18;
+    ctx.fillStyle='rgba(253,248,240,0.95)'; ctx.strokeStyle='rgba(200,145,42,0.22)'; ctx.lineWidth=1;
+    ctx.beginPath(); ctx.roundRect(14,14,bw,bh,4); ctx.fill(); ctx.stroke();
+    info.forEach((item,i)=>{
+      ctx.fillStyle='#9a8a70'; ctx.font='400 9px JetBrains Mono'; ctx.textAlign='left'; ctx.fillText(item.k,24,28+i*17);
+      ctx.fillStyle='#1a3057'; ctx.font='500 9px JetBrains Mono'; ctx.fillText(item.v,78,28+i*17);
+    });
+  }
+
+  if(activeStep>=4||activeStep<0){
+    const mcx=padX+4*slotW+slotW/2;
+    ctx.save(); ctx.globalAlpha=activeStep<0?0.3:0.88;
+    ctx.fillStyle='rgba(200,145,42,0.1)'; ctx.strokeStyle='rgba(200,145,42,0.45)'; ctx.lineWidth=1;
+    ctx.beginPath(); ctx.roundRect(mcx-40,midY-mH*0.52-46,80,26,3); ctx.fill(); ctx.stroke();
+    ctx.fillStyle='#c8912a'; ctx.font='600 8px JetBrains Mono'; ctx.textAlign='center';
+    ctx.fillText('OB DOSING',mcx,midY-mH*0.52-30);
+    if(activeStep>=4){
+      const dy=midY-mH*0.52-22+(frame%32)*0.72;
+      ctx.strokeStyle='rgba(200,145,42,0.3)'; ctx.lineWidth=0.8; ctx.setLineDash([2,3]);
+      ctx.beginPath(); ctx.moveTo(mcx,midY-mH*0.52-23); ctx.lineTo(mcx,midY-mH*0.52); ctx.stroke(); ctx.setLineDash([]);
+      ctx.beginPath(); ctx.arc(mcx,dy,2.5,0,Math.PI*2); ctx.fillStyle='rgba(200,145,42,0.75)'; ctx.fill();
+    }
+    ctx.restore();
+  }
+
+  for(let i=0;i<n-1;i++){
+    const s=STAGES[i];
+    const cx1=padX+i*slotW+slotW/2;
+    const cx2=padX+(i+1)*slotW+slotW/2;
+    const lit=s.step<activeStep||s.step===activeStep;
+    const x1=cx1+mW*0.46, x2=cx2-mW*0.46;
+    ctx.save();
+    ctx.strokeStyle=lit?s.color:'rgba(200,145,42,0.15)';
+    ctx.lineWidth=lit?2.5:1.5; ctx.globalAlpha=lit?0.8:0.38;
+    ctx.setLineDash(lit?[]:[5,5]);
+    ctx.beginPath(); ctx.moveTo(x1,midY); ctx.lineTo(x2,midY); ctx.stroke(); ctx.setLineDash([]);
+    ctx.fillStyle=lit?s.color:'rgba(200,145,42,0.22)'; ctx.globalAlpha=lit?0.9:0.65;
+    ctx.beginPath(); ctx.moveTo(x2,midY-5); ctx.lineTo(x2+9,midY); ctx.lineTo(x2,midY+5); ctx.fill();
+    ctx.restore();
+    if(lit){
+      const t=(frame%60)/60;
+      const px=x1+(x2-x1)*t;
+      const rg=ctx.createRadialGradient(px,midY,0,px,midY,7);
+      rg.addColorStop(0,'rgba(232,184,75,0.95)'); rg.addColorStop(1,'rgba(200,145,42,0)');
+      ctx.beginPath(); ctx.arc(px,midY,7,0,Math.PI*2); ctx.fillStyle=rg; ctx.fill();
+    }
+  }
+
+  STAGES.forEach((s,i)=>{
+    const cx=padX+i*slotW+slotW/2;
+    const isActive=s.step===activeStep;
+    const isDone=s.step<activeStep;
+    const isConfig=isStageConfigured(s.id);
+    const lit=isActive||isDone;
+    const alpha=activeStep>=0?(lit?1:0.33):1;
+    ctx.save(); ctx.globalAlpha=alpha;
+    if(isActive){ctx.shadowColor=s.color; ctx.shadowBlur=22;}
+    const col=lit?s.color:(isConfig?s.color:'#c0ae90');
+    const strokeCol=isActive?s.color:(isDone?s.color:(isConfig?'rgba(200,145,42,0.55)':'rgba(200,145,42,0.22)'));
+    const strokeW=isActive?2.5:(isConfig?1.8:1.2);
+    const bounds=drawMachineShape(s.shape,cx,midY,mW,mH,col,strokeCol,strokeW,isActive,isDone,frame,s);
+    ctx.shadowBlur=0;
+    hitZones.push({id:s.id,...bounds});
+    const lines=s.label.split('\n');
+    const fs=slotW<100?7:8;
+    ctx.font=`600 ${fs}px JetBrains Mono`; ctx.textAlign='center';
+    ctx.fillStyle=lit?s.color:(isConfig?s.color:'#8a7a60');
+    lines.forEach((line,li)=>ctx.fillText(line,cx,labelY+li*(fs+3)));
+    if(s.id==='pellet'&&activeStep===9){
+      ctx.fillStyle='#2a7a4a'; ctx.font='700 8px JetBrains Mono';
+      ctx.fillText('✓ PELLETS READY',cx,labelY+lines.length*(fs+3)+12);
+    }
+    if(isConfig&&activeStep<0){
+      ctx.fillStyle='#3aaa6a'; ctx.beginPath(); ctx.arc(bounds.x+bounds.w-6,bounds.y+6,4.5,0,Math.PI*2); ctx.fill();
+    }
+    if(activeStep<0){
+      ctx.fillStyle=isConfig?'rgba(58,170,106,0.6)':'rgba(200,145,42,0.42)';
+      ctx.font='400 6.5px DM Sans'; ctx.textAlign='center';
+      ctx.fillText(isConfig?'✓ configured':'⊕ configure',cx,bounds.y+bounds.h+13);
+    }
+    ctx.restore();
+  });
+
+  if(activeStep===9){
+    const pi=STAGES.findIndex(s=>s.id==='pellet');
+    drawPelletBurst(padX+pi*slotW+slotW/2,midY,frame,mW*0.48);
+  }
+}
+
+// ═══════ MACHINE SHAPES ═══════
+function drawMachineShape(shape,cx,cy,mW,mH,col,strokeCol,strokeW,isActive,isDone,frame,stage){
+  const lit=isActive||isDone;
+  ctx.fillStyle=col; ctx.strokeStyle=strokeCol; ctx.lineWidth=strokeW;
+  switch(shape){
+    case 'hopper':{
+      const tw=mW*0.60,th=mH*0.58;
+      const top=cy-th/2,bot=cy+th/2;
+      ctx.beginPath();
+      ctx.moveTo(cx-tw/2,top); ctx.lineTo(cx+tw/2,top);
+      ctx.lineTo(cx+tw*0.22,bot); ctx.lineTo(cx-tw*0.22,bot);
+      ctx.closePath(); ctx.fill(); ctx.stroke();
+      if(isActive){
+        for(let p=0;p<4;p++){
+          const fy=top+6+(frame*2.2+p*18)%(th*0.8);
+          ctx.beginPath(); ctx.arc(cx+(p-1.5)*7,fy,2.5+p%2,0,Math.PI*2);
+          ctx.fillStyle=p%2?'#cd7f32':'rgba(255,255,255,0.4)'; ctx.fill();
+        }
+      }
+      return{x:cx-tw/2,y:top,w:tw,h:th};
+    }
+    case 'drum':{
+      const rw=mW*0.46,rh=mH*0.34;
+      ctx.beginPath(); ctx.ellipse(cx,cy,rw,rh,0,0,Math.PI*2); ctx.fill(); ctx.stroke();
+      ctx.save(); ctx.translate(cx,cy); ctx.rotate(isActive?frame*0.07:0.4);
+      ctx.strokeStyle='rgba(255,255,255,0.42)'; ctx.lineWidth=1.5;
+      for(let k=0;k<6;k++){
+        const a=k*Math.PI/3;
+        ctx.beginPath(); ctx.moveTo(Math.cos(a)*rw*0.35,Math.sin(a)*rh*0.35);
+        ctx.lineTo(Math.cos(a)*rw*0.88,Math.sin(a)*rh*0.88); ctx.stroke();
+      }
+      for(let b=0;b<3;b++){
+        const ba=frame*0.055+b*Math.PI*2/3;
+        ctx.beginPath(); ctx.arc(Math.cos(ba)*rw*0.44,Math.sin(ba)*rh*0.44,3,0,Math.PI*2);
+        ctx.fillStyle='rgba(255,255,255,0.5)'; ctx.fill();
+      }
+      ctx.restore();
+      if(isActive){const dy=cy-rh-5+(frame%22)*1;ctx.beginPath();ctx.arc(cx+rw*0.55,dy,2.5,0,Math.PI*2);ctx.fillStyle='rgba(100,180,255,0.7)';ctx.fill();}
+      return{x:cx-rw,y:cy-rh,w:rw*2,h:rh*2};
+    }
+    case 'conetank':{
+      const rr=mW*0.36,th=mH*0.62;
+      const top=cy-th/2,mid2=cy+th*0.18;
+      ctx.beginPath();
+      ctx.moveTo(cx-rr,top); ctx.lineTo(cx+rr,top);
+      ctx.lineTo(cx+rr,mid2); ctx.lineTo(cx,cy+th/2);
+      ctx.lineTo(cx-rr,mid2); ctx.closePath(); ctx.fill(); ctx.stroke();
+      ctx.beginPath(); ctx.ellipse(cx,top,rr,rr*0.2,0,0,Math.PI*2); ctx.fill(); ctx.stroke();
+      ctx.strokeStyle='rgba(255,255,255,0.2)'; ctx.lineWidth=0.8;
+      for(let r=1;r<=2;r++){ctx.beginPath();ctx.ellipse(cx,top+r*(th*0.23),rr*0.68,rr*0.1,0,0,Math.PI*2);ctx.stroke();}
+      ctx.save(); ctx.translate(cx,top+th*0.26); ctx.rotate(isActive?-frame*0.022:-0.2);
+      ctx.strokeStyle='rgba(255,255,255,0.55)'; ctx.lineWidth=2;
+      ctx.beginPath(); ctx.moveTo(-rr*0.85,0); ctx.lineTo(rr*0.85,0); ctx.stroke();
+      ctx.restore();
+      return{x:cx-rr,y:top,w:rr*2,h:th};
+    }
+    case 'press':{
+      const fw=mW*0.46,fh=mH*0.58;
+      const top=cy-fh/2;
+      ctx.beginPath(); ctx.roundRect(cx-fw/2,top,fw,fh,3); ctx.fill(); ctx.stroke();
+      for(let p=0;p<4;p++){
+        const py=top+5+p*(fh-10)/4;
+        ctx.fillStyle='rgba(255,255,255,0.14)'; ctx.fillRect(cx-fw/2+4,py,fw-8,fh/4-6);
+        ctx.strokeStyle='rgba(255,255,255,0.2)'; ctx.lineWidth=0.7; ctx.strokeRect(cx-fw/2+4,py,fw-8,fh/4-6);
+      }
+      if(isActive){
+        for(let d=0;d<3;d++){
+          const dy=cy+fh/2+2+(frame*1.8+d*14)%22;
+          ctx.beginPath(); ctx.arc(cx+(d-1)*10,dy,2,0,Math.PI*2);
+          ctx.fillStyle='rgba(100,160,255,0.65)'; ctx.fill();
+        }
+      }
+      return{x:cx-fw/2,y:top,w:fw,h:fh};
+    }
+    case 'ellipse':{
+      const rw=mW*0.50,rh=mH*0.35;
+      ctx.beginPath(); ctx.ellipse(cx,cy,rw,rh,0,0,Math.PI*2); ctx.fill(); ctx.stroke();
+      ctx.save(); ctx.translate(cx,cy); ctx.rotate(isActive?frame*0.065:0.5);
+      ctx.strokeStyle='rgba(255,255,255,0.55)'; ctx.lineWidth=2;
+      for(let k=0;k<3;k++){
+        const a=k*Math.PI*2/3;
+        ctx.beginPath(); ctx.moveTo(0,0); ctx.lineTo(Math.cos(a)*rw*0.78,Math.sin(a)*rh*0.78); ctx.stroke();
+        ctx.beginPath(); ctx.arc(Math.cos(a)*rw*0.78,Math.sin(a)*rh*0.78,4,0,Math.PI*2);
+        ctx.fillStyle='rgba(255,255,255,0.35)'; ctx.fill();
+      }
+      ctx.restore();
+      if(isActive){ctx.shadowColor=col;ctx.shadowBlur=14;ctx.strokeStyle='rgba(255,255,255,0.2)';ctx.lineWidth=1.5;ctx.beginPath();ctx.ellipse(cx,cy,rw,rh,0,0,Math.PI*2);ctx.stroke();ctx.shadowBlur=0;}
+      return{x:cx-rw,y:cy-rh,w:rw*2,h:rh*2};
+    }
+    case 'circle':{
+      const r=mW*0.40;
+      ctx.beginPath(); ctx.arc(cx,cy,r,0,Math.PI*2); ctx.fill(); ctx.stroke();
+      ctx.save(); ctx.translate(cx,cy); ctx.rotate(isActive?-frame*0.045:-0.3);
+      ctx.strokeStyle='rgba(255,255,255,0.35)'; ctx.lineWidth=1.5;
+      ctx.beginPath(); ctx.arc(0,0,r*0.92,0,Math.PI*2); ctx.stroke();
+      for(let k=0;k<5;k++){
+        const a=k*Math.PI*2/5;
+        ctx.beginPath(); ctx.moveTo(0,0); ctx.lineTo(Math.cos(a)*r*0.86,Math.sin(a)*r*0.86); ctx.stroke();
+      }
+      ctx.restore();
+      for(let p=0;p<5;p++){
+        const ang=(isActive?frame*0.05:0)+p*Math.PI*2/5;
+        const pr=r*0.64,pelR=3.5+p%2;
+        const px=cx+Math.cos(ang)*pr,py=cy+Math.sin(ang)*pr*0.6;
+        const pg=ctx.createRadialGradient(px-pelR*0.4,py-pelR*0.4,0,px,py,pelR);
+        pg.addColorStop(0,'#8ba3b5'); pg.addColorStop(1,'#2a4a5a');
+        ctx.beginPath(); ctx.arc(px,py,pelR,0,Math.PI*2); ctx.fillStyle=pg; ctx.fill();
+      }
+      return{x:cx-r,y:cy-r,w:r*2,h:r*2};
+    }
+    case 'screen':{
+      const sw=mW*0.58,sh=mH*0.46;
+      const top=cy-sh/2;
+      const vib=isActive?Math.sin(frame*0.5)*2:0;
+      ctx.save(); ctx.translate(0,vib);
+      ctx.beginPath(); ctx.roundRect(cx-sw/2,top,sw,sh,3); ctx.fill(); ctx.stroke();
+      ctx.strokeStyle='rgba(255,255,255,0.22)'; ctx.lineWidth=0.8;
+      for(let g=1;g<5;g++){ctx.beginPath();ctx.moveTo(cx-sw/2,top+g*sh/5);ctx.lineTo(cx+sw/2,top+g*sh/5);ctx.stroke();}
+      for(let g=1;g<7;g++){ctx.beginPath();ctx.moveTo(cx-sw/2+g*sw/7,top);ctx.lineTo(cx-sw/2+g*sw/7,top+sh);ctx.stroke();}
+      ctx.restore();
+      if(isActive){
+        for(let p=0;p<3;p++){
+          const py2=cy+sh/2+1+(frame*2+p*18)%(sh*0.5);
+          const pg=ctx.createRadialGradient(cx+(p-1)*12,py2,0,cx+(p-1)*12,py2,3.5);
+          pg.addColorStop(0,'#8ba3b5'); pg.addColorStop(1,'#2a4a5a');
+          ctx.beginPath(); ctx.arc(cx+(p-1)*12,py2,3.5,0,Math.PI*2); ctx.fillStyle=pg; ctx.fill();
+        }
+      }
+      return{x:cx-sw/2,y:top,w:sw,h:sh};
+    }
+    case 'furnace':{
+      const fw=mW*0.50,fh=mH*0.72;
+      const top=cy-fh/2;
+      ctx.beginPath(); ctx.roundRect(cx-fw/2,top,fw,fh,3); ctx.fill(); ctx.stroke();
+      const fg=ctx.createRadialGradient(cx,cy,0,cx,cy,fw*0.65);
+      fg.addColorStop(0,'rgba(255,150,30,0.5)'); fg.addColorStop(1,'rgba(200,60,0,0)');
+      ctx.fillStyle=fg; ctx.beginPath(); ctx.ellipse(cx,cy,fw*0.52,fh*0.32,0,0,Math.PI*2); ctx.fill();
+      if(isActive){
+        for(let f=0;f<3;f++){
+          const fx=cx+(f-1)*12,fh2=12+Math.sin(frame*0.18+f*1.2)*7;
+          ctx.fillStyle=`rgba(255,${120+f*40},0,0.8)`;
+          ctx.beginPath(); ctx.moveTo(fx-6,cy); ctx.quadraticCurveTo(fx,cy-fh2-6,fx+6,cy); ctx.closePath(); ctx.fill();
+        }
+        ctx.shadowColor='#ff6b1a'; ctx.shadowBlur=18;
+        ctx.strokeStyle='rgba(255,140,0,0.35)'; ctx.lineWidth=1.5;
+        ctx.beginPath(); ctx.roundRect(cx-fw/2,top,fw,fh,3); ctx.stroke();
+        ctx.shadowBlur=0;
+      }
+      return{x:cx-fw/2,y:top,w:fw,h:fh};
+    }
+    case 'trapezoid':{
+      const tw=mW*0.60,th=mH*0.62;
+      const top=cy-th/2,bot=cy+th/2;
+      ctx.beginPath();
+      ctx.moveTo(cx-tw/2,top); ctx.lineTo(cx+tw/2,top);
+      ctx.lineTo(cx+tw*0.28,bot); ctx.lineTo(cx-tw*0.28,bot);
+      ctx.closePath(); ctx.fill(); ctx.stroke();
+      if(isActive){
+        for(let w=0;w<3;w++){
+          const wy=bot-6-((frame*1.6+w*18)%(th*0.78));
+          ctx.strokeStyle=`rgba(150,220,255,${0.5-w*0.12})`; ctx.lineWidth=1.5;
+          ctx.beginPath(); ctx.moveTo(cx-tw*0.28,wy); ctx.quadraticCurveTo(cx,wy-5,cx+tw*0.28,wy); ctx.stroke();
+        }
+      }
+      for(let p=0;p<4;p++){
+        const px2=cx-tw*0.2+p*(tw*0.14),py2=bot-15;
+        const pg=ctx.createRadialGradient(px2-2,py2-2,0,px2,py2,4.5);
+        pg.addColorStop(0,'#8ba3b5'); pg.addColorStop(1,'#2a4a5a');
+        ctx.beginPath(); ctx.arc(px2,py2,4.5,0,Math.PI*2); ctx.fillStyle=pg; ctx.fill();
+      }
+      return{x:cx-tw/2,y:top,w:tw,h:th};
+    }
+    case 'pellets':{
+      const r=mW*0.42;
+      const pelletDefs=[
+        {ox:0,oy:0,rr:11},{ox:-14,oy:-7,rr:8.5},{ox:14,oy:-5,rr:8.5},
+        {ox:-9,oy:12,rr:7.5},{ox:11,oy:12,rr:7.5},{ox:-19,oy:5,rr:6.5},
+        {ox:19,oy:4,rr:6.5},{ox:0,oy:-17,rr:6},{ox:-4,oy:21,rr:5.5},
+      ];
+      const ang=isActive?frame*0.022:0;
+      pelletDefs.forEach(pd=>{
+        const px=cx+pd.ox*Math.cos(ang)-pd.oy*Math.sin(ang)*0.3;
+        const py=cy+pd.ox*Math.sin(ang)*0.3+pd.oy*Math.cos(ang);
+        const pg=ctx.createRadialGradient(px-pd.rr*0.35,py-pd.rr*0.35,0,px,py,pd.rr);
+        pg.addColorStop(0,'#9ab8cc'); pg.addColorStop(0.6,'#4a7a9a'); pg.addColorStop(1,'#1a3a5a');
+        ctx.beginPath(); ctx.arc(px,py,pd.rr,0,Math.PI*2); ctx.fillStyle=pg; ctx.fill();
+        ctx.strokeStyle='rgba(140,175,200,0.35)'; ctx.lineWidth=0.7; ctx.stroke();
+      });
+      return{x:cx-r,y:cy-r,w:r*2,h:r*2};
+    }
+  }
+  return{x:cx-mW/2,y:cy-mH/2,w:mW,h:mH};
+}
+
+function drawPelletBurst(cx,cy,frame,r){
+  const count=12;
+  for(let p=0;p<count;p++){
+    const ang=(frame*0.03)+p*Math.PI*2/count;
+    const dist=r+16+Math.sin(frame*0.08+p)*7;
+    const pr=5+p%3;
+    const px=cx+Math.cos(ang)*dist,py=cy+Math.sin(ang)*dist*0.5;
+    const pg=ctx.createRadialGradient(px-pr*0.4,py-pr*0.4,0,px,py,pr);
+    pg.addColorStop(0,'#9ab8cc'); pg.addColorStop(1,'#1a3a5a');
+    ctx.beginPath(); ctx.arc(px,py,pr,0,Math.PI*2); ctx.fillStyle=pg; ctx.fill();
+    ctx.strokeStyle='rgba(140,175,200,0.4)'; ctx.lineWidth=0.6; ctx.stroke();
+  }
+}
+
+// ═══════ HIT TEST ═══════
+canvas.addEventListener('click',function(e){
+  if(simRunning)return;
+  const rect=canvas.getBoundingClientRect();
+  const mx=e.clientX-rect.left,my=e.clientY-rect.top;
+  for(const z of hitZones){if(mx>=z.x&&mx<=z.x+z.w&&my>=z.y&&my<=z.y+z.h){openModal(z.id);return;}}
+});
+canvas.addEventListener('mousemove',function(e){
+  if(simRunning){canvas.style.cursor='default';return;}
+  const rect=canvas.getBoundingClientRect();
+  const mx=e.clientX-rect.left,my=e.clientY-rect.top;
+  canvas.style.cursor=hitZones.some(z=>mx>=z.x&&mx<=z.x+z.w&&my>=z.y&&my<=z.y+z.h)?'pointer':'default';
+});
+
+// ═══════ HELPER: number input field ═══════
+function numField(id, label, val, min, max, unit, step){
+  step = step || 'any';
+  return `
+    <div class="field-group">
+      <div class="field-label">${label}</div>
+      <input type="number" class="finp" id="${id}" value="${val||''}" min="${min}" max="${max}" step="${step}" placeholder="${min} – ${max}">
+      <div class="input-hint">Range: ${min} – ${max}${unit?' '+unit:''}</div>
+    </div>`;
+}
+
+// ═══════ FLUX HELPER ═══════
+const FLUX_OPTIONS = ['Limestone','Dolomite','Pyroxenite'];
+
+function fluxListHTML(listId, fluxes){
+  const rows = (fluxes && fluxes.length > 0 ? fluxes : []).map((f,i)=>`
+    <div class="flux-row" id="${listId}-row-${i}">
+      <select class="fsel" id="${listId}-type-${i}">
+        <option value="">— Select Flux —</option>
+        ${FLUX_OPTIONS.map(v=>`<option value="${v}"${f.type===v?' selected':''}>${v}</option>`).join('')}
+      </select>
+      <input type="number" class="finp" id="${listId}-pct-${i}" value="${f.pct||''}" min="0" max="100" step="0.1" placeholder="%" style="width:72px;flex:0 0 72px;">
+      <span class="flux-unit">%</span>
+      <button class="btn-remove-flux" onclick="removeFluxRow('${listId}',${i})" title="Remove">✕</button>
+    </div>`).join('');
+  return `
+    <div class="flux-list" id="${listId}-list">${rows}</div>
+    <button class="btn-add-flux" onclick="addFluxRow('${listId}')">＋ Add Flux / Additive</button>`;
+}
+
+function addFluxRow(listId){
+  const list = document.getElementById(listId+'-list');
+  const i = list.children.length;
+  const div = document.createElement('div');
+  div.className = 'flux-row';
+  div.id = `${listId}-row-${i}`;
+  div.innerHTML = `
+    <select class="fsel" id="${listId}-type-${i}">
+      <option value="">— Select Flux —</option>
+      ${FLUX_OPTIONS.map(v=>`<option value="${v}">${v}</option>`).join('')}
+    </select>
+    <input type="number" class="finp" id="${listId}-pct-${i}" value="" min="0" max="100" step="0.1" placeholder="%" style="width:72px;flex:0 0 72px;">
+    <span class="flux-unit">%</span>
+    <button class="btn-remove-flux" onclick="removeFluxRow('${listId}',${i})" title="Remove">✕</button>`;
+  list.appendChild(div);
+}
+
+function removeFluxRow(listId, idx){
+  const row = document.getElementById(`${listId}-row-${idx}`);
+  if(row) row.remove();
+  const list = document.getElementById(listId+'-list');
+  Array.from(list.children).forEach((r,newIdx)=>{
+    r.id = `${listId}-row-${newIdx}`;
+    const sel = r.querySelector('select');
+    const inp = r.querySelector('input');
+    const btn = r.querySelector('button');
+    if(sel) sel.id = `${listId}-type-${newIdx}`;
+    if(inp) inp.id = `${listId}-pct-${newIdx}`;
+    if(btn) btn.setAttribute('onclick',`removeFluxRow('${listId}',${newIdx})`);
+  });
+}
+
+function readFluxList(listId){
+  const list = document.getElementById(listId+'-list');
+  if(!list) return [];
+  return Array.from(list.children).map((r,i)=>{
+    const sel = document.getElementById(`${listId}-type-${i}`);
+    const inp = document.getElementById(`${listId}-pct-${i}`);
+    return {type: sel?sel.value:'', pct: inp?inp.value:''};
+  }).filter(f=>f.type);
+}
+
+// ═══════════════════════════════════════════════════════════
+// FEED — ZONE / LOCATION / CHEMISTRY HELPERS
+// ═══════════════════════════════════════════════════════════
+function onOreGradeChange(){
+  const ore = document.getElementById('m-ore').value;
+  const block = document.getElementById('feed-zone-location-block');
+  if(!block) return;
+  if(ore === 'Hematite'){
+    block.style.display = '';
+    renderChemCard();
+  } else {
+    block.style.display = 'none';
+  }
+}
+
+function onFeedZoneChange(){
+  const locSel = document.getElementById('m-feed-location');
+  locSel.innerHTML = '<option value="">— Select Location —</option>';
+  const zone = stageParams.feed.zone || '';
+  if(zone && ORE_ZONES[zone]){
+    Object.keys(ORE_ZONES[zone].locations).forEach(loc=>{
+      const opt = document.createElement('option');
+      opt.value = loc;
+      opt.textContent = loc;
+      if(loc === stageParams.feed.location) opt.selected = true;
+      locSel.appendChild(opt);
+    });
+  }
+  renderChemCard();
+}
+
+function onFeedLocationChange(){
+  renderChemCard();
+}
+
+function renderChemCard(){
+  const zone = stageParams.feed.zone || '';
+  const locEl = document.getElementById('m-feed-location');
+  const loc  = locEl ? locEl.value : '';
+  const container = document.getElementById('feed-chem-card');
+  if(!container) return;
+
+  if(!zone || !loc || !ORE_ZONES[zone] || !ORE_ZONES[zone].locations[loc]){
+    container.innerHTML = '';
+    return;
+  }
+
+  const d = ORE_ZONES[zone].locations[loc];
+  const fmt = (v, dec) => (v === null || v === undefined) ? '' : Number(v).toFixed(dec);
+
+  const sameLocation = stageParams.feed.location === loc;
+  const feVal    = (sameLocation && stageParams.feed.chemFe !== '')       ? stageParams.feed.chemFe       : fmt(d.fe, 2);
+  const sio2Val  = (sameLocation && stageParams.feed.chemSio2 !== '')     ? stageParams.feed.chemSio2     : fmt(d.sio2, 2);
+  const al2o3Val = (sameLocation && stageParams.feed.chemAl2o3 !== '')    ? stageParams.feed.chemAl2o3    : fmt(d.al2o3, 2);
+  const moistVal = (sameLocation && stageParams.feed.chemMoisture !== '') ? stageParams.feed.chemMoisture : fmt(d.moisture, 2);
+  const ccsVal   = (sameLocation && stageParams.feed.chemCcs !== '')      ? stageParams.feed.chemCcs      : fmt(d.ccs, 0);
+  const tiVal    = (sameLocation && stageParams.feed.chemTi !== '')       ? stageParams.feed.chemTi       : fmt(d.ti, 2);
+  const aiVal    = (sameLocation && stageParams.feed.chemAi !== '')       ? stageParams.feed.chemAi       : fmt(d.ai, 2);
+
+  container.innerHTML = `
+    <div class="chem-card">
+      <div class="chem-card-title">${ORE_ZONES[zone].label} · ${loc} — Average Chemistry</div>
+      <div class="chem-grid">
+        <div class="chem-cell fe-cell">
+          <div class="chem-cell-label">Fe</div>
+          <input type="number" class="chem-inp" id="chem-fe" value="${feVal}" step="0.01" min="0" max="100" placeholder="—">
+          <div class="chem-cell-unit">%</div>
+        </div>
+        <div class="chem-cell sio2-cell">
+          <div class="chem-cell-label">SiO₂</div>
+          <input type="number" class="chem-inp" id="chem-sio2" value="${sio2Val}" step="0.01" min="0" max="100" placeholder="—">
+          <div class="chem-cell-unit">%</div>
+        </div>
+        <div class="chem-cell al2o3-cell">
+          <div class="chem-cell-label">Al₂O₃</div>
+          <input type="number" class="chem-inp" id="chem-al2o3" value="${al2o3Val}" step="0.01" min="0" max="100" placeholder="—">
+          <div class="chem-cell-unit">%</div>
+        </div>
+        <div class="chem-cell">
+          <div class="chem-cell-label">Moisture</div>
+          <input type="number" class="chem-inp" id="chem-moisture" value="${moistVal}" step="0.01" min="0" max="100" placeholder="—">
+          <div class="chem-cell-unit">%</div>
+        </div>
+        <div class="chem-cell">
+          <div class="chem-cell-label">CCS</div>
+          <input type="number" class="chem-inp" id="chem-ccs" value="${ccsVal}" step="1" min="0" placeholder="—">
+          <div class="chem-cell-unit">kg/p</div>
+        </div>
+        <div class="chem-cell">
+          <div class="chem-cell-label">TI / AI</div>
+          <div class="ti-ai-row">
+            <input type="number" class="chem-inp" id="chem-ti" value="${tiVal}" step="0.01" min="0" max="100" placeholder="TI">
+            <span class="ti-ai-sep">/</span>
+            <input type="number" class="chem-inp" id="chem-ai" value="${aiVal}" step="0.01" min="0" max="100" placeholder="AI">
+          </div>
+          <div class="chem-cell-unit">%</div>
+        </div>
+      </div>
+      <div class="chem-note">click any value to edit</div>
+    </div>`;
+}
+
+function updateBinderDosageLabel(){
+  const binderSel = document.getElementById('m-binder');
+  const dosageLabelEl = document.getElementById('binder-dosage-label-text');
+  if(!binderSel || !dosageLabelEl) return;
+  const val = binderSel.value;
+  dosageLabelEl.textContent = val ? val + ' Dosage' : 'Binder Dosage';
+}
+
+const BINDER_OPTIONS = ['OB-1205 Organic','OB-1206','OB3s','OB Pro','Bentonite (6 kg/t)','OB-1205 + Bentonite'];
+
+// ═══════ MODALS ═══════
+const MODAL_CONFIGS={
+  feed:{
+    title:'Iron Ore Feed',desc:'Configure raw material grades and additives',
+    fields:()=>`
+      <div class="field-group">
+        <div class="field-label">Iron Ore Grade</div>
+        <select class="fsel" id="m-ore" onchange="onOreGradeChange()">
+          <option value="">— Select Grade —</option>
+          ${['Hematite','Magnetite','Limonite','Goethite'].map(v=>`<option value="${v}"${stageParams.feed.ore===v?' selected':''}>${v}</option>`).join('')}
+        </select>
+      </div>
+      <div id="feed-zone-location-block" style="${stageParams.feed.ore==='Hematite'?'':'display:none'}">
+        <div class="field-group">
+          <div class="field-label">Ore Source Zone</div>
+          <div class="zone-toggle">
+            <button id="zone-btn-E" class="${stageParams.feed.zone==='E'?'active':''}" onclick="selectFeedZone('E')">E — East</button>
+            <button id="zone-btn-S" class="${stageParams.feed.zone==='S'?'active':''}" onclick="selectFeedZone('S')">S — South</button>
+            <button id="zone-btn-C" class="${stageParams.feed.zone==='C'?'active':''}" onclick="selectFeedZone('C')">C — Central</button>
+          </div>
+        </div>
+        <div class="field-group">
+          <div class="field-label">Mine Location</div>
+          <select class="fsel" id="m-feed-location" onchange="onFeedLocationChange()">
+            <option value="">— Select Location —</option>
+            ${stageParams.feed.zone && ORE_ZONES[stageParams.feed.zone]
+              ? Object.keys(ORE_ZONES[stageParams.feed.zone].locations).map(loc=>
+                  `<option value="${loc}"${stageParams.feed.location===loc?' selected':''}>${loc}</option>`
+                ).join('')
+              : ''}
+          </select>
+          <div class="input-hint">Select zone first, then pick the mine location</div>
+        </div>
+        <div id="feed-chem-card"></div>
+      </div>
+      <div class="field-group">
+        <div class="field-label">Iron Ore Percentage (%)</div>
+        <input type="number" class="finp" id="m-ore-pct" value="${stageParams.feed.orePercent||''}" min="55" max="65" step="0.1" placeholder="55 – 65">
+        <div class="input-hint">Range: 55 – 65 %</div>
+      </div>
+      <div class="field-group">
+        <div class="field-label">Feed Rate (TPH)</div>
+        <input type="number" class="finp" id="m-feedrate" value="${stageParams.feed.feedRate||''}" min="1" max="9999" step="0.1" placeholder="Enter feed rate">
+        <div class="input-hint">Tonnes per hour</div>
+      </div>
+      <div class="field-group">
+        <div class="field-label">Flux / Additive (one or more)</div>
+        ${fluxListHTML('feed-flux', stageParams.feed.fluxes)}
+      </div>
+      <div class="field-group">
+        <div class="field-label">Fuel / Reductant</div>
+        <select class="fsel" id="m-coal">
+          <option value="">— Select —</option>
+          ${['Anthracite Coal'].map(v=>`<option value="${v}"${stageParams.feed.coal===v?' selected':''}>${v}</option>`).join('')}
+        </select>
+      </div>
+      <div class="field-group">
+        <div class="field-label">Coal Percentage (%)</div>
+        <input type="number" class="finp" id="m-coal-pct" value="${stageParams.feed.coalPercent||''}" min="0.5" max="1.5" step="0.1" placeholder="~1%">
+        <div class="input-hint">Range: ~1 % (0.5 – 1.5)</div>
+      </div>`,
+    save:()=>{
+      stageParams.feed.ore          = document.getElementById('m-ore').value;
+      stageParams.feed.zone         = stageParams.feed.zone || '';
+      stageParams.feed.location     = document.getElementById('m-feed-location').value;
+      stageParams.feed.orePercent   = document.getElementById('m-ore-pct').value;
+      stageParams.feed.feedRate     = document.getElementById('m-feedrate').value;
+      stageParams.feed.fluxes       = readFluxList('feed-flux');
+      stageParams.feed.coal         = document.getElementById('m-coal').value;
+      stageParams.feed.coalPercent  = document.getElementById('m-coal-pct').value;
+      const chemFe = document.getElementById('chem-fe');
+      if(chemFe) stageParams.feed.chemFe = chemFe.value;
+      const chemSio2 = document.getElementById('chem-sio2');
+      if(chemSio2) stageParams.feed.chemSio2 = chemSio2.value;
+      const chemAl2o3 = document.getElementById('chem-al2o3');
+      if(chemAl2o3) stageParams.feed.chemAl2o3 = chemAl2o3.value;
+      const chemMoisture = document.getElementById('chem-moisture');
+      if(chemMoisture) stageParams.feed.chemMoisture = chemMoisture.value;
+      const chemCcs = document.getElementById('chem-ccs');
+      if(chemCcs) stageParams.feed.chemCcs = chemCcs.value;
+      const chemTi = document.getElementById('chem-ti');
+      if(chemTi) stageParams.feed.chemTi = chemTi.value;
+      const chemAi = document.getElementById('chem-ai');
+      if(chemAi) stageParams.feed.chemAi = chemAi.value;
+    }
+  },
+  grind:{
+    title:'Grinding',desc:'Set raw feed moisture and target Blain fineness',
+    fields:()=>`
+      ${numField('m-rfmoist','Raw Feed Moisture (%)',stageParams.grind.rawFeedMoisture,8,15,'%',0.1)}
+      ${numField('m-blain','Blain Number (cm²/g)',stageParams.grind.blain,1800,3200,'cm²/g',10)}`,
+    save:()=>{
+      stageParams.grind.rawFeedMoisture=document.getElementById('m-rfmoist').value;
+      stageParams.grind.blain=document.getElementById('m-blain').value;
+    }
+  },
+  thickner:{
+    title:'Thickener',desc:'Configure thickener underflow density',
+    fields:()=>`
+      ${numField('m-ufd','Underflow Density (t/m³)',stageParams.thickner.underflowDensity,2.01,2.1,'t/m³',0.01)}`,
+    save:()=>{
+      stageParams.thickner.underflowDensity=document.getElementById('m-ufd').value;
+    }
+  },
+  filter:{
+    title:'Filter Cake',desc:'Set filter cake moisture for the mixing stage',
+    fields:()=>`
+      ${numField('m-fcm','Filter Cake Moisture (%)',stageParams.filter.cakeMoisture,8,13,'%',0.1)}`,
+    save:()=>{stageParams.filter.cakeMoisture=document.getElementById('m-fcm').value;}
+  },
+  mix:{
+    title:'Mixing + Binder',desc:'Select binder, dosage and configure mix moisture',
+    fields:()=>`
+      <div class="field-group">
+        <div class="field-label">Binder Type</div>
+        <select class="fsel" id="m-binder" onchange="updateBinderDosageLabel()">
+          <option value="">— Select Binder —</option>
+          ${BINDER_OPTIONS.map(v=>`<option value="${v}"${stageParams.mix.binder===v?' selected':''}>${v}</option>`).join('')}
+        </select>
+      </div>
+      <div class="field-group">
+        <div class="field-label">Bentonite</div>
+        <select class="fsel" id="m-bentonite">
+          <option value="">— Select Bentonite —</option>
+          ${BINDER_OPTIONS.map(v=>`<option value="${v}"${stageParams.mix.bentonite===v?' selected':''}>${v}</option>`).join('')}
+        </select>
+      </div>
+      <div class="field-group">
+        <div class="field-label">Bentonite Dosage</div>
+        <div class="input-row">
+          <input type="number" class="finp" id="m-bento-dose" value="${stageParams.mix.bentoniteDosageValue||''}" min="0" step="0.01" placeholder="Enter value">
+          <select class="fsel" id="m-bento-dose-unit" style="width:80px;flex:0 0 80px;">
+            <option value="kg"${stageParams.mix.bentoniteDosageUnit==='kg'?' selected':''}>kg/t</option>
+            <option value="%"${stageParams.mix.bentoniteDosageUnit==='%'?' selected':''}>%</option>
+          </select>
+        </div>
+        <div class="input-hint">Bentonite dosage in kg/t or %</div>
+      </div>
+      <div class="field-group">
+        <div class="field-label" id="binder-dosage-label-text">${stageParams.mix.binder ? stageParams.mix.binder + ' Dosage' : 'Binder Dosage'}</div>
+        <div class="input-row">
+          <input type="number" class="finp" id="m-dose" value="${stageParams.mix.dosageValue||''}" min="0" step="0.01" placeholder="Enter value">
+          <select class="fsel" id="m-dose-unit" style="width:80px;flex:0 0 80px;">
+            <option value="GPT"${stageParams.mix.dosageUnit==='GPT'?' selected':''}>GPT</option>
+          </select>
+        </div>
+        <div class="input-hint">Binder dosage in GPT</div>
+      </div>
+      <div class="field-group">
+        <div class="field-label">Flux / Additive (one or more)</div>
+        ${fluxListHTML('mix-flux', stageParams.mix.fluxes)}
+      </div>
+      ${numField('m-mmoist','Mix Material Moisture (%)',stageParams.mix.mixMoisture,0,20,'%',0.1)}`,
+    save:()=>{
+      stageParams.mix.binder=document.getElementById('m-binder').value;
+      stageParams.mix.bentonite=document.getElementById('m-bentonite').value;
+      stageParams.mix.bentoniteDosageValue=document.getElementById('m-bento-dose').value;
+      stageParams.mix.bentoniteDosageUnit=document.getElementById('m-bento-dose-unit').value;
+      stageParams.mix.dosageValue=document.getElementById('m-dose').value;
+      stageParams.mix.dosageUnit='GPT';
+      stageParams.mix.fluxes=readFluxList('mix-flux');
+      stageParams.mix.mixMoisture=document.getElementById('m-mmoist').value;
+    }
+  },
+  ball:{
+    title:'Balling Disc',desc:'Configure disc angle, motor speed, disc speed and green ball moisture',
+    fields:()=>`
+      ${numField('m-angle','Disc Inclination Angle (°)',stageParams.ball.angle,46,50,'°',0.5)}
+      ${numField('m-motorrpm','Motor Speed (RPM)',stageParams.ball.motorRpm,900,1400,'RPM',1)}
+      ${numField('m-discrpm','Disc Speed (RPM)',stageParams.ball.discRpm,6,8,'RPM',0.1)}
+      ${numField('m-gbmoist','Green Ball Moisture (%)',stageParams.ball.greenBallMoisture,0,20,'%',0.1)}`,
+    save:()=>{
+      stageParams.ball.angle=document.getElementById('m-angle').value;
+      stageParams.ball.motorRpm=document.getElementById('m-motorrpm').value;
+      stageParams.ball.discRpm=document.getElementById('m-discrpm').value;
+      stageParams.ball.greenBallMoisture=document.getElementById('m-gbmoist').value;
+    }
+  },
+  greenball:{
+    title:'Green Ball Properties',desc:'Enter measured green ball quality parameters',
+    fields:()=>`
+      ${numField('m-gbp-moist','Green Ball Moisture (%)',stageParams.greenball.moisture,9.5,11,'%',0.1)}
+      ${numField('m-gbp-drop','Drop Number',stageParams.greenball.dropNumber,20,45,'drops',1)}
+      ${numField('m-gbp-gcs','GCS (kg / green pellet)',stageParams.greenball.gcs,1,1.5,'kg',0.05)}`,
+    save:()=>{
+      stageParams.greenball.moisture=document.getElementById('m-gbp-moist').value;
+      stageParams.greenball.dropNumber=document.getElementById('m-gbp-drop').value;
+      stageParams.greenball.gcs=document.getElementById('m-gbp-gcs').value;
+    }
+  },
+  screen:{
+    title:'Screening',desc:'Enter size distribution percentages and recycle rate',
+    fields:()=>`
+      <div style="margin-bottom:.8rem;padding:8px 12px;background:rgba(106,90,42,0.07);border:1px solid var(--border);border-radius:4px;font-size:.73rem;color:var(--text-dim);">
+        Enter percentage for each size fraction. Remainder = oversize + undersize.
+      </div>
+      <div class="size-grid">
+        ${numField('m-s8','8–10 mm (%)',stageParams.screen.s8_10,0,100,'%',0.1)}
+        ${numField('m-s10','10–12 mm (%)',stageParams.screen.s10_12,0,100,'%',0.1)}
+        ${numField('m-s12','12–14 mm (%)',stageParams.screen.s12_14,0,100,'%',0.1)}
+        ${numField('m-s14','14–16 mm (%)',stageParams.screen.s14_16,0,100,'%',0.1)}
+      </div>
+      <div class="field-group" style="margin-top:.5rem;">
+        <div class="field-label">Recycled Material</div>
+        <div class="input-row">
+          <input type="number" class="finp" id="m-recycled" value="${stageParams.screen.recycled||''}" min="0" step="0.1" placeholder="Enter value">
+          <select class="fsel" id="m-recycled-unit" style="width:80px;flex:0 0 80px;">
+            <option value="%"${stageParams.screen.recycledUnit==='%'?' selected':''}>%</option>
+            <option value="tph"${stageParams.screen.recycledUnit==='tph'?' selected':''}>tph</option>
+          </select>
+        </div>
+        <div class="input-hint">Oversize (>16mm) and Undersize (< 8mm)</div>
+      </div>`,
+    save:()=>{
+      stageParams.screen.s8_10=document.getElementById('m-s8').value;
+      stageParams.screen.s10_12=document.getElementById('m-s10').value;
+      stageParams.screen.s12_14=document.getElementById('m-s12').value;
+      stageParams.screen.s14_16=document.getElementById('m-s14').value;
+      stageParams.screen.recycled=document.getElementById('m-recycled').value;
+      stageParams.screen.recycledUnit=document.getElementById('m-recycled-unit').value;
+    }
+  },
+  indu:{
+    title:'Induration',desc:'Select machine type and configure process parameters',
+    fields:()=>{
+      const mode=stageParams.indu.mode||'furnace';
+      return `
+        <div class="field-group">
+          <div class="field-label">Machine Type</div>
+          <div class="mode-toggle">
+            <button id="btn-furnace" class="${mode==='furnace'?'active':''}" onclick="switchInduMode('furnace')">Induration Furnace</button>
+            <button id="btn-grate" class="${mode==='grate'?'active':''}" onclick="switchInduMode('grate')">Grate Kiln</button>
+          </div>
+        </div>
+        <div id="indu-params-area">${getInduFields(mode)}</div>`;
+    },
+    save:()=>{
+      const mode=stageParams.indu.mode;
+      if(mode==='furnace'){
+        stageParams.indu.rpm=document.getElementById('m-irpm').value;
+        stageParams.indu.btt=document.getElementById('m-btt').value;
+        stageParams.indu.drm=document.getElementById('m-drm').value;
+        stageParams.indu.exhaust=document.getElementById('m-exhaust').value;
+      } else {
+        stageParams.indu.tgRpm=document.getElementById('m-tgrpm').value;
+        stageParams.indu.mcTemp=document.getElementById('m-mctemp').value;
+        stageParams.indu.tgDischarge=document.getElementById('m-tgdis').value;
+        stageParams.indu.tgExhaust=document.getElementById('m-tgexh').value;
+      }
+    }
+  },
+  cool:{
+    title:'Cooling',desc:'Enter temperature for each cooling zone',
+    fields:()=>{
+      const mode=stageParams.indu.mode||'furnace';
+      const isGrate=mode==='grate';
+      const coolingName=isGrate?'Circulating Cooling Zone':'Straight Cooling Zone';
+      return `
+        <div style="margin-bottom:1rem;padding:10px 14px;background:linear-gradient(135deg,rgba(42,122,74,0.07),rgba(26,48,87,0.05));border:1.5px solid rgba(42,122,74,0.25);border-radius:5px;">
+          <div style="font-family:'JetBrains Mono';font-size:.56rem;letter-spacing:2px;color:var(--green);text-transform:uppercase;margin-bottom:3px;">${isGrate?'Grate Kiln':'Induration Furnace'}</div>
+          <div style="font-family:'Cormorant Garamond',serif;font-size:1.1rem;font-weight:700;color:var(--navy);">${coolingName}</div>
+        </div>
+        ${numField('m-z1','Zone 1 — Combustion (°C)',stageParams.cool.zone1,900,950,'°C',1)}
+        ${numField('m-z2','Zone 2 — UDD Upper Draft Zone (°C)',stageParams.cool.zone2,650,700,'°C',1)}
+        ${numField('m-z3','Zone 3 — DD1 Down Draft Zone (°C)',stageParams.cool.zone3,350,400,'°C',1)}
+        ${numField('m-z4','Zone 4 — Exit (°C)',stageParams.cool.zone4,150,200,'°C',1)}`;
+    },
+    save:()=>{
+      stageParams.cool.zone1=document.getElementById('m-z1').value;
+      stageParams.cool.zone2=document.getElementById('m-z2').value;
+      stageParams.cool.zone3=document.getElementById('m-z3').value;
+      stageParams.cool.zone4=document.getElementById('m-z4').value;
+    }
+  },
+  pellet:{
+    title:'Finished Pellets',desc:'Quality targets and measured pellet properties',
+    fields:()=>{
+      const mode=stageParams.indu.mode||'furnace';
+      const isGrate=mode==='grate';
+      const tumblerRange=isGrate?'94–95':'92';
+      const abrasionRange=isGrate?'2.5–3.5':'5–7';
+      const crackedNote=isGrate?'Grate target: 0%':'Lower than 10% is great';
+      return `
+        <div style="margin-bottom:.8rem;padding:8px 12px;background:rgba(26,48,87,0.06);border:1px solid var(--border);border-radius:4px;font-size:.73rem;color:var(--text-dim);">
+          Machine mode: <strong style="color:var(--navy)">${isGrate?'Grate Kiln':'Induration Furnace'}</strong> — ranges adjust accordingly.
+        </div>
+        <div class="field-label" style="margin-bottom:.7rem;">◈ PELLET SIZE DISTRIBUTION (%)</div>
+        <div class="size-grid">
+          ${numField('m-p8','8–10 mm (%)',stageParams.pellet.size8_10,0,100,'%',0.1)}
+          ${numField('m-p10','10–12 mm (%)',stageParams.pellet.size10_12,0,100,'%',0.1)}
+          ${numField('m-p12','12–14 mm (%)',stageParams.pellet.size12_14,0,100,'%',0.1)}
+          ${numField('m-p14','14–16 mm (%)',stageParams.pellet.size14_16,0,100,'%',0.1)}
+        </div>
+        <div class="field-group">
+          <div class="field-label">Cracked Pellets (%)</div>
+          <input type="number" class="finp" id="m-cracked" value="${stageParams.pellet.cracked||''}" min="12" max="15" step="0.1" placeholder="12–15">
+          <div class="input-hint">Range: 12–15% | ${crackedNote}</div>
+        </div>
+        ${numField('m-ccs','Min CCS (kg/pellet)',stageParams.pellet.ccs,180,300,'kg/p',1)}
+        <div class="field-group">
+          <div class="field-label">Tumbler Index (%)</div>
+          <input type="number" class="finp" id="m-tumbler" value="${stageParams.pellet.tumbler||''}" min="${isGrate?94:92}" max="${isGrate?95:95}" step="0.1" placeholder="${tumblerRange}">
+          <div class="input-hint">Range: ${tumblerRange} %</div>
+        </div>
+        <div class="field-group">
+          <div class="field-label">Abrasion Index (%)</div>
+          <input type="number" class="finp" id="m-abrasion" value="${stageParams.pellet.abrasion||''}" min="${isGrate?2.5:5}" max="${isGrate?3.5:7}" step="0.1" placeholder="${abrasionRange}">
+          <div class="input-hint">Range: ${abrasionRange} %</div>
+        </div>
+        ${numField('m-fe','Fe Percentage (%)',stageParams.pellet.fe,59,61,'%',0.1)}
+        <div style="padding:10px 12px;background:rgba(42,122,74,0.07);border:1px solid rgba(58,170,106,0.25);border-radius:4px;font-size:.74rem;color:var(--text-dim);margin-top:.5rem;">
+          Quality targets
+        </div>`;
+    },
+    save:()=>{
+      stageParams.pellet.size8_10=document.getElementById('m-p8').value;
+      stageParams.pellet.size10_12=document.getElementById('m-p10').value;
+      stageParams.pellet.size12_14=document.getElementById('m-p12').value;
+      stageParams.pellet.size14_16=document.getElementById('m-p14').value;
+      stageParams.pellet.cracked=document.getElementById('m-cracked').value;
+      stageParams.pellet.ccs=document.getElementById('m-ccs').value;
+      stageParams.pellet.tumbler=document.getElementById('m-tumbler').value;
+      stageParams.pellet.abrasion=document.getElementById('m-abrasion').value;
+      stageParams.pellet.fe=document.getElementById('m-fe').value;
+    }
+  }
+};
+
+function getInduFields(mode){
+  if(mode==='furnace'){
+    return `
+      ${numField('m-irpm','Induration Machine RPM',stageParams.indu.rpm,2,6,'RPM',0.1)}
+      ${numField('m-btt','Burn-Through Temperature (°C)',stageParams.indu.btt,320,400,'°C',1)}
+      ${numField('m-drm','DRM Temperature (°C)',stageParams.indu.drm,850,950,'°C',1)}
+      <div class="field-group">
+        <div class="field-label">Exhaust Hood Pressure (bar)</div>
+        <input type="number" class="finp" id="m-exhaust" value="${stageParams.indu.exhaust||''}" min="-100" max="150" step="1" placeholder="-100 to 150">
+        <div class="input-hint">Range: -100 – 150 bar</div>
+      </div>`;
+  } else {
+    return `
+      ${numField('m-tgrpm','TG RPM',stageParams.indu.tgRpm,2,6,'RPM',0.1)}
+      ${numField('m-mctemp','Multi Cyclone Temperature (°C)',stageParams.indu.mcTemp,280,350,'°C',1)}
+      ${numField('m-tgdis','TG Discharge Temperature (°C)',stageParams.indu.tgDischarge,0,1200,'°C',1)}
+      <div class="field-group">
+        <div class="field-label">Exhaust Hood Pressure (bar)</div>
+        <input type="number" class="finp" id="m-tgexh" value="${stageParams.indu.tgExhaust||''}" min="-45" max="-20" step="1" placeholder="-20 to -45">
+        <div class="input-hint">Range: -20 – -45 bar</div>
+      </div>`;
+  }
+}
+
+function switchInduMode(mode){
+  stageParams.indu.mode=mode;
+  document.getElementById('btn-furnace').className=mode==='furnace'?'active':'';
+  document.getElementById('btn-grate').className=mode==='grate'?'active':'';
+  document.getElementById('indu-params-area').innerHTML=getInduFields(mode);
+  const s=STAGES.find(st=>st.id==='indu');
+  if(s) s.label=mode==='furnace'?'INDURATION\nFURNACE':'GRATE\nKILN';
+}
+
+function selectFeedZone(zone){
+  stageParams.feed.zone = zone;
+  ['E','S','C'].forEach(z=>{
+    const btn = document.getElementById('zone-btn-'+z);
+    if(btn) btn.className = z===zone ? 'active' : '';
+  });
+  const locSel = document.getElementById('m-feed-location');
+  if(locSel){
+    locSel.innerHTML = '<option value="">— Select Location —</option>';
+    Object.keys(ORE_ZONES[zone].locations).forEach(loc=>{
+      const opt = document.createElement('option');
+      opt.value = loc; opt.textContent = loc;
+      locSel.appendChild(opt);
+    });
+    stageParams.feed.location = '';
+  }
+  renderChemCard();
+}
+
+function isStageConfigured(id){
+  if(id==='feed')      return!!stageParams.feed.ore;
+  if(id==='grind')     return!!stageParams.grind.blain;
+  if(id==='thickner')  return!!stageParams.thickner.underflowDensity;
+  if(id==='filter')    return!!stageParams.filter.cakeMoisture;
+  if(id==='mix')       return!!stageParams.mix.binder;
+  if(id==='greenball') return!!stageParams.greenball.moisture;
+  if(id==='pellet')    return false;
+  return false;
+}
+
+function openModal(stageId){
+  currentModalStage=stageId;
+  const s=STAGES.find(st=>st.id===stageId);
+  const cfg=MODAL_CONFIGS[stageId];
+  if(!cfg)return;
+  document.getElementById('modalTag').textContent=s.tag;
+  document.getElementById('modalTitle').textContent=cfg.title;
+  document.getElementById('modalDesc').textContent=cfg.desc;
+  document.getElementById('modalBody').innerHTML=cfg.fields();
+  document.getElementById('modalOverlay').classList.add('open');
+  if(stageId==='feed') onOreGradeChange();
+}
+function closeModal(){document.getElementById('modalOverlay').classList.remove('open');currentModalStage=null;}
+function saveModal(){
+  if(!currentModalStage)return;
+  const cfg=MODAL_CONFIGS[currentModalStage]; cfg.save(); closeModal(); updateSummaryParams();
+}
+document.getElementById('modalOverlay').addEventListener('click',function(e){if(e.target===this)closeModal();});
+
+function updateSummaryParams(){
+  const hasOb=stageParams.mix.binder&&stageParams.mix.binder.includes('OB');
+  const hasFlux=stageParams.mix.fluxes&&stageParams.mix.fluxes.length>0;
+  const moist=stageParams.filter.cakeMoisture;
+  document.getElementById('p-size').textContent=moist>10.5?'14–18mm':'10–16mm';
+  const dosageLabel=stageParams.mix.dosageValue?(stageParams.mix.dosageValue+' '+stageParams.mix.dosageUnit):(stageParams.mix.binder||'—');
+  document.getElementById('p-ob').textContent=hasOb?dosageLabel:(stageParams.mix.binder||'—');
+  document.getElementById('p-ob').className='param-box-val '+(hasOb?'good':'warn');
+  const yieldV=stageParams.feed.ore?(hasOb?82+Math.floor(Math.random()*8):70+Math.floor(Math.random()*8)):null;
+  document.getElementById('p-yield').textContent=yieldV?yieldV+'%':'—';
+  document.getElementById('p-basicity').textContent=hasFlux?(0.9+Math.random()*0.5).toFixed(2):'0.35';
+  const induMode=stageParams.indu.mode||'furnace';
+  const tempVal=induMode==='furnace'?(stageParams.indu.btt?stageParams.indu.btt+'°C BTT':'—'):(stageParams.indu.mcTemp?stageParams.indu.mcTemp+'°C MC':'—');
+  document.getElementById('p-temp').textContent=tempVal;
+  document.getElementById('p-moist').textContent=stageParams.filter.cakeMoisture?stageParams.filter.cakeMoisture+'%':'—';
+}
+
+function setStep(idx){
+  simStep=idx;
+  document.querySelectorAll('.step-pill').forEach((p,i)=>{p.className='step-pill'+(i<idx?' done':i===idx?' active':'');});
+}
+
+function runSimulation(){
+  simRunning=true; simFrame=0; simStep=0;
+  document.getElementById('runBtn').disabled=true;
+  const steps=[
+    {delay:0,   step:0},
+    {delay:650, step:1},
+    {delay:1300,step:2},
+    {delay:1950,step:3},
+    {delay:2600,step:4},
+    {delay:3350,step:5},
+    {delay:4100,step:6},
+    {delay:4900,step:7},
+    {delay:5800,step:8},
+    {delay:6600,step:9},
+  ];
+  steps.forEach(l=>setTimeout(()=>{setStep(l.step);},l.delay));
+  setTimeout(()=>{simRunning=false;document.getElementById('runBtn').disabled=false;updateSummaryParams();},7200);
+}
+
+function resetAll(){
+  simRunning=false; simStep=-1; simFrame=0;
+  document.getElementById('plantName').value = '';
+  Object.assign(stageParams.feed,{ore:'',orePercent:'',feedRate:'',fluxes:[],coal:'',coalPercent:'',zone:'',location:'',
+    chemFe:'',chemSio2:'',chemAl2o3:'',chemMoisture:'',chemCcs:'',chemTi:'',chemAi:''});
+  Object.assign(stageParams.grind,{rawFeedMoisture:'',blain:''});
+  Object.assign(stageParams.thickner,{underflowDensity:''});
+  Object.assign(stageParams.filter,{cakeMoisture:''});
+  Object.assign(stageParams.mix,{binder:'',bentonite:'',bentoniteDosageValue:'',bentoniteDosageUnit:'kg',dosageValue:'',dosageUnit:'GPT',fluxes:[],mixMoisture:''});
+  Object.assign(stageParams.ball,{angle:'',motorRpm:'',discRpm:'',greenBallMoisture:''});
+  Object.assign(stageParams.greenball,{moisture:'',dropNumber:'',gcs:''});
+  Object.assign(stageParams.screen,{s8_10:'',s10_12:'',s12_14:'',s14_16:'',recycled:'',recycledUnit:'%'});
+  Object.assign(stageParams.indu,{mode:'furnace',rpm:'',btt:'',drm:'',exhaust:'',tgRpm:'',mcTemp:'',tgDischarge:'',tgExhaust:''});
+  Object.assign(stageParams.cool,{zone1:'',zone2:'',zone3:'',zone4:''});
+  Object.assign(stageParams.pellet,{size8_10:'',size10_12:'',size12_14:'',size14_16:'',cracked:'',ccs:'',tumbler:'',abrasion:'',fe:''});
+  const induStage=STAGES.find(s=>s.id==='indu'); if(induStage) induStage.label='INDURATION\nFURNACE';
+  document.querySelectorAll('.step-pill').forEach(p=>p.className='step-pill');
+  ['p-size','p-ob','p-yield','p-basicity','p-temp','p-moist'].forEach(id=>{
+    document.getElementById(id).textContent='—';
+    document.getElementById(id).className='param-box-val';
+  });
+  document.getElementById('runBtn').disabled=false;
+}
+
+// Reposition groups on resize
+window.addEventListener('resize', positionGroups);
+
+// ═══════ LOOP ═══════
+(function loop(){draw(simFrame,simStep);simFrame++;animId=requestAnimationFrame(loop);})();
+</script>
+</body>
+</html>
