@@ -402,43 +402,90 @@ const STAGES=[
   {id:'cool',     label:'COOLING',               tag:'STAGE 09',shape:'trapezoid',color:'#2a7a4a',step:8},
   {id:'pellet',   label:'FINISHED\nPELLETS',    tag:'STAGE 10',shape:'pellets',  color:'#1a3057',step:9},
 ];
-
 // ═══════════════════════════════════════════════════════════
 // GROUP DEFINITIONS
-// Group 1 (wet):   stages 0–3  (feed, grind, thickner, filter)
-// Group 2 (green): stages 4–7  (mix, ball, greenball, screen)
-// Group 3 (indu):  stages 8–10 (indu, cool, pellet)
+// Only Group 1 & 2 overlap
+// Group 3 completely independent
 // ═══════════════════════════════════════════════════════════
 const GROUPS = [
-  { id:'grp-wet',   startIdx:0, endIdx:3  },  // Feed, Grind, Thickener, Filter Cake
-  { id:'grp-green', startIdx:4, endIdx:6  },  // Mixing, Balling, Green Ball Prop
-  { id:'grp-indu',  startIdx:7, endIdx:10 },  // Screening, Induration, Cooling, Pellets
+  {
+    id:'grp-wet',
+    startIdx:0,
+    endIdx:5.6
+  },
+  {
+    id:'grp-green',
+    startIdx:3.8,
+    endIdx:6.2 // includes Green Ball Prop fully
+  },
+  {
+    id:'grp-indu',
+    startIdx:7,
+    endIdx:10
+  },
 ];
 
 function positionGroups(){
   const wrap = document.getElementById('canvasWrap');
   const W = wrap.clientWidth;
   const n = STAGES.length;
+
   const padX = W * 0.022;
   const slotW = (W - padX * 2) / n;
-  // canvas height mirrors the draw() sizeCanvas logic
-  const H = Math.max(230, Math.min(W * 0.36, 350));
-  const PAD_TOP = 10;   // matches .stage-group top
-  const PAD_SIDE = 6;
-  const PAD_BOT = 28;   // room for configure labels below shapes
 
-  GROUPS.forEach(g => {
+  const H = Math.max(230, Math.min(W * 0.36, 350));
+
+  const PAD_TOP = 10;
+  const PAD_SIDE = 6;
+  const PAD_BOT = 28;
+
+  GROUPS.forEach((g,index) => {
     const el = document.getElementById(g.id);
     if(!el) return;
+
     const x1 = padX + g.startIdx * slotW - PAD_SIDE;
     const x2 = padX + (g.endIdx + 1) * slotW + PAD_SIDE;
-    el.style.left   = x1 + 'px';
-    el.style.top    = PAD_TOP + 'px';
-    el.style.width  = (x2 - x1) + 'px';
+
+    el.style.left = x1 + 'px';
+    el.style.top = PAD_TOP + 'px';
+    el.style.width = (x2 - x1) + 'px';
     el.style.height = (H - PAD_TOP - PAD_BOT) + 'px';
+
+    // z-index layering
+    if(index === 0) el.style.zIndex = '1';
+    if(index === 1) el.style.zIndex = '2';
+    if(index === 2) el.style.zIndex = '1';
+
+    // GROUP 1
+    if(index === 0){
+      el.style.borderRight = 'none';
+      el.style.borderTopRightRadius = '0';
+      el.style.borderBottomRightRadius = '0';
+    }
+
+    // GROUP 2
+    if(index === 1){
+      el.style.borderLeft = 'none';
+
+      // KEEP RIGHT BORDER NORMAL
+      // so no colour blending with group 3
+      el.style.borderRight = '1.5px solid rgba(200,145,42,0.28)';
+
+      el.style.borderTopLeftRadius = '0';
+      el.style.borderBottomLeftRadius = '0';
+
+      // rounded right side
+      el.style.borderTopRightRadius = '10px';
+      el.style.borderBottomRightRadius = '10px';
+    }
+
+    // GROUP 3
+    if(index === 2){
+      el.style.border = '1.5px solid rgba(42,122,74,0.22)';
+      el.style.borderRadius = '10px';
+    }
   });
 }
-
 // ═══════════════════════════════════════════════════════════
 // PLANT NAME HANDLER
 // ═══════════════════════════════════════════════════════════
