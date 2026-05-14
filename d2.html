@@ -288,13 +288,13 @@ input.finp{cursor:text;}
     <!-- Group overlay cards — positioned by JS after layout is known -->
     <div id="groupOverlay">
       <div class="stage-group grp-wet" id="grp-wet">
-        <div class="group-label">Wet Preparation</div>
+        <div class="group-label">Stage 1</div>
       </div>
       <div class="stage-group grp-green" id="grp-green">
-        <div class="group-label">Green Ball Formation</div>
+        <div class="group-label">Stage 2</div>
       </div>
       <div class="stage-group grp-indu" id="grp-indu">
-        <div class="group-label">Induration &amp; Finishing</div>
+        <div class="group-label">Stage 3</div>
       </div>
     </div>
     <canvas id="processCanvas"></canvas>
@@ -416,7 +416,8 @@ const GROUPS = [
   {
     id:'grp-green',
     startIdx:3.8,
-    endIdx:6.2 // includes Green Ball Prop fully
+    endIdx:5.7
+     // includes Green Ball Prop fully
   },
   {
     id:'grp-indu',

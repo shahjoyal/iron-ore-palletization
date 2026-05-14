@@ -49,7 +49,6 @@ nav{
 .page-hint{font-size:.78rem;color:var(--text-dim);margin-top:.75rem;display:flex;align-items:center;gap:6px;justify-content:center;}
 .page-hint::before{content:'◈';color:var(--gold);font-size:.65rem;}
 
-/* ── CAPACITY BOX (updated for plant name) ── */
 .capacity-box{
   display:flex;flex-direction:column;align-items:stretch;justify-content:center;
   background:#fff;border:1.5px solid var(--border-strong);border-radius:7px;
@@ -100,7 +99,7 @@ nav{
 
 .modal-overlay{position:fixed;inset:0;z-index:200;background:rgba(15,31,58,.55);backdrop-filter:blur(6px) saturate(1.2);display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .3s ease;}
 .modal-overlay.open{opacity:1;pointer-events:all;}
-.modal-card{background:#fff;border:1px solid var(--border-strong);border-radius:10px;box-shadow:0 24px 80px rgba(26,48,87,.25);width:min(480px,92vw);max-height:88vh;overflow-y:auto;transform:translateY(16px) scale(.97);transition:transform .35s cubic-bezier(.22,1,.36,1);position:relative;}
+.modal-card{background:#fff;border:1px solid var(--border-strong);border-radius:10px;box-shadow:0 24px 80px rgba(26,48,87,.25);width:min(520px,92vw);max-height:88vh;overflow-y:auto;transform:translateY(16px) scale(.97);transition:transform .35s cubic-bezier(.22,1,.36,1);position:relative;}
 .modal-overlay.open .modal-card{transform:translateY(0) scale(1);}
 .modal-header{padding:1.4rem 1.6rem 1rem;border-bottom:1px solid var(--border);background:linear-gradient(135deg,var(--navy2) 0%,var(--navy3) 100%);border-radius:10px 10px 0 0;position:relative;}
 .modal-stage-tag{font-family:'JetBrains Mono';font-size:.52rem;letter-spacing:2.5px;color:rgba(200,145,42,.7);text-transform:uppercase;margin-bottom:5px;}
@@ -142,7 +141,7 @@ input.finp{cursor:text;}
 .btn-add-flux{display:flex;align-items:center;gap:6px;background:rgba(200,145,42,.06);border:1px dashed var(--border-strong);border-radius:4px;padding:7px 12px;color:var(--gold);font-family:'DM Sans';font-size:.78rem;font-weight:500;cursor:pointer;transition:all .22s;width:100%;}
 .btn-add-flux:hover{background:rgba(200,145,42,.12);border-color:var(--gold);}
 
-/* ── CHEMISTRY CARD (editable) ── */
+/* ── CHEMISTRY CARD (editable, expanded) ── */
 .chem-card{
   background:linear-gradient(135deg,rgba(26,48,87,0.04) 0%,rgba(200,145,42,0.05) 100%);
   border:1.5px solid var(--border-strong);border-radius:6px;padding:12px 14px;
@@ -151,10 +150,16 @@ input.finp{cursor:text;}
 @keyframes chemFadeIn{from{opacity:0;transform:translateY(-6px);}to{opacity:1;transform:translateY(0);}}
 .chem-card-title{font-family:'DM Sans',sans-serif;font-size:.78rem;font-weight:600;letter-spacing:.2px;color:var(--gold);text-transform:none;margin-bottom:10px;display:flex;align-items:center;gap:6px;}
 .chem-card-title::before{content:'⬡';font-size:.7rem;}
+
+/* Section label inside chem card */
+.chem-section-label{
+  font-family:'JetBrains Mono';font-size:.52rem;letter-spacing:1.8px;color:var(--text-dim);
+  text-transform:uppercase;margin:10px 0 6px;padding-bottom:4px;border-bottom:1px solid var(--border);
+}
 .chem-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;}
+.chem-grid-2{display:grid;grid-template-columns:repeat(2,1fr);gap:6px;}
 .chem-cell{background:#fff;border:1px solid var(--border);border-radius:4px;padding:7px 8px;text-align:center;}
 .chem-cell-label{font-family:'DM Sans',sans-serif;font-size:.72rem;font-weight:500;letter-spacing:.1px;color:var(--text-dim);text-transform:none;margin-bottom:3px;}
-/* editable chem input */
 .chem-inp{
   width:100%;background:transparent;border:none;border-bottom:1.5px solid var(--border);
   border-radius:0;padding:2px 4px;font-family:'DM Sans',sans-serif;font-size:.95rem;font-weight:700;
@@ -167,6 +172,7 @@ input.finp{cursor:text;}
 .chem-cell.sio2-cell .chem-inp{color:#7a5a30;}
 .chem-cell.al2o3-cell .chem-inp{color:var(--blue);}
 .chem-cell-unit{font-family:'JetBrains Mono';font-size:.42rem;color:var(--text-dim);margin-top:2px;}
+.chem-cell-range{font-family:'JetBrains Mono';font-size:.44rem;color:rgba(138,122,96,0.7);margin-top:1px;}
 .chem-note{font-family:'DM Sans',sans-serif;font-size:.72rem;color:var(--text-dim);margin-top:8px;padding-top:6px;border-top:1px solid var(--border);display:flex;align-items:center;gap:5px;}
 .chem-note::before{content:'✎';font-size:.7rem;color:var(--gold);}
 .ti-ai-row{display:flex;gap:4px;align-items:center;justify-content:center;}
@@ -187,6 +193,7 @@ input.finp{cursor:text;}
   .params-row{grid-template-columns:1fr 1fr;}
   .size-grid{grid-template-columns:1fr;}
   .chem-grid{grid-template-columns:repeat(2,1fr);}
+  .chem-grid-2{grid-template-columns:1fr;}
 }
 </style>
 </head>
@@ -226,7 +233,6 @@ input.finp{cursor:text;}
         <div class="page-title">Pelletization Process Simulator</div>
         <div class="page-sub">// Iron Ore Pelletization — Wet Grinding Route</div>
       </div>
-      <!-- ── CAPACITY BOX: now includes Plant Name dropdown ── -->
       <div class="capacity-box">
         <div class="capacity-box-label">Plant Name</div>
         <select class="plant-name-select" id="plantName" onchange="onPlantChange()">
@@ -279,51 +285,327 @@ input.finp{cursor:text;}
 
 <script>
 // ═══════════════════════════════════════════════════════════
-// ORE CHEMISTRY DATA — keyed by zone → location
+// ORE CHEMISTRY DATA — full min/max from Zone_Wise_Iron_Ore_Chemistry_2025-2026
+// Each field: { min, max }  →  midpoint used as default editable value
+// Fields: moisture, fe, sio2, al2o3, blain, mic45, bentonite, ob1205, ccs, ti, ai
 // ═══════════════════════════════════════════════════════════
 const ORE_ZONES = {
   E: {
     label: 'East Zone',
     locations: {
-      'JSW - Jharsugda':  { moisture:11.50, fe:61.85, sio2:4.07,  al2o3:62.92, ccs:210, ti:null, ai:null },
-      'Chaliyama Steel - Chaibasa':  { moisture:10.00, fe:61.50, sio2:4.28,  al2o3:3.31,  ccs:198, ti:94.00, ai:4.30 },
-      'Dhenkanal Steel - Dhenkanal':   { moisture:10.05, fe:61.50, sio2:3.60,  al2o3:2.90,  ccs:194, ti:94.00, ai:4.00 },
-      'Kamanada Steel - Joda':   { moisture:9.80,  fe:61.50, sio2:3.90,  al2o3:2.80,  ccs:190, ti:94.00, ai:4.00 },
-      'Gallent Ispat - Gorkhpur':   { moisture:10.50, fe:61.50, sio2:5.50,  al2o3:2.60,  ccs:215, ti:96.00, ai:2.50 },
-      'GR Integrate - Raipur':   { moisture:10.80, fe:62.50, sio2:5.50,  al2o3:2.20,  ccs:198, ti:95.50, ai:3.50 },
-      'Shree Jagnath Steel - Barbil':   { moisture:11.50, fe:61.30, sio2:4.50,  al2o3:3.50,  ccs:195,  ti:91.50, ai:6.50 },
-      'Envirocare - Rourkela':   { moisture:11.70, fe:60.50, sio2:3.50,  al2o3:3.70,  ccs:220, ti:95.00, ai:3.00 },
-      'Shree Mahaveer - Rourkel':   { moisture:11.70, fe:60.50, sio2:3.50,  al2o3:3.70,  ccs:220,  ti:95.00, ai:3.00  },
-      'Orissa Metalic Pvt. Ltd - Khargpur':   { moisture:12.00, fe:60.50, sio2:4.50,  al2o3:4.00,  ccs:195, ti:95.00, ai:2.50 },
-      'Shyam Metalics - Samblpur':  { moisture:11.80, fe:60.50, sio2:4.50,  al2o3:3.80,  ccs:200, ti:95.00, ai:2.50 },
-      'Super Smelter - Jamuria':  { moisture:11.50, fe:61.50, sio2:3.50,  al2o3:2.30,  ccs:185, ti:96.00, ai:3.00 },
-      'Shyam Sel & Power Ltd. - Jamuria': { moisture:12.00, fe:61.00, sio2:3.50,  al2o3:2.30,  ccs:185, ti:96.00, ai:3.00 }
+      'JSW - Jharsugda': {
+        moisture:  { min: 10.80, max: 11.45 },
+        fe:        { min: 60.80, max: 63.91 },
+        sio2:      { min: 3.58,  max: 4.36  },
+        al2o3:     { min: 3.08,  max: 4.12  },
+        blain:     { min: 2188,  max: 2422  },
+        mic45:     { min: 63.50, max: 65.58 },
+        bentonite: { min: 3.39,  max: 6.84  },
+        ob1205:    { min: 20.00, max: 38.00 },
+        ccs:       { min: 189,   max: 230   },
+        ti:        { min: 92.01, max: 94.39 },
+        ai:        { min: 3.75,  max: 6.14  }
+      },
+      'Chaliyama Steel - Chaibasa': {
+        moisture:  { min: 10.00, max: 10.50 },
+        fe:        { min: 60.59, max: 61.85 },
+        sio2:      { min: 3.61,  max: 4.45  },
+        al2o3:     { min: 3.02,  max: 4.75  },
+        blain:     { min: 2358,  max: 2939  },
+        mic45:     { min: 60.04, max: 70.48 },
+        bentonite: { min: 2.00,  max: 4.95  },
+        ob1205:    { min: 30.00, max: 36.45 },
+        ccs:       { min: 189,   max: 210   },
+        ti:        { min: 92.10, max: 94.59 },
+        ai:        { min: 3.70,  max: 5.86  }
+      },
+      'Dhenkanal Steel - Dhenkanal': {
+        moisture:  { min: 9.80,  max: 10.50 },
+        fe:        { min: 60.56, max: 61.50 },
+        sio2:      { min: 3.88,  max: 4.75  },
+        al2o3:     { min: 2.85,  max: 3.07  },
+        blain:     { min: 1965,  max: 2762  },
+        mic45:     { min: 56.42, max: 70.58 },
+        bentonite: { min: 3.01,  max: 4.18  },
+        ob1205:    { min: 30.50, max: 59.06 },
+        ccs:       { min: 185,   max: 200   },
+        ti:        { min: 93.27, max: 94.46 },
+        ai:        { min: 3.75,  max: 4.85  }
+      },
+      'Kamanada Steel - Koira': {
+        moisture:  { min: 9.50,  max: 10.50 },
+        fe:        { min: 61.38, max: 62.62 },
+        sio2:      { min: 3.06,  max: 4.16  },
+        al2o3:     { min: 1.93,  max: 2.08  },
+        blain:     { min: 2400,  max: 3000  },
+        mic45:     { min: 60.75, max: 68.75 },
+        bentonite: { min: 2.70,  max: 5.80  },
+        ob1205:    { min: 25.00, max: 77.00 },
+        ccs:       { min: 177,   max: 226   },
+        ti:        { min: 93.59, max: 95.58 },
+        ai:        { min: 2.85,  max: 4.54  }
+      },
+      'Gallent Ispat - Gorkhpur': {
+        moisture:  { min: 10.50, max: 11.00 },
+        fe:        { min: 61.00, max: 61.50 },
+        sio2:      { min: 4.76,  max: 4.90  },
+        al2o3:     { min: 1.87,  max: 2.31  },
+        blain:     { min: 2100,  max: 2300  },
+        mic45:     { min: 60.00, max: 61.60 },
+        bentonite: { min: 3.50,  max: 5.50  },
+        ob1205:    { min: 62.00, max: 80.00 },
+        ccs:       { min: 207,   max: 225   },
+        ti:        { min: 96.22, max: 97.00 },
+        ai:        { min: 2.27,  max: 2.98  }
+      },
+      'GR Integrate - Raipur': {
+        moisture:  { min: 10.30, max: 11.00 },
+        fe:        { min: 62.00, max: 62.70 },
+        sio2:      { min: 4.68,  max: 5.57  },
+        al2o3:     { min: null,  max: null  },   // not given in PDF for this column
+        blain:     { min: null,  max: null  },
+        mic45:     { min: 57.30, max: 61.20 },
+        bentonite: { min: 9.20,  max: 12.30 },
+        ob1205:    { min: 50.00, max: 68.00 },
+        ccs:       { min: 180,   max: 200   },
+        ti:        { min: 95.30, max: 95.93 },
+        ai:        { min: 2.92,  max: 3.46  }
+      },
+      'Shree Jagnath Steel - Barbil': {
+        moisture:  { min: 11.00, max: 12.00 },
+        fe:        { min: 61.42, max: 62.20 },
+        sio2:      { min: 4.50,  max: 5.46  },
+        al2o3:     { min: 3.20,  max: 4.10  },
+        blain:     { min: 1700,  max: 2550  },
+        mic45:     { min: 59.38, max: 61.50 },
+        bentonite: { min: 3.80,  max: 12.50 },
+        ob1205:    { min: 30.00, max: 120.00},
+        ccs:       { min: 180,   max: 215   },
+        ti:        { min: 90.36, max: 92.75 },
+        ai:        { min: 5.43,  max: 7.50  }
+      },
+      'Envirocare - Rourkela': {
+        moisture:  { min: 11.50, max: 12.00 },
+        fe:        { min: 60.50, max: 61.00 },
+        sio2:      { min: 3.50,  max: 4.00  },
+        al2o3:     { min: 3.50,  max: 4.00  },
+        blain:     { min: 2000,  max: 2300  },
+        mic45:     { min: 60.50, max: 63.50 },
+        bentonite: { min: 7.20,  max: 9.50  },
+        ob1205:    { min: 70.00, max: 120.00},
+        ccs:       { min: 220,   max: 225   },
+        ti:        { min: 94.50, max: 95.00 },
+        ai:        { min: 2.70,  max: 3.10  }
+      },
+      'Shree Mahaveer - Rourkel': {
+        moisture:  { min: 11.50, max: 12.00 },
+        fe:        { min: 60.50, max: 61.00 },
+        sio2:      { min: 3.50,  max: 4.00  },
+        al2o3:     { min: 3.50,  max: 4.00  },
+        blain:     { min: 2000,  max: 2300  },
+        mic45:     { min: 60.50, max: 63.50 },
+        bentonite: { min: 7.20,  max: 9.50  },
+        ob1205:    { min: 70.00, max: 120.00},
+        ccs:       { min: 220,   max: 225   },
+        ti:        { min: 94.50, max: 95.00 },
+        ai:        { min: 2.70,  max: 3.10  }
+      },
+      'Orissa Metalic Pvt. Ltd - Khargpur': {
+        moisture:  { min: 11.50, max: 12.50 },
+        fe:        { min: 59.50, max: 61.50 },
+        sio2:      { min: 3.77,  max: 6.66  },
+        al2o3:     { min: 3.50,  max: 4.20  },
+        blain:     { min: 1600,  max: 1900  },
+        mic45:     { min: 58.50, max: 63.50 },
+        bentonite: { min: 11.00, max: 14.00 },
+        ob1205:    { min: 30.00, max: 65.00 },
+        ccs:       { min: 170,   max: 220   },
+        ti:        { min: 94.50, max: 95.50 },
+        ai:        { min: 2.30,  max: 2.50  }
+      },
+      'Shyam Metalics - Samblpur': {
+        moisture:  { min: 11.50, max: 12.00 },
+        fe:        { min: 60.00, max: 60.50 },
+        sio2:      { min: 4.50,  max: 5.00  },
+        al2o3:     { min: 3.80,  max: 4.20  },
+        blain:     { min: 2000,  max: 2500  },
+        mic45:     { min: 60.00, max: 67.50 },
+        bentonite: { min: 7.50,  max: 10.00 },
+        ob1205:    { min: 50.00, max: 70.00 },
+        ccs:       { min: 180,   max: 200   },
+        ti:        { min: 94.80, max: 95.50 },
+        ai:        { min: 1.90,  max: 2.20  }
+      },
+      'Super Smelter - Jamuria': {
+        moisture:  { min: 11.00, max: 12.00 },
+        fe:        { min: 61.00, max: 62.00 },
+        sio2:      { min: 3.20,  max: 4.00  },
+        al2o3:     { min: 2.20,  max: 2.50  },
+        blain:     { min: 1300,  max: 2000  },
+        mic45:     { min: 57.20, max: 60.75 },
+        bentonite: { min: 4.50,  max: 7.80  },
+        ob1205:    { min: 45.00, max: 55.00 },
+        ccs:       { min: 185,   max: 180   },   // note: PDF shows 185/180, keeping as-is
+        ti:        { min: 95.00, max: 96.00 },
+        ai:        { min: 2.30,  max: 3.50  }
+      },
+      'Shyam Sel & Power Ltd. - Jamuria': {
+        moisture:  { min: 11.50, max: 12.00 },
+        fe:        { min: 59.50, max: 60.20 },
+        sio2:      { min: 4.50,  max: 5.00  },
+        al2o3:     { min: 3.80,  max: 4.20  },
+        blain:     { min: 2000,  max: 2500  },
+        mic45:     { min: 60.00, max: 67.50 },
+        bentonite: { min: 7.50,  max: 10.00 },
+        ob1205:    { min: 50.00, max: 70.00 },
+        ccs:       { min: 180,   max: 200   },
+        ti:        { min: 94.80, max: 95.20 },
+        ai:        { min: 2.50,  max: 3.00  }
+      }
     }
   },
   S: {
     label: 'South Zone',
     locations: {
-      'JSW - Bellary':  { moisture:10.50, fe:59.50, sio2:6.90, al2o3:2.50, ccs:250, ti:93.00, ai:5.70 },
-      'Minera Steel- Bellary':  { moisture:9.20,  fe:61.50, sio2:4.50, al2o3:2.00, ccs:180, ti:93.50, ai:4.50 },
-      'MSPL - Baldota':   { moisture:11.00, fe:62.00, sio2:5.00, al2o3:2.00, ccs:200, ti:96.00, ai:2.50 },
-      'Prakash Spong - Chitradurga':  { moisture:8.50,  fe:61.00, sio2:4.50, al2o3:2.30, ccs:210, ti:95.70, ai:3.00 },
-      'BMM Ispat - Hospet':  { moisture:11.00, fe:61.00, sio2:5.50, al2o3:2.00, ccs:220, ti:95.50, ai:3.50 }
+      'JSW - Bellary': {
+        moisture:  { min: 9.20,  max: 10.90 },
+        fe:        { min: 57.60, max: 58.80 },
+        sio2:      { min: 6.25,  max: 7.00  },
+        al2o3:     { min: 3.20,  max: 3.70  },
+        blain:     { min: 3600,  max: 4200  },
+        mic45:     { min: 71.00, max: 73.80 },
+        bentonite: { min: 5.30,  max: 7.50  },
+        ob1205:    { min: 28,    max: 38    },
+        ccs:       { min: 216,   max: 236   },
+        ti:        { min: 92.16, max: 94.00 },
+        ai:        { min: 5.20,  max: 6.96  }
+      },
+      'Minera Steel - Bellary': {
+        moisture:  { min: 8.00,  max: 9.50  },
+        fe:        { min: 60.00, max: 62.70 },
+        sio2:      { min: 4.00,  max: 5.80  },
+        al2o3:     { min: 1.90,  max: 2.50  },
+        blain:     { min: 2500,  max: 3200  },
+        mic45:     { min: 66.80, max: 68.49 },
+        bentonite: { min: 3.00,  max: 6.00  },
+        ob1205:    { min: 28,    max: 35    },
+        ccs:       { min: 180,   max: 200   },
+        ti:        { min: 93.00, max: 94.20 },
+        ai:        { min: 4.00,  max: 5.18  }
+      },
+      'MSPL - Baldota': {
+        moisture:  { min: 10.50, max: 12.00 },
+        fe:        { min: 61.00, max: 62.80 },
+        sio2:      { min: 4.50,  max: 5.50  },
+        al2o3:     { min: 1.80,  max: 2.20  },
+        blain:     { min: 2500,  max: 3500  },
+        mic45:     { min: 74.50, max: 82.50 },
+        bentonite: { min: 12.00, max: 17.00 },
+        ob1205:    { min: 32,    max: 45    },
+        ccs:       { min: 180,   max: 205   },
+        ti:        { min: 95.00, max: 96.50 },
+        ai:        { min: 2.50,  max: 3.80  }
+      },
+      'Prakash Spong - Chitradurga': {
+        moisture:  { min: 8.50,  max: 10.50 },
+        fe:        { min: 59.50, max: 61.60 },
+        sio2:      { min: 4.30,  max: 5.70  },
+        al2o3:     { min: 1.80,  max: 2.20  },
+        blain:     { min: 1800,  max: 2200  },
+        mic45:     { min: 64.00, max: 66.50 },
+        bentonite: { min: 7.00,  max: 12.00 },
+        ob1205:    { min: 25,    max: 51    },
+        ccs:       { min: 170,   max: 210   },
+        ti:        { min: 94.50, max: 96.80 },
+        ai:        { min: 2.10,  max: 4.30  }
+      },
+      'BMM Ispat - Hospet': {
+        moisture:  { min: 11.00, max: null  },   // PDF shows single value 11.00
+        fe:        { min: 60.80, max: 62.50 },
+        sio2:      { min: 5.10,  max: 6.50  },
+        al2o3:     { min: 1.60,  max: 2.20  },
+        blain:     { min: 2500,  max: 3200  },
+        mic45:     { min: 73.50, max: 75.00 },
+        bentonite: { min: 7.50,  max: 13.00 },
+        ob1205:    { min: 22,    max: 40    },
+        ccs:       { min: 200,   max: 235   },
+        ti:        { min: 95.00, max: 95.80 },
+        ai:        { min: 3.60,  max: 4.00  }
+      }
     }
   },
   C: {
     label: 'Central Zone',
     locations: {
-      'Lloyds Metalics Energy Ltd. - Konsari':  { moisture:9.50,  fe:64.50, sio2:4.00, al2o3:2.20, ccs:220, ti:95.00, ai:3.10 },
-      'Shree Bajrang Power & Ispat Ltd. - Tilda': { moisture:12.00, fe:62.00, sio2:4.50, al2o3:2.50, ccs:210, ti:94.00, ai:4.00 },
-      'Jayswal Neco - Raipur':  { moisture:10.50, fe:61.50, sio2:5.50, al2o3:2.50, ccs:220, ti:93.00, ai:5.00 }
+      'Lloyds Metalics Energy Ltd. - Konsari': {
+        moisture:  { min: 9.20,  max: 10.20 },
+        fe:        { min: 64.50, max: 65.10 },
+        sio2:      { min: 2.80,  max: 3.30  },
+        al2o3:     { min: 1.70,  max: 2.40  },
+        blain:     { min: 2100,  max: 3200  },
+        mic45:     { min: 57.00, max: 64.50 },
+        bentonite: { min: 3.70,  max: 8.00  },
+        ob1205:    { min: 25.00, max: 46.00 },
+        ccs:       { min: 220,   max: 238   },
+        ti:        { min: 95.00, max: 95.50 },
+        ai:        { min: 3.00,  max: 3.20  }
+      },
+      'Shree Bajrang Power & Ispat Ltd. - Tilda': {
+        moisture:  { min: 11.50, max: 11.80 },
+        fe:        { min: 62.00, max: 62.50 },
+        sio2:      { min: 4.10,  max: 4.30  },
+        al2o3:     { min: 2.00,  max: 2.50  },
+        blain:     { min: 2200,  max: 3100  },
+        mic45:     { min: 59.00, max: 63.70 },
+        bentonite: { min: 4.70,  max: 6.70  },
+        ob1205:    { min: 35.00, max: 50.00 },
+        ccs:       { min: 200,   max: 220   },
+        ti:        { min: 93.50, max: 94.00 },
+        ai:        { min: 4.00,  max: 4.50  }
+      },
+      'Jayswal Neco - Raipur': {
+        // Not listed separately in PDF – kept with sensible Central Zone defaults
+        moisture:  { min: 10.50, max: 11.50 },
+        fe:        { min: 61.00, max: 62.50 },
+        sio2:      { min: 4.50,  max: 5.50  },
+        al2o3:     { min: 2.00,  max: 2.50  },
+        blain:     { min: 2200,  max: 3000  },
+        mic45:     { min: 58.00, max: 65.00 },
+        bentonite: { min: 4.00,  max: 7.00  },
+        ob1205:    { min: 30.00, max: 55.00 },
+        ccs:       { min: 200,   max: 225   },
+        ti:        { min: 93.00, max: 95.00 },
+        ai:        { min: 3.50,  max: 5.00  }
+      }
     }
   }
 };
 
+// Helper: midpoint of a range; returns '' if both null
+function mid(mn, mx) {
+  if (mn === null && mx === null) return '';
+  if (mn === null) return mx;
+  if (mx === null) return mn;
+  return ((mn + mx) / 2);
+}
+function fmtMid(mn, mx, dec) {
+  const v = mid(mn, mx);
+  if (v === '') return '';
+  return Number(v).toFixed(dec);
+}
+function rangeLabel(mn, mx, dec) {
+  const fdec = dec !== undefined ? dec : 2;
+  if (mn === null && mx === null) return '—';
+  if (mn === null) return String(Number(mx).toFixed(fdec));
+  if (mx === null) return String(Number(mn).toFixed(fdec));
+  return `${Number(mn).toFixed(fdec)} – ${Number(mx).toFixed(fdec)}`;
+}
+
 // ═══════ STATE ═══════
 const stageParams = {
   feed:      {ore:'',orePercent:'',feedRate:'',fluxes:[],coal:'',coalPercent:'',zone:'',location:'',
-              chemFe:'',chemSio2:'',chemAl2o3:'',chemMoisture:'',chemCcs:'',chemTi:'',chemAi:''},
+              chemMoisture:'',chemFe:'',chemSio2:'',chemAl2o3:'',chemBlain:'',chemMic45:'',
+              chemBentonite:'',chemOb1205:'',chemCcs:'',chemTi:'',chemAi:''},
   grind:     {rawFeedMoisture:'',blain:''},
   thickner:  {underflowDensity:''},
   filter:    {cakeMoisture:''},
@@ -353,7 +635,7 @@ const STAGES=[
 ];
 
 // ═══════════════════════════════════════════════════════════
-// PLANT NAME HANDLER — Demo 1 = Grate Kiln, Demo 2 = Furnace
+// PLANT NAME HANDLER
 // ═══════════════════════════════════════════════════════════
 function onPlantChange(){
   const val = document.getElementById('plantName').value;
@@ -382,7 +664,6 @@ function sizeCanvas(){
   return{W,H};
 }
 
-// ═══════ MAIN DRAW ═══════
 function draw(frame,activeStep){
   const{W,H}=sizeCanvas();
   ctx.clearRect(0,0,W,H);
@@ -496,7 +777,6 @@ function draw(frame,activeStep){
   }
 }
 
-// ═══════ MACHINE SHAPES ═══════
 function drawMachineShape(shape,cx,cy,mW,mH,col,strokeCol,strokeW,isActive,isDone,frame,stage){
   const lit=isActive||isDone;
   ctx.fillStyle=col; ctx.strokeStyle=strokeCol; ctx.lineWidth=strokeW;
@@ -704,7 +984,6 @@ function drawPelletBurst(cx,cy,frame,r){
   }
 }
 
-// ═══════ HIT TEST ═══════
 canvas.addEventListener('click',function(e){
   if(simRunning)return;
   const rect=canvas.getBoundingClientRect();
@@ -718,14 +997,13 @@ canvas.addEventListener('mousemove',function(e){
   canvas.style.cursor=hitZones.some(z=>mx>=z.x&&mx<=z.x+z.w&&my>=z.y&&my<=z.y+z.h)?'pointer':'default';
 });
 
-// ═══════ HELPER: number input field ═══════
-function numField(id, label, val, min, max, unit, step){
+function numField(id, label, val, mn, mx, unit, step){
   step = step || 'any';
   return `
     <div class="field-group">
       <div class="field-label">${label}</div>
-      <input type="number" class="finp" id="${id}" value="${val||''}" min="${min}" max="${max}" step="${step}" placeholder="${min} – ${max}">
-      <div class="input-hint">Range: ${min} – ${max}${unit?' '+unit:''}</div>
+      <input type="number" class="finp" id="${id}" value="${val||''}" min="${mn}" max="${mx}" step="${step}" placeholder="${mn} – ${mx}">
+      <div class="input-hint">Range: ${mn} – ${mx}${unit?' '+unit:''}</div>
     </div>`;
 }
 
@@ -791,9 +1069,8 @@ function readFluxList(listId){
 }
 
 // ═══════════════════════════════════════════════════════════
-// FEED — ZONE / LOCATION / CHEMISTRY HELPERS
+// CHEMISTRY CARD — renders all 11 fields with range & midpoint
 // ═══════════════════════════════════════════════════════════
-
 function onOreGradeChange(){
   const ore = document.getElementById('m-ore').value;
   const block = document.getElementById('feed-zone-location-block');
@@ -826,9 +1103,18 @@ function onFeedLocationChange(){
   renderChemCard();
 }
 
-// ═══════════════════════════════════════════════════════════
-// RENDER CHEM CARD — now with EDITABLE inputs
-// ═══════════════════════════════════════════════════════════
+function chemCell(id, label, mn, mx, dec, unit, colorClass, savedVal) {
+  const midVal = savedVal !== '' ? savedVal : fmtMid(mn, mx, dec);
+  const rng = rangeLabel(mn, mx, dec);
+  return `
+    <div class="chem-cell${colorClass?' '+colorClass:''}">
+      <div class="chem-cell-label">${label}</div>
+      <input type="number" class="chem-inp" id="${id}" value="${midVal}" step="${Math.pow(10,-dec).toFixed(dec)}" min="${mn!==null?mn:0}" max="${mx!==null?mx:99999}" placeholder="—">
+      <div class="chem-cell-unit">${unit}</div>
+      <div class="chem-cell-range">${rng}</div>
+    </div>`;
+}
+
 function renderChemCard(){
   const zone = stageParams.feed.zone || '';
   const locEl = document.getElementById('m-feed-location');
@@ -842,62 +1128,46 @@ function renderChemCard(){
   }
 
   const d = ORE_ZONES[zone].locations[loc];
-  const fmt = (v, dec) => (v === null || v === undefined) ? '' : Number(v).toFixed(dec);
-
-  // If the same location was previously saved with custom edits, restore those; otherwise use DB values
   const sameLocation = stageParams.feed.location === loc;
-  const feVal    = (sameLocation && stageParams.feed.chemFe !== '')       ? stageParams.feed.chemFe       : fmt(d.fe, 2);
-  const sio2Val  = (sameLocation && stageParams.feed.chemSio2 !== '')     ? stageParams.feed.chemSio2     : fmt(d.sio2, 2);
-  const al2o3Val = (sameLocation && stageParams.feed.chemAl2o3 !== '')    ? stageParams.feed.chemAl2o3    : fmt(d.al2o3, 2);
-  const moistVal = (sameLocation && stageParams.feed.chemMoisture !== '') ? stageParams.feed.chemMoisture : fmt(d.moisture, 2);
-  const ccsVal   = (sameLocation && stageParams.feed.chemCcs !== '')      ? stageParams.feed.chemCcs      : fmt(d.ccs, 0);
-  const tiVal    = (sameLocation && stageParams.feed.chemTi !== '')       ? stageParams.feed.chemTi       : fmt(d.ti, 2);
-  const aiVal    = (sameLocation && stageParams.feed.chemAi !== '')       ? stageParams.feed.chemAi       : fmt(d.ai, 2);
+
+  // Helper to get saved value or empty string
+  function sv(key) { return (sameLocation && stageParams.feed[key] !== '') ? stageParams.feed[key] : ''; }
 
   container.innerHTML = `
     <div class="chem-card">
-      <div class="chem-card-title">${ORE_ZONES[zone].label} · ${loc} — Average Chemistry</div>
+      <div class="chem-card-title">${ORE_ZONES[zone].label} · ${loc}</div>
+
+      <div class="chem-section-label">Filter Cake Chemistry</div>
       <div class="chem-grid">
-        <div class="chem-cell fe-cell">
-          <div class="chem-cell-label">Fe</div>
-          <input type="number" class="chem-inp" id="chem-fe" value="${feVal}" step="0.01" min="0" max="100" placeholder="—">
-          <div class="chem-cell-unit">%</div>
-        </div>
-        <div class="chem-cell sio2-cell">
-          <div class="chem-cell-label">SiO₂</div>
-          <input type="number" class="chem-inp" id="chem-sio2" value="${sio2Val}" step="0.01" min="0" max="100" placeholder="—">
-          <div class="chem-cell-unit">%</div>
-        </div>
-        <div class="chem-cell al2o3-cell">
-          <div class="chem-cell-label">Al₂O₃</div>
-          <input type="number" class="chem-inp" id="chem-al2o3" value="${al2o3Val}" step="0.01" min="0" max="100" placeholder="—">
-          <div class="chem-cell-unit">%</div>
-        </div>
-        <div class="chem-cell">
-          <div class="chem-cell-label">Moisture</div>
-          <input type="number" class="chem-inp" id="chem-moisture" value="${moistVal}" step="0.01" min="0" max="100" placeholder="—">
-          <div class="chem-cell-unit">%</div>
-        </div>
-        <div class="chem-cell">
-          <div class="chem-cell-label">CCS</div>
-          <input type="number" class="chem-inp" id="chem-ccs" value="${ccsVal}" step="1" min="0" placeholder="—">
-          <div class="chem-cell-unit">kg/p</div>
-        </div>
-        <div class="chem-cell">
-          <div class="chem-cell-label">TI / AI</div>
-          <div class="ti-ai-row">
-            <input type="number" class="chem-inp" id="chem-ti" value="${tiVal}" step="0.01" min="0" max="100" placeholder="TI">
-            <span class="ti-ai-sep">/</span>
-            <input type="number" class="chem-inp" id="chem-ai" value="${aiVal}" step="0.01" min="0" max="100" placeholder="AI">
-          </div>
-          <div class="chem-cell-unit">%</div>
-        </div>
+        ${chemCell('chem-moisture','Moisture',d.moisture.min,d.moisture.max,2,'%','',sv('chemMoisture'))}
+        ${chemCell('chem-fe','Fe',d.fe.min,d.fe.max,2,'%','fe-cell',sv('chemFe'))}
+        ${chemCell('chem-sio2','SiO₂',d.sio2.min,d.sio2.max,2,'%','sio2-cell',sv('chemSio2'))}
+        ${chemCell('chem-al2o3','Al₂O₃',d.al2o3.min,d.al2o3.max,2,'%','al2o3-cell',sv('chemAl2o3'))}
       </div>
-      <div class="chem-note">click any value to edit</div>
+
+      <div class="chem-section-label">Grinding</div>
+      <div class="chem-grid-2">
+        ${chemCell('chem-blain','Blain No.',d.blain.min,d.blain.max,0,'cm²/g','',sv('chemBlain'))}
+        ${chemCell('chem-mic45','-45 Mic',d.mic45.min,d.mic45.max,2,'%','',sv('chemMic45'))}
+      </div>
+
+      <div class="chem-section-label">Binder / Additive Consumption</div>
+      <div class="chem-grid-2">
+        ${chemCell('chem-bentonite','Bentonite',d.bentonite.min,d.bentonite.max,2,'kg/t','',sv('chemBentonite'))}
+        ${chemCell('chem-ob1205','OB-1205',d.ob1205.min,d.ob1205.max,2,'GPT','',sv('chemOb1205'))}
+      </div>
+
+      <div class="chem-section-label">Pellet Quality</div>
+      <div class="chem-grid">
+        ${chemCell('chem-ccs','CCS',d.ccs.min,d.ccs.max,0,'kg/p','',sv('chemCcs'))}
+        ${chemCell('chem-ti','TI',d.ti.min,d.ti.max,2,'%','',sv('chemTi'))}
+        ${chemCell('chem-ai','AI',d.ai.min,d.ai.max,2,'%','',sv('chemAi'))}
+      </div>
+
+      <div class="chem-note">click any field to edit</div>
     </div>`;
 }
 
-// ═══════ DYNAMIC BINDER DOSAGE LABEL ═══════
 function updateBinderDosageLabel(){
   const binderSel = document.getElementById('m-binder');
   const dosageLabelEl = document.getElementById('binder-dosage-label-text');
@@ -906,13 +1176,11 @@ function updateBinderDosageLabel(){
   dosageLabelEl.textContent = val ? val + ' Dosage' : 'Binder Dosage';
 }
 
-// ═══════ BINDER OPTIONS ═══════
 const BINDER_OPTIONS = ['OB-1205 Organic','OB-1206','OB3s','OB Pro','Bentonite (6 kg/t)','OB-1205 + Bentonite'];
 
 // ═══════ MODALS ═══════
 const MODAL_CONFIGS={
 
-  // ─── FEED ───
   feed:{
     title:'Iron Ore Feed',desc:'Configure raw material grades and additives',
     fields:()=>`
@@ -985,25 +1253,17 @@ const MODAL_CONFIGS={
       stageParams.feed.fluxes       = readFluxList('feed-flux');
       stageParams.feed.coal         = document.getElementById('m-coal').value;
       stageParams.feed.coalPercent  = document.getElementById('m-coal-pct').value;
-      // Save editable chemistry values
-      const chemFe = document.getElementById('chem-fe');
-      if(chemFe) stageParams.feed.chemFe = chemFe.value;
-      const chemSio2 = document.getElementById('chem-sio2');
-      if(chemSio2) stageParams.feed.chemSio2 = chemSio2.value;
-      const chemAl2o3 = document.getElementById('chem-al2o3');
-      if(chemAl2o3) stageParams.feed.chemAl2o3 = chemAl2o3.value;
-      const chemMoisture = document.getElementById('chem-moisture');
-      if(chemMoisture) stageParams.feed.chemMoisture = chemMoisture.value;
-      const chemCcs = document.getElementById('chem-ccs');
-      if(chemCcs) stageParams.feed.chemCcs = chemCcs.value;
-      const chemTi = document.getElementById('chem-ti');
-      if(chemTi) stageParams.feed.chemTi = chemTi.value;
-      const chemAi = document.getElementById('chem-ai');
-      if(chemAi) stageParams.feed.chemAi = chemAi.value;
+      // Save all chemistry fields
+      const fields = ['moisture','fe','sio2','al2o3','blain','mic45','bentonite','ob1205','ccs','ti','ai'];
+      const idMap  = ['chem-moisture','chem-fe','chem-sio2','chem-al2o3','chem-blain','chem-mic45','chem-bentonite','chem-ob1205','chem-ccs','chem-ti','chem-ai'];
+      const keyMap = ['chemMoisture','chemFe','chemSio2','chemAl2o3','chemBlain','chemMic45','chemBentonite','chemOb1205','chemCcs','chemTi','chemAi'];
+      idMap.forEach((elId, i) => {
+        const el = document.getElementById(elId);
+        if(el) stageParams.feed[keyMap[i]] = el.value;
+      });
     }
   },
 
-  // ─── GRINDING ───
   grind:{
     title:'Grinding',desc:'Set raw feed moisture and target Blain fineness',
     fields:()=>`
@@ -1015,7 +1275,6 @@ const MODAL_CONFIGS={
     }
   },
 
-  // ─── THICKENER ───
   thickner:{
     title:'Thickener',desc:'Configure thickener underflow density',
     fields:()=>`
@@ -1025,7 +1284,6 @@ const MODAL_CONFIGS={
     }
   },
 
-  // ─── FILTER CAKE ───
   filter:{
     title:'Filter Cake',desc:'Set filter cake moisture for the mixing stage',
     fields:()=>`
@@ -1033,7 +1291,6 @@ const MODAL_CONFIGS={
     save:()=>{stageParams.filter.cakeMoisture=document.getElementById('m-fcm').value;}
   },
 
-  // ─── MIXING ───
   mix:{
     title:'Mixing + Binder',desc:'Select binder, dosage and configure mix moisture',
     fields:()=>`
@@ -1089,7 +1346,6 @@ const MODAL_CONFIGS={
     }
   },
 
-  // ─── BALLING DISC ───
   ball:{
     title:'Balling Disc',desc:'Configure disc angle, motor speed, disc speed and green ball moisture',
     fields:()=>`
@@ -1105,7 +1361,6 @@ const MODAL_CONFIGS={
     }
   },
 
-  // ─── GREEN BALL PROPERTIES ───
   greenball:{
     title:'Green Ball Properties',desc:'Enter measured green ball quality parameters',
     fields:()=>`
@@ -1119,7 +1374,6 @@ const MODAL_CONFIGS={
     }
   },
 
-  // ─── SCREENING ───
   screen:{
     title:'Screening',desc:'Enter size distribution percentages and recycle rate',
     fields:()=>`
@@ -1153,7 +1407,6 @@ const MODAL_CONFIGS={
     }
   },
 
-  // ─── INDURATION ───
   indu:{
     title:'Induration',desc:'Select machine type and configure process parameters',
     fields:()=>{
@@ -1184,7 +1437,6 @@ const MODAL_CONFIGS={
     }
   },
 
-  // ─── COOLING ───
   cool:{
     title:'Cooling',desc:'Enter temperature for each cooling zone',
     fields:()=>{
@@ -1209,7 +1461,6 @@ const MODAL_CONFIGS={
     }
   },
 
-  // ─── FINISHED PELLETS ───
   pellet:{
     title:'Finished Pellets',desc:'Quality targets and measured pellet properties',
     fields:()=>{
@@ -1264,7 +1515,6 @@ const MODAL_CONFIGS={
   }
 };
 
-// ─── Induration mode helpers ───
 function getInduFields(mode){
   if(mode==='furnace'){
     return `
@@ -1298,7 +1548,6 @@ function switchInduMode(mode){
   if(s) s.label=mode==='furnace'?'INDURATION\nFURNACE':'GRATE\nKILN';
 }
 
-// ─── Zone toggle handler (Feed modal) ───
 function selectFeedZone(zone){
   stageParams.feed.zone = zone;
   ['E','S','C'].forEach(z=>{
@@ -1391,10 +1640,10 @@ function runSimulation(){
 
 function resetAll(){
   simRunning=false; simStep=-1; simFrame=0;
-  // Reset plant name dropdown
   document.getElementById('plantName').value = '';
   Object.assign(stageParams.feed,{ore:'',orePercent:'',feedRate:'',fluxes:[],coal:'',coalPercent:'',zone:'',location:'',
-    chemFe:'',chemSio2:'',chemAl2o3:'',chemMoisture:'',chemCcs:'',chemTi:'',chemAi:''});
+    chemMoisture:'',chemFe:'',chemSio2:'',chemAl2o3:'',chemBlain:'',chemMic45:'',
+    chemBentonite:'',chemOb1205:'',chemCcs:'',chemTi:'',chemAi:''});
   Object.assign(stageParams.grind,{rawFeedMoisture:'',blain:''});
   Object.assign(stageParams.thickner,{underflowDensity:''});
   Object.assign(stageParams.filter,{cakeMoisture:''});
@@ -1414,7 +1663,6 @@ function resetAll(){
   document.getElementById('runBtn').disabled=false;
 }
 
-// ═══════ LOOP ═══════
 (function loop(){draw(simFrame,simStep);simFrame++;animId=requestAnimationFrame(loop);})();
 </script>
 </body>
