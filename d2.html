@@ -75,54 +75,19 @@ nav{
 }
 .plant-name-select:focus{border-color:var(--gold);background-color:#fff;}
 
-/* ── CANVAS WRAP + GROUP OVERLAY ── */
+/* ── STAGE LEGEND STRIP ── */
+.stage-legend{
+  display:flex;align-items:center;justify-content:center;gap:1.5rem;
+  padding:.55rem 1.25rem;border-bottom:1px solid var(--border);
+  background:rgba(253,248,240,0.85);flex-wrap:wrap;
+}
+.legend-item{display:flex;align-items:center;gap:6px;font-family:'JetBrains Mono';font-size:.52rem;letter-spacing:1.2px;color:var(--text-dim);text-transform:uppercase;}
+.legend-swatch{width:14px;height:8px;border-radius:2px;flex-shrink:0;}
+
 .canvas-wrap{width:100%;max-width:1200px;background:#fff;border:1px solid var(--border);border-radius:8px;box-shadow:var(--shadow-navy),inset 0 1px 0 rgba(255,255,255,.8);overflow:hidden;position:relative;}
-#processCanvas{display:block;width:100%;height:auto;cursor:default;position:relative;z-index:2;}
+#processCanvas{display:block;width:100%;height:auto;cursor:default;}
 
-/* ── GROUP OVERLAY: sits between background and canvas ── */
-#groupOverlay{
-  position:absolute;inset:0;z-index:1;
-  pointer-events:none;
-}
-.stage-group{
-  position:absolute;
-  top:10px;
-  border-radius:10px;
-  display:flex;flex-direction:column;justify-content:flex-start;
-}
-
-/* Group 1 — Wet Preparation (blue-grey tint) */
-.stage-group.grp-wet{
-  background:rgba(45,95,166,0.045);
-  border:1.5px solid rgba(45,95,166,0.22);
-}
-/* Group 2 — Green Ball Formation (gold tint) */
-.stage-group.grp-green{
-  background:rgba(200,145,42,0.045);
-  border:1.5px solid rgba(200,145,42,0.28);
-}
-/* Group 3 — Induration & Finishing (green tint) */
-.stage-group.grp-indu{
-  background:rgba(42,122,74,0.045);
-  border:1.5px solid rgba(42,122,74,0.22);
-}
-
-.group-label{
-  font-family:'JetBrains Mono';
-  font-size:.52rem;
-  letter-spacing:2px;
-  text-transform:uppercase;
-  padding:5px 10px 4px;
-  border-radius:7px 7px 0 0;
-  font-weight:600;
-  line-height:1;
-  white-space:nowrap;
-}
-.grp-wet  .group-label{color:rgba(45,95,166,0.75);}
-.grp-green .group-label{color:rgba(180,120,20,0.85);}
-.grp-indu  .group-label{color:rgba(42,122,74,0.85);}
-
-.step-bar{display:flex;align-items:center;gap:5px;justify-content:center;padding:.65rem 1rem;border-top:1px solid var(--border);background:rgba(253,248,240,.7);flex-wrap:wrap;position:relative;z-index:3;}
+.step-bar{display:flex;align-items:center;gap:5px;justify-content:center;padding:.65rem 1rem;border-top:1px solid var(--border);background:rgba(253,248,240,.7);flex-wrap:wrap;}
 .step-pill{padding:3px 10px;font-family:'JetBrains Mono';font-size:.52rem;letter-spacing:1px;border:1px solid var(--border);border-radius:20px;color:var(--text-dim);transition:all .35s;white-space:nowrap;cursor:pointer;user-select:none;}
 .step-pill:hover{border-color:var(--gold);color:var(--gold);}
 .step-pill.active{background:var(--gold);border-color:var(--gold);color:#fff;box-shadow:0 2px 10px rgba(200,145,42,.4);}
@@ -132,7 +97,7 @@ nav{
 .run-btn{background:linear-gradient(135deg,var(--navy),var(--blue));color:#fff;border:none;border-radius:4px;padding:13px 32px;font-family:'DM Sans';font-size:.9rem;font-weight:600;cursor:pointer;letter-spacing:.3px;transition:all .3s;display:flex;align-items:center;gap:8px;box-shadow:0 4px 16px rgba(26,48,87,.25);}
 .run-btn:hover:not(:disabled){background:linear-gradient(135deg,var(--gold),var(--gold-light));transform:translateY(-2px);box-shadow:0 6px 24px rgba(200,145,42,.4);}
 .run-btn:disabled{opacity:.45;pointer-events:none;}
-.reset-btn{background:transparent;color:var(--text-mid);border:1px solid var(--border);border-radius:4px;padding:13px 20px;font-family:'DM Sans';font-size:.85rem;cursor:pointer;transition:all .25s;}
+.reset-btn{background:transparent;color:var(--text-dim);border:1px solid var(--border);border-radius:4px;padding:13px 20px;font-family:'DM Sans';font-size:.85rem;cursor:pointer;transition:all .25s;}
 .reset-btn:hover{border-color:var(--red);color:var(--red);}
 
 .params-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:8px;width:100%;max-width:1200px;margin-top:1.2rem;}
@@ -143,7 +108,7 @@ nav{
 
 .modal-overlay{position:fixed;inset:0;z-index:200;background:rgba(15,31,58,.55);backdrop-filter:blur(6px) saturate(1.2);display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .3s ease;}
 .modal-overlay.open{opacity:1;pointer-events:all;}
-.modal-card{background:#fff;border:1px solid var(--border-strong);border-radius:10px;box-shadow:0 24px 80px rgba(26,48,87,.25);width:min(480px,92vw);max-height:88vh;overflow-y:auto;transform:translateY(16px) scale(.97);transition:transform .35s cubic-bezier(.22,1,.36,1);position:relative;}
+.modal-card{background:#fff;border:1px solid var(--border-strong);border-radius:10px;box-shadow:0 24px 80px rgba(26,48,87,.25);width:min(520px,92vw);max-height:88vh;overflow-y:auto;transform:translateY(16px) scale(.97);transition:transform .35s cubic-bezier(.22,1,.36,1);position:relative;}
 .modal-overlay.open .modal-card{transform:translateY(0) scale(1);}
 .modal-header{padding:1.4rem 1.6rem 1rem;border-bottom:1px solid var(--border);background:linear-gradient(135deg,var(--navy2) 0%,var(--navy3) 100%);border-radius:10px 10px 0 0;position:relative;}
 .modal-stage-tag{font-family:'JetBrains Mono';font-size:.52rem;letter-spacing:2.5px;color:rgba(200,145,42,.7);text-transform:uppercase;margin-bottom:5px;}
@@ -193,7 +158,13 @@ input.finp{cursor:text;}
 @keyframes chemFadeIn{from{opacity:0;transform:translateY(-6px);}to{opacity:1;transform:translateY(0);}}
 .chem-card-title{font-family:'DM Sans',sans-serif;font-size:.78rem;font-weight:600;letter-spacing:.2px;color:var(--gold);text-transform:none;margin-bottom:10px;display:flex;align-items:center;gap:6px;}
 .chem-card-title::before{content:'⬡';font-size:.7rem;}
+
+.chem-section-label{
+  font-family:'JetBrains Mono';font-size:.52rem;letter-spacing:1.8px;color:var(--text-dim);
+  text-transform:uppercase;margin:10px 0 6px;padding-bottom:4px;border-bottom:1px solid var(--border);
+}
 .chem-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;}
+.chem-grid-2{display:grid;grid-template-columns:repeat(2,1fr);gap:6px;}
 .chem-cell{background:#fff;border:1px solid var(--border);border-radius:4px;padding:7px 8px;text-align:center;}
 .chem-cell-label{font-family:'DM Sans',sans-serif;font-size:.72rem;font-weight:500;letter-spacing:.1px;color:var(--text-dim);text-transform:none;margin-bottom:3px;}
 .chem-inp{
@@ -208,11 +179,9 @@ input.finp{cursor:text;}
 .chem-cell.sio2-cell .chem-inp{color:#7a5a30;}
 .chem-cell.al2o3-cell .chem-inp{color:var(--blue);}
 .chem-cell-unit{font-family:'JetBrains Mono';font-size:.42rem;color:var(--text-dim);margin-top:2px;}
+.chem-cell-range{font-family:'JetBrains Mono';font-size:.44rem;color:rgba(138,122,96,0.7);margin-top:1px;}
 .chem-note{font-family:'DM Sans',sans-serif;font-size:.72rem;color:var(--text-dim);margin-top:8px;padding-top:6px;border-top:1px solid var(--border);display:flex;align-items:center;gap:5px;}
 .chem-note::before{content:'✎';font-size:.7rem;color:var(--gold);}
-.ti-ai-row{display:flex;gap:4px;align-items:center;justify-content:center;}
-.ti-ai-row input.chem-inp{width:44%;}
-.ti-ai-sep{font-size:.65rem;color:var(--text-dim);}
 
 .zone-toggle{display:flex;gap:0;border:1.5px solid var(--border-strong);border-radius:4px;overflow:hidden;margin-bottom:10px;}
 .zone-toggle button{flex:1;background:transparent;border:none;padding:8px 6px;font-family:'JetBrains Mono';font-size:.62rem;font-weight:600;letter-spacing:1px;color:var(--text-dim);cursor:pointer;transition:all .22s;text-transform:uppercase;}
@@ -227,6 +196,7 @@ input.finp{cursor:text;}
   .params-row{grid-template-columns:1fr 1fr;}
   .size-grid{grid-template-columns:1fr;}
   .chem-grid{grid-template-columns:repeat(2,1fr);}
+  .chem-grid-2{grid-template-columns:1fr;}
 }
 </style>
 </head>
@@ -284,17 +254,27 @@ input.finp{cursor:text;}
     <div class="page-hint">Click any process stage to configure its parameters</div>
   </div>
 
-  <div class="canvas-wrap" id="canvasWrap">
-    <!-- Group overlay cards — positioned by JS after layout is known -->
-    <div id="groupOverlay">
-      <div class="stage-group grp-wet" id="grp-wet">
-        <div class="group-label">Stage 1</div>
+  <div class="canvas-wrap">
+    <!-- Stage legend strip above canvas -->
+    <div class="stage-legend">
+      <div class="legend-item">
+        <div class="legend-swatch" style="background:rgba(139,90,43,0.22);border:1px solid rgba(139,90,43,0.5);"></div>
+        Stage I — Preparation
       </div>
-      <div class="stage-group grp-green" id="grp-green">
-        <div class="group-label">Stage 2</div>
+      <div class="legend-item">
+        <div class="legend-swatch" style="background:rgba(45,95,166,0.18);border:1px solid rgba(45,95,166,0.45);"></div>
+        Stage II — Agglomeration
       </div>
-      <div class="stage-group grp-indu" id="grp-indu">
-        <div class="group-label">Stage 3</div>
+      <div class="legend-item" style="position:relative;">
+        <div style="display:flex;gap:0;">
+          <div class="legend-swatch" style="background:rgba(139,90,43,0.22);border:1px solid rgba(139,90,43,0.5);border-right:none;border-radius:2px 0 0 2px;width:7px;"></div>
+          <div class="legend-swatch" style="background:rgba(45,95,166,0.18);border:1px solid rgba(45,95,166,0.45);border-left:none;border-radius:0 2px 2px 0;width:7px;"></div>
+        </div>
+        Overlap zone
+      </div>
+      <div class="legend-item">
+        <div class="legend-swatch" style="background:rgba(26,48,87,0.15);border:1px solid rgba(26,48,87,0.38);"></div>
+        Stage III — Firing & Finishing
       </div>
     </div>
     <canvas id="processCanvas"></canvas>
@@ -336,45 +316,317 @@ const ORE_ZONES = {
   E: {
     label: 'East Zone',
     locations: {
-      'JSW - Jharsugda':  { moisture:11.50, fe:61.85, sio2:4.07,  al2o3:62.92, ccs:210, ti:null, ai:null },
-      'Chaliyama Steel - Chaibasa':  { moisture:10.00, fe:61.50, sio2:4.28,  al2o3:3.31,  ccs:198, ti:94.00, ai:4.30 },
-      'Dhenkanal Steel - Dhenkanal':   { moisture:10.05, fe:61.50, sio2:3.60,  al2o3:2.90,  ccs:194, ti:94.00, ai:4.00 },
-      'Kamanada Steel - Joda':   { moisture:9.80,  fe:61.50, sio2:3.90,  al2o3:2.80,  ccs:190, ti:94.00, ai:4.00 },
-      'Gallent Ispat - Gorkhpur':   { moisture:10.50, fe:61.50, sio2:5.50,  al2o3:2.60,  ccs:215, ti:96.00, ai:2.50 },
-      'GR Integrate - Raipur':   { moisture:10.80, fe:62.50, sio2:5.50,  al2o3:2.20,  ccs:198, ti:95.50, ai:3.50 },
-      'Shree Jagnath Steel - Barbil':   { moisture:11.50, fe:61.30, sio2:4.50,  al2o3:3.50,  ccs:195,  ti:91.50, ai:6.50 },
-      'Envirocare - Rourkela':   { moisture:11.70, fe:60.50, sio2:3.50,  al2o3:3.70,  ccs:220, ti:95.00, ai:3.00 },
-      'Shree Mahaveer - Rourkel':   { moisture:11.70, fe:60.50, sio2:3.50,  al2o3:3.70,  ccs:220,  ti:95.00, ai:3.00  },
-      'Orissa Metalic Pvt. Ltd - Khargpur':   { moisture:12.00, fe:60.50, sio2:4.50,  al2o3:4.00,  ccs:195, ti:95.00, ai:2.50 },
-      'Shyam Metalics - Samblpur':  { moisture:11.80, fe:60.50, sio2:4.50,  al2o3:3.80,  ccs:200, ti:95.00, ai:2.50 },
-      'Super Smelter - Jamuria':  { moisture:11.50, fe:61.50, sio2:3.50,  al2o3:2.30,  ccs:185, ti:96.00, ai:3.00 },
-      'Shyam Sel & Power Ltd. - Jamuria': { moisture:12.00, fe:61.00, sio2:3.50,  al2o3:2.30,  ccs:185, ti:96.00, ai:3.00 }
+      'JSW - Jharsugda': {
+        moisture:  { min: 10.80, max: 11.45 },
+        fe:        { min: 60.80, max: 63.91 },
+        sio2:      { min: 3.58,  max: 4.36  },
+        al2o3:     { min: 3.08,  max: 4.12  },
+        blain:     { min: 2188,  max: 2422  },
+        mic45:     { min: 63.50, max: 65.58 },
+        bentonite: { min: 3.39,  max: 6.84  },
+        ob1205:    { min: 20.00, max: 38.00 },
+        ccs:       { min: 189,   max: 230   },
+        ti:        { min: 92.01, max: 94.39 },
+        ai:        { min: 3.75,  max: 6.14  }
+      },
+      'Chaliyama Steel - Chaibasa': {
+        moisture:  { min: 10.00, max: 10.50 },
+        fe:        { min: 60.59, max: 61.85 },
+        sio2:      { min: 3.61,  max: 4.45  },
+        al2o3:     { min: 3.02,  max: 4.75  },
+        blain:     { min: 2358,  max: 2939  },
+        mic45:     { min: 60.04, max: 70.48 },
+        bentonite: { min: 2.00,  max: 4.95  },
+        ob1205:    { min: 30.00, max: 36.45 },
+        ccs:       { min: 189,   max: 210   },
+        ti:        { min: 92.10, max: 94.59 },
+        ai:        { min: 3.70,  max: 5.86  }
+      },
+      'Dhenkanal Steel - Dhenkanal': {
+        moisture:  { min: 9.80,  max: 10.50 },
+        fe:        { min: 60.56, max: 61.50 },
+        sio2:      { min: 3.88,  max: 4.75  },
+        al2o3:     { min: 2.85,  max: 3.07  },
+        blain:     { min: 1965,  max: 2762  },
+        mic45:     { min: 56.42, max: 70.58 },
+        bentonite: { min: 3.01,  max: 4.18  },
+        ob1205:    { min: 30.50, max: 59.06 },
+        ccs:       { min: 185,   max: 200   },
+        ti:        { min: 93.27, max: 94.46 },
+        ai:        { min: 3.75,  max: 4.85  }
+      },
+      'Kamanada Steel - Koira': {
+        moisture:  { min: 9.50,  max: 10.50 },
+        fe:        { min: 61.38, max: 62.62 },
+        sio2:      { min: 3.06,  max: 4.16  },
+        al2o3:     { min: 1.93,  max: 2.08  },
+        blain:     { min: 2400,  max: 3000  },
+        mic45:     { min: 60.75, max: 68.75 },
+        bentonite: { min: 2.70,  max: 5.80  },
+        ob1205:    { min: 25.00, max: 77.00 },
+        ccs:       { min: 177,   max: 226   },
+        ti:        { min: 93.59, max: 95.58 },
+        ai:        { min: 2.85,  max: 4.54  }
+      },
+      'Gallent Ispat - Gorkhpur': {
+        moisture:  { min: 10.50, max: 11.00 },
+        fe:        { min: 61.00, max: 61.50 },
+        sio2:      { min: 4.76,  max: 4.90  },
+        al2o3:     { min: 1.87,  max: 2.31  },
+        blain:     { min: 2100,  max: 2300  },
+        mic45:     { min: 60.00, max: 61.60 },
+        bentonite: { min: 3.50,  max: 5.50  },
+        ob1205:    { min: 62.00, max: 80.00 },
+        ccs:       { min: 207,   max: 225   },
+        ti:        { min: 96.22, max: 97.00 },
+        ai:        { min: 2.27,  max: 2.98  }
+      },
+      'GR Integrate - Raipur': {
+        moisture:  { min: 10.30, max: 11.00 },
+        fe:        { min: 62.00, max: 62.70 },
+        sio2:      { min: 4.68,  max: 5.57  },
+        al2o3:     { min: null,  max: null  },
+        blain:     { min: null,  max: null  },
+        mic45:     { min: 57.30, max: 61.20 },
+        bentonite: { min: 9.20,  max: 12.30 },
+        ob1205:    { min: 50.00, max: 68.00 },
+        ccs:       { min: 180,   max: 200   },
+        ti:        { min: 95.30, max: 95.93 },
+        ai:        { min: 2.92,  max: 3.46  }
+      },
+      'Shree Jagnath Steel - Barbil': {
+        moisture:  { min: 11.00, max: 12.00 },
+        fe:        { min: 61.42, max: 62.20 },
+        sio2:      { min: 4.50,  max: 5.46  },
+        al2o3:     { min: 3.20,  max: 4.10  },
+        blain:     { min: 1700,  max: 2550  },
+        mic45:     { min: 59.38, max: 61.50 },
+        bentonite: { min: 3.80,  max: 12.50 },
+        ob1205:    { min: 30.00, max: 120.00},
+        ccs:       { min: 180,   max: 215   },
+        ti:        { min: 90.36, max: 92.75 },
+        ai:        { min: 5.43,  max: 7.50  }
+      },
+      'Envirocare - Rourkela': {
+        moisture:  { min: 11.50, max: 12.00 },
+        fe:        { min: 60.50, max: 61.00 },
+        sio2:      { min: 3.50,  max: 4.00  },
+        al2o3:     { min: 3.50,  max: 4.00  },
+        blain:     { min: 2000,  max: 2300  },
+        mic45:     { min: 60.50, max: 63.50 },
+        bentonite: { min: 7.20,  max: 9.50  },
+        ob1205:    { min: 70.00, max: 120.00},
+        ccs:       { min: 220,   max: 225   },
+        ti:        { min: 94.50, max: 95.00 },
+        ai:        { min: 2.70,  max: 3.10  }
+      },
+      'Shree Mahaveer - Rourkel': {
+        moisture:  { min: 11.50, max: 12.00 },
+        fe:        { min: 60.50, max: 61.00 },
+        sio2:      { min: 3.50,  max: 4.00  },
+        al2o3:     { min: 3.50,  max: 4.00  },
+        blain:     { min: 2000,  max: 2300  },
+        mic45:     { min: 60.50, max: 63.50 },
+        bentonite: { min: 7.20,  max: 9.50  },
+        ob1205:    { min: 70.00, max: 120.00},
+        ccs:       { min: 220,   max: 225   },
+        ti:        { min: 94.50, max: 95.00 },
+        ai:        { min: 2.70,  max: 3.10  }
+      },
+      'Orissa Metalic Pvt. Ltd - Khargpur': {
+        moisture:  { min: 11.50, max: 12.50 },
+        fe:        { min: 59.50, max: 61.50 },
+        sio2:      { min: 3.77,  max: 6.66  },
+        al2o3:     { min: 3.50,  max: 4.20  },
+        blain:     { min: 1600,  max: 1900  },
+        mic45:     { min: 58.50, max: 63.50 },
+        bentonite: { min: 11.00, max: 14.00 },
+        ob1205:    { min: 30.00, max: 65.00 },
+        ccs:       { min: 170,   max: 220   },
+        ti:        { min: 94.50, max: 95.50 },
+        ai:        { min: 2.30,  max: 2.50  }
+      },
+      'Shyam Metalics - Samblpur': {
+        moisture:  { min: 11.50, max: 12.00 },
+        fe:        { min: 60.00, max: 60.50 },
+        sio2:      { min: 4.50,  max: 5.00  },
+        al2o3:     { min: 3.80,  max: 4.20  },
+        blain:     { min: 2000,  max: 2500  },
+        mic45:     { min: 60.00, max: 67.50 },
+        bentonite: { min: 7.50,  max: 10.00 },
+        ob1205:    { min: 50.00, max: 70.00 },
+        ccs:       { min: 180,   max: 200   },
+        ti:        { min: 94.80, max: 95.50 },
+        ai:        { min: 1.90,  max: 2.20  }
+      },
+      'Super Smelter - Jamuria': {
+        moisture:  { min: 11.00, max: 12.00 },
+        fe:        { min: 61.00, max: 62.00 },
+        sio2:      { min: 3.20,  max: 4.00  },
+        al2o3:     { min: 2.20,  max: 2.50  },
+        blain:     { min: 1300,  max: 2000  },
+        mic45:     { min: 57.20, max: 60.75 },
+        bentonite: { min: 4.50,  max: 7.80  },
+        ob1205:    { min: 45.00, max: 55.00 },
+        ccs:       { min: 185,   max: 180   },
+        ti:        { min: 95.00, max: 96.00 },
+        ai:        { min: 2.30,  max: 3.50  }
+      },
+      'Shyam Sel & Power Ltd. - Jamuria': {
+        moisture:  { min: 11.50, max: 12.00 },
+        fe:        { min: 59.50, max: 60.20 },
+        sio2:      { min: 4.50,  max: 5.00  },
+        al2o3:     { min: 3.80,  max: 4.20  },
+        blain:     { min: 2000,  max: 2500  },
+        mic45:     { min: 60.00, max: 67.50 },
+        bentonite: { min: 7.50,  max: 10.00 },
+        ob1205:    { min: 50.00, max: 70.00 },
+        ccs:       { min: 180,   max: 200   },
+        ti:        { min: 94.80, max: 95.20 },
+        ai:        { min: 2.50,  max: 3.00  }
+      }
     }
   },
   S: {
     label: 'South Zone',
     locations: {
-      'JSW - Bellary':  { moisture:10.50, fe:59.50, sio2:6.90, al2o3:2.50, ccs:250, ti:93.00, ai:5.70 },
-      'Minera Steel- Bellary':  { moisture:9.20,  fe:61.50, sio2:4.50, al2o3:2.00, ccs:180, ti:93.50, ai:4.50 },
-      'MSPL - Baldota':   { moisture:11.00, fe:62.00, sio2:5.00, al2o3:2.00, ccs:200, ti:96.00, ai:2.50 },
-      'Prakash Spong - Chitradurga':  { moisture:8.50,  fe:61.00, sio2:4.50, al2o3:2.30, ccs:210, ti:95.70, ai:3.00 },
-      'BMM Ispat - Hospet':  { moisture:11.00, fe:61.00, sio2:5.50, al2o3:2.00, ccs:220, ti:95.50, ai:3.50 }
+      'JSW - Bellary': {
+        moisture:  { min: 9.20,  max: 10.90 },
+        fe:        { min: 57.60, max: 58.80 },
+        sio2:      { min: 6.25,  max: 7.00  },
+        al2o3:     { min: 3.20,  max: 3.70  },
+        blain:     { min: 3600,  max: 4200  },
+        mic45:     { min: 71.00, max: 73.80 },
+        bentonite: { min: 5.30,  max: 7.50  },
+        ob1205:    { min: 28,    max: 38    },
+        ccs:       { min: 216,   max: 236   },
+        ti:        { min: 92.16, max: 94.00 },
+        ai:        { min: 5.20,  max: 6.96  }
+      },
+      'Minera Steel - Bellary': {
+        moisture:  { min: 8.00,  max: 9.50  },
+        fe:        { min: 60.00, max: 62.70 },
+        sio2:      { min: 4.00,  max: 5.80  },
+        al2o3:     { min: 1.90,  max: 2.50  },
+        blain:     { min: 2500,  max: 3200  },
+        mic45:     { min: 66.80, max: 68.49 },
+        bentonite: { min: 3.00,  max: 6.00  },
+        ob1205:    { min: 28,    max: 35    },
+        ccs:       { min: 180,   max: 200   },
+        ti:        { min: 93.00, max: 94.20 },
+        ai:        { min: 4.00,  max: 5.18  }
+      },
+      'MSPL - Baldota': {
+        moisture:  { min: 10.50, max: 12.00 },
+        fe:        { min: 61.00, max: 62.80 },
+        sio2:      { min: 4.50,  max: 5.50  },
+        al2o3:     { min: 1.80,  max: 2.20  },
+        blain:     { min: 2500,  max: 3500  },
+        mic45:     { min: 74.50, max: 82.50 },
+        bentonite: { min: 12.00, max: 17.00 },
+        ob1205:    { min: 32,    max: 45    },
+        ccs:       { min: 180,   max: 205   },
+        ti:        { min: 95.00, max: 96.50 },
+        ai:        { min: 2.50,  max: 3.80  }
+      },
+      'Prakash Spong - Chitradurga': {
+        moisture:  { min: 8.50,  max: 10.50 },
+        fe:        { min: 59.50, max: 61.60 },
+        sio2:      { min: 4.30,  max: 5.70  },
+        al2o3:     { min: 1.80,  max: 2.20  },
+        blain:     { min: 1800,  max: 2200  },
+        mic45:     { min: 64.00, max: 66.50 },
+        bentonite: { min: 7.00,  max: 12.00 },
+        ob1205:    { min: 25,    max: 51    },
+        ccs:       { min: 170,   max: 210   },
+        ti:        { min: 94.50, max: 96.80 },
+        ai:        { min: 2.10,  max: 4.30  }
+      },
+      'BMM Ispat - Hospet': {
+        moisture:  { min: 11.00, max: null  },
+        fe:        { min: 60.80, max: 62.50 },
+        sio2:      { min: 5.10,  max: 6.50  },
+        al2o3:     { min: 1.60,  max: 2.20  },
+        blain:     { min: 2500,  max: 3200  },
+        mic45:     { min: 73.50, max: 75.00 },
+        bentonite: { min: 7.50,  max: 13.00 },
+        ob1205:    { min: 22,    max: 40    },
+        ccs:       { min: 200,   max: 235   },
+        ti:        { min: 95.00, max: 95.80 },
+        ai:        { min: 3.60,  max: 4.00  }
+      }
     }
   },
   C: {
     label: 'Central Zone',
     locations: {
-      'Lloyds Metalics Energy Ltd. - Konsari':  { moisture:9.50,  fe:64.50, sio2:4.00, al2o3:2.20, ccs:220, ti:95.00, ai:3.10 },
-      'Shree Bajrang Power & Ispat Ltd. - Tilda': { moisture:12.00, fe:62.00, sio2:4.50, al2o3:2.50, ccs:210, ti:94.00, ai:4.00 },
-      'Jayswal Neco - Raipur':  { moisture:10.50, fe:61.50, sio2:5.50, al2o3:2.50, ccs:220, ti:93.00, ai:5.00 }
+      'Lloyds Metalics Energy Ltd. - Konsari': {
+        moisture:  { min: 9.20,  max: 10.20 },
+        fe:        { min: 64.50, max: 65.10 },
+        sio2:      { min: 2.80,  max: 3.30  },
+        al2o3:     { min: 1.70,  max: 2.40  },
+        blain:     { min: 2100,  max: 3200  },
+        mic45:     { min: 57.00, max: 64.50 },
+        bentonite: { min: 3.70,  max: 8.00  },
+        ob1205:    { min: 25.00, max: 46.00 },
+        ccs:       { min: 220,   max: 238   },
+        ti:        { min: 95.00, max: 95.50 },
+        ai:        { min: 3.00,  max: 3.20  }
+      },
+      'Shree Bajrang Power & Ispat Ltd. - Tilda': {
+        moisture:  { min: 11.50, max: 11.80 },
+        fe:        { min: 62.00, max: 62.50 },
+        sio2:      { min: 4.10,  max: 4.30  },
+        al2o3:     { min: 2.00,  max: 2.50  },
+        blain:     { min: 2200,  max: 3100  },
+        mic45:     { min: 59.00, max: 63.70 },
+        bentonite: { min: 4.70,  max: 6.70  },
+        ob1205:    { min: 35.00, max: 50.00 },
+        ccs:       { min: 200,   max: 220   },
+        ti:        { min: 93.50, max: 94.00 },
+        ai:        { min: 4.00,  max: 4.50  }
+      },
+      'Jayswal Neco - Raipur': {
+        moisture:  { min: 10.50, max: 11.50 },
+        fe:        { min: 61.00, max: 62.50 },
+        sio2:      { min: 4.50,  max: 5.50  },
+        al2o3:     { min: 2.00,  max: 2.50  },
+        blain:     { min: 2200,  max: 3000  },
+        mic45:     { min: 58.00, max: 65.00 },
+        bentonite: { min: 4.00,  max: 7.00  },
+        ob1205:    { min: 30.00, max: 55.00 },
+        ccs:       { min: 200,   max: 225   },
+        ti:        { min: 93.00, max: 95.00 },
+        ai:        { min: 3.50,  max: 5.00  }
+      }
     }
   }
 };
 
+function mid(mn, mx) {
+  if (mn === null && mx === null) return '';
+  if (mn === null) return mx;
+  if (mx === null) return mn;
+  return ((mn + mx) / 2);
+}
+function fmtMid(mn, mx, dec) {
+  const v = mid(mn, mx);
+  if (v === '') return '';
+  return Number(v).toFixed(dec);
+}
+function rangeLabel(mn, mx, dec) {
+  const fdec = dec !== undefined ? dec : 2;
+  if (mn === null && mx === null) return '—';
+  if (mn === null) return String(Number(mx).toFixed(fdec));
+  if (mx === null) return String(Number(mn).toFixed(fdec));
+  return `${Number(mn).toFixed(fdec)} – ${Number(mx).toFixed(fdec)}`;
+}
+
 // ═══════ STATE ═══════
 const stageParams = {
   feed:      {ore:'',orePercent:'',feedRate:'',fluxes:[],coal:'',coalPercent:'',zone:'',location:'',
-              chemFe:'',chemSio2:'',chemAl2o3:'',chemMoisture:'',chemCcs:'',chemTi:'',chemAi:''},
+              chemMoisture:'',chemFe:'',chemSio2:'',chemAl2o3:'',chemBlain:'',chemMic45:'',
+              chemBentonite:'',chemOb1205:'',chemCcs:'',chemTi:'',chemAi:''},
   grind:     {rawFeedMoisture:'',blain:''},
   thickner:  {underflowDensity:''},
   filter:    {cakeMoisture:''},
@@ -402,94 +654,19 @@ const STAGES=[
   {id:'cool',     label:'COOLING',               tag:'STAGE 09',shape:'trapezoid',color:'#2a7a4a',step:8},
   {id:'pellet',   label:'FINISHED\nPELLETS',    tag:'STAGE 10',shape:'pellets',  color:'#1a3057',step:9},
 ];
-// ═══════════════════════════════════════════════════════════
-// GROUP DEFINITIONS
-// Only Group 1 & 2 overlap
-// Group 3 completely independent
-// ═══════════════════════════════════════════════════════════
-const GROUPS = [
-  {
-    id:'grp-wet',
-    startIdx:0,
-    endIdx:5.6
-  },
-  {
-    id:'grp-green',
-    startIdx:3.8,
-    endIdx:5.7
-     // includes Green Ball Prop fully
-  },
-  {
-    id:'grp-indu',
-    startIdx:7,
-    endIdx:10
-  },
-];
 
-function positionGroups(){
-  const wrap = document.getElementById('canvasWrap');
-  const W = wrap.clientWidth;
-  const n = STAGES.length;
+// ═══════ STAGE BAND DEFINITIONS ═══════
+// Stage I  : indices 0–3  (Feed → Filter Cake)
+// Stage II : indices 0–6  (Feed → Green Ball)   overlaps Stage I at 0–3
+// Stage III: indices 7–10 (Screening → Pellets)
+// Overlap zone: indices 4–6 (Mix, Ball, GreenBall) — in Stage II only but not Stage I
+// Pure Stage I  only: 0–3
+// Shared overlap (both I & II): 0–3
+// Pure Stage II only: 4–6
+const BAND_STAGE1_END   = 3;   // index of last Stage-I stage
+const BAND_STAGE2_END   = 6;   // index of last Stage-II stage
+const BAND_STAGE3_START = 7;   // index of first Stage-III stage
 
-  const padX = W * 0.022;
-  const slotW = (W - padX * 2) / n;
-
-  const H = Math.max(230, Math.min(W * 0.36, 350));
-
-  const PAD_TOP = 10;
-  const PAD_SIDE = 6;
-  const PAD_BOT = 28;
-
-  GROUPS.forEach((g,index) => {
-    const el = document.getElementById(g.id);
-    if(!el) return;
-
-    const x1 = padX + g.startIdx * slotW - PAD_SIDE;
-    const x2 = padX + (g.endIdx + 1) * slotW + PAD_SIDE;
-
-    el.style.left = x1 + 'px';
-    el.style.top = PAD_TOP + 'px';
-    el.style.width = (x2 - x1) + 'px';
-    el.style.height = (H - PAD_TOP - PAD_BOT) + 'px';
-
-    // z-index layering
-    if(index === 0) el.style.zIndex = '1';
-    if(index === 1) el.style.zIndex = '2';
-    if(index === 2) el.style.zIndex = '1';
-
-    // GROUP 1
-    if(index === 0){
-      el.style.borderRight = 'none';
-      el.style.borderTopRightRadius = '0';
-      el.style.borderBottomRightRadius = '0';
-    }
-
-    // GROUP 2
-    if(index === 1){
-      el.style.borderLeft = 'none';
-
-      // KEEP RIGHT BORDER NORMAL
-      // so no colour blending with group 3
-      el.style.borderRight = '1.5px solid rgba(200,145,42,0.28)';
-
-      el.style.borderTopLeftRadius = '0';
-      el.style.borderBottomLeftRadius = '0';
-
-      // rounded right side
-      el.style.borderTopRightRadius = '10px';
-      el.style.borderBottomRightRadius = '10px';
-    }
-
-    // GROUP 3
-    if(index === 2){
-      el.style.border = '1.5px solid rgba(42,122,74,0.22)';
-      el.style.borderRadius = '10px';
-    }
-  });
-}
-// ═══════════════════════════════════════════════════════════
-// PLANT NAME HANDLER
-// ═══════════════════════════════════════════════════════════
 function onPlantChange(){
   const val = document.getElementById('plantName').value;
   const induStage = STAGES.find(s => s.id === 'indu');
@@ -517,27 +694,177 @@ function sizeCanvas(){
   return{W,H};
 }
 
-// ═══════ MAIN DRAW ═══════
+// ── Draw the three premium stage background cards ──
+function drawStageBands(W, H, n, padX, slotW, midY, mH) {
+  const cardPadY = 10;
+  const cardTop  = midY - mH * 0.58 - cardPadY - 22; // 22 = space for label
+  const cardBot  = midY + mH * 0.62 + cardPadY + 20;  // 20 = space for stage label below machine
+  const cardH    = cardBot - cardTop;
+  const cornerR  = 8;
+
+  // ── helper: draw a card band from stageIdxA to stageIdxB ──
+  function bandX1(idx) { return padX + idx * slotW - slotW * 0.08; }
+  function bandX2(idx) { return padX + idx * slotW + slotW + slotW * 0.08; }
+
+  // ─── STAGE I card (indices 0 → BAND_STAGE1_END) ───
+  // Warm amber/brown tones — preparation phase
+  const s1x1 = bandX1(0);
+  const s1x2 = bandX2(BAND_STAGE1_END);
+  const s1w  = s1x2 - s1x1;
+
+  // Main fill
+  ctx.save();
+  ctx.beginPath();
+  ctx.roundRect(s1x1, cardTop, s1w, cardH, cornerR);
+  ctx.fillStyle = 'rgba(139,90,43,0.10)';
+  ctx.fill();
+  // Top accent stripe
+  ctx.beginPath();
+  ctx.roundRect(s1x1, cardTop, s1w, 3, [cornerR, cornerR, 0, 0]);
+  ctx.fillStyle = 'rgba(139,90,43,0.55)';
+  ctx.fill();
+  // Border
+  ctx.beginPath();
+  ctx.roundRect(s1x1, cardTop, s1w, cardH, cornerR);
+  ctx.strokeStyle = 'rgba(139,90,43,0.38)';
+  ctx.lineWidth = 1;
+  ctx.stroke();
+  // Inner highlight line (top-left rim)
+  ctx.beginPath();
+  ctx.roundRect(s1x1+1.5, cardTop+1.5, s1w-3, cardH-3, cornerR-1);
+  ctx.strokeStyle = 'rgba(255,255,255,0.28)';
+  ctx.lineWidth = 0.8;
+  ctx.stroke();
+  // Label
+  ctx.fillStyle = 'rgba(139,90,43,0.75)';
+  ctx.font = '600 7.5px JetBrains Mono';
+  ctx.textAlign = 'left';
+  ctx.letterSpacing = '1.5px';
+  ctx.fillText('STAGE I — PREPARATION', s1x1 + 10, cardTop + 14);
+  ctx.letterSpacing = '0px';
+  ctx.restore();
+
+  // ─── STAGE II card (indices 0 → BAND_STAGE2_END) ───
+  // Cool blue tones — agglomeration phase
+  // This overlaps Stage I from 0→BAND_STAGE1_END
+  const s2x1 = bandX1(0);
+  const s2x2 = bandX2(BAND_STAGE2_END);
+  const s2w  = s2x2 - s2x1;
+
+  // Only draw Stage II fill for the NON-overlapping portion (BAND_STAGE1_END+1 → BAND_STAGE2_END)
+  // For the overlap zone we blend both colours via a separate overlay
+  const s2_pure_x1 = bandX2(BAND_STAGE1_END);
+  const s2_pure_x2 = bandX2(BAND_STAGE2_END);
+  const s2_pure_w  = s2_pure_x2 - s2_pure_x1;
+
+  ctx.save();
+  // Pure Stage II area (no overlap)
+  ctx.beginPath();
+  ctx.roundRect(s2_pure_x1, cardTop, s2_pure_w, cardH, cornerR);
+  ctx.fillStyle = 'rgba(45,95,166,0.11)';
+  ctx.fill();
+  ctx.beginPath();
+  ctx.roundRect(s2_pure_x1, cardTop, s2_pure_w, 3, [cornerR, cornerR, 0, 0]);
+  ctx.fillStyle = 'rgba(45,95,166,0.50)';
+  ctx.fill();
+  ctx.beginPath();
+  ctx.roundRect(s2_pure_x1, cardTop, s2_pure_w, cardH, cornerR);
+  ctx.strokeStyle = 'rgba(45,95,166,0.32)';
+  ctx.lineWidth = 1;
+  ctx.stroke();
+  ctx.beginPath();
+  ctx.roundRect(s2_pure_x1+1.5, cardTop+1.5, s2_pure_w-3, cardH-3, cornerR-1);
+  ctx.strokeStyle = 'rgba(255,255,255,0.22)';
+  ctx.lineWidth = 0.8;
+  ctx.stroke();
+  // Overlap zone (indices 0→BAND_STAGE1_END) — blend both colours
+  const ov_x1 = bandX1(0);
+  const ov_x2 = bandX2(BAND_STAGE1_END);
+  const ov_w  = ov_x2 - ov_x1;
+  ctx.beginPath();
+  ctx.roundRect(ov_x1, cardTop, ov_w, cardH, cornerR);
+  ctx.fillStyle = 'rgba(45,95,166,0.09)'; // blue layer over the amber already drawn
+  ctx.fill();
+  // Overlap top accent — blended dual-colour stripe (left amber, right blue)
+  const grd = ctx.createLinearGradient(ov_x1, 0, ov_x2, 0);
+  grd.addColorStop(0,   'rgba(139,90,43,0.55)');
+  grd.addColorStop(0.52,'rgba(139,90,43,0.45)');
+  grd.addColorStop(0.48,'rgba(45,95,166,0.45)');
+  grd.addColorStop(1,   'rgba(45,95,166,0.55)');
+  ctx.beginPath();
+  ctx.roundRect(ov_x1, cardTop, ov_w, 3, [cornerR, cornerR, 0, 0]);
+  ctx.fillStyle = grd;
+  ctx.fill();
+  // Full Stage II outer border (wraps everything 0→BAND_STAGE2_END)
+  ctx.beginPath();
+  ctx.roundRect(s2x1, cardTop, s2w, cardH, cornerR);
+  ctx.strokeStyle = 'rgba(45,95,166,0.28)';
+  ctx.lineWidth = 0.8;
+  ctx.setLineDash([4, 3]);
+  ctx.stroke();
+  ctx.setLineDash([]);
+  // Stage II label (right side, pure blue zone)
+  ctx.fillStyle = 'rgba(45,95,166,0.72)';
+  ctx.font = '600 7.5px JetBrains Mono';
+  ctx.textAlign = 'left';
+  ctx.letterSpacing = '1.5px';
+  ctx.fillText('STAGE II — AGGLOMERATION', s2_pure_x1 + 10, cardTop + 14);
+  ctx.letterSpacing = '0px';
+  ctx.restore();
+
+  // ─── STAGE III card (indices BAND_STAGE3_START → n-1) ───
+  // Deep navy tones — firing & finishing phase
+  const s3x1 = bandX1(BAND_STAGE3_START);
+  const s3x2 = bandX2(n - 1);
+  const s3w  = s3x2 - s3x1;
+
+  ctx.save();
+  ctx.beginPath();
+  ctx.roundRect(s3x1, cardTop, s3w, cardH, cornerR);
+  ctx.fillStyle = 'rgba(26,48,87,0.12)';
+  ctx.fill();
+  ctx.beginPath();
+  ctx.roundRect(s3x1, cardTop, s3w, 3, [cornerR, cornerR, 0, 0]);
+  ctx.fillStyle = 'rgba(26,48,87,0.55)';
+  ctx.fill();
+  ctx.beginPath();
+  ctx.roundRect(s3x1, cardTop, s3w, cardH, cornerR);
+  ctx.strokeStyle = 'rgba(26,48,87,0.32)';
+  ctx.lineWidth = 1;
+  ctx.stroke();
+  ctx.beginPath();
+  ctx.roundRect(s3x1+1.5, cardTop+1.5, s3w-3, cardH-3, cornerR-1);
+  ctx.strokeStyle = 'rgba(255,255,255,0.20)';
+  ctx.lineWidth = 0.8;
+  ctx.stroke();
+  ctx.fillStyle = 'rgba(26,48,87,0.65)';
+  ctx.font = '600 7.5px JetBrains Mono';
+  ctx.textAlign = 'left';
+  ctx.letterSpacing = '1.5px';
+  ctx.fillText('STAGE III — FIRING & FINISHING', s3x1 + 10, cardTop + 14);
+  ctx.letterSpacing = '0px';
+  ctx.restore();
+}
+
 function draw(frame,activeStep){
   const{W,H}=sizeCanvas();
   ctx.clearRect(0,0,W,H);
-  // transparent background so the group cards show through
-  ctx.fillStyle='rgba(255,255,255,0)'; ctx.fillRect(0,0,W,H);
+  ctx.fillStyle='#fff'; ctx.fillRect(0,0,W,H);
   ctx.strokeStyle='rgba(200,145,42,0.035)'; ctx.lineWidth=1;
   for(let x=0;x<W;x+=36){ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x,H);ctx.stroke();}
   for(let y=0;y<H;y+=36){ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(W,y);ctx.stroke();}
-
-  // reposition group cards whenever draw runs (handles resize)
-  positionGroups();
 
   hitZones=[];
   const n=STAGES.length;
   const padX=W*0.022;
   const slotW=(W-padX*2)/n;
-  const midY=H*0.43;
+  const midY=H*0.46;
   const mH=H*0.50;
   const mW=slotW*0.68;
   const labelY=midY+mH*0.55+18;
+
+  // ── Draw stage background cards FIRST (behind everything) ──
+  drawStageBands(W, H, n, padX, slotW, midY, mH);
 
   if(activeStep>=0){
     const info=[
@@ -635,7 +962,6 @@ function draw(frame,activeStep){
   }
 }
 
-// ═══════ MACHINE SHAPES ═══════
 function drawMachineShape(shape,cx,cy,mW,mH,col,strokeCol,strokeW,isActive,isDone,frame,stage){
   const lit=isActive||isDone;
   ctx.fillStyle=col; ctx.strokeStyle=strokeCol; ctx.lineWidth=strokeW;
@@ -843,7 +1169,6 @@ function drawPelletBurst(cx,cy,frame,r){
   }
 }
 
-// ═══════ HIT TEST ═══════
 canvas.addEventListener('click',function(e){
   if(simRunning)return;
   const rect=canvas.getBoundingClientRect();
@@ -857,18 +1182,16 @@ canvas.addEventListener('mousemove',function(e){
   canvas.style.cursor=hitZones.some(z=>mx>=z.x&&mx<=z.x+z.w&&my>=z.y&&my<=z.y+z.h)?'pointer':'default';
 });
 
-// ═══════ HELPER: number input field ═══════
-function numField(id, label, val, min, max, unit, step){
+function numField(id, label, val, mn, mx, unit, step){
   step = step || 'any';
   return `
     <div class="field-group">
       <div class="field-label">${label}</div>
-      <input type="number" class="finp" id="${id}" value="${val||''}" min="${min}" max="${max}" step="${step}" placeholder="${min} – ${max}">
-      <div class="input-hint">Range: ${min} – ${max}${unit?' '+unit:''}</div>
+      <input type="number" class="finp" id="${id}" value="${val||''}" min="${mn}" max="${mx}" step="${step}" placeholder="${mn} – ${mx}">
+      <div class="input-hint">Range: ${mn} – ${mx}${unit?' '+unit:''}</div>
     </div>`;
 }
 
-// ═══════ FLUX HELPER ═══════
 const FLUX_OPTIONS = ['Limestone','Dolomite','Pyroxenite'];
 
 function fluxListHTML(listId, fluxes){
@@ -929,9 +1252,6 @@ function readFluxList(listId){
   }).filter(f=>f.type);
 }
 
-// ═══════════════════════════════════════════════════════════
-// FEED — ZONE / LOCATION / CHEMISTRY HELPERS
-// ═══════════════════════════════════════════════════════════
 function onOreGradeChange(){
   const ore = document.getElementById('m-ore').value;
   const block = document.getElementById('feed-zone-location-block');
@@ -964,6 +1284,18 @@ function onFeedLocationChange(){
   renderChemCard();
 }
 
+function chemCell(id, label, mn, mx, dec, unit, colorClass, savedVal) {
+  const midVal = savedVal !== '' ? savedVal : fmtMid(mn, mx, dec);
+  const rng = rangeLabel(mn, mx, dec);
+  return `
+    <div class="chem-cell${colorClass?' '+colorClass:''}">
+      <div class="chem-cell-label">${label}</div>
+      <input type="number" class="chem-inp" id="${id}" value="${midVal}" step="${Math.pow(10,-dec).toFixed(dec)}" min="${mn!==null?mn:0}" max="${mx!==null?mx:99999}" placeholder="—">
+      <div class="chem-cell-unit">${unit}</div>
+      <div class="chem-cell-range">${rng}</div>
+    </div>`;
+}
+
 function renderChemCard(){
   const zone = stageParams.feed.zone || '';
   const locEl = document.getElementById('m-feed-location');
@@ -977,57 +1309,37 @@ function renderChemCard(){
   }
 
   const d = ORE_ZONES[zone].locations[loc];
-  const fmt = (v, dec) => (v === null || v === undefined) ? '' : Number(v).toFixed(dec);
-
   const sameLocation = stageParams.feed.location === loc;
-  const feVal    = (sameLocation && stageParams.feed.chemFe !== '')       ? stageParams.feed.chemFe       : fmt(d.fe, 2);
-  const sio2Val  = (sameLocation && stageParams.feed.chemSio2 !== '')     ? stageParams.feed.chemSio2     : fmt(d.sio2, 2);
-  const al2o3Val = (sameLocation && stageParams.feed.chemAl2o3 !== '')    ? stageParams.feed.chemAl2o3    : fmt(d.al2o3, 2);
-  const moistVal = (sameLocation && stageParams.feed.chemMoisture !== '') ? stageParams.feed.chemMoisture : fmt(d.moisture, 2);
-  const ccsVal   = (sameLocation && stageParams.feed.chemCcs !== '')      ? stageParams.feed.chemCcs      : fmt(d.ccs, 0);
-  const tiVal    = (sameLocation && stageParams.feed.chemTi !== '')       ? stageParams.feed.chemTi       : fmt(d.ti, 2);
-  const aiVal    = (sameLocation && stageParams.feed.chemAi !== '')       ? stageParams.feed.chemAi       : fmt(d.ai, 2);
+
+  function sv(key) { return (sameLocation && stageParams.feed[key] !== '') ? stageParams.feed[key] : ''; }
 
   container.innerHTML = `
     <div class="chem-card">
-      <div class="chem-card-title">${ORE_ZONES[zone].label} · ${loc} — Average Chemistry</div>
+      <div class="chem-card-title">${ORE_ZONES[zone].label} · ${loc}</div>
+      <div class="chem-section-label">Filter Cake Chemistry</div>
       <div class="chem-grid">
-        <div class="chem-cell fe-cell">
-          <div class="chem-cell-label">Fe</div>
-          <input type="number" class="chem-inp" id="chem-fe" value="${feVal}" step="0.01" min="0" max="100" placeholder="—">
-          <div class="chem-cell-unit">%</div>
-        </div>
-        <div class="chem-cell sio2-cell">
-          <div class="chem-cell-label">SiO₂</div>
-          <input type="number" class="chem-inp" id="chem-sio2" value="${sio2Val}" step="0.01" min="0" max="100" placeholder="—">
-          <div class="chem-cell-unit">%</div>
-        </div>
-        <div class="chem-cell al2o3-cell">
-          <div class="chem-cell-label">Al₂O₃</div>
-          <input type="number" class="chem-inp" id="chem-al2o3" value="${al2o3Val}" step="0.01" min="0" max="100" placeholder="—">
-          <div class="chem-cell-unit">%</div>
-        </div>
-        <div class="chem-cell">
-          <div class="chem-cell-label">Moisture</div>
-          <input type="number" class="chem-inp" id="chem-moisture" value="${moistVal}" step="0.01" min="0" max="100" placeholder="—">
-          <div class="chem-cell-unit">%</div>
-        </div>
-        <div class="chem-cell">
-          <div class="chem-cell-label">CCS</div>
-          <input type="number" class="chem-inp" id="chem-ccs" value="${ccsVal}" step="1" min="0" placeholder="—">
-          <div class="chem-cell-unit">kg/p</div>
-        </div>
-        <div class="chem-cell">
-          <div class="chem-cell-label">TI / AI</div>
-          <div class="ti-ai-row">
-            <input type="number" class="chem-inp" id="chem-ti" value="${tiVal}" step="0.01" min="0" max="100" placeholder="TI">
-            <span class="ti-ai-sep">/</span>
-            <input type="number" class="chem-inp" id="chem-ai" value="${aiVal}" step="0.01" min="0" max="100" placeholder="AI">
-          </div>
-          <div class="chem-cell-unit">%</div>
-        </div>
+        ${chemCell('chem-moisture','Moisture',d.moisture.min,d.moisture.max,2,'%','',sv('chemMoisture'))}
+        ${chemCell('chem-fe','Fe',d.fe.min,d.fe.max,2,'%','fe-cell',sv('chemFe'))}
+        ${chemCell('chem-sio2','SiO₂',d.sio2.min,d.sio2.max,2,'%','sio2-cell',sv('chemSio2'))}
+        ${chemCell('chem-al2o3','Al₂O₃',d.al2o3.min,d.al2o3.max,2,'%','al2o3-cell',sv('chemAl2o3'))}
       </div>
-      <div class="chem-note">click any value to edit</div>
+      <div class="chem-section-label">Grinding</div>
+      <div class="chem-grid-2">
+        ${chemCell('chem-blain','Blain No.',d.blain.min,d.blain.max,0,'cm²/g','',sv('chemBlain'))}
+        ${chemCell('chem-mic45','-45 Mic',d.mic45.min,d.mic45.max,2,'%','',sv('chemMic45'))}
+      </div>
+      <div class="chem-section-label">Binder / Additive Consumption</div>
+      <div class="chem-grid-2">
+        ${chemCell('chem-bentonite','Bentonite',d.bentonite.min,d.bentonite.max,2,'kg/t','',sv('chemBentonite'))}
+        ${chemCell('chem-ob1205','OB-1205',d.ob1205.min,d.ob1205.max,2,'GPT','',sv('chemOb1205'))}
+      </div>
+      <div class="chem-section-label">Pellet Quality</div>
+      <div class="chem-grid">
+        ${chemCell('chem-ccs','CCS',d.ccs.min,d.ccs.max,0,'kg/p','',sv('chemCcs'))}
+        ${chemCell('chem-ti','TI',d.ti.min,d.ti.max,2,'%','',sv('chemTi'))}
+        ${chemCell('chem-ai','AI',d.ai.min,d.ai.max,2,'%','',sv('chemAi'))}
+      </div>
+      <div class="chem-note">click any field to edit</div>
     </div>`;
 }
 
@@ -1041,7 +1353,6 @@ function updateBinderDosageLabel(){
 
 const BINDER_OPTIONS = ['OB-1205 Organic','OB-1206','OB3s','OB Pro','Bentonite (6 kg/t)','OB-1205 + Bentonite'];
 
-// ═══════ MODALS ═══════
 const MODAL_CONFIGS={
   feed:{
     title:'Iron Ore Feed',desc:'Configure raw material grades and additives',
@@ -1111,20 +1422,12 @@ const MODAL_CONFIGS={
       stageParams.feed.fluxes       = readFluxList('feed-flux');
       stageParams.feed.coal         = document.getElementById('m-coal').value;
       stageParams.feed.coalPercent  = document.getElementById('m-coal-pct').value;
-      const chemFe = document.getElementById('chem-fe');
-      if(chemFe) stageParams.feed.chemFe = chemFe.value;
-      const chemSio2 = document.getElementById('chem-sio2');
-      if(chemSio2) stageParams.feed.chemSio2 = chemSio2.value;
-      const chemAl2o3 = document.getElementById('chem-al2o3');
-      if(chemAl2o3) stageParams.feed.chemAl2o3 = chemAl2o3.value;
-      const chemMoisture = document.getElementById('chem-moisture');
-      if(chemMoisture) stageParams.feed.chemMoisture = chemMoisture.value;
-      const chemCcs = document.getElementById('chem-ccs');
-      if(chemCcs) stageParams.feed.chemCcs = chemCcs.value;
-      const chemTi = document.getElementById('chem-ti');
-      if(chemTi) stageParams.feed.chemTi = chemTi.value;
-      const chemAi = document.getElementById('chem-ai');
-      if(chemAi) stageParams.feed.chemAi = chemAi.value;
+      const idMap  = ['chem-moisture','chem-fe','chem-sio2','chem-al2o3','chem-blain','chem-mic45','chem-bentonite','chem-ob1205','chem-ccs','chem-ti','chem-ai'];
+      const keyMap = ['chemMoisture','chemFe','chemSio2','chemAl2o3','chemBlain','chemMic45','chemBentonite','chemOb1205','chemCcs','chemTi','chemAi'];
+      idMap.forEach((elId, i) => {
+        const el = document.getElementById(elId);
+        if(el) stageParams.feed[keyMap[i]] = el.value;
+      });
     }
   },
   grind:{
@@ -1496,7 +1799,8 @@ function resetAll(){
   simRunning=false; simStep=-1; simFrame=0;
   document.getElementById('plantName').value = '';
   Object.assign(stageParams.feed,{ore:'',orePercent:'',feedRate:'',fluxes:[],coal:'',coalPercent:'',zone:'',location:'',
-    chemFe:'',chemSio2:'',chemAl2o3:'',chemMoisture:'',chemCcs:'',chemTi:'',chemAi:''});
+    chemMoisture:'',chemFe:'',chemSio2:'',chemAl2o3:'',chemBlain:'',chemMic45:'',
+    chemBentonite:'',chemOb1205:'',chemCcs:'',chemTi:'',chemAi:''});
   Object.assign(stageParams.grind,{rawFeedMoisture:'',blain:''});
   Object.assign(stageParams.thickner,{underflowDensity:''});
   Object.assign(stageParams.filter,{cakeMoisture:''});
@@ -1516,10 +1820,6 @@ function resetAll(){
   document.getElementById('runBtn').disabled=false;
 }
 
-// Reposition groups on resize
-window.addEventListener('resize', positionGroups);
-
-// ═══════ LOOP ═══════
 (function loop(){draw(simFrame,simStep);simFrame++;animId=requestAnimationFrame(loop);})();
 </script>
 </body>

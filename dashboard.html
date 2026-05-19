@@ -235,11 +235,32 @@ input.finp{cursor:text;}
       </div>
       <div class="capacity-box">
         <div class="capacity-box-label">Plant Name</div>
-        <select class="plant-name-select" id="plantName" onchange="onPlantChange()">
-          <option value="">— Select Plant —</option>
-          <option value="demo1">Demo 1</option>
-          <option value="demo2">Demo 2</option>
-        </select>
+<select class="plant-name-select" id="plantName" onchange="onPlantChange()">
+  <option value="">— Select Plant —</option>
+  <option value="JSW - Jharsugda">JSW - Jharsugda</option>
+  <option value="Chaliyama Steel - Chaibasa">Chaliyama Steel - Chaibasa</option>
+  <option value="Dhenkanal Steel - Dhenkanal">Dhenkanal Steel - Dhenkanal</option>
+  <option value="Kamanada Steel - Koira">Kamanada Steel - Koira</option>
+  <option value="Gallent Ispat - Gorkhpur">Gallent Ispat - Gorkhpur</option>
+  <option value="GR Integrate - Raipur">GR Integrate - Raipur</option>
+
+  <option value="Shree Jagnath Steel - Barbil">Shree Jagnath Steel - Barbil</option>
+  <option value="Envirocare - Rourkela">Envirocare - Rourkela</option>
+  <option value="Shree Mahaveer - Rourkel">Shree Mahaveer - Rourkel</option>
+  <option value="Orissa Metalic Pvt. Ltd - Khargpur">Orissa Metalic Pvt. Ltd - Khargpur</option>
+  <option value="Shyam Metalics - Samblpur">Shyam Metalics - Samblpur</option>
+  <option value="Super Smelter - Jamuria">Super Smelter - Jamuria</option>
+  <option value="Shyam Sel & Power Ltd. - Jamuria">Shyam Sel & Power Ltd. - Jamuria</option>
+
+  <option value="JSW - Bellary">JSW - Bellary</option>
+  <option value="Minera Steel - Bellary">Minera Steel - Bellary</option>
+  <option value="MSPL - Baldota">MSPL - Baldota</option>
+  <option value="Prakash Spong - Chitradurga">Prakash Spong - Chitradurga</option>
+  <option value="BMM Ispat - Hospet">BMM Ispat - Hospet</option>
+
+  <option value="Lloyds Metalics Energy Ltd. - Konsari">Lloyds Metalics Energy Ltd. - Konsari</option>
+  <option value="Shree Bajrang Power & Ispat Ltd. - Tilda">Shree Bajrang Power & Ispat Ltd. - Tilda</option>
+</select>
         <div class="capacity-box-divider"></div>
         <div class="capacity-box-label">Plant Capacity</div>
         <div class="capacity-box-input-wrap">
@@ -581,6 +602,57 @@ const ORE_ZONES = {
   }
 };
 
+
+const PLANT_TECH = {
+  "JSW - Jharsugda": "straight_grate",
+  "Chaliyama Steel - Chaibasa": "straight_grate",
+  "Dhenkanal Steel - Dhenkanal": "straight_grate",
+  "Kamanada Steel - Koira": "straight_grate",
+  "Gallent Ispat - Gorkhpur": "traveling_grate_kiln",
+  "GR Integrate - Raipur": "traveling_grate_kiln",
+
+  "Shree Jagnath Steel - Barbil": "straight_grate",
+  "Envirocare - Rourkela": "traveling_grate_kiln",
+  "Shree Mahaveer - Rourkel": "traveling_grate_kiln",
+  "Orissa Metalic Pvt. Ltd - Khargpur": "traveling_grate_kiln",
+  "Shyam Metalics - Samblpur": "traveling_grate_kiln",
+  "Super Smelter - Jamuria": "traveling_grate_kiln",
+  "Shyam Sel & Power Ltd. - Jamuria": "traveling_grate_kiln",
+
+  "JSW - Bellary": "straight_grate",
+  "Minera Steel - Bellary": "straight_grate",
+  "MSPL - Baldota": "traveling_grate_kiln",
+  "Prakash Spong - Chitradurga": "traveling_grate_kiln",
+  "BMM Ispat - Hospet": "traveling_grate_kiln",
+
+  "Lloyds Metalics Energy Ltd. - Konsari": "straight_grate",
+  "Shree Bajrang Power & Ispat Ltd. - Tilda": "straight_grate"
+};
+
+function onPlantChange() {
+  const plant = document.getElementById("plantName").value;
+  const induStage = STAGES.find(s => s.id === "indu");
+
+  if (!plant) {
+    stageParams.indu.mode = "furnace";
+    if (induStage) induStage.label = "INDURATION\nFURNACE";
+    draw(simFrame, simStep);
+    return;
+  }
+
+  const tech = PLANT_TECH[plant];
+
+  if (tech === "straight_grate") {
+    stageParams.indu.mode = "furnace";
+    if (induStage) induStage.label = "INDURATION\nFURNACE";
+  } else {
+    stageParams.indu.mode = "grate";
+    if (induStage) induStage.label = "TRAVELING\nGRATE &\nKILN";
+  }
+
+  draw(simFrame, simStep);
+}
+
 // Helper: midpoint of a range; returns '' if both null
 function mid(mn, mx) {
   if (mn === null && mx === null) return '';
@@ -637,17 +709,6 @@ const STAGES=[
 // ═══════════════════════════════════════════════════════════
 // PLANT NAME HANDLER
 // ═══════════════════════════════════════════════════════════
-function onPlantChange(){
-  const val = document.getElementById('plantName').value;
-  const induStage = STAGES.find(s => s.id === 'indu');
-  if(val === 'demo1'){
-    stageParams.indu.mode = 'grate';
-    if(induStage) induStage.label = 'GRATE\nKILN';
-  } else if(val === 'demo2'){
-    stageParams.indu.mode = 'furnace';
-    if(induStage) induStage.label = 'INDURATION\nFURNACE';
-  }
-}
 
 // ═══════ CANVAS ═══════
 const canvas=document.getElementById('processCanvas');
