@@ -141,6 +141,19 @@ input.finp{cursor:text;}
 .btn-add-flux{display:flex;align-items:center;gap:6px;background:rgba(200,145,42,.06);border:1px dashed var(--border-strong);border-radius:4px;padding:7px 12px;color:var(--gold);font-family:'DM Sans';font-size:.78rem;font-weight:500;cursor:pointer;transition:all .22s;width:100%;}
 .btn-add-flux:hover{background:rgba(200,145,42,.12);border-color:var(--gold);}
 
+/* ── FUEL LIST (new) ── */
+.fuel-list{display:flex;flex-direction:column;gap:10px;margin-bottom:8px;}
+.fuel-row{background:rgba(200,145,42,0.04);border:1px solid var(--border);border-radius:5px;padding:10px 12px;position:relative;}
+.fuel-row-header{display:flex;align-items:center;gap:8px;margin-bottom:8px;}
+.fuel-row-header select.fsel{flex:1;}
+.fuel-row-header .btn-remove-flux{margin-left:auto;}
+.fuel-inputs{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+.fuel-input-wrap{display:flex;flex-direction:column;gap:3px;}
+.fuel-input-label{font-family:'JetBrains Mono';font-size:.5rem;letter-spacing:1.2px;color:var(--text-dim);text-transform:uppercase;}
+.fuel-input-row{display:flex;align-items:center;gap:5px;}
+.fuel-input-row input.finp{flex:1;}
+.fuel-input-unit{font-family:'JetBrains Mono';font-size:.58rem;color:var(--gold);white-space:nowrap;min-width:40px;}
+
 /* ── CHEMISTRY CARD (editable, expanded) ── */
 .chem-card{
   background:linear-gradient(135deg,rgba(26,48,87,0.04) 0%,rgba(200,145,42,0.05) 100%);
@@ -197,6 +210,37 @@ input.finp{cursor:text;}
   content:'';flex:1;height:1px;background:var(--border);
 }
 
+/* ── BINDER TABLE (new for mix stage) ── */
+.binder-table{
+  display:grid;grid-template-columns:1fr 1fr;gap:0;
+  border:1.5px solid var(--border-strong);border-radius:6px;overflow:hidden;
+  margin-bottom:1.2rem;
+}
+.binder-col{display:flex;flex-direction:column;}
+.binder-col:first-child{border-right:1.5px solid var(--border-strong);}
+.binder-col-header{
+  background:linear-gradient(135deg,var(--navy2),var(--navy3));
+  padding:10px 12px;display:flex;flex-direction:column;gap:6px;
+  border-bottom:1.5px solid var(--border-strong);
+}
+.binder-col-title{
+  font-family:'JetBrains Mono';font-size:.6rem;letter-spacing:2px;color:var(--gold);
+  text-transform:uppercase;
+}
+.binder-col-header select.fsel{
+  background-color:rgba(255,255,255,0.1);border-color:rgba(200,145,42,0.4);
+  color:#fff;font-size:.8rem;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23e8b84b' stroke-width='1.5' fill='none'/%3E%3C/svg%3E");
+}
+.binder-col-header select.fsel:focus{background-color:rgba(255,255,255,0.18);border-color:var(--gold-light);}
+.binder-col-body{padding:12px;background:#fff;display:flex;flex-direction:column;gap:10px;flex:1;}
+.binder-field{display:flex;flex-direction:column;gap:3px;}
+.binder-field-label{font-family:'JetBrains Mono';font-size:.5rem;letter-spacing:1.4px;color:var(--text-dim);text-transform:uppercase;}
+.binder-input-row{display:flex;gap:6px;align-items:center;}
+.binder-input-row input.finp{flex:1;}
+.binder-input-row select.fsel{width:auto;flex:0 0 62px;font-size:.76rem;}
+.binder-dosage-name{font-family:'JetBrains Mono';font-size:.5rem;letter-spacing:1.2px;color:var(--gold);text-transform:uppercase;min-height:14px;margin-bottom:1px;}
+
 @media(max-width:640px){
   nav{padding:0 1rem;height:58px;}.logo-text .l2{display:none;}
   .page-wrap{padding:1.25rem .75rem 2.5rem;}
@@ -206,6 +250,8 @@ input.finp{cursor:text;}
   .size-grid{grid-template-columns:1fr;}
   .chem-grid{grid-template-columns:repeat(2,1fr);}
   .chem-grid-2{grid-template-columns:1fr;}
+  .binder-table{grid-template-columns:1fr;}.binder-col:first-child{border-right:none;border-bottom:1.5px solid var(--border-strong);}
+  .fuel-inputs{grid-template-columns:1fr;}
 }
 </style>
 </head>
@@ -549,7 +595,7 @@ function rangeLabel(mn, mx, dec) {
 
 // ═══════ STATE ═══════
 const stageParams = {
-  feed:      { ore:'', orePercent:'', feedRate:'', fluxes:[], coal:'', coalPercent:'',
+  feed:      { ore:'', orePercent:'', feedRate:'', fluxes:[], fuels:[],
                zone:'', location:'', loi:'',
                chemMoisture:'', chemFe:'', chemSio2:'', chemAl2o3:'', chemBlain:'', chemMic45:'',
                chemBentonite:'', chemOb1205:'', chemCcs:'', chemTi:'', chemAi:'' },
@@ -919,6 +965,125 @@ function readFluxList(listId){
   }).filter(f=>f.type);
 }
 
+// ═══════ FUEL HELPER (new) ═══════
+const FUEL_OPTIONS = [
+  { value:'Anthracite Coal', label:'Anthracite Coal', category:'solid', qtyUnit:'kg', qtyLabel:'Quantity (kg/t)' },
+  { value:'Fuel FO',         label:'Fuel Oil (FO)',   category:'liquid', qtyUnit:'litre', qtyLabel:'Quantity (litre/t)' },
+  { value:'Gas Fuel',        label:'Gas Fuel',        category:'gas',   qtyUnit:'Nm³',   qtyLabel:'Quantity (Nm³/t)' },
+];
+
+function getFuelUnit(fuelType){
+  const f=FUEL_OPTIONS.find(o=>o.value===fuelType);
+  return f?{unit:f.qtyUnit,label:f.qtyLabel}:{unit:'unit',label:'Quantity'};
+}
+
+function fuelListHTML(fuels){
+  const rows=(fuels&&fuels.length>0?fuels:[]).map((f,i)=>`
+    <div class="fuel-row" id="feed-fuel-row-${i}">
+      <div class="fuel-row-header">
+        <select class="fsel" id="feed-fuel-type-${i}" onchange="onFuelTypeChange(${i})">
+          <option value="">— Select Fuel —</option>
+          ${FUEL_OPTIONS.map(o=>`<option value="${o.value}"${f.type===o.value?' selected':''}>${o.label}</option>`).join('')}
+        </select>
+        <button class="btn-remove-flux" onclick="removeFuelRow(${i})" title="Remove">✕</button>
+      </div>
+      <div class="fuel-inputs">
+        <div class="fuel-input-wrap">
+          <div class="fuel-input-label" id="feed-fuel-qty-label-${i}">${getFuelUnit(f.type).label}</div>
+          <div class="fuel-input-row">
+            <input type="number" class="finp" id="feed-fuel-qty-${i}" value="${f.qty||''}" min="0" step="0.01" placeholder="0.00">
+            <span class="fuel-input-unit" id="feed-fuel-qty-unit-${i}">${getFuelUnit(f.type).unit}</span>
+          </div>
+        </div>
+        <div class="fuel-input-wrap">
+          <div class="fuel-input-label">GCV (kcal/kg)</div>
+          <div class="fuel-input-row">
+            <input type="number" class="finp" id="feed-fuel-gcv-${i}" value="${f.gcv||''}" min="0" step="1" placeholder="0">
+            <span class="fuel-input-unit">kcal</span>
+          </div>
+        </div>
+      </div>
+    </div>`).join('');
+  return `
+    <div class="fuel-list" id="feed-fuel-list">${rows}</div>
+    <button class="btn-add-flux" onclick="addFuelRow()">＋ Add Fuel</button>`;
+}
+
+function addFuelRow(){
+  const list=document.getElementById('feed-fuel-list');
+  const i=list.children.length;
+  const div=document.createElement('div');
+  div.className='fuel-row'; div.id=`feed-fuel-row-${i}`;
+  div.innerHTML=`
+    <div class="fuel-row-header">
+      <select class="fsel" id="feed-fuel-type-${i}" onchange="onFuelTypeChange(${i})">
+        <option value="">— Select Fuel —</option>
+        ${FUEL_OPTIONS.map(o=>`<option value="${o.value}">${o.label}</option>`).join('')}
+      </select>
+      <button class="btn-remove-flux" onclick="removeFuelRow(${i})" title="Remove">✕</button>
+    </div>
+    <div class="fuel-inputs">
+      <div class="fuel-input-wrap">
+        <div class="fuel-input-label" id="feed-fuel-qty-label-${i}">Quantity</div>
+        <div class="fuel-input-row">
+          <input type="number" class="finp" id="feed-fuel-qty-${i}" value="" min="0" step="0.01" placeholder="0.00">
+          <span class="fuel-input-unit" id="feed-fuel-qty-unit-${i}">unit</span>
+        </div>
+      </div>
+      <div class="fuel-input-wrap">
+        <div class="fuel-input-label">GCV (kcal/kg)</div>
+        <div class="fuel-input-row">
+          <input type="number" class="finp" id="feed-fuel-gcv-${i}" value="" min="0" step="1" placeholder="0">
+          <span class="fuel-input-unit">kcal</span>
+        </div>
+      </div>
+    </div>`;
+  list.appendChild(div);
+}
+
+function removeFuelRow(idx){
+  const row=document.getElementById(`feed-fuel-row-${idx}`);
+  if(row)row.remove();
+  // re-index
+  const list=document.getElementById('feed-fuel-list');
+  Array.from(list.children).forEach((r,ni)=>{
+    r.id=`feed-fuel-row-${ni}`;
+    const sel=r.querySelector('select');
+    if(sel){sel.id=`feed-fuel-type-${ni}`;sel.setAttribute('onchange',`onFuelTypeChange(${ni})`);}
+    const btns=r.querySelectorAll('button');
+    btns.forEach(b=>b.setAttribute('onclick',`removeFuelRow(${ni})`));
+    const qtyInp=r.querySelector(`[id^="feed-fuel-qty-"]`);
+    const gcvInp=r.querySelector(`[id^="feed-fuel-gcv-"]`);
+    const qtyUnit=r.querySelector(`[id^="feed-fuel-qty-unit-"]`);
+    const qtyLabel=r.querySelector(`[id^="feed-fuel-qty-label-"]`);
+    if(qtyInp)qtyInp.id=`feed-fuel-qty-${ni}`;
+    if(gcvInp)gcvInp.id=`feed-fuel-gcv-${ni}`;
+    if(qtyUnit)qtyUnit.id=`feed-fuel-qty-unit-${ni}`;
+    if(qtyLabel)qtyLabel.id=`feed-fuel-qty-label-${ni}`;
+  });
+}
+
+function onFuelTypeChange(idx){
+  const sel=document.getElementById(`feed-fuel-type-${idx}`);
+  if(!sel)return;
+  const {unit,label}=getFuelUnit(sel.value);
+  const unitEl=document.getElementById(`feed-fuel-qty-unit-${idx}`);
+  const labelEl=document.getElementById(`feed-fuel-qty-label-${idx}`);
+  if(unitEl)unitEl.textContent=unit;
+  if(labelEl)labelEl.textContent=label;
+}
+
+function readFuelList(){
+  const list=document.getElementById('feed-fuel-list');
+  if(!list)return[];
+  return Array.from(list.children).map((r,i)=>{
+    const sel=document.getElementById(`feed-fuel-type-${i}`);
+    const qty=document.getElementById(`feed-fuel-qty-${i}`);
+    const gcv=document.getElementById(`feed-fuel-gcv-${i}`);
+    return{type:sel?sel.value:'',qty:qty?qty.value:'',gcv:gcv?gcv.value:''};
+  }).filter(f=>f.type);
+}
+
 // ═══════════════════════════════════════════════════════════
 // CHEMISTRY CARD
 // ═══════════════════════════════════════════════════════════
@@ -1000,13 +1165,13 @@ function renderChemCard(){
 }
 
 function updateBinderDosageLabel(){
-  const binderSel=document.getElementById('m-binder');
-  const dosageLabelEl=document.getElementById('binder-dosage-label-text');
-  if(!binderSel||!dosageLabelEl)return;
-  dosageLabelEl.textContent=binderSel.value?binderSel.value+' Dosage':'Binder Dosage';
+  const binderSel=document.getElementById('m-ob-binder');
+  const nameEl=document.getElementById('ob-dosage-name');
+  if(!nameEl)return;
+  nameEl.textContent=binderSel&&binderSel.value?binderSel.value+' Dosage':'Binder Dosage';
 }
 
-const BINDER_OPTIONS=['OB-1205 Organic','OB-1206','OB3s','OB Pro','Bentonite (6 kg/t)','OB-1205 + Bentonite'];
+const BINDER_OPTIONS=['OB-1205 Organic','OB-1206','OB3s','OB Pro','OB-1205 + Bentonite'];
 
 // ═══════ MODALS ═══════
 const MODAL_CONFIGS={
@@ -1066,15 +1231,7 @@ const MODAL_CONFIGS={
       </div>
       <div class="field-group">
         <div class="field-label">Fuel / Reductant</div>
-        <select class="fsel" id="m-coal">
-          <option value="">— Select —</option>
-          ${['Anthracite Coal'].map(v=>`<option value="${v}"${stageParams.feed.coal===v?' selected':''}>${v}</option>`).join('')}
-        </select>
-      </div>
-      <div class="field-group">
-        <div class="field-label">Coal Percentage (%)</div>
-        <input type="number" class="finp" id="m-coal-pct" value="${stageParams.feed.coalPercent||''}" min="0.5" max="1.5" step="0.1" placeholder="~1%">
-        <div class="input-hint">Range: ~1 % (0.5 – 1.5)</div>
+        ${fuelListHTML(stageParams.feed.fuels)}
       </div>`,
     save:()=>{
       stageParams.feed.ore         = document.getElementById('m-ore').value;
@@ -1084,8 +1241,7 @@ const MODAL_CONFIGS={
       stageParams.feed.loi         = document.getElementById('m-loi').value;
       stageParams.feed.feedRate    = document.getElementById('m-feedrate').value;
       stageParams.feed.fluxes      = readFluxList('feed-flux');
-      stageParams.feed.coal        = document.getElementById('m-coal').value;
-      stageParams.feed.coalPercent = document.getElementById('m-coal-pct').value;
+      stageParams.feed.fuels       = readFuelList();
       const idMap =['chem-moisture','chem-fe','chem-sio2','chem-al2o3','chem-blain','chem-mic45','chem-bentonite','chem-ob1205','chem-ccs','chem-ti','chem-ai'];
       const keyMap=['chemMoisture','chemFe','chemSio2','chemAl2o3','chemBlain','chemMic45','chemBentonite','chemOb1205','chemCcs','chemTi','chemAi'];
       idMap.forEach((elId,i)=>{const el=document.getElementById(elId);if(el)stageParams.feed[keyMap[i]]=el.value;});
@@ -1134,55 +1290,70 @@ const MODAL_CONFIGS={
   mix:{
     title:'Mixing + Binder',desc:'Select binder, bentonite type, dosages and mix moisture',
     fields:()=>`
-      <div class="field-group">
-        <div class="field-label">Binder Type</div>
-        <select class="fsel" id="m-binder" onchange="updateBinderDosageLabel()">
-          <option value="">— Select Binder —</option>
-          ${BINDER_OPTIONS.map(v=>`<option value="${v}"${stageParams.mix.binder===v?' selected':''}>${v}</option>`).join('')}
-        </select>
-      </div>
-
-      ${sectionDiv('Bentonite')}
-      <div class="field-group">
-        <div class="field-label">Bentonite Grade</div>
-        <select class="fsel" id="m-bentonite">
-          <option value="">— Select Bentonite —</option>
-          ${BINDER_OPTIONS.map(v=>`<option value="${v}"${stageParams.mix.bentonite===v?' selected':''}>${v}</option>`).join('')}
-        </select>
-      </div>
-      <div class="field-group">
-        <div class="field-label">Bentonite Type</div>
-        <select class="fsel" id="m-bentonite-type">
-          <option value="">— Select Type —</option>
-          <option value="Sodium"${stageParams.mix.bentoniteType==='Sodium'?' selected':''}>Sodium Bentonite</option>
-          <option value="Calcium"${stageParams.mix.bentoniteType==='Calcium'?' selected':''}>Calcium Bentonite</option>
-        </select>
-        <div class="input-hint">Sodium: higher swelling index; Calcium: lower swelling index</div>
-      </div>
-      <div class="field-group">
-        <div class="field-label">Bentonite Dosage</div>
-        <div class="input-row">
-          <input type="number" class="finp" id="m-bento-dose" value="${stageParams.mix.bentoniteDosageValue||''}" min="0" step="0.01" placeholder="Enter value">
-          <select class="fsel" id="m-bento-dose-unit" style="width:80px;flex:0 0 80px;">
-            <option value="kg"${stageParams.mix.bentoniteDosageUnit==='kg'?' selected':''}>kg/t</option>
-            <option value="%"${stageParams.mix.bentoniteDosageUnit==='%'?' selected':''}>%</option>
-          </select>
+      <div class="binder-table">
+        <!-- BENTONITE COLUMN -->
+        <div class="binder-col">
+          <div class="binder-col-header">
+            <div class="binder-col-title">Bentonite</div>
+            <select class="fsel" id="m-bentonite">
+              <option value="">— Select —</option>
+              <option value="Bentonite (6 kg/t)"${stageParams.mix.bentonite==='Bentonite (6 kg/t)'?' selected':''}>Bentonite (6 kg/t)</option>
+            </select>
+          </div>
+          <div class="binder-col-body">
+            <div class="binder-field">
+              <div class="binder-field-label">Bentonite Type</div>
+              <select class="fsel" id="m-bentonite-type">
+                <option value="">— Select Type —</option>
+                <option value="Sodium"${stageParams.mix.bentoniteType==='Sodium'?' selected':''}>Sodium Bentonite</option>
+                <option value="Calcium"${stageParams.mix.bentoniteType==='Calcium'?' selected':''}>Calcium Bentonite</option>
+              </select>
+              <div class="input-hint" style="margin-top:4px;">Sodium: higher swelling; Calcium: lower swelling</div>
+            </div>
+            <div class="binder-field">
+              <div class="binder-field-label">Bentonite Dosage</div>
+              <div class="binder-input-row">
+                <input type="number" class="finp" id="m-bento-dose" value="${stageParams.mix.bentoniteDosageValue||''}" min="0" step="0.01" placeholder="0.00">
+                <select class="fsel" id="m-bento-dose-unit">
+                  <option value="kg"${stageParams.mix.bentoniteDosageUnit==='kg'?' selected':''}>kg/t</option>
+                  <option value="%"${stageParams.mix.bentoniteDosageUnit==='%'?' selected':''}>%</option>
+                </select>
+              </div>
+            </div>
+          </div>
         </div>
-        <div class="input-hint">Bentonite dosage in kg/t or %</div>
-      </div>
 
-      ${sectionDiv('Binder Dosage & Water')}
-      <div class="field-group">
-        <div class="field-label" id="binder-dosage-label-text">${stageParams.mix.binder?stageParams.mix.binder+' Dosage':'Binder Dosage'}</div>
-        <div class="input-row">
-          <input type="number" class="finp" id="m-dose" value="${stageParams.mix.dosageValue||''}" min="0" step="0.01" placeholder="Enter value">
-          <select class="fsel" id="m-dose-unit" style="width:80px;flex:0 0 80px;">
-            <option value="GPT"${stageParams.mix.dosageUnit==='GPT'?' selected':''}>GPT</option>
-          </select>
+        <!-- OB BINDER COLUMN -->
+        <div class="binder-col">
+          <div class="binder-col-header">
+            <div class="binder-col-title">OB Binder</div>
+            <select class="fsel" id="m-ob-binder" onchange="updateBinderDosageLabel()">
+              <option value="">— Select OB —</option>
+              ${BINDER_OPTIONS.map(v=>`<option value="${v}"${stageParams.mix.binder===v?' selected':''}>${v}</option>`).join('')}
+            </select>
+          </div>
+          <div class="binder-col-body">
+            <div class="binder-field">
+              <div class="binder-dosage-name" id="ob-dosage-name">${stageParams.mix.binder?stageParams.mix.binder+' Dosage':'Binder Dosage'}</div>
+              <div class="binder-field-label">Dosage</div>
+              <div class="binder-input-row">
+                <input type="number" class="finp" id="m-dose" value="${stageParams.mix.dosageValue||''}" min="0" step="0.01" placeholder="0.00">
+                <select class="fsel" id="m-dose-unit" style="flex:0 0 62px;">
+                  <option value="GPT"${stageParams.mix.dosageUnit==='GPT'?' selected':''}>GPT</option>
+                </select>
+              </div>
+            </div>
+            <div class="binder-field">
+              <div class="binder-field-label">Water Addition</div>
+              <div class="binder-input-row">
+                <input type="number" class="finp" id="m-wateradd" value="${stageParams.mix.waterAddition||''}" min="0" max="500" step="1" placeholder="0">
+                <span style="font-family:'JetBrains Mono';font-size:.6rem;color:var(--text-dim);white-space:nowrap;min-width:40px;">L/min</span>
+              </div>
+              <div class="input-hint">Range: 0 – 500 L/min</div>
+            </div>
+          </div>
         </div>
-        <div class="input-hint">Binder dosage in GPT</div>
       </div>
-      ${numField('m-wateradd','Water Addition (Litres/min)',stageParams.mix.waterAddition,0,500,'L/min',1)}
 
       ${sectionDiv('Flux & Moisture')}
       <div class="field-group">
@@ -1191,7 +1362,7 @@ const MODAL_CONFIGS={
       </div>
       ${numField('m-mmoist','Mix Material Moisture (%)',stageParams.mix.mixMoisture,0,20,'%',0.1)}`,
     save:()=>{
-      stageParams.mix.binder                = document.getElementById('m-binder').value;
+      stageParams.mix.binder                = document.getElementById('m-ob-binder').value;
       stageParams.mix.bentonite             = document.getElementById('m-bentonite').value;
       stageParams.mix.bentoniteType         = document.getElementById('m-bentonite-type').value;
       stageParams.mix.bentoniteDosageValue  = document.getElementById('m-bento-dose').value;
@@ -1503,7 +1674,7 @@ function runSimulation(){
 function resetAll(){
   simRunning=false; simStep=-1; simFrame=0;
   document.getElementById('plantName').value='';
-  Object.assign(stageParams.feed,{ore:'',orePercent:'',feedRate:'',fluxes:[],coal:'',coalPercent:'',zone:'',location:'',loi:'',
+  Object.assign(stageParams.feed,{ore:'',orePercent:'',feedRate:'',fluxes:[],fuels:[],zone:'',location:'',loi:'',
     chemMoisture:'',chemFe:'',chemSio2:'',chemAl2o3:'',chemBlain:'',chemMic45:'',chemBentonite:'',chemOb1205:'',chemCcs:'',chemTi:'',chemAi:''});
   Object.assign(stageParams.grind,{rawFeedMoisture:'',blain:'',millSpeed:'',retentionTime:''});
   Object.assign(stageParams.thickner,{underflowDensity:'',vacuumPressure:''});
