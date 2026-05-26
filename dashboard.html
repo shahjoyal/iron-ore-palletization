@@ -210,7 +210,7 @@ input.finp{cursor:text;}
   content:'';flex:1;height:1px;background:var(--border);
 }
 
-/* ── BINDER TABLE (new for mix stage) ── */
+/* ── BINDER TABLE ── */
 .binder-table{
   display:grid;grid-template-columns:1fr 1fr;gap:0;
   border:1.5px solid var(--border-strong);border-radius:6px;overflow:hidden;
@@ -227,12 +227,29 @@ input.finp{cursor:text;}
   font-family:'JetBrains Mono';font-size:.6rem;letter-spacing:2px;color:var(--gold);
   text-transform:uppercase;
 }
+/* FIX: binder-col-header select — solid dark bg so dropdown arrow & text are always visible */
 .binder-col-header select.fsel{
-  background-color:rgba(255,255,255,0.1);border-color:rgba(200,145,42,0.4);
-  color:#fff;font-size:.8rem;
+  background-color:rgba(255,255,255,0.12);
+  border:1px solid rgba(200,145,42,0.5);
+  color:#fff;
+  font-size:.8rem;
+  /* override the cream bg-image arrow with a light-coloured one */
   background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23e8b84b' stroke-width='1.5' fill='none'/%3E%3C/svg%3E");
+  background-repeat:no-repeat;
+  background-position:right 10px center;
+  padding-right:30px;
+  /* important: keep options readable in the native popup */
+  color-scheme: dark;
 }
-.binder-col-header select.fsel:focus{background-color:rgba(255,255,255,0.18);border-color:var(--gold-light);}
+.binder-col-header select.fsel option{
+  background:#1a3057;
+  color:#fff;
+}
+.binder-col-header select.fsel:focus{
+  background-color:rgba(255,255,255,0.20);
+  border-color:var(--gold-light);
+  outline:none;
+}
 .binder-col-body{padding:12px;background:#fff;display:flex;flex-direction:column;gap:10px;flex:1;}
 .binder-field{display:flex;flex-direction:column;gap:3px;}
 .binder-field-label{font-family:'JetBrains Mono';font-size:.5rem;letter-spacing:1.4px;color:var(--text-dim);text-transform:uppercase;}
@@ -1044,7 +1061,6 @@ function addFuelRow(){
 function removeFuelRow(idx){
   const row=document.getElementById(`feed-fuel-row-${idx}`);
   if(row)row.remove();
-  // re-index
   const list=document.getElementById('feed-fuel-list');
   Array.from(list.children).forEach((r,ni)=>{
     r.id=`feed-fuel-row-${ni}`;
@@ -1287,6 +1303,9 @@ const MODAL_CONFIGS={
   },
 
   // ── STAGE 05: MIXING ────────────────────────────────────
+  // CHANGES:
+  //   1. Binder table dropdown fix (CSS handles it)
+  //   2. Water Addition removed from OB Binder column; moved to Flux & Moisture section (above flux list)
   mix:{
     title:'Mixing + Binder',desc:'Select binder, bentonite type, dosages and mix moisture',
     fields:()=>`
@@ -1323,7 +1342,7 @@ const MODAL_CONFIGS={
           </div>
         </div>
 
-        <!-- OB BINDER COLUMN -->
+        <!-- OB BINDER COLUMN — Water Addition removed from here -->
         <div class="binder-col">
           <div class="binder-col-header">
             <div class="binder-col-title">OB Binder</div>
@@ -1343,19 +1362,19 @@ const MODAL_CONFIGS={
                 </select>
               </div>
             </div>
-            <div class="binder-field">
-              <div class="binder-field-label">Water Addition</div>
-              <div class="binder-input-row">
-                <input type="number" class="finp" id="m-wateradd" value="${stageParams.mix.waterAddition||''}" min="0" max="500" step="1" placeholder="0">
-                <span style="font-family:'JetBrains Mono';font-size:.6rem;color:var(--text-dim);white-space:nowrap;min-width:40px;">L/min</span>
-              </div>
-              <div class="input-hint">Range: 0 – 500 L/min</div>
-            </div>
           </div>
         </div>
       </div>
 
       ${sectionDiv('Flux & Moisture')}
+      <div class="field-group">
+        <div class="field-label">Water Addition</div>
+        <div class="input-row">
+          <input type="number" class="finp" id="m-wateradd" value="${stageParams.mix.waterAddition||''}" min="0" max="500" step="1" placeholder="0">
+          <span style="font-family:'JetBrains Mono';font-size:.6rem;color:var(--text-dim);white-space:nowrap;min-width:40px;padding:0 4px;">L/min</span>
+        </div>
+        <div class="input-hint">Range: 0 – 500 L/min</div>
+      </div>
       <div class="field-group">
         <div class="field-label">Flux / Additive (one or more)</div>
         ${fluxListHTML('mix-flux',stageParams.mix.fluxes)}
