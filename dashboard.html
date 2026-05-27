@@ -258,6 +258,48 @@ input.finp{cursor:text;}
 .binder-input-row select.fsel{width:auto;flex:0 0 62px;font-size:.76rem;}
 .binder-dosage-name{font-family:'JetBrains Mono';font-size:.5rem;letter-spacing:1.2px;color:var(--gold);text-transform:uppercase;min-height:14px;margin-bottom:1px;}
 
+
+/* ── BENTONITE TOP CARD ── */
+.binder-stack{
+  display:flex;
+  flex-direction:column;
+  gap:1rem;
+  margin-bottom:1.2rem;
+}
+
+.bentonite-top-card{
+  border:1.5px solid var(--border-strong);
+  border-radius:6px;
+  overflow:hidden;
+  background:#fff;
+  box-shadow:0 2px 8px rgba(26,48,87,.04);
+}
+
+.bentonite-top-card-header{
+  background:linear-gradient(135deg,var(--navy2),var(--navy3));
+  padding:10px 12px;
+  border-bottom:1.5px solid var(--border-strong);
+  text-align:center;
+}
+
+.bentonite-top-card-body{
+  padding:12px;
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:8px;
+  background:#fff;
+}
+
+.bentonite-top-card .binder-field{
+  margin:0;
+}
+
+@media(max-width:640px){
+  .bentonite-top-card-body{
+    grid-template-columns:1fr;
+  }
+}
+
 @media(max-width:640px){
   nav{padding:0 1rem;height:58px;}.logo-text .l2{display:none;}
   .page-wrap{padding:1.25rem .75rem 2.5rem;}
@@ -984,7 +1026,7 @@ function readFluxList(listId){
 
 // ═══════ FUEL HELPER (new) ═══════
 const FUEL_OPTIONS = [
-  { value:'Anthracite Coal', label:'Anthracite Coal', category:'solid', qtyUnit:'kg', qtyLabel:'Quantity (kg/t)' },
+  { value:'Anthracite Coal', label:'Anthracite Coal', category:'solid', qtyUnit:'kg', qtyLabel:'Quantity (kg/T)' },
   { value:'Fuel FO',         label:'Fuel Oil (FO)',   category:'liquid', qtyUnit:'litre', qtyLabel:'Quantity (litre/t)' },
   { value:'Gas Fuel',        label:'Gas Fuel',        category:'gas',   qtyUnit:'Nm³',   qtyLabel:'Quantity (Nm³/t)' },
 ];
@@ -1167,7 +1209,7 @@ function renderChemCard(){
       </div>
       <div class="chem-section-label">Binder / Additive Consumption</div>
       <div class="chem-grid-2">
-        ${chemCell('chem-bentonite','Bentonite',d.bentonite.min,d.bentonite.max,2,'kg/t','',sv('chemBentonite'))}
+        ${chemCell('chem-bentonite','Bentonite',d.bentonite.min,d.bentonite.max,2,'kg/T','',sv('chemBentonite'))}
         ${chemCell('chem-ob1205','OB-1205',d.ob1205.min,d.ob1205.max,2,'GPT','',sv('chemOb1205'))}
       </div>
       <div class="chem-section-label">Pellet Quality</div>
@@ -1306,9 +1348,44 @@ const MODAL_CONFIGS={
   // CHANGES:
   //   1. Binder table dropdown fix (CSS handles it)
   //   2. Water Addition removed from OB Binder column; moved to Flux & Moisture section (above flux list)
-  mix:{
-    title:'Mixing + Binder',desc:'Select binder, bentonite type, dosages and mix moisture',
-    fields:()=>`
+mix:{
+  title:'Mixing + Binder',
+  desc:'Select binder, bentonite type, dosages and mix moisture',
+  fields:()=>`
+    <div class="binder-stack">
+
+      <!-- TOP BENTONITE CARD -->
+      <div class="bentonite-top-card">
+        <div class="bentonite-top-card-header">
+          <div class="binder-col-title">Bentonite</div>
+        </div>
+        <div class="bentonite-top-card-body">
+          <div class="binder-field">
+            <div class="binder-field-label">Bentonite Type</div>
+            <select class="fsel" id="m-bentonite-type">
+              <option value="">— Select Type —</option>
+              <option value="Sodium"${stageParams.mix.bentoniteType==='Sodium'?' selected':''}>Sodium Bentonite</option>
+              <option value="Calcium"${stageParams.mix.bentoniteType==='Calcium'?' selected':''}>Calcium Bentonite</option>
+            </select>
+            <div class="input-hint" style="margin-top:4px;">Sodium: higher swelling; Calcium: lower swelling</div>
+          </div>
+
+          <div class="binder-field">
+            <div class="binder-field-label">Bentonite Dosage</div>
+            <div class="binder-input-row">
+              <input type="number" class="finp" id="m-bento-dose"
+                     value="${stageParams.mix.bentoniteDosageValue||''}"
+                     min="0" step="0.01" placeholder="0.00">
+              <select class="fsel" id="m-bento-dose-unit">
+                <option value="kg"${stageParams.mix.bentoniteDosageUnit==='kg'?' selected':''}>kg/T</option>
+                <option value="%"${stageParams.mix.bentoniteDosageUnit==='%'?' selected':''}>%</option>
+              </select>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- EXISTING TWO-COLUMN BLOCK -->
       <div class="binder-table">
         <!-- BENTONITE COLUMN -->
         <div class="binder-col">
@@ -1316,33 +1393,26 @@ const MODAL_CONFIGS={
             <div class="binder-col-title">Bentonite</div>
             <select class="fsel" id="m-bentonite">
               <option value="">— Select —</option>
-              <option value="Bentonite (6 kg/t)"${stageParams.mix.bentonite==='Bentonite (6 kg/t)'?' selected':''}>Bentonite (6 kg/t)</option>
+              <option value="Bentonite (6 kg/t)"${stageParams.mix.bentonite==='Bentonite (6 kg/T)'?' selected':''}>Bentonite (6 kg/t)</option>
             </select>
           </div>
-          <div class="binder-col-body">
-            <div class="binder-field">
-              <div class="binder-field-label">Bentonite Type</div>
-              <select class="fsel" id="m-bentonite-type">
-                <option value="">— Select Type —</option>
-                <option value="Sodium"${stageParams.mix.bentoniteType==='Sodium'?' selected':''}>Sodium Bentonite</option>
-                <option value="Calcium"${stageParams.mix.bentoniteType==='Calcium'?' selected':''}>Calcium Bentonite</option>
-              </select>
-              <div class="input-hint" style="margin-top:4px;">Sodium: higher swelling; Calcium: lower swelling</div>
-            </div>
-            <div class="binder-field">
-              <div class="binder-field-label">Bentonite Dosage</div>
-              <div class="binder-input-row">
-                <input type="number" class="finp" id="m-bento-dose" value="${stageParams.mix.bentoniteDosageValue||''}" min="0" step="0.01" placeholder="0.00">
-                <select class="fsel" id="m-bento-dose-unit">
-                  <option value="kg"${stageParams.mix.bentoniteDosageUnit==='kg'?' selected':''}>kg/t</option>
-                  <option value="%"${stageParams.mix.bentoniteDosageUnit==='%'?' selected':''}>%</option>
-                </select>
-              </div>
-            </div>
-          </div>
+<div class="binder-col-body">
+  <div class="binder-field">
+    <div class="binder-field-label">Dosage</div>
+    <div class="binder-input-row">
+      <input type="number" class="finp" id="m-bento-dose-bottom"
+             value="${stageParams.mix.bentoniteDosageValue||''}"
+             min="0" step="0.01" placeholder="0.00">
+      <select class="fsel" id="m-bento-dose-unit-bottom">
+        <option value="kg"${stageParams.mix.bentoniteDosageUnit==='kg'?' selected':''}>kg/T</option>
+        <option value="%"${stageParams.mix.bentoniteDosageUnit==='%'?' selected':''}>%</option>
+      </select>
+    </div>
+  </div>
+</div>
         </div>
 
-        <!-- OB BINDER COLUMN — Water Addition removed from here -->
+        <!-- OB BINDER COLUMN -->
         <div class="binder-col">
           <div class="binder-col-header">
             <div class="binder-col-title">OB Binder</div>
@@ -1365,34 +1435,41 @@ const MODAL_CONFIGS={
           </div>
         </div>
       </div>
+    </div>
 
-      ${sectionDiv('Flux & Moisture')}
-      <div class="field-group">
-        <div class="field-label">Water Addition</div>
-        <div class="input-row">
-          <input type="number" class="finp" id="m-wateradd" value="${stageParams.mix.waterAddition||''}" min="0" max="500" step="1" placeholder="0">
-          <span style="font-family:'JetBrains Mono';font-size:.6rem;color:var(--text-dim);white-space:nowrap;min-width:40px;padding:0 4px;">L/min</span>
-        </div>
-        <div class="input-hint">Range: 0 – 500 L/min</div>
+    ${sectionDiv('Flux & Moisture')}
+    <div class="field-group">
+      <div class="field-label">Water Addition</div>
+      <div class="input-row">
+        <input type="number" class="finp" id="m-wateradd" value="${stageParams.mix.waterAddition||''}" min="0" max="500" step="1" placeholder="0">
+        <span style="font-family:'JetBrains Mono';font-size:.6rem;color:var(--text-dim);white-space:nowrap;min-width:40px;padding:0 4px;">L/min</span>
       </div>
-      <div class="field-group">
-        <div class="field-label">Flux / Additive (one or more)</div>
-        ${fluxListHTML('mix-flux',stageParams.mix.fluxes)}
-      </div>
-      ${numField('m-mmoist','Mix Material Moisture (%)',stageParams.mix.mixMoisture,0,20,'%',0.1)}`,
-    save:()=>{
-      stageParams.mix.binder                = document.getElementById('m-ob-binder').value;
-      stageParams.mix.bentonite             = document.getElementById('m-bentonite').value;
-      stageParams.mix.bentoniteType         = document.getElementById('m-bentonite-type').value;
-      stageParams.mix.bentoniteDosageValue  = document.getElementById('m-bento-dose').value;
-      stageParams.mix.bentoniteDosageUnit   = document.getElementById('m-bento-dose-unit').value;
-      stageParams.mix.dosageValue           = document.getElementById('m-dose').value;
-      stageParams.mix.dosageUnit            = 'GPT';
-      stageParams.mix.waterAddition         = document.getElementById('m-wateradd').value;
-      stageParams.mix.fluxes                = readFluxList('mix-flux');
-      stageParams.mix.mixMoisture           = document.getElementById('m-mmoist').value;
-    }
-  },
+      <div class="input-hint">Range: 0 – 500 L/min</div>
+    </div>
+    <div class="field-group">
+      <div class="field-label">Flux / Additive (one or more)</div>
+      ${fluxListHTML('mix-flux',stageParams.mix.fluxes)}
+    </div>
+    ${numField('m-mmoist','Mix Material Moisture (%)',stageParams.mix.mixMoisture,0,20,'%',0.1)}
+  `,
+  save:()=>{
+    stageParams.mix.binder               = document.getElementById('m-ob-binder').value;
+    stageParams.mix.bentonite            = document.getElementById('m-bentonite').value;
+    stageParams.mix.bentoniteType        = document.getElementById('m-bentonite-type').value;
+stageParams.mix.bentoniteDosageValue =
+  document.getElementById('m-bento-dose-bottom')?.value ||
+  document.getElementById('m-bento-dose')?.value;
+
+stageParams.mix.bentoniteDosageUnit =
+  document.getElementById('m-bento-dose-unit-bottom')?.value ||
+  document.getElementById('m-bento-dose-unit')?.value;
+    stageParams.mix.dosageValue          = document.getElementById('m-dose').value;
+    stageParams.mix.dosageUnit           = 'GPT';
+    stageParams.mix.waterAddition        = document.getElementById('m-wateradd').value;
+    stageParams.mix.fluxes               = readFluxList('mix-flux');
+    stageParams.mix.mixMoisture          = document.getElementById('m-mmoist').value;
+  }
+},
 
   // ── STAGE 06: BALLING ───────────────────────────────────
   ball:{
