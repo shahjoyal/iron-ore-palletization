@@ -667,7 +667,7 @@ const stageParams = {
   greenball: { moisture:'', dropNumber:'', gcs:'', greenBallSize:'', porosity:'' },
   screen:    { s8_10:'', s10_12:'', s12_14:'', s14_16:'', recycled:'', recycledUnit:'%' },
   indu:      { mode:'furnace', rpm:'', btt:'', drm:'', exhaust:'', tgRpm:'', mcTemp:'', tgDischarge:'', tgExhaust:'' },
-  cool:      { zone1:'', zone2:'', zone3:'', zone4:'' },
+  cool:      { zone1:'', zone2:'', zone3:'', zone4:'', zoneCount:1 },
   pellet:    { size8_10:'', size10_12:'', size12_14:'', size14_16:'', cracked:'', ccs:'', tumbler:'', abrasion:'', fe:'' }
 };
 let simRunning=false, simFrame=0, simStep=-1, animId=null, currentModalStage=null;
@@ -1590,21 +1590,26 @@ stageParams.mix.bentoniteDosageUnit =
     fields:()=>{
       const mode=stageParams.indu.mode||'furnace';
       const isGrate=mode==='grate';
+      const count=getCoolingZoneCount();
       return `
         <div style="margin-bottom:1rem;padding:10px 14px;background:linear-gradient(135deg,rgba(42,122,74,0.07),rgba(26,48,87,0.05));border:1.5px solid rgba(42,122,74,0.25);border-radius:5px;">
           <div style="font-family:'JetBrains Mono';font-size:.56rem;letter-spacing:2px;color:var(--green);text-transform:uppercase;margin-bottom:3px;">${isGrate?'Grate Kiln':'Induration Furnace'}</div>
           <div style="font-family:'Cormorant Garamond',serif;font-size:1.1rem;font-weight:700;color:var(--navy);">${isGrate?'Circulating Cooling Zone':'Straight Cooling Zone'}</div>
         </div>
-        ${numField('m-z1','Zone 1 — Combustion (°C)',stageParams.cool.zone1,900,950,'°C',1)}
-        ${numField('m-z2','Zone 2 — UDD Upper Draft Zone (°C)',stageParams.cool.zone2,650,700,'°C',1)}
-        ${numField('m-z3','Zone 3 — DD1 Down Draft Zone (°C)',stageParams.cool.zone3,350,400,'°C',1)}
-        ${numField('m-z4','Zone 4 — Exit (°C)',stageParams.cool.zone4,150,200,'°C',1)}`;
+        <div style="margin-bottom:10px;">
+          <button type="button" class="btn-add-flux" style="width:auto;display:inline-flex;" onclick="addCoolingZone(); return false;">＋ Add Zone</button>
+        </div>
+        ${count>=1 ? numField('m-z1','Zone 1 — Combustion (°C)',stageParams.cool.zone1,900,950,'°C',1) : ''}
+        ${count>=2 ? numField('m-z2','Zone 2 — UDD Upper Draft Zone (°C)',stageParams.cool.zone2,650,700,'°C',1) : ''}
+        ${count>=3 ? numField('m-z3','Zone 3 — DD1 Down Draft Zone (°C)',stageParams.cool.zone3,350,400,'°C',1) : ''}
+        ${count>=4 ? numField('m-z4','Zone 4 — Exit (°C)',stageParams.cool.zone4,150,200,'°C',1) : ''}`;
     },
     save:()=>{
-      stageParams.cool.zone1=document.getElementById('m-z1').value;
-      stageParams.cool.zone2=document.getElementById('m-z2').value;
-      stageParams.cool.zone3=document.getElementById('m-z3').value;
-      stageParams.cool.zone4=document.getElementById('m-z4').value;
+      const count=getCoolingZoneCount();
+      if(count>=1) stageParams.cool.zone1=document.getElementById('m-z1').value;
+      if(count>=2) stageParams.cool.zone2=document.getElementById('m-z2').value;
+      if(count>=3) stageParams.cool.zone3=document.getElementById('m-z3').value;
+      if(count>=4) stageParams.cool.zone4=document.getElementById('m-z4').value;
     }
   },
 
@@ -1683,6 +1688,23 @@ function getInduFields(mode){
       </div>`;
   }
 }
+function getCoolingZoneCount(){
+  return Math.min(4, Math.max(
+    stageParams.cool.zoneCount || 1,
+    stageParams.cool.zone4 ? 4 : 0,
+    stageParams.cool.zone3 ? 3 : 0,
+    stageParams.cool.zone2 ? 2 : 0,
+    stageParams.cool.zone1 ? 1 : 0
+  ));
+}
+
+function addCoolingZone(){
+  stageParams.cool.zoneCount = Math.min(4, (stageParams.cool.zoneCount || 1) + 1);
+  if(currentModalStage==='cool'){
+    document.getElementById('modalBody').innerHTML = MODAL_CONFIGS.cool.fields();
+  }
+}
+
 
 function switchInduMode(mode){
   stageParams.indu.mode=mode;
@@ -1722,6 +1744,7 @@ function openModal(stageId){
   const s=STAGES.find(st=>st.id===stageId);
   const cfg=MODAL_CONFIGS[stageId];
   if(!cfg)return;
+  if(stageId==='cool') stageParams.cool.zoneCount = getCoolingZoneCount();
   document.getElementById('modalTag').textContent=s.tag;
   document.getElementById('modalTitle').textContent=cfg.title;
   document.getElementById('modalDesc').textContent=cfg.desc;
@@ -1780,7 +1803,7 @@ function resetAll(){
   Object.assign(stageParams.greenball,{moisture:'',dropNumber:'',gcs:'',greenBallSize:'',porosity:''});
   Object.assign(stageParams.screen,{s8_10:'',s10_12:'',s12_14:'',s14_16:'',recycled:'',recycledUnit:'%'});
   Object.assign(stageParams.indu,{mode:'furnace',rpm:'',btt:'',drm:'',exhaust:'',tgRpm:'',mcTemp:'',tgDischarge:'',tgExhaust:''});
-  Object.assign(stageParams.cool,{zone1:'',zone2:'',zone3:'',zone4:''});
+  Object.assign(stageParams.cool,{zone1:'',zone2:'',zone3:'',zone4:'',zoneCount:1});
   Object.assign(stageParams.pellet,{size8_10:'',size10_12:'',size12_14:'',size14_16:'',cracked:'',ccs:'',tumbler:'',abrasion:'',fe:''});
   const induStage=STAGES.find(s=>s.id==='indu'); if(induStage)induStage.label='INDURATION\nFURNACE';
   document.querySelectorAll('.step-pill').forEach(p=>p.className='step-pill');
