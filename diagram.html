@@ -961,275 +961,179 @@ function drawCoolingKiln(cx, cy, mW, mH, stage, isActive, isDone, frame){
   const temps = coolingTemps();
   const zones = temps.map(t => tempZoneColors(t));
 
-  // Reference-like proportions: thicker, slightly more slanted, and mobile-safe.
-  const kilnW = mW * 1.20;
-  const kilnH = mH * 0.82;
-  const left = cx - kilnW * 0.50;
-  const right = cx + kilnW * 0.52;
+  const kilnW  = mW * 1.30;
+  const kilnH  = mH * 0.18;   // very thin tube
+  const slopeY = mH * 0.12;   // slant drop left→right
 
-  // Top edge slopes down to the right a bit more, matching the attached reference.
-  const topL = cy - kilnH * 0.34;
-  const topR = cy - kilnH * 0.24;
-  const botL = cy + kilnH * 0.30;
-  const botR = cy + kilnH * 0.38;
+  const left  = cx - kilnW * 0.50;
+  const right = cx + kilnW * 0.50;
 
-  const outerLeft = left + kilnW * 0.01;
-  const outerRight = right - kilnW * 0.01;
-  const innerLeft = left + kilnW * 0.03;
-  const innerRight = right - kilnW * 0.03;
+  const topL = cy - kilnH * 0.5 - slopeY;
+  const topR = cy - kilnH * 0.5 + slopeY;
+  const botL = cy + kilnH * 0.5 - slopeY;
+  const botR = cy + kilnH * 0.5 + slopeY;
 
-  const fadeAlpha = isActive ? 1 : (isDone ? 0.98 : 0.86);
-
-  // ---- left drive unit ----
-  ctx.save();
-  const driveX = left - kilnW * 0.17;
-  const driveY = cy - kilnH * 0.37;
-  const driveW = kilnW * 0.16;
-  const driveH = kilnH * 0.64;
-  const driveGrad = ctx.createLinearGradient(driveX, driveY, driveX, driveY + driveH);
-  driveGrad.addColorStop(0, 'rgba(90,112,126,0.98)');
-  driveGrad.addColorStop(0.52, 'rgba(78,98,110,0.98)');
-  driveGrad.addColorStop(1, 'rgba(56,74,84,0.98)');
-  ctx.fillStyle = driveGrad;
-  ctx.strokeStyle = 'rgba(96,125,139,0.95)';
-  ctx.lineWidth = 1.1;
-  ctx.beginPath();
-  ctx.roundRect(driveX, driveY, driveW, driveH, 4);
-  ctx.fill(); ctx.stroke();
-
-  // top cap and bolt
-  ctx.fillStyle = 'rgba(120,144,156,0.75)';
-  ctx.beginPath();
-  ctx.roundRect(driveX + 2, driveY + 2, driveW - 4, driveH * 0.13, 3);
-  ctx.fill();
-  ctx.fillStyle = 'rgba(38,50,56,0.80)';
-  ctx.beginPath();
-  ctx.arc(driveX + driveW * 0.35, driveY + driveH * 0.22, Math.max(3, kilnW * 0.01), 0, Math.PI * 2);
-  ctx.fill();
-
-  // gear ring
-  const gearCx = driveX + driveW + kilnW * 0.03;
-  const gearCy = cy + kilnH * 0.06;
-  ctx.fillStyle = 'rgba(55,71,79,0.98)';
-  ctx.strokeStyle = 'rgba(96,125,139,0.98)';
-  ctx.lineWidth = 1.1;
-  ctx.beginPath();
-  ctx.ellipse(gearCx, gearCy, kilnW * 0.068, kilnH * 0.18, 0, 0, Math.PI * 2);
-  ctx.fill(); ctx.stroke();
-  ctx.fillStyle = 'rgba(38,50,56,0.98)';
-  ctx.beginPath();
-  ctx.ellipse(gearCx, gearCy, kilnW * 0.045, kilnH * 0.11, 0, 0, Math.PI * 2);
-  ctx.fill();
-  ctx.fillStyle = 'rgba(120,144,156,0.9)';
-  ctx.beginPath(); ctx.arc(gearCx, gearCy - kilnH * 0.10, 1.6, 0, Math.PI * 2); ctx.fill();
-  ctx.beginPath(); ctx.arc(gearCx, gearCy + kilnH * 0.10, 1.6, 0, Math.PI * 2); ctx.fill();
-  ctx.beginPath(); ctx.arc(gearCx - kilnW * 0.04, gearCy, 1.6, 0, Math.PI * 2); ctx.fill();
-  ctx.restore();
-
-  // ---- main shell ----
-  const shellGrad = ctx.createLinearGradient(left, topL, right, botR);
-  shellGrad.addColorStop(0.00, zones[0].main);
-  shellGrad.addColorStop(0.18, zones[0].soft);
-  shellGrad.addColorStop(0.38, zones[1].main);
-  shellGrad.addColorStop(0.58, zones[2].main);
-  shellGrad.addColorStop(0.80, zones[3].main);
-  shellGrad.addColorStop(1.00, zones[3].soft);
+  const fadeAlpha = isActive ? 1 : (isDone ? 0.95 : 0.82);
 
   ctx.save();
   ctx.globalAlpha = fadeAlpha;
-  ctx.fillStyle = shellGrad;
-  ctx.strokeStyle = 'rgba(84,96,108,0.98)';
-  ctx.lineWidth = 1.6;
+
+  // ── clip to drum shape ───────────────────────────────────
   ctx.beginPath();
-  ctx.moveTo(outerLeft, topL);
-  ctx.lineTo(outerRight, topR);
-  ctx.lineTo(outerRight, botR);
-  ctx.lineTo(outerLeft, botL);
+  ctx.moveTo(left,  topL);
+  ctx.lineTo(right, topR);
+  ctx.lineTo(right, botR);
+  ctx.lineTo(left,  botL);
   ctx.closePath();
-  ctx.fill(); ctx.stroke();
-
-  // darker lower edge for thickness
-  ctx.strokeStyle = 'rgba(34,45,54,0.50)';
-  ctx.lineWidth = 1.1;
-  ctx.beginPath();
-  ctx.moveTo(outerLeft + 1, botL - 1);
-  ctx.lineTo(outerRight - 1, botR - 1);
-  ctx.stroke();
-
-  // inner heat band
-  const innerTopL = topL + kilnH * 0.11;
-  const innerTopR = topR + kilnH * 0.11;
-  const innerBotL = botL - kilnH * 0.11;
-  const innerBotR = botR - kilnH * 0.11;
-
-  const heatGrad = ctx.createLinearGradient(innerLeft, cy, innerRight, cy);
-  heatGrad.addColorStop(0.00, zones[0].main);
-  heatGrad.addColorStop(0.18, zones[0].soft);
-  heatGrad.addColorStop(0.38, zones[1].main);
-  heatGrad.addColorStop(0.56, zones[1].soft);
-  heatGrad.addColorStop(0.72, zones[2].main);
-  heatGrad.addColorStop(0.88, zones[2].soft);
-  heatGrad.addColorStop(1.00, zones[3].main);
-
-  ctx.fillStyle = heatGrad;
-  ctx.globalAlpha = isActive ? 0.98 : 0.92;
-  ctx.beginPath();
-  ctx.moveTo(innerLeft, innerTopL);
-  ctx.lineTo(innerRight, innerTopR);
-  ctx.lineTo(innerRight, innerBotR);
-  ctx.lineTo(innerLeft, innerBotL);
-  ctx.closePath();
-  ctx.fill();
-
-  // slim inner outline
-  ctx.strokeStyle = 'rgba(18,35,58,0.22)';
-  ctx.lineWidth = 1;
-  ctx.beginPath();
-  ctx.moveTo(innerLeft, innerTopL);
-  ctx.lineTo(innerRight, innerTopR);
-  ctx.lineTo(innerRight, innerBotR);
-  ctx.lineTo(innerLeft, innerBotL);
-  ctx.closePath();
-  ctx.stroke();
-
-  // slight heat glare
-  if(isActive){
-    const pulse = (frame % 100) / 100;
-    const glowX = innerLeft + (innerRight - innerLeft) * pulse;
-    const glow = ctx.createRadialGradient(glowX, cy, 0, glowX, cy, kilnW * 0.10);
-    glow.addColorStop(0, 'rgba(255,255,255,0.35)');
-    glow.addColorStop(0.36, 'rgba(255,193,7,0.16)');
-    glow.addColorStop(1, 'rgba(255,193,7,0)');
-    ctx.fillStyle = glow;
-    ctx.beginPath();
-    ctx.ellipse(glowX, cy, kilnW * 0.085, kilnH * 0.13, 0, 0, Math.PI * 2);
-    ctx.fill();
-  }
-
-  // zone separators
-  const zoneCuts = [
-    innerLeft + (innerRight - innerLeft) * 0.25,
-    innerLeft + (innerRight - innerLeft) * 0.50,
-    innerLeft + (innerRight - innerLeft) * 0.75
-  ];
   ctx.save();
-  ctx.globalAlpha = 0.18;
-  ctx.strokeStyle = 'rgba(255,255,255,0.7)';
-  ctx.lineWidth = 0.8;
-  zoneCuts.forEach((x) => {
-    ctx.beginPath();
-    ctx.moveTo(x, innerTopL + kilnH * 0.03);
-    ctx.lineTo(x, innerBotL - kilnH * 0.03);
-    ctx.stroke();
-  });
-  ctx.restore();
+  ctx.clip();
 
-  // ---- support rings ----
-  const ringYs = [0.34, 0.39, 0.44];
-  const ringXs = [0.17, 0.45, 0.73];
-  const ringHs = [0.80, 0.77, 0.72];
-  ringXs.forEach((rx, i) => {
-    const x = left + kilnW * rx;
-    const h = kilnH * ringHs[i];
-    const ringGrad = ctx.createLinearGradient(x, cy - h * 0.5, x, cy + h * 0.5);
-    ringGrad.addColorStop(0, 'rgba(124,147,160,0.98)');
-    ringGrad.addColorStop(1, 'rgba(68,84,94,0.98)');
-    ctx.fillStyle = ringGrad;
-    ctx.strokeStyle = 'rgba(96,125,139,0.92)';
-    ctx.lineWidth = 1.1;
-    ctx.beginPath();
-    ctx.roundRect(x, cy - h * 0.50, kilnW * 0.046, h, 3);
-    ctx.fill(); ctx.stroke();
-    ctx.fillStyle = 'rgba(255,255,255,0.08)';
-    ctx.beginPath();
-    ctx.roundRect(x + 3, cy - h * 0.48, kilnW * 0.022, h * 0.96, 2);
-    ctx.fill();
-  });
+  // Silver base fill
+  ctx.fillStyle = '#c8cdd4';
+  ctx.globalAlpha = fadeAlpha;
+  ctx.fillRect(left - 2, topL - 4, kilnW + 4, (botL - topL) + slopeY * 2 + 8);
 
-  // ---- support stands ----
-  [0, 1].forEach((i) => {
-    const sX = left + kilnW * (i === 0 ? 0.165 : 0.44);
-    const baseY = cy + kilnH * 0.46;
-    ctx.fillStyle = 'rgba(84,96,108,0.98)';
-    ctx.beginPath();
-    ctx.roundRect(sX, baseY, kilnW * 0.058, kilnH * 0.06, 2);
-    ctx.fill();
-    ctx.fillStyle = 'rgba(96,125,139,0.98)';
-    ctx.beginPath();
-    ctx.roundRect(sX + kilnW * 0.012, baseY + kilnH * 0.06, kilnW * 0.034, kilnH * 0.08, 2);
-    ctx.fill();
-    ctx.fillStyle = 'rgba(120,144,156,0.95)';
-    ctx.beginPath();
-    ctx.roundRect(sX - 2, baseY + kilnH * 0.14, kilnW * 0.062, kilnH * 0.04, 2);
-    ctx.fill();
-  });
+  // Subtle temperature tint overlay — very faint
+  const sliceW = kilnW / 4;
+  for(let z = 0; z < 4; z++){
+    const x0 = left + z * sliceW;
+    ctx.fillStyle = zones[z].main;
+    ctx.globalAlpha = fadeAlpha * 0.18;
+    ctx.fillRect(x0, topL - 4, sliceW + 1, (botL - topL) + slopeY * 2 + 8);
+  }
 
-  // ---- outlet housing ----
-  const outX = right - kilnW * 0.01;
-  const outY = cy - kilnH * 0.30;
-  const outW = kilnW * 0.15;
-  const outH = kilnH * 0.58;
-  const outGrad = ctx.createLinearGradient(outX, outY, outX, outY + outH);
-  outGrad.addColorStop(0, zones[3].soft);
-  outGrad.addColorStop(1, 'rgba(78,97,109,0.96)');
-  ctx.fillStyle = outGrad;
-  ctx.strokeStyle = 'rgba(84,96,108,0.98)';
-  ctx.lineWidth = 1.2;
+  // Top highlight stripe for cylindrical roundness
+  ctx.globalAlpha = fadeAlpha * 0.55;
+  ctx.fillStyle = '#ffffff';
+  const bandH = kilnH * 0.30;
   ctx.beginPath();
-  ctx.roundRect(outX, outY, outW, outH, 5);
-  ctx.fill(); ctx.stroke();
-
-  ctx.fillStyle = 'rgba(55,71,79,0.96)';
-  ctx.beginPath();
-  ctx.arc(outX + outW * 0.82, cy + kilnH * 0.08, kilnW * 0.028, 0, Math.PI * 2);
-  ctx.fill();
-  ctx.fillStyle = 'rgba(144,164,174,0.18)';
-  ctx.beginPath();
-  ctx.arc(outX + outW * 0.82, cy + kilnH * 0.08, kilnW * 0.014, 0, Math.PI * 2);
+  ctx.moveTo(left,  topL);
+  ctx.lineTo(right, topR);
+  ctx.lineTo(right, topR + bandH);
+  ctx.lineTo(left,  topL + bandH);
+  ctx.closePath();
   ctx.fill();
 
-  // inlet/outlet slant edges
-  ctx.strokeStyle = 'rgba(144,164,174,0.95)';
-  ctx.lineWidth = 1.2;
-  ctx.beginPath(); ctx.moveTo(outerLeft, topL); ctx.lineTo(innerLeft, innerTopL); ctx.stroke();
-  ctx.beginPath(); ctx.moveTo(outerLeft, botL); ctx.lineTo(innerLeft, innerBotL); ctx.stroke();
-  ctx.beginPath(); ctx.moveTo(innerRight, innerTopR); ctx.lineTo(outerRight, topR); ctx.stroke();
-  ctx.beginPath(); ctx.moveTo(innerRight, innerBotR); ctx.lineTo(outerRight, botR); ctx.stroke();
+  // Bottom shadow stripe
+  ctx.globalAlpha = fadeAlpha * 0.18;
+  ctx.fillStyle = '#2a2a2a';
+  ctx.beginPath();
+  ctx.moveTo(left,  botL - bandH * 0.6);
+  ctx.lineTo(right, botR - bandH * 0.6);
+  ctx.lineTo(right, botR);
+  ctx.lineTo(left,  botL);
+  ctx.closePath();
+  ctx.fill();
 
-  // subtle temp labels
-  const labelXs = [
-    innerLeft + (innerRight - innerLeft) * 0.12,
-    innerLeft + (innerRight - innerLeft) * 0.36,
-    innerLeft + (innerRight - innerLeft) * 0.62,
-    innerLeft + (innerRight - innerLeft) * 0.86
-  ];
-  ctx.font = '500 7px JetBrains Mono';
-  ctx.textAlign = 'center';
-  temps.forEach((t, i) => {
-    ctx.fillStyle = zones[i].dark;
-    ctx.fillText(`${Math.round(t)}°C`, labelXs[i], cy + kilnH * 0.02);
-  });
-
-  // small active heat trail
+  // Active shimmer
   if(isActive){
-    const t = (frame % 80) / 80;
-    const trailX = innerLeft + (innerRight - innerLeft) * t;
-    const trail = ctx.createRadialGradient(trailX, cy, 0, trailX, cy, kilnW * 0.08);
-    trail.addColorStop(0, 'rgba(255,255,255,0.50)');
-    trail.addColorStop(0.45, 'rgba(255,255,255,0.16)');
-    trail.addColorStop(1, 'rgba(255,255,255,0)');
-    ctx.fillStyle = trail;
+    const p = (frame % 90) / 90;
+    const trailX = left + kilnW * p;
+    const trailY = topL + p * (slopeY * 2) + kilnH * 0.5;
+    ctx.globalAlpha = 0.22;
+    ctx.fillStyle = '#ffffff';
     ctx.beginPath();
-    ctx.ellipse(trailX, cy, kilnW * 0.08, kilnH * 0.11, 0, 0, Math.PI * 2);
+    ctx.ellipse(trailX, trailY, kilnW * 0.04, kilnH * 0.42, 0, 0, Math.PI * 2);
     ctx.fill();
   }
 
+  ctx.restore(); // end clip
+
+  // ── drum outline ─────────────────────────────────────────
+  ctx.globalAlpha = fadeAlpha;
+  ctx.strokeStyle = 'rgba(80,85,95,0.65)';
+  ctx.lineWidth = 1.2;
+  ctx.beginPath();
+  ctx.moveTo(left,  topL);
+  ctx.lineTo(right, topR);
+  ctx.lineTo(right, botR);
+  ctx.lineTo(left,  botL);
+  ctx.closePath();
+  ctx.stroke();
+
+  // ── end caps (thin ellipses) ──────────────────────────────
+  const capRy = kilnH * 0.50;
+  const capRx = kilnH * 0.13;
+
+  // Inlet (left)
+  ctx.save();
+  ctx.globalAlpha = fadeAlpha * 0.90;
+  ctx.fillStyle = '#a8adb5';
+  ctx.strokeStyle = 'rgba(80,85,95,0.60)';
+  ctx.lineWidth = 1.0;
+  ctx.beginPath(); ctx.ellipse(left, (topL+botL)/2, capRx, capRy, 0, 0, Math.PI*2); ctx.fill(); ctx.stroke();
   ctx.restore();
 
-  return { x: left - kilnW * 0.20, y: cy - kilnH * 0.46, w: kilnW * 1.22, h: kilnH * 1.02 };
+  // Outlet (right)
+  ctx.save();
+  ctx.globalAlpha = fadeAlpha * 0.90;
+  ctx.fillStyle = '#a8adb5';
+  ctx.strokeStyle = 'rgba(80,85,95,0.60)';
+  ctx.lineWidth = 1.0;
+  ctx.beginPath(); ctx.ellipse(right, (topR+botR)/2, capRx, capRy, 0, 0, Math.PI*2); ctx.fill(); ctx.stroke();
+  ctx.restore();
+
+  // ── riding rings — very thin ──────────────────────────────
+  const tyrePositions = [0.24, 0.62];
+  tyrePositions.forEach((frac) => {
+    const tx  = left + kilnW * frac;
+    const tyY = topL + frac * (slopeY * 2) - slopeY;
+    const tyMy = tyY + kilnH * 0.50;
+    const tyRy = capRy * 1.18;
+    const tyRx = capRx * 0.55;   // very thin ring
+
+    ctx.save();
+    ctx.globalAlpha = fadeAlpha * 0.88;
+    ctx.fillStyle = '#9ea4ad';
+    ctx.strokeStyle = 'rgba(70,75,85,0.55)';
+    ctx.lineWidth = 0.9;
+    ctx.beginPath(); ctx.ellipse(tx, tyMy, tyRx, tyRy, 0, 0, Math.PI*2); ctx.fill(); ctx.stroke();
+    // hollow centre
+    ctx.fillStyle = '#c0c5cc';
+    ctx.globalAlpha = fadeAlpha * 0.50;
+    ctx.beginPath(); ctx.ellipse(tx, tyMy, tyRx * 0.28, tyRy * 0.55, 0, 0, Math.PI*2); ctx.fill();
+    ctx.restore();
+
+    // Support stand — slim
+    const standW = tyRx * 3.2;
+    const standTop = tyMy + tyRy + 0.5;
+    const standH = kilnH * 0.70;
+    ctx.save();
+    ctx.globalAlpha = fadeAlpha * 0.82;
+    ctx.fillStyle = 'rgba(110,112,118,0.92)';
+    ctx.strokeStyle = 'rgba(75,78,85,0.55)';
+    ctx.lineWidth = 0.8;
+    ctx.beginPath(); ctx.roundRect(tx - standW/2, standTop, standW, standH, 2); ctx.fill(); ctx.stroke();
+    // base
+    ctx.fillStyle = 'rgba(90,92,98,0.95)';
+    ctx.beginPath(); ctx.roundRect(tx - standW/2 - 3, standTop + standH, standW + 6, kilnH * 0.18, 2); ctx.fill(); ctx.stroke();
+    ctx.restore();
+  });
+
+  // ── temperature labels ────────────────────────────────────
+  ctx.save();
+  ctx.globalAlpha = fadeAlpha * 0.80;
+  ctx.font = '500 6px JetBrains Mono';
+  ctx.textAlign = 'center';
+  for(let z = 0; z < 4; z++){
+    const frac = z / 4 + 0.125;
+    const lx = left + kilnW * frac;
+    const lTopY = topL + frac * (slopeY * 2) - slopeY;
+    const lMy = lTopY + kilnH * 0.44;
+    ctx.fillStyle = 'rgba(40,42,50,0.75)';
+    ctx.fillText(`${Math.round(temps[z])}°`, lx, lMy);
+  }
+  ctx.restore();
+
+  ctx.restore();
+
+  return {
+    x: left - capRx * 1.5,
+    y: topL - capRy * 0.3,
+    w: kilnW + capRx * 3,
+    h: (botL - topL) + slopeY * 2 + kilnH * 1.0 + 10
+  };
 }
-
-
 function drawPelletBurst(cx,cy,frame,r){
   const count=12;
   for(let p=0;p<count;p++){
