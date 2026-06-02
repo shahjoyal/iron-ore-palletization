@@ -815,6 +815,289 @@ function draw(frame,activeStep){
   }
 }
 
+
+function drawBallingDiscEnhanced(cx,cy,mW,mH,frame,stage,isActive,isDone){
+  const angleDeg = clamp(safeNum(stageParams.ball.angle, 46), 36, 58);
+  const discRpm = clamp(safeNum(stageParams.ball.discRpm, 7), 0, 30);
+  const motorRpm = clamp(safeNum(stageParams.ball.motorRpm, 1100), 0, 3000);
+  const waterSprayRate = clamp(safeNum(stageParams.ball.waterSprayRate, 0), 0, 200);
+  const greenMoisture = clamp(safeNum(stageParams.ball.greenBallMoisture, 10), 0, 20);
+
+  const angleT = (angleDeg - 36) / (58 - 36);
+  const tilt = 0.22 + angleT * 0.16;            // 0.22..0.38
+  const rotation = -0.62 + angleT * 0.34;       // slight perspective rotation
+  const discRx = mW * 0.47;
+  const discRy = mH * (0.28 - angleT * 0.045);
+  const rim = Math.max(7, mH * 0.04);
+  const discX = cx - mW * 0.07;
+  const discY = cy - mH * 0.02;
+
+  // subtle machine base shadow
+  ctx.save();
+  ctx.globalAlpha = 0.18;
+  ctx.fillStyle = '#000';
+  ctx.beginPath();
+  ctx.ellipse(discX + 8, discY + discRy + 45, discRx * 0.92, discRy * 0.28, 0, 0, Math.PI * 2);
+  ctx.fill();
+  ctx.restore();
+
+  // back rim / underside
+  ctx.save();
+  ctx.translate(discX, discY);
+  ctx.rotate(rotation);
+  ctx.fillStyle = '#6c727b';
+  ctx.strokeStyle = 'rgba(35,45,55,0.65)';
+  ctx.lineWidth = 1.5;
+
+  // shadowed outer shell
+  ctx.beginPath();
+  ctx.ellipse(0, 0, discRx * 1.03, discRy * 1.08, 0, 0, Math.PI * 2);
+  ctx.fill();
+  ctx.stroke();
+
+  // top disc with perspective
+  const surfaceGrad = ctx.createLinearGradient(-discRx, -discRy, discRx, discRy);
+  surfaceGrad.addColorStop(0, '#4f5964');
+  surfaceGrad.addColorStop(0.45, '#707882');
+  surfaceGrad.addColorStop(1, '#2f3740');
+  ctx.fillStyle = surfaceGrad;
+  ctx.beginPath();
+  ctx.ellipse(0, 0, discRx, discRy, 0, 0, Math.PI * 2);
+  ctx.fill();
+
+  // segmented top surface
+  ctx.strokeStyle = 'rgba(255,255,255,0.17)';
+  ctx.lineWidth = 1;
+  for(let s=0;s<8;s++){
+    const a = s * Math.PI / 4;
+    ctx.beginPath();
+    ctx.moveTo(0,0);
+    ctx.lineTo(Math.cos(a) * discRx * 0.97, Math.sin(a) * discRy * 0.97);
+    ctx.stroke();
+  }
+
+  // central collar
+  ctx.save();
+  ctx.rotate(0.08);
+  ctx.fillStyle = '#6b7077';
+  ctx.strokeStyle = 'rgba(255,255,255,0.45)';
+  ctx.lineWidth = 1.2;
+  ctx.beginPath();
+  ctx.ellipse(0, 0, discRx * 0.30, discRy * 0.31, 0, 0, Math.PI * 2);
+  ctx.fill();
+  ctx.stroke();
+  ctx.restore();
+
+  // inner ring bolts
+  ctx.strokeStyle = 'rgba(255,255,255,0.55)';
+  ctx.fillStyle = '#9ca6b0';
+  for(let b=0;b<14;b++){
+    const a = b * Math.PI * 2 / 14 + frame * 0.001;
+    const bx = Math.cos(a) * discRx * 0.31;
+    const by = Math.sin(a) * discRy * 0.31;
+    ctx.beginPath();
+    ctx.arc(bx, by, 1.6, 0, Math.PI * 2);
+    ctx.fill();
+  }
+
+  // shiny highlight
+  const hi = ctx.createLinearGradient(-discRx * 0.8, -discRy * 0.9, discRx * 0.6, discRy * 0.4);
+  hi.addColorStop(0, 'rgba(255,255,255,0.25)');
+  hi.addColorStop(0.35, 'rgba(255,255,255,0.03)');
+  hi.addColorStop(1, 'rgba(255,255,255,0.0)');
+  ctx.fillStyle = hi;
+  ctx.beginPath();
+  ctx.ellipse(-discRx * 0.08, -discRy * 0.18, discRx * 0.92, discRy * 0.55, -0.06, 0, Math.PI * 2);
+  ctx.fill();
+
+  // moving pellets on disc
+  const rotSpeed = 0.018 + discRpm * 0.0048;
+  const pellets = 9;
+  const pourX = discRx * 0.52;
+  const pourY = discRy * 0.22;
+  for(let p=0;p<pellets;p++){
+    const phase = (frame * rotSpeed + p / pellets) * Math.PI * 2;
+    const edgeBias = 0.56 + 0.18 * Math.sin(frame * 0.02 + p);
+    const x = Math.cos(phase) * discRx * edgeBias;
+    const y = Math.sin(phase) * discRy * edgeBias * 0.76;
+    const size = 3 + (p % 3);
+    const g = ctx.createRadialGradient(x - size * 0.3, y - size * 0.3, 0, x, y, size);
+    g.addColorStop(0, '#a7b8c6');
+    g.addColorStop(1, '#374b59');
+    ctx.beginPath();
+    ctx.arc(x, y, size, 0, Math.PI * 2);
+    ctx.fillStyle = g;
+    ctx.fill();
+    ctx.strokeStyle = 'rgba(255,255,255,0.18)';
+    ctx.lineWidth = 0.6;
+    ctx.stroke();
+  }
+
+  // water spray line / droplets when active
+  if(isActive && waterSprayRate > 0){
+    ctx.strokeStyle = 'rgba(95,180,255,0.5)';
+    ctx.lineWidth = 1.1;
+    ctx.setLineDash([2,4]);
+    ctx.beginPath();
+    ctx.moveTo(-discRx * 0.55, -discRy * 0.98);
+    ctx.lineTo(-discRx * 0.15, -discRy * 0.35);
+    ctx.stroke();
+    ctx.setLineDash([]);
+    const drops = Math.min(8, Math.max(3, Math.round(waterSprayRate / 30)));
+    for(let d=0; d<drops; d++){
+      const t = ((frame * 0.04) + d / drops) % 1;
+      const dx = -discRx * 0.55 + t * (discRx * 0.42);
+      const dy = -discRy * 0.98 + t * (discRy * 0.62);
+      ctx.beginPath();
+      ctx.arc(dx, dy, 1.5, 0, Math.PI * 2);
+      ctx.fillStyle = 'rgba(120,200,255,0.8)';
+      ctx.fill();
+    }
+  }
+
+  ctx.restore();
+
+  // support / base and motor
+  ctx.save();
+  ctx.translate(discX, discY);
+  ctx.rotate(rotation);
+
+  const baseW = mW * 0.70;
+  const baseH = mH * 0.34;
+  const baseY = discRy * 0.88;
+  const baseGrad = ctx.createLinearGradient(-baseW/2, baseY, baseW/2, baseY + baseH);
+  baseGrad.addColorStop(0, '#d9d7d0');
+  baseGrad.addColorStop(0.55, '#f1efe8');
+  baseGrad.addColorStop(1, '#a5a9af');
+  ctx.fillStyle = baseGrad;
+  ctx.strokeStyle = 'rgba(65,75,85,0.55)';
+  ctx.lineWidth = 1;
+  ctx.beginPath();
+  ctx.moveTo(-baseW * 0.50, baseY - 6);
+  ctx.lineTo(baseW * 0.46, baseY + 4);
+  ctx.lineTo(baseW * 0.40, baseY + baseH);
+  ctx.lineTo(-baseW * 0.42, baseY + baseH * 0.88);
+  ctx.closePath();
+  ctx.fill();
+  ctx.stroke();
+
+  // motor
+  const motorX = -discRx * 0.95;
+  const motorY = baseY + baseH * 0.10;
+  ctx.save();
+  ctx.translate(motorX, motorY);
+  ctx.rotate(0.03);
+  ctx.fillStyle = '#2b7480';
+  ctx.strokeStyle = 'rgba(20,40,50,0.7)';
+  ctx.lineWidth = 1;
+  ctx.beginPath();
+  ctx.roundRect(-mW * 0.13, -mH * 0.11, mW * 0.26, mH * 0.22, 4);
+  ctx.fill(); ctx.stroke();
+  ctx.fillStyle = '#4e8a94';
+  ctx.beginPath();
+  ctx.roundRect(-mW * 0.20, -mH * 0.085, mW * 0.08, mH * 0.17, 4);
+  ctx.fill(); ctx.stroke();
+  ctx.fillStyle = '#d7a62a';
+  ctx.beginPath();
+  ctx.roundRect(mW * 0.11, -mH * 0.13, mW * 0.05, mH * 0.26, 4);
+  ctx.fill(); ctx.stroke();
+  ctx.restore();
+
+  // conveyor belt to next layer
+  const beltStartX = discRx * 0.82;
+  const beltStartY = discRy * 0.42;
+  const beltLen = mW * 1.12;
+  const beltH = mH * 0.18;
+  const beltAngle = -0.04;
+
+  ctx.save();
+  ctx.translate(beltStartX, beltStartY + 10);
+  ctx.rotate(beltAngle);
+  const beltGrad = ctx.createLinearGradient(0, -beltH/2, 0, beltH/2);
+  beltGrad.addColorStop(0, '#2f3338');
+  beltGrad.addColorStop(0.45, '#51565c');
+  beltGrad.addColorStop(1, '#24282d');
+  ctx.fillStyle = beltGrad;
+  ctx.strokeStyle = 'rgba(40,45,50,0.8)';
+  ctx.lineWidth = 1;
+  ctx.beginPath();
+  ctx.roundRect(0, -beltH/2, beltLen, beltH, 4);
+  ctx.fill(); ctx.stroke();
+
+  // belt rails
+  ctx.strokeStyle = 'rgba(220,220,220,0.35)';
+  ctx.lineWidth = 0.9;
+  ctx.beginPath(); ctx.moveTo(0, -beltH/2 + 3); ctx.lineTo(beltLen, -beltH/2 + 3); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(0, beltH/2 - 3); ctx.lineTo(beltLen, beltH/2 - 3); ctx.stroke();
+
+  // rollers
+  for(let r=0; r<6; r++){
+    const rx = 16 + r * (beltLen - 32) / 5;
+    ctx.fillStyle = '#9aa1a8';
+    ctx.strokeStyle = 'rgba(45,50,55,0.75)';
+    ctx.lineWidth = 0.7;
+    ctx.beginPath();
+    ctx.roundRect(rx - 8, -beltH/2 - 4, 16, beltH + 8, 3);
+    ctx.fill();
+    ctx.stroke();
+  }
+
+  // pellets on conveyor
+  const pelletCount = Math.round(10 + discRpm * 0.8);
+  for(let i=0;i<pelletCount;i++){
+    const t = ((frame * (0.015 + discRpm * 0.0015)) + i / pelletCount) % 1;
+    const px = t * beltLen;
+    const py = Math.sin((t * 4 + frame * 0.02) * Math.PI) * (beltH * 0.16);
+    const pr = 3 + (i % 3) * 0.8;
+    const pg = ctx.createRadialGradient(px - pr * 0.35, py - pr * 0.35, 0, px, py, pr);
+    pg.addColorStop(0, '#b4bec5');
+    pg.addColorStop(1, '#64707a');
+    ctx.beginPath();
+    ctx.arc(px, py, pr, 0, Math.PI * 2);
+    ctx.fillStyle = pg;
+    ctx.fill();
+    ctx.strokeStyle = 'rgba(255,255,255,0.14)';
+    ctx.lineWidth = 0.5;
+    ctx.stroke();
+  }
+
+  // exit chute into next stage
+  ctx.fillStyle = '#b8bcc2';
+  ctx.strokeStyle = 'rgba(50,55,60,0.65)';
+  ctx.lineWidth = 1;
+  ctx.beginPath();
+  ctx.moveTo(0, -beltH/2 + 2);
+  ctx.lineTo(-18, -beltH/2 - 14);
+  ctx.lineTo(0, -beltH/2 + 14);
+  ctx.closePath();
+  ctx.fill();
+  ctx.stroke();
+  ctx.restore();
+
+  // small status label inside machine when active
+  if(isActive){
+    ctx.save();
+    ctx.rotate(-rotation);
+    ctx.fillStyle = 'rgba(255,255,255,0.55)';
+    ctx.font = '600 7px JetBrains Mono';
+    ctx.textAlign = 'center';
+    ctx.fillText(`ANGLE ${angleDeg.toFixed(1)}°`, 0, -discRy * 1.18);
+    ctx.fillText(`RPM ${discRpm.toFixed(1)}`, 0, -discRy * 1.04);
+    ctx.restore();
+  }
+
+  ctx.restore();
+
+  // return larger hit area so the belt also clicks
+  return {
+    x: discX - discRx * 1.10,
+    y: discY - discRy * 1.30,
+    w: discRx * 2.25,
+    h: discRy * 2.25
+  };
+}
+
+
 function drawMachineShape(shape,cx,cy,mW,mH,col,strokeCol,strokeW,isActive,isDone,frame,stage){
   const lit=isActive||isDone;
   ctx.fillStyle=col; ctx.strokeStyle=strokeCol; ctx.lineWidth=strokeW;
@@ -864,15 +1147,7 @@ function drawMachineShape(shape,cx,cy,mW,mH,col,strokeCol,strokeW,isActive,isDon
       return{x:cx-rw,y:cy-rh,w:rw*2,h:rh*2};
     }
     case 'circle':{
-      const r=mW*0.40;
-      ctx.beginPath(); ctx.arc(cx,cy,r,0,Math.PI*2); ctx.fill(); ctx.stroke();
-      ctx.save(); ctx.translate(cx,cy); ctx.rotate(isActive?-frame*0.045:-0.3);
-      ctx.strokeStyle='rgba(255,255,255,0.35)'; ctx.lineWidth=1.5;
-      ctx.beginPath(); ctx.arc(0,0,r*0.92,0,Math.PI*2); ctx.stroke();
-      for(let k=0;k<5;k++){const a=k*Math.PI*2/5;ctx.beginPath();ctx.moveTo(0,0);ctx.lineTo(Math.cos(a)*r*0.86,Math.sin(a)*r*0.86);ctx.stroke();}
-      ctx.restore();
-      for(let p=0;p<5;p++){const ang=(isActive?frame*0.05:0)+p*Math.PI*2/5;const pr=r*0.64,pelR=3.5+p%2;const px=cx+Math.cos(ang)*pr,py=cy+Math.sin(ang)*pr*0.6;const pg=ctx.createRadialGradient(px-pelR*0.4,py-pelR*0.4,0,px,py,pelR);pg.addColorStop(0,'#8ba3b5');pg.addColorStop(1,'#2a4a5a');ctx.beginPath();ctx.arc(px,py,pelR,0,Math.PI*2);ctx.fillStyle=pg;ctx.fill();}
-      return{x:cx-r,y:cy-r,w:r*2,h:r*2};
+      return drawBallingDiscEnhanced(cx,cy,mW,mH,frame,stage,isActive,isDone);
     }
     case 'screen':{
       const sw=mW*0.58,sh=mH*0.46; const top=cy-sh/2;
