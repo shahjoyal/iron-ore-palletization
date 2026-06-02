@@ -817,6 +817,7 @@ function draw(frame,activeStep){
 
 
 
+
 function drawBallingDiscEnhanced(cx,cy,mW,mH,frame,stage,isActive,isDone){
   const angleDeg = clamp(safeNum(stageParams.ball.angle, 45), 35, 60);
   const discRpm = clamp(safeNum(stageParams.ball.discRpm, 7), 0, 30);
@@ -825,10 +826,10 @@ function drawBallingDiscEnhanced(cx,cy,mW,mH,frame,stage,isActive,isDone){
   const greenMoisture = clamp(safeNum(stageParams.ball.greenBallMoisture, 10), 0, 20);
 
   const angleT = (angleDeg - 35) / 25;                 // 0..1
-  const discLean = 0.03 + angleT * 0.08;               // very subtle tilt
-  const rotation = -0.12 + angleT * 0.09;              // slight perspective rotation
+  const discLean = 0.02 + angleT * 0.04;               // flatter, straighter look
+  const rotation = -0.06 + angleT * 0.05;              // subtle perspective rotation
   const discRx = mW * 0.47;
-  const discRy = mH * (0.305 - angleT * 0.012);
+  const discRy = mH * (0.305 - angleT * 0.010);
   const discX = cx - mW * 0.02;
   const discY = cy - mH * 0.01;
 
@@ -837,7 +838,7 @@ function drawBallingDiscEnhanced(cx,cy,mW,mH,frame,stage,isActive,isDone){
   ctx.globalAlpha = 0.18;
   ctx.fillStyle = '#000';
   ctx.beginPath();
-  ctx.ellipse(discX + 8, discY + discRy + 44, discRx * 0.92, discRy * 0.30, 0, 0, Math.PI * 2);
+  ctx.ellipse(discX + 8, discY + discRy + 42, discRx * 0.90, discRy * 0.28, 0, 0, Math.PI * 2);
   ctx.fill();
   ctx.restore();
 
@@ -846,33 +847,33 @@ function drawBallingDiscEnhanced(cx,cy,mW,mH,frame,stage,isActive,isDone){
   ctx.rotate(rotation);
 
   // back shell / underside
-  ctx.fillStyle = '#6b7179';
+  ctx.fillStyle = '#69707a';
   ctx.strokeStyle = 'rgba(35,45,55,0.65)';
-  ctx.lineWidth = 1.5;
+  ctx.lineWidth = 1.4;
   ctx.beginPath();
-  ctx.ellipse(0, 0, discRx * 1.02, discRy * 1.08, 0, 0, Math.PI * 2);
+  ctx.ellipse(0, 0, discRx * 1.02, discRy * 1.06, 0, 0, Math.PI * 2);
   ctx.fill();
   ctx.stroke();
 
   // disc surface
   const surfaceGrad = ctx.createLinearGradient(-discRx, -discRy, discRx, discRy);
-  surfaceGrad.addColorStop(0, '#515c67');
+  surfaceGrad.addColorStop(0, '#54606b');
   surfaceGrad.addColorStop(0.45, '#75808a');
-  surfaceGrad.addColorStop(1, '#2f3740');
+  surfaceGrad.addColorStop(1, '#303841');
   ctx.fillStyle = surfaceGrad;
   ctx.beginPath();
   ctx.ellipse(0, 0, discRx, discRy, 0, 0, Math.PI * 2);
   ctx.fill();
 
-  // subtle rim highlight
-  ctx.strokeStyle = 'rgba(255,255,255,0.24)';
+  // rim highlight
+  ctx.strokeStyle = 'rgba(255,255,255,0.22)';
   ctx.lineWidth = 1.1;
   ctx.beginPath();
-  ctx.ellipse(0, 0, discRx * 0.995, discRy * 0.995, 0, 0, Math.PI * 2);
+  ctx.ellipse(0, 0, discRx * 0.994, discRy * 0.994, 0, 0, Math.PI * 2);
   ctx.stroke();
 
   // surface segments
-  ctx.strokeStyle = 'rgba(255,255,255,0.16)';
+  ctx.strokeStyle = 'rgba(255,255,255,0.15)';
   ctx.lineWidth = 1;
   for(let s=0;s<8;s++){
     const a = s * Math.PI / 4;
@@ -885,9 +886,9 @@ function drawBallingDiscEnhanced(cx,cy,mW,mH,frame,stage,isActive,isDone){
   // central collar
   ctx.save();
   ctx.rotate(0.08);
-  ctx.fillStyle = '#6b7077';
-  ctx.strokeStyle = 'rgba(255,255,255,0.45)';
-  ctx.lineWidth = 1.2;
+  ctx.fillStyle = '#6a7077';
+  ctx.strokeStyle = 'rgba(255,255,255,0.42)';
+  ctx.lineWidth = 1.15;
   ctx.beginPath();
   ctx.ellipse(0, 0, discRx * 0.30, discRy * 0.31, 0, 0, Math.PI * 2);
   ctx.fill();
@@ -895,13 +896,13 @@ function drawBallingDiscEnhanced(cx,cy,mW,mH,frame,stage,isActive,isDone){
   ctx.restore();
 
   // inner ring bolts
-  ctx.fillStyle = '#b1bac2';
+  ctx.fillStyle = '#b2bac2';
   for(let b=0;b<14;b++){
     const a = b * Math.PI * 2 / 14 + frame * 0.001;
     const bx = Math.cos(a) * discRx * 0.31;
     const by = Math.sin(a) * discRy * 0.31;
     ctx.beginPath();
-    ctx.arc(bx, by, 1.6, 0, Math.PI * 2);
+    ctx.arc(bx, by, 1.55, 0, Math.PI * 2);
     ctx.fill();
   }
 
@@ -915,14 +916,14 @@ function drawBallingDiscEnhanced(cx,cy,mW,mH,frame,stage,isActive,isDone){
   ctx.ellipse(-discRx * 0.08, -discRy * 0.18, discRx * 0.92, discRy * 0.55, -0.06, 0, Math.PI * 2);
   ctx.fill();
 
-  // pellets moving on the disc - biased slightly toward the discharge side
-  const discSpeed = 0.008 + discRpm * 0.0024;
+  // pellets moving on the disc - biased toward the discharge side and falling lower
+  const discSpeed = 0.0055 + discRpm * 0.0014;
   const pellets = 9;
   for(let p=0;p<pellets;p++){
     const phase = (frame * discSpeed + p / pellets) * Math.PI * 2;
-    const orbitBias = 0.57 + 0.08 * Math.sin(frame * 0.02 + p * 1.4);
+    const orbitBias = 0.54 + 0.07 * Math.sin(frame * 0.018 + p * 1.3);
     const x = Math.cos(phase) * discRx * orbitBias;
-    const y = Math.sin(phase) * discRy * (0.58 - angleT * 0.05) + discRy * (0.16 + angleT * 0.08);
+    const y = Math.sin(phase) * discRy * (0.50 - angleT * 0.04) + discRy * (0.18 + angleT * 0.12);
     const size = 3 + (p % 3);
     const g = ctx.createRadialGradient(x - size * 0.3, y - size * 0.3, 0, x, y, size);
     g.addColorStop(0, '#aebccc');
@@ -931,19 +932,19 @@ function drawBallingDiscEnhanced(cx,cy,mW,mH,frame,stage,isActive,isDone){
     ctx.arc(x, y, size, 0, Math.PI * 2);
     ctx.fillStyle = g;
     ctx.fill();
-    ctx.strokeStyle = 'rgba(255,255,255,0.16)';
+    ctx.strokeStyle = 'rgba(255,255,255,0.15)';
     ctx.lineWidth = 0.6;
     ctx.stroke();
   }
 
-  // a small falling stream to reinforce the downward motion
-  const spillSpeed = 0.010 + discRpm * 0.0014 + angleT * 0.001;
-  const spillCount = 5;
+  // falling stream from the discharge side
+  const spillSpeed = 0.008 + discRpm * 0.0010 + angleT * 0.0008;
+  const spillCount = 6;
   for(let p=0;p<spillCount;p++){
     const t = ((frame * spillSpeed) + p / spillCount) % 1;
-    const sx = discRx * 0.36 + t * discRx * 0.44;
-    const sy = -discRy * 0.06 + t * discRy * 0.26 + Math.pow(t, 1.2) * discRy * 0.24;
-    const sr = 2.3 + (p % 2) * 0.55;
+    const sx = discRx * 0.30 + t * discRx * 0.42;
+    const sy = -discRy * 0.04 + t * discRy * 0.24 + Math.pow(t, 1.12) * discRy * 0.22;
+    const sr = 2.1 + (p % 2) * 0.5;
     const sg = ctx.createRadialGradient(sx - sr * 0.3, sy - sr * 0.3, 0, sx, sy, sr);
     sg.addColorStop(0, '#c6d0d8');
     sg.addColorStop(1, '#5b6873');
@@ -975,59 +976,60 @@ function drawBallingDiscEnhanced(cx,cy,mW,mH,frame,stage,isActive,isDone){
     }
   }
 
-  // support / base and motor
+  // compact support structure + reduced motor size
   ctx.save();
-
-  const baseW = mW * 0.70;
-  const baseH = mH * 0.34;
-  const baseY = discRy * 0.88;
-  const baseGrad = ctx.createLinearGradient(-baseW/2, baseY, baseW/2, baseY + baseH);
-  baseGrad.addColorStop(0, '#d9d7d0');
-  baseGrad.addColorStop(0.55, '#f1efe8');
-  baseGrad.addColorStop(1, '#a5a9af');
-  ctx.fillStyle = baseGrad;
-  ctx.strokeStyle = 'rgba(65,75,85,0.55)';
+  const supportY = discRy * 0.88;
+  ctx.fillStyle = '#a4aab0';
+  ctx.strokeStyle = 'rgba(60,68,75,0.7)';
   ctx.lineWidth = 1;
   ctx.beginPath();
-  ctx.moveTo(-baseW * 0.50, baseY - 6);
-  ctx.lineTo(baseW * 0.46, baseY + 4);
-  ctx.lineTo(baseW * 0.40, baseY + baseH);
-  ctx.lineTo(-baseW * 0.42, baseY + baseH * 0.88);
+  ctx.moveTo(-discRx * 0.42, supportY - 4);
+  ctx.lineTo(-discRx * 0.20, supportY + 12);
+  ctx.lineTo(-discRx * 0.02, supportY + 4);
+  ctx.lineTo(-discRx * 0.25, supportY - 12);
   ctx.closePath();
   ctx.fill();
   ctx.stroke();
 
-  // motor
-  const motorX = -discRx * 0.95;
-  const motorY = baseY + baseH * 0.10;
+  ctx.fillStyle = '#c3c8cd';
+  ctx.beginPath();
+  ctx.roundRect(-discRx * 0.34, supportY + 10, discRx * 0.18, 12, 3);
+  ctx.fill();
+  ctx.stroke();
+
+  const motorX = -discRx * 0.86;
+  const motorY = supportY + 9;
   ctx.save();
   ctx.translate(motorX, motorY);
-  ctx.rotate(0.03);
-  ctx.fillStyle = '#2b7480';
+  ctx.rotate(0.02);
+  const motorW = mW * 0.16;
+  const motorH = mH * 0.13;
+  ctx.fillStyle = '#2f7480';
   ctx.strokeStyle = 'rgba(20,40,50,0.7)';
   ctx.lineWidth = 1;
   ctx.beginPath();
-  ctx.roundRect(-mW * 0.13, -mH * 0.11, mW * 0.26, mH * 0.22, 4);
+  ctx.roundRect(-motorW * 0.58, -motorH * 0.40, motorW * 1.16, motorH * 0.80, 4);
   ctx.fill(); ctx.stroke();
   ctx.fillStyle = '#4e8a94';
   ctx.beginPath();
-  ctx.roundRect(-mW * 0.20, -mH * 0.085, mW * 0.08, mH * 0.17, 4);
+  ctx.roundRect(-motorW * 0.70, -motorH * 0.28, motorW * 0.16, motorH * 0.56, 4);
   ctx.fill(); ctx.stroke();
   ctx.fillStyle = '#d7a62a';
   ctx.beginPath();
-  ctx.roundRect(mW * 0.11, -mH * 0.13, mW * 0.05, mH * 0.26, 4);
+  ctx.roundRect(motorW * 0.44, -motorH * 0.44, motorW * 0.08, motorH * 0.88, 4);
   ctx.fill(); ctx.stroke();
   ctx.restore();
+  ctx.restore();
 
-  // conveyor belt to next layer: slightly downward, with space before the next stage
-  const beltStartX = discRx * 0.72;
-  const beltStartY = discRy * 0.54 + 10;
-  const beltLen = mW * 0.84;
-  const beltH = mH * 0.17;
-  const beltAngle = 0.09 + angleT * 0.02;
+  // conveyor belt to next layer: downward, with a clear gap before the next stage
+  const beltStartX = discRx * 0.64;
+  const beltStartY = discRy * 0.56 + 8;
+  const beltLen = mW * 0.70;
+  const beltH = mH * 0.15;
+  const beltAngle = 0.08 + angleT * 0.018;
 
   ctx.save();
-  ctx.translate(beltStartX, beltStartY + 10);
+  ctx.translate(beltStartX, beltStartY + 8);
   ctx.rotate(beltAngle);
 
   const beltGrad = ctx.createLinearGradient(0, -beltH/2, 0, beltH/2);
@@ -1042,7 +1044,7 @@ function drawBallingDiscEnhanced(cx,cy,mW,mH,frame,stage,isActive,isDone){
   ctx.fill(); ctx.stroke();
 
   // belt rails
-  ctx.strokeStyle = 'rgba(220,220,220,0.34)';
+  ctx.strokeStyle = 'rgba(220,220,220,0.30)';
   ctx.lineWidth = 0.9;
   ctx.beginPath(); ctx.moveTo(0, -beltH/2 + 3); ctx.lineTo(beltLen, -beltH/2 + 3); ctx.stroke();
   ctx.beginPath(); ctx.moveTo(0, beltH/2 - 3); ctx.lineTo(beltLen, beltH/2 - 3); ctx.stroke();
@@ -1060,13 +1062,13 @@ function drawBallingDiscEnhanced(cx,cy,mW,mH,frame,stage,isActive,isDone){
   }
 
   // pellets on conveyor
-  const pelletCount = Math.max(8, Math.round(8 + discRpm * 0.55));
-  const beltSpeed = 0.008 + discRpm * 0.0011 + angleT * 0.0005;
+  const pelletCount = Math.max(8, Math.round(8 + discRpm * 0.45));
+  const beltSpeed = 0.0045 + discRpm * 0.0009 + angleT * 0.00035;
   for(let i=0;i<pelletCount;i++){
     const t = ((frame * beltSpeed) + i / pelletCount) % 1;
     const px = t * beltLen;
-    const py = Math.sin((t * 4 + frame * 0.02) * Math.PI) * (beltH * 0.12) + Math.max(0, (t - 0.2) * beltH * 0.10);
-    const pr = 3 + (i % 3) * 0.75;
+    const py = Math.sin((t * 4 + frame * 0.016) * Math.PI) * (beltH * 0.10) + Math.max(0, (t - 0.24) * beltH * 0.08);
+    const pr = 3 + (i % 3) * 0.65;
     const pg = ctx.createRadialGradient(px - pr * 0.35, py - pr * 0.35, 0, px, py, pr);
     pg.addColorStop(0, '#b4bec5');
     pg.addColorStop(1, '#64707a');
@@ -1079,15 +1081,26 @@ function drawBallingDiscEnhanced(cx,cy,mW,mH,frame,stage,isActive,isDone){
     ctx.stroke();
   }
 
-  // discharge chute with a gap toward the next stage
-  ctx.fillStyle = '#b8bcc2';
+  // discharge chute with separation before the next stage
+  ctx.fillStyle = '#aeb4ba';
   ctx.strokeStyle = 'rgba(50,55,60,0.65)';
   ctx.lineWidth = 1;
   ctx.beginPath();
-  ctx.moveTo(0, -beltH/2 + 2);
-  ctx.lineTo(-18, -beltH/2 - 14);
+  ctx.moveTo(0, -beltH/2 + 3);
+  ctx.lineTo(-14, -beltH/2 - 12);
   ctx.lineTo(0, -beltH/2 + 12);
   ctx.closePath();
+  ctx.fill();
+  ctx.stroke();
+
+  // small discharge lip at the end
+  ctx.beginPath();
+  ctx.moveTo(beltLen, -beltH/2 + 2);
+  ctx.lineTo(beltLen + 12, -beltH/2 + 6);
+  ctx.lineTo(beltLen + 12, beltH/2 - 6);
+  ctx.lineTo(beltLen, beltH/2 - 2);
+  ctx.closePath();
+  ctx.fillStyle = '#6f757b';
   ctx.fill();
   ctx.stroke();
 
@@ -1109,10 +1122,10 @@ function drawBallingDiscEnhanced(cx,cy,mW,mH,frame,stage,isActive,isDone){
   ctx.restore();
 
   return {
-    x: discX - discRx * 1.10,
-    y: discY - discRy * 1.30,
-    w: discRx * 2.25,
-    h: discRy * 2.25
+    x: discX - discRx * 1.08,
+    y: discY - discRy * 1.20,
+    w: discRx * 2.18,
+    h: discRy * 2.15
   };
 }
 
