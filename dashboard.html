@@ -300,75 +300,139 @@ input.finp{cursor:text;}
   }
 }
 
-/* ── FEED ANIMATION CARD ── */
+/* ── FEED TWO-PANEL OVERLAY ── */
 .feed-anim-overlay{
   position:fixed;inset:0;z-index:250;
-  background:rgba(10,20,40,0.62);
-  backdrop-filter:blur(8px) saturate(1.4);
+  background:rgba(15,31,58,.55);
+  backdrop-filter:blur(6px) saturate(1.2);
   display:flex;align-items:center;justify-content:center;
   opacity:0;pointer-events:none;
-  transition:opacity .32s ease;
+  transition:opacity .3s ease;
 }
 .feed-anim-overlay.open{opacity:1;pointer-events:all;}
+
+/* side-by-side wrapper */
+.feed-anim-panels{
+  display:flex;
+  align-items:flex-start;
+  gap:12px;
+}
+
+/* LEFT card — identical to .modal-card */
 .feed-anim-card{
-  background:linear-gradient(145deg,#f5f8fc 0%,#fff 60%,#f0f4f8 100%);
-  border:1.5px solid rgba(160,190,220,0.55);
-  border-radius:14px;
-  box-shadow:0 32px 90px rgba(20,45,90,0.32),0 0 0 1px rgba(255,255,255,0.6) inset;
-  width:min(540px,94vw);
+  background:#fff;
+  border:1px solid var(--border-strong);
+  border-radius:10px;
+  box-shadow:0 24px 80px rgba(26,48,87,.25);
+  width:min(520px,92vw);
   max-height:88vh;
   overflow-y:auto;
-  transform:translateY(20px) scale(.96);
-  transition:transform .38s cubic-bezier(.2,1,.3,1);
+  transform:translateY(16px) scale(.97);
+  transition:transform .35s cubic-bezier(.22,1,.36,1);
   position:relative;
+  display:flex;
+  flex-direction:column;
 }
 .feed-anim-overlay.open .feed-anim-card{transform:translateY(0) scale(1);}
+
+/* LEFT header — identical to .modal-header */
 .feed-anim-header{
-  padding:1.2rem 1.5rem 0.9rem;
-  background:linear-gradient(135deg,#0f1f3a 0%,#1a3a5e 100%);
-  border-radius:14px 14px 0 0;
-  border-bottom:1.5px solid rgba(160,200,240,0.18);
+  padding:1.4rem 1.6rem 1rem;
+  border-bottom:1px solid var(--border);
+  background:linear-gradient(135deg,var(--navy2) 0%,var(--navy3) 100%);
+  border-radius:10px 10px 0 0;
   position:relative;
+  flex-shrink:0;
 }
-.feed-anim-tag{font-family:'JetBrains Mono';font-size:.5rem;letter-spacing:2.5px;color:rgba(160,200,240,0.65);text-transform:uppercase;margin-bottom:4px;}
-.feed-anim-title{font-family:'Cormorant Garamond',serif;font-size:1.45rem;font-weight:700;color:#fff;}
-.feed-anim-subtitle{font-size:.72rem;color:rgba(255,255,255,.38);margin-top:3px;}
+.feed-anim-tag{font-family:'JetBrains Mono';font-size:.52rem;letter-spacing:2.5px;color:rgba(200,145,42,.7);text-transform:uppercase;margin-bottom:5px;}
+.feed-anim-title{font-family:'Cormorant Garamond',serif;font-size:1.5rem;font-weight:700;color:#fff;line-height:1.2;}
+.feed-anim-subtitle{font-size:.78rem;color:rgba(255,255,255,.45);margin-top:5px;}
 .feed-anim-close{
-  position:absolute;top:1rem;right:1.1rem;
-  background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.14);
-  color:rgba(255,255,255,.55);width:28px;height:28px;border-radius:50%;
-  font-size:.85rem;cursor:pointer;display:flex;align-items:center;justify-content:center;
+  position:absolute;top:1.1rem;right:1.2rem;
+  background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);
+  color:rgba(255,255,255,.6);width:30px;height:30px;border-radius:50%;
+  font-size:.9rem;cursor:pointer;display:flex;align-items:center;justify-content:center;
   transition:all .2s;
 }
 .feed-anim-close:hover{background:rgba(200,145,42,.3);color:#fff;}
-/* mini-diagram canvas inside card */
-.feed-mini-canvas-wrap{
-  margin:0;padding:1rem 1.2rem 0;
-  background:linear-gradient(180deg,rgba(220,232,246,0.22) 0%,rgba(240,246,252,0.08) 100%);
-  border-bottom:1px solid rgba(160,190,220,0.18);
+.feed-anim-body{padding:1.4rem 1.6rem;flex:1;}
+
+/* RIGHT diagram card */
+.feed-diagram-card{
+  width:300px;
+  flex-shrink:0;
+  background:linear-gradient(170deg,#0d1b30 0%,#112244 55%,#0a1828 100%);
+  border:1px solid rgba(100,150,210,0.18);
+  border-radius:10px;
+  box-shadow:0 24px 80px rgba(10,22,50,.40);
+  display:flex;
+  flex-direction:column;
+  align-self:stretch;
+  overflow:hidden;
+  transform:translateY(16px) scale(.97);
+  transition:transform .35s cubic-bezier(.22,1,.36,1) .05s;
 }
-#feedMiniCanvas{display:block;width:100%;height:auto;border-radius:8px;background:transparent;}
-.feed-anim-body{padding:1.2rem 1.5rem;}
-/* save-pulse animation for the mini diagram */
-@keyframes oreSaveBurst{
-  0%{opacity:0;transform:scale(0.8);}
-  15%{opacity:1;transform:scale(1.05);}
-  80%{opacity:1;}
-  100%{opacity:0;transform:scale(0.9);}
+.feed-anim-overlay.open .feed-diagram-card{transform:translateY(0) scale(1);}
+
+.feed-diagram-header{
+  padding:1rem 1.2rem .8rem;
+  border-bottom:1px solid rgba(100,150,200,0.10);
+  flex-shrink:0;
 }
+.feed-diagram-tag{
+  font-family:'JetBrains Mono';font-size:.52rem;letter-spacing:2.5px;
+  color:rgba(200,145,42,.65);text-transform:uppercase;margin-bottom:5px;
+}
+.feed-diagram-title{
+  font-family:'Cormorant Garamond',serif;font-size:1.2rem;font-weight:700;
+  color:rgba(220,235,255,0.90);line-height:1.2;
+}
+
+.feed-diagram-canvas-wrap{
+  flex:1;
+  position:relative;
+  min-height:280px;
+}
+#feedMiniCanvas{
+  position:absolute;inset:0;
+  width:100%;height:100%;
+  display:block;
+}
+
+.feed-diagram-footer{
+  padding:.7rem 1.1rem .9rem;
+  border-top:1px solid rgba(100,150,200,0.10);
+  flex-shrink:0;
+}
+.feed-meter-label{
+  font-family:'JetBrains Mono';font-size:.50rem;letter-spacing:1.5px;
+  color:rgba(120,160,200,0.50);text-transform:uppercase;margin-bottom:5px;
+}
+.feed-meter-bar-bg{height:5px;background:rgba(20,40,70,0.8);border-radius:3px;overflow:hidden;}
+.feed-meter-bar-fill{height:100%;background:linear-gradient(90deg,#3a8fda,#5aafff);border-radius:3px;transition:width .6s ease;}
+
 .ore-save-indicator{
-  position:absolute;bottom:8px;left:50%;transform:translateX(-50%);
-  font-family:'JetBrains Mono';font-size:.58rem;letter-spacing:1.5px;
+  position:absolute;bottom:12px;left:50%;transform:translateX(-50%);
+  font-family:'JetBrains Mono';font-size:.55rem;letter-spacing:1.5px;
   color:#3aaa6a;text-transform:uppercase;
-  background:rgba(42,122,74,0.12);border:1px solid rgba(42,122,74,0.35);
-  border-radius:20px;padding:3px 12px;
+  background:rgba(12,50,30,0.90);border:1px solid rgba(42,170,90,0.50);
+  border-radius:20px;padding:4px 16px;white-space:nowrap;
   opacity:0;pointer-events:none;
 }
 .ore-save-indicator.show{animation:oreSaveBurst 2s ease forwards;}
 
-@media(max-width:640px){
-  .bentonite-top-card-body{grid-template-columns:1fr;}
-  .feed-anim-header{padding:1rem 1.2rem 0.8rem;}
+@keyframes oreSaveBurst{
+  0%  {opacity:0;transform:translateX(-50%) scale(.85);}
+  15% {opacity:1;transform:translateX(-50%) scale(1.05);}
+  80% {opacity:1;transform:translateX(-50%) scale(1);}
+  100%{opacity:0;transform:translateX(-50%) scale(.9);}
+}
+
+@media(max-width:880px){
+  .feed-diagram-card{display:none;}
+}
+@media(max-width:560px){
+  .feed-anim-card{width:96vw;}
 }
 
 </style>
@@ -377,22 +441,39 @@ input.finp{cursor:text;}
 
 <!-- ══ FEED ANIMATION CARD ══ -->
 <div class="feed-anim-overlay" id="feedAnimOverlay">
-  <div class="feed-anim-card" id="feedAnimCard">
-    <div class="feed-anim-header">
-      <div class="feed-anim-tag">STAGE 01 · RAW FEED</div>
-      <div class="feed-anim-title">Iron Ore Feeds</div>
-      <div class="feed-anim-subtitle">Configure raw material grades and additives</div>
-      <button class="feed-anim-close" onclick="closeFeedCard()">✕</button>
+  <div class="feed-anim-panels">
+
+    <!-- LEFT: Parameters Card -->
+    <div class="feed-anim-card" id="feedAnimCard">
+      <div class="feed-anim-header">
+        <div class="feed-anim-tag">STAGE 01 · RAW FEED</div>
+        <div class="feed-anim-title">Iron Ore Feed</div>
+        <div class="feed-anim-subtitle">Configure raw material grades and additives</div>
+        <button class="feed-anim-close" onclick="closeFeedCard()">✕</button>
+      </div>
+      <div class="feed-anim-body" id="feedAnimBody"></div>
+      <div class="modal-footer" style="padding:1rem 1.4rem 1.2rem;flex-shrink:0;">
+        <button class="btn-save" onclick="saveFeedCard()">Save Parameters</button>
+        <button class="btn-cancel" onclick="closeFeedCard()">Cancel</button>
+      </div>
     </div>
-    <div class="feed-mini-canvas-wrap" style="position:relative;">
-      <canvas id="feedMiniCanvas" height="160"></canvas>
-      <div class="ore-save-indicator" id="oreSaveIndicator">✓ Parameters Saved</div>
+
+    <!-- RIGHT: Diagram Card -->
+    <div class="feed-diagram-card">
+      <div class="feed-diagram-header">
+        <div class="feed-diagram-tag">LIVE PREVIEW</div>
+        <div class="feed-diagram-title">Iron Ore Feed Hopper</div>
+      </div>
+      <div class="feed-diagram-canvas-wrap">
+        <canvas id="feedMiniCanvas"></canvas>
+        <div class="ore-save-indicator" id="oreSaveIndicator">✓ Parameters Saved</div>
+      </div>
+      <div class="feed-diagram-footer">
+        <div class="feed-meter-label">Feed Rate</div>
+        <div class="feed-meter-bar-bg"><div class="feed-meter-bar-fill" id="feedMeterFill" style="width:0%"></div></div>
+      </div>
     </div>
-    <div class="feed-anim-body" id="feedAnimBody"></div>
-    <div class="modal-footer" style="padding:1rem 1.5rem 1.3rem;">
-      <button class="btn-save" onclick="saveFeedCard()">Save Parameters</button>
-      <button class="btn-cancel" onclick="closeFeedCard()">Cancel</button>
-    </div>
+
   </div>
 </div>
 
@@ -400,7 +481,7 @@ input.finp{cursor:text;}
   <div class="modal-card">
     <div class="modal-header">
       <div class="modal-stage-tag" id="modalTag">STAGE 01</div>
-      <div class="modal-title" id="modalTitle">Iron Ore Feeds</div>
+      <div class="modal-title" id="modalTitle">Iron Ore Feed</div>
       <div class="modal-desc" id="modalDesc">Configure inputs</div>
       <button class="modal-close" onclick="closeModal()">✕</button>
     </div>
@@ -418,7 +499,7 @@ input.finp{cursor:text;}
     <div class="logo-text"><span class="l1">ABHITECH</span><span class="l2">Pelletization Simulator</span></div>
   </a>
   <div class="nav-right">
-    <a href="index.html" class="nav-btn">← Main page </a>
+    <a href="index.html" class="nav-btn">← Home</a>
     <a href="login.html" class="nav-btn">Sign Out</a>
   </div>
 </nav>
@@ -1215,93 +1296,103 @@ function drawMachineShape(shape,cx,cy,mW,mH,col,strokeCol,strokeW,isActive,isDon
   ctx.fillStyle=col; ctx.strokeStyle=strokeCol; ctx.lineWidth=strokeW;
   switch(shape){
     case 'hopper':{
-      // Wide rectangular body — top portion is straight-sided, only bottom tapers slightly
-      const tw=mW*0.62, th=mH*0.60;
-      const top=cy-th/2, bot=cy+th/2;
-      // Wide neck — barely tapers, like a real industrial storage bin
-      const neckW=tw*0.72;
-      // Split body into upper rectangular section + short lower taper
-      const splitY=bot-th*0.22; // taper only the bottom 22%
+      // Real pellet plant hopper: wide open brim → steep V-funnel → narrow vertical chute
+      const brimW=mW*0.82, brimH=mH*0.06;
+      const brimTop=cy-mH*0.40;
+      const hopTop=brimTop+brimH;
+      const neckW=mW*0.16;
+      const funnelH=mH*0.38;
+      const chuteH=mH*0.10;
+      const neckTop=hopTop+funnelH;
+      const neckBot=neckTop+chuteH;
 
-      // Silver metallic body gradient
-      const hopGrad=ctx.createLinearGradient(cx-tw/2,0,cx+tw/2,0);
-      hopGrad.addColorStop(0,'#6a7a88');
-      hopGrad.addColorStop(0.12,'#b8c8d4');
-      hopGrad.addColorStop(0.38,'#e4edf3');
-      hopGrad.addColorStop(0.52,'#dce6ee');
-      hopGrad.addColorStop(0.78,'#a8b8c8');
-      hopGrad.addColorStop(1,'#5a6a78');
-      // Draw: rect upper body + tapered lower
+      // V-funnel gradient (dark steel, left-lit)
+      const fGrad=ctx.createLinearGradient(cx-brimW/2,0,cx+brimW/2,0);
+      fGrad.addColorStop(0,'#2a3340');
+      fGrad.addColorStop(0.10,'#4a5a68');
+      fGrad.addColorStop(0.30,'#6a7a88');
+      fGrad.addColorStop(0.50,'#8a9aaa');
+      fGrad.addColorStop(0.70,'#6a7a88');
+      fGrad.addColorStop(0.90,'#4a5a68');
+      fGrad.addColorStop(1,'#2a3340');
       ctx.beginPath();
-      ctx.moveTo(cx-tw/2, top);               // top-left
-      ctx.lineTo(cx+tw/2, top);               // top-right
-      ctx.lineTo(cx+tw/2, splitY);            // right side straight down
-      ctx.lineTo(cx+neckW/2, bot);            // taper right
-      ctx.lineTo(cx-neckW/2, bot);            // bottom
-      ctx.lineTo(cx-tw/2, splitY);            // taper left
+      ctx.moveTo(cx-brimW/2,hopTop); ctx.lineTo(cx+brimW/2,hopTop);
+      ctx.lineTo(cx+neckW/2,neckTop); ctx.lineTo(cx-neckW/2,neckTop);
       ctx.closePath();
-      ctx.fillStyle=hopGrad; ctx.fill();
+      ctx.fillStyle=fGrad; ctx.fill();
 
-      // Left-edge highlight
-      ctx.strokeStyle='rgba(255,255,255,0.50)'; ctx.lineWidth=1.3;
-      ctx.beginPath(); ctx.moveTo(cx-tw/2+2,top+3); ctx.lineTo(cx-tw/2+2,splitY); ctx.lineTo(cx-neckW/2+2,bot-3); ctx.stroke();
-      // Right-edge shadow
-      ctx.strokeStyle='rgba(20,40,60,0.30)'; ctx.lineWidth=1.0;
-      ctx.beginPath(); ctx.moveTo(cx+tw/2-2,top+3); ctx.lineTo(cx+tw/2-2,splitY); ctx.lineTo(cx+neckW/2-2,bot-3); ctx.stroke();
-
-      // Horizontal stiffener bands (real bins have these)
-      ctx.strokeStyle='rgba(80,100,120,0.28)'; ctx.lineWidth=0.8;
-      for(let b=1;b<=2;b++){
-        const by=top+b*(splitY-top)/3;
-        ctx.beginPath(); ctx.moveTo(cx-tw/2+2,by); ctx.lineTo(cx+tw/2-2,by); ctx.stroke();
+      // Panel seam lines on funnel
+      ctx.strokeStyle='rgba(255,255,255,0.06)'; ctx.lineWidth=0.7;
+      for(let p=1;p<=3;p++){
+        const t=p/4;
+        const lx=cx-brimW/2+(brimW/2-neckW/2)*t;
+        const rx=cx+brimW/2-(brimW/2-neckW/2)*t;
+        const py=hopTop+funnelH*t;
+        ctx.beginPath(); ctx.moveTo(lx,py); ctx.lineTo(rx,py); ctx.stroke();
       }
+      // Left highlight / right shadow
+      ctx.strokeStyle='rgba(200,220,240,0.16)'; ctx.lineWidth=1.3;
+      ctx.beginPath(); ctx.moveTo(cx-brimW/2+2,hopTop+2); ctx.lineTo(cx-neckW/2+1,neckTop-1); ctx.stroke();
+      ctx.strokeStyle='rgba(0,0,0,0.22)'; ctx.lineWidth=1.3;
+      ctx.beginPath(); ctx.moveTo(cx+brimW/2-2,hopTop+2); ctx.lineTo(cx+neckW/2-1,neckTop-1); ctx.stroke();
 
-      // Top rim
-      const rimGrad=ctx.createLinearGradient(cx-tw/2,top-4,cx+tw/2,top+4);
-      rimGrad.addColorStop(0,'#7a8a9a'); rimGrad.addColorStop(0.5,'#ffffff'); rimGrad.addColorStop(1,'#7a8a9a');
-      ctx.fillStyle=rimGrad;
-      ctx.beginPath(); ctx.roundRect(cx-tw/2-2,top-5,tw+4,8,2); ctx.fill();
-      // Rivet dots on rim
-      for(let rv=0;rv<5;rv++){const rx=cx-tw/2+rv*(tw/4)+tw/8;ctx.beginPath();ctx.arc(rx,top-1.5,1.6,0,Math.PI*2);ctx.fillStyle='rgba(110,130,150,0.9)';ctx.fill();}
-
-      // Outer stroke
+      // Funnel outer stroke
       ctx.strokeStyle=strokeCol; ctx.lineWidth=strokeW;
       ctx.beginPath();
-      ctx.moveTo(cx-tw/2,top); ctx.lineTo(cx+tw/2,top);
-      ctx.lineTo(cx+tw/2,splitY); ctx.lineTo(cx+neckW/2,bot);
-      ctx.lineTo(cx-neckW/2,bot); ctx.lineTo(cx-tw/2,splitY);
+      ctx.moveTo(cx-brimW/2,hopTop); ctx.lineTo(cx+brimW/2,hopTop);
+      ctx.lineTo(cx+neckW/2,neckTop); ctx.lineTo(cx-neckW/2,neckTop);
       ctx.closePath(); ctx.stroke();
 
-      // Inner surface sheen (top-left area)
-      ctx.fillStyle='rgba(255,255,255,0.10)';
+      // Vertical chute
+      const cGrad=ctx.createLinearGradient(cx-neckW/2,0,cx+neckW/2,0);
+      cGrad.addColorStop(0,'#2a3340'); cGrad.addColorStop(0.5,'#5a6a78'); cGrad.addColorStop(1,'#2a3340');
+      ctx.fillStyle=cGrad; ctx.fillRect(cx-neckW/2,neckTop,neckW,chuteH);
+      ctx.strokeStyle=strokeCol; ctx.lineWidth=strokeW;
+      ctx.strokeRect(cx-neckW/2,neckTop,neckW,chuteH);
+
+      // Wide brim rim
+      const rimG=ctx.createLinearGradient(cx-brimW/2-3,brimTop,cx+brimW/2+3,brimTop+brimH);
+      rimG.addColorStop(0,'#3a4450'); rimG.addColorStop(0.4,'#7a8a98'); rimG.addColorStop(0.6,'#aabbc8'); rimG.addColorStop(1,'#3a4450');
+      ctx.fillStyle=rimG;
+      ctx.beginPath(); ctx.roundRect(cx-brimW/2-3,brimTop,brimW+6,brimH,2); ctx.fill();
+      ctx.strokeStyle='rgba(255,255,255,0.13)'; ctx.lineWidth=0.7;
+      ctx.beginPath(); ctx.roundRect(cx-brimW/2-3,brimTop,brimW+6,brimH,2); ctx.stroke();
+
+      // Support legs (small, below chute)
+      const legW=4, legH2=mH*0.10;
+      const l1=cx-brimW*0.32, l2=cx+brimW*0.32;
+      ctx.fillStyle='#3a4450';
+      ctx.fillRect(l1-legW/2,neckBot,legW,legH2);
+      ctx.fillRect(l2-legW/2,neckBot,legW,legH2);
+
+      // Ore pile inside (visible through open top)
+      ctx.save();
       ctx.beginPath();
-      ctx.moveTo(cx-tw/2+5,top+5); ctx.lineTo(cx-tw*0.08,top+5);
-      ctx.lineTo(cx-tw*0.08,splitY); ctx.lineTo(cx-tw/2+5,splitY);
-      ctx.closePath(); ctx.fill();
+      ctx.moveTo(cx-brimW/2+3,hopTop); ctx.lineTo(cx+brimW/2-3,hopTop);
+      ctx.lineTo(cx+neckW/2,neckTop); ctx.lineTo(cx-neckW/2,neckTop);
+      ctx.closePath(); ctx.clip();
+      const oreG=ctx.createRadialGradient(cx,hopTop+funnelH*0.3,funnelH*0.05,cx,hopTop+funnelH*0.3,brimW*0.45);
+      oreG.addColorStop(0,'rgba(110,70,38,0.85)'); oreG.addColorStop(0.7,'rgba(65,42,22,0.80)'); oreG.addColorStop(1,'rgba(35,22,10,0)');
+      ctx.fillStyle=oreG;
+      ctx.beginPath(); ctx.ellipse(cx,hopTop+funnelH*0.35,brimW*0.42,funnelH*0.55,0,0,Math.PI*2); ctx.fill();
+      ctx.restore();
 
-      // Bottom flange / outlet
-      const flangeGrad=ctx.createLinearGradient(cx-neckW/2-3,0,cx+neckW/2+3,0);
-      flangeGrad.addColorStop(0,'#6a7a88'); flangeGrad.addColorStop(0.5,'#d8e4ec'); flangeGrad.addColorStop(1,'#6a7a88');
-      ctx.fillStyle=flangeGrad;
-      ctx.beginPath(); ctx.roundRect(cx-neckW/2-4,bot-5,neckW+8,9,2); ctx.fill();
-      ctx.strokeStyle='rgba(70,90,110,0.45)'; ctx.lineWidth=0.7;
-      ctx.beginPath(); ctx.roundRect(cx-neckW/2-4,bot-5,neckW+8,9,2); ctx.stroke();
-
-      // Falling ore particles — only when active/done (lit)
+      // Falling ore FROM ABOVE when active
       if(lit){
-        const numOre=7;
+        const numOre=8;
         for(let p=0;p<numOre;p++){
-          const t=((frame*1.6+p*(60/numOre))%60)/60;
-          const startX=cx-neckW*0.38+p*(neckW*0.76/(numOre-1));
-          const fy=bot+4+(t*th*0.52);
-          const alpha=Math.max(0,1-t*0.75);
-          const r=1.8+p%3*0.5;
-          ctx.beginPath(); ctx.arc(startX,fy,r,0,Math.PI*2);
-          ctx.fillStyle=`rgba(175,95,35,${alpha.toFixed(2)})`;
-          ctx.fill();
+          const t=((frame*1.8+p*(55/numOre))%55)/55;
+          const sx=cx-brimW*0.38+p*(brimW*0.76/(numOre-1));
+          const startY=brimTop-mH*0.10;
+          const endY=hopTop+funnelH*0.45;
+          const fy=startY+t*(endY-startY);
+          const alpha=t<0.15?(t/0.15):(t>0.7?(1-(t-0.7)/0.3):1)*0.85;
+          const r=1.5+p%3*0.5;
+          ctx.beginPath(); ctx.arc(sx,fy,r,0,Math.PI*2);
+          ctx.fillStyle=`rgba(175,98,38,${alpha.toFixed(2)})`; ctx.fill();
         }
       }
-      return{x:cx-tw/2,y:top,w:tw,h:th};
+      return{x:cx-brimW/2,y:brimTop,w:brimW,h:neckBot-brimTop};
     }
     case 'drum':{
       const rw=mW*0.46,rh=mH*0.34;
@@ -2584,12 +2675,14 @@ const feedMiniCtx=feedMiniCanvas.getContext('2d');
 
 function sizeFeedMini(){
   const wrap=feedMiniCanvas.parentElement;
-  const W=wrap.clientWidth-0;
+  const W=Math.max(wrap.clientWidth||280,10);
+  const H=Math.max(wrap.clientHeight||280,10);
   const ratio=window.devicePixelRatio||1;
-  const H=160;
-  feedMiniCanvas.width=W*ratio; feedMiniCanvas.height=H*ratio;
-  feedMiniCanvas.style.width=W+'px'; feedMiniCanvas.style.height=H+'px';
-  feedMiniCtx.scale(ratio,ratio);
+  const wPx=Math.round(W*ratio), hPx=Math.round(H*ratio);
+  if(feedMiniCanvas.width!==wPx||feedMiniCanvas.height!==hPx){
+    feedMiniCanvas.width=wPx; feedMiniCanvas.height=hPx;
+    feedMiniCtx.setTransform(ratio,0,0,ratio,0,0);
+  }
   return{W,H};
 }
 
@@ -2597,133 +2690,225 @@ function drawFeedMini(frame, burst){
   const{W,H}=sizeFeedMini();
   feedMiniCtx.clearRect(0,0,W,H);
 
-  // Background — subtle dark gradient
+  // ── BACKGROUND ──
   const bg=feedMiniCtx.createLinearGradient(0,0,0,H);
-  bg.addColorStop(0,'#0f1f38'); bg.addColorStop(1,'#182d4a');
+  bg.addColorStop(0,'#08111e'); bg.addColorStop(1,'#0e1e34');
   feedMiniCtx.fillStyle=bg; feedMiniCtx.fillRect(0,0,W,H);
+  // subtle grid
+  feedMiniCtx.strokeStyle='rgba(80,130,200,0.05)'; feedMiniCtx.lineWidth=0.7;
+  for(let x=0;x<W;x+=22){feedMiniCtx.beginPath();feedMiniCtx.moveTo(x,0);feedMiniCtx.lineTo(x,H);feedMiniCtx.stroke();}
+  for(let y=0;y<H;y+=22){feedMiniCtx.beginPath();feedMiniCtx.moveTo(0,y);feedMiniCtx.lineTo(W,y);feedMiniCtx.stroke();}
 
-  // Grid lines
-  feedMiniCtx.strokeStyle='rgba(100,150,200,0.06)'; feedMiniCtx.lineWidth=0.8;
-  for(let x=0;x<W;x+=28){feedMiniCtx.beginPath();feedMiniCtx.moveTo(x,0);feedMiniCtx.lineTo(x,H);feedMiniCtx.stroke();}
-  for(let y=0;y<H;y+=28){feedMiniCtx.beginPath();feedMiniCtx.moveTo(0,y);feedMiniCtx.lineTo(W,y);feedMiniCtx.stroke();}
+  const cx=W/2;
 
-  // ── HOPPER (silver metallic, wide rectangular body) ──
-  const cx=W*0.38, cy=H*0.46;
-  const tw=W*0.32, th=H*0.55;
-  const neckW=tw*0.72;
-  const top=cy-th/2, bot=cy+th/2;
-  const splitY=bot-th*0.22;
+  // ── HOPPER GEOMETRY (matches real image) ──
+  // Wide brim at top, steep V-funnel to narrow neck, then vertical chute, then outlet
+  const brimW   = W*0.82;          // very wide open top
+  const brimTop = H*0.20;          // top edge of brim
+  const brimH   = H*0.06;          // brim rim height
+  const hopTop  = brimTop+brimH;   // where funnel body starts
+  const neckW   = W*0.16;          // narrow neck (like real hopper)
+  const funnelH = H*0.32;          // height of V-funnel section
+  const chuteH  = H*0.12;          // vertical chute below funnel
+  const neckTop = hopTop+funnelH;
+  const neckBot = neckTop+chuteH;
 
-  const hopGrad=feedMiniCtx.createLinearGradient(cx-tw/2,0,cx+tw/2,0);
-  hopGrad.addColorStop(0,'#5a6a7a'); hopGrad.addColorStop(0.15,'#aabac8');
-  hopGrad.addColorStop(0.42,'#d8e4ec'); hopGrad.addColorStop(0.58,'#c0ccd8');
-  hopGrad.addColorStop(0.85,'#8a9aaa'); hopGrad.addColorStop(1,'#4a5a6a');
+  // Support platform level
+  const platY   = neckTop+4;
+  const platH   = 6;
+  const platW   = W*0.74;
+
+  // Support legs
+  const legH    = H*0.22;
+  const legBot  = platY+platH+legH;
+  const leg1X   = cx-platW*0.36;
+  const leg2X   = cx+platW*0.36;
+
+  // ── DRAW SUPPORT LEGS (behind hopper) ──
+  const legCol='#3a4450';
+  // X-brace
+  feedMiniCtx.strokeStyle='#2e3840'; feedMiniCtx.lineWidth=2.5;
+  feedMiniCtx.beginPath(); feedMiniCtx.moveTo(leg1X,platY+platH); feedMiniCtx.lineTo(leg2X,legBot); feedMiniCtx.stroke();
+  feedMiniCtx.beginPath(); feedMiniCtx.moveTo(leg2X,platY+platH); feedMiniCtx.lineTo(leg1X,legBot); feedMiniCtx.stroke();
+  // Left leg
+  feedMiniCtx.fillStyle=legCol;
+  feedMiniCtx.fillRect(leg1X-5,platY+platH,10,legH);
+  feedMiniCtx.strokeStyle='rgba(255,255,255,0.08)'; feedMiniCtx.lineWidth=0.8;
+  feedMiniCtx.strokeRect(leg1X-5,platY+platH,10,legH);
+  // Right leg
+  feedMiniCtx.fillStyle=legCol;
+  feedMiniCtx.fillRect(leg2X-5,platY+platH,10,legH);
+  feedMiniCtx.strokeStyle='rgba(255,255,255,0.08)'; feedMiniCtx.lineWidth=0.8;
+  feedMiniCtx.strokeRect(leg2X-5,platY+platH,10,legH);
+  // Base pads
+  feedMiniCtx.fillStyle='#2a3340';
+  feedMiniCtx.fillRect(leg1X-9,legBot,18,5);
+  feedMiniCtx.fillRect(leg2X-9,legBot,18,5);
+
+  // ── PLATFORM (walkway) ──
+  const platGrad=feedMiniCtx.createLinearGradient(cx-platW/2,platY,cx-platW/2,platY+platH);
+  platGrad.addColorStop(0,'#5a6472'); platGrad.addColorStop(1,'#3a4250');
+  feedMiniCtx.fillStyle=platGrad;
+  feedMiniCtx.beginPath(); feedMiniCtx.roundRect(cx-platW/2,platY,platW,platH,2); feedMiniCtx.fill();
+  feedMiniCtx.strokeStyle='rgba(255,255,255,0.12)'; feedMiniCtx.lineWidth=0.7;
+  feedMiniCtx.beginPath(); feedMiniCtx.roundRect(cx-platW/2,platY,platW,platH,2); feedMiniCtx.stroke();
+
+  // ── YELLOW SAFETY RAILING ──
+  const railY=platY-18; const railH=18; const railCol='#e8b800';
+  const posts=[cx-platW/2, cx-platW/4, cx, cx+platW/4, cx+platW/2];
+  // top rail bar
+  feedMiniCtx.strokeStyle=railCol; feedMiniCtx.lineWidth=2.2;
+  feedMiniCtx.beginPath(); feedMiniCtx.moveTo(cx-platW/2,railY); feedMiniCtx.lineTo(cx+platW/2,railY); feedMiniCtx.stroke();
+  // mid rail
+  feedMiniCtx.lineWidth=1.5;
+  feedMiniCtx.beginPath(); feedMiniCtx.moveTo(cx-platW/2,railY+railH*0.5); feedMiniCtx.lineTo(cx+platW/2,railY+railH*0.5); feedMiniCtx.stroke();
+  // posts
+  feedMiniCtx.lineWidth=2;
+  posts.forEach(px=>{
+    feedMiniCtx.beginPath(); feedMiniCtx.moveTo(px,platY); feedMiniCtx.lineTo(px,railY); feedMiniCtx.stroke();
+  });
+
+  // ── HOPPER BODY (main shape) ──
+  // V-funnel: wide top narrows to neckW
+  const fGrad=feedMiniCtx.createLinearGradient(cx-brimW/2,0,cx+brimW/2,0);
+  fGrad.addColorStop(0,'#2a3340');
+  fGrad.addColorStop(0.10,'#4a5560');
+  fGrad.addColorStop(0.30,'#6a7a88');
+  fGrad.addColorStop(0.50,'#8a9aaa');
+  fGrad.addColorStop(0.70,'#6a7a88');
+  fGrad.addColorStop(0.90,'#4a5560');
+  fGrad.addColorStop(1,'#2a3340');
+
   feedMiniCtx.beginPath();
-  feedMiniCtx.moveTo(cx-tw/2,top); feedMiniCtx.lineTo(cx+tw/2,top);
-  feedMiniCtx.lineTo(cx+tw/2,splitY); feedMiniCtx.lineTo(cx+neckW/2,bot);
-  feedMiniCtx.lineTo(cx-neckW/2,bot); feedMiniCtx.lineTo(cx-tw/2,splitY);
+  feedMiniCtx.moveTo(cx-brimW/2, hopTop);
+  feedMiniCtx.lineTo(cx+brimW/2, hopTop);
+  feedMiniCtx.lineTo(cx+neckW/2, neckTop);
+  feedMiniCtx.lineTo(cx-neckW/2, neckTop);
   feedMiniCtx.closePath();
-  feedMiniCtx.fillStyle=hopGrad; feedMiniCtx.fill();
-  // Shine
-  feedMiniCtx.strokeStyle='rgba(255,255,255,0.28)'; feedMiniCtx.lineWidth=1.2;
-  feedMiniCtx.beginPath(); feedMiniCtx.moveTo(cx-tw/2+3,top+3); feedMiniCtx.lineTo(cx-tw/2+3,splitY); feedMiniCtx.lineTo(cx-neckW/2+3,bot-3); feedMiniCtx.stroke();
-  // Stiffener bands
-  feedMiniCtx.strokeStyle='rgba(80,100,120,0.22)'; feedMiniCtx.lineWidth=0.7;
-  for(let b=1;b<=2;b++){const by=top+b*(splitY-top)/3;feedMiniCtx.beginPath();feedMiniCtx.moveTo(cx-tw/2+2,by);feedMiniCtx.lineTo(cx+tw/2-2,by);feedMiniCtx.stroke();}
-  // Top rim
-  const rimG=feedMiniCtx.createLinearGradient(cx-tw/2,top-4,cx+tw/2,top+4);
-  rimG.addColorStop(0,'#6a7a8a'); rimG.addColorStop(0.5,'#fff'); rimG.addColorStop(1,'#6a7a8a');
-  feedMiniCtx.fillStyle=rimG;
-  feedMiniCtx.beginPath(); feedMiniCtx.roundRect(cx-tw/2-2,top-5,tw+4,8,2); feedMiniCtx.fill();
-  // Outer border
-  feedMiniCtx.strokeStyle='rgba(130,160,190,0.55)'; feedMiniCtx.lineWidth=1.4;
+  feedMiniCtx.fillStyle=fGrad; feedMiniCtx.fill();
+
+  // Panel weld lines on funnel walls (left & right diagonal plates)
+  feedMiniCtx.strokeStyle='rgba(255,255,255,0.07)'; feedMiniCtx.lineWidth=0.8;
+  for(let p=1;p<=3;p++){
+    const t=p/4;
+    const lx1=cx-brimW/2+(brimW/2-neckW/2)*t; const rx1=cx+brimW/2-(brimW/2-neckW/2)*t;
+    const py=hopTop+funnelH*t;
+    feedMiniCtx.beginPath(); feedMiniCtx.moveTo(lx1,py); feedMiniCtx.lineTo(rx1,py); feedMiniCtx.stroke();
+  }
+  // Left wall highlight
+  feedMiniCtx.strokeStyle='rgba(200,220,240,0.18)'; feedMiniCtx.lineWidth=1.5;
+  feedMiniCtx.beginPath(); feedMiniCtx.moveTo(cx-brimW/2+3,hopTop+3); feedMiniCtx.lineTo(cx-neckW/2+2,neckTop-2); feedMiniCtx.stroke();
+  // Right wall shadow
+  feedMiniCtx.strokeStyle='rgba(0,0,0,0.25)'; feedMiniCtx.lineWidth=1.5;
+  feedMiniCtx.beginPath(); feedMiniCtx.moveTo(cx+brimW/2-3,hopTop+3); feedMiniCtx.lineTo(cx+neckW/2-2,neckTop-2); feedMiniCtx.stroke();
+
+  // Funnel outer border
+  feedMiniCtx.strokeStyle='rgba(80,110,140,0.65)'; feedMiniCtx.lineWidth=1.5;
   feedMiniCtx.beginPath();
-  feedMiniCtx.moveTo(cx-tw/2,top); feedMiniCtx.lineTo(cx+tw/2,top);
-  feedMiniCtx.lineTo(cx+tw/2,splitY); feedMiniCtx.lineTo(cx+neckW/2,bot);
-  feedMiniCtx.lineTo(cx-neckW/2,bot); feedMiniCtx.lineTo(cx-tw/2,splitY);
+  feedMiniCtx.moveTo(cx-brimW/2,hopTop); feedMiniCtx.lineTo(cx+brimW/2,hopTop);
+  feedMiniCtx.lineTo(cx+neckW/2,neckTop); feedMiniCtx.lineTo(cx-neckW/2,neckTop);
   feedMiniCtx.closePath(); feedMiniCtx.stroke();
-  // Neck flange
-  const flangeG=feedMiniCtx.createLinearGradient(cx-neckW/2-3,0,cx+neckW/2+3,0);
-  flangeG.addColorStop(0,'#5a6a7a'); flangeG.addColorStop(0.5,'#c8d8e4'); flangeG.addColorStop(1,'#5a6a7a');
-  feedMiniCtx.fillStyle=flangeG;
-  feedMiniCtx.beginPath(); feedMiniCtx.roundRect(cx-neckW/2-4,bot-5,neckW+8,9,2); feedMiniCtx.fill();
 
-  // ── IRON ORE LABEL ──
-  feedMiniCtx.fillStyle='rgba(180,200,220,0.7)'; feedMiniCtx.font='500 8px JetBrains Mono';
-  feedMiniCtx.textAlign='center'; feedMiniCtx.fillText('IRON ORE FEED',cx,top-12);
-  feedMiniCtx.fillStyle='rgba(120,150,180,0.5)'; feedMiniCtx.font='400 6px JetBrains Mono';
-  feedMiniCtx.fillText('STAGE 01',cx,top-22);
+  // ── VERTICAL CHUTE (below funnel neck) ──
+  const chuteGrad=feedMiniCtx.createLinearGradient(cx-neckW/2,0,cx+neckW/2,0);
+  chuteGrad.addColorStop(0,'#2e3c48'); chuteGrad.addColorStop(0.5,'#5a6a78'); chuteGrad.addColorStop(1,'#2e3c48');
+  feedMiniCtx.fillStyle=chuteGrad;
+  feedMiniCtx.fillRect(cx-neckW/2,neckTop,neckW,chuteH);
+  feedMiniCtx.strokeStyle='rgba(80,110,140,0.50)'; feedMiniCtx.lineWidth=1;
+  feedMiniCtx.strokeRect(cx-neckW/2,neckTop,neckW,chuteH);
 
-  // ── FALLING ORE PARTICLES ── (always animated; faster during burst)
-  const speedMul = feedMiniActive ? 2.5 : (burst>0 ? 3.2 : 1.0);
-  const numP = feedMiniActive ? 14 : (burst>0 ? 18 : 6);
-  const period = 80;
+  // ── BRIM / TOP RIM ──
+  const brimGrad=feedMiniCtx.createLinearGradient(cx-brimW/2-4,brimTop,cx+brimW/2+4,brimTop+brimH);
+  brimGrad.addColorStop(0,'#3a4450'); brimGrad.addColorStop(0.4,'#7a8a98'); brimGrad.addColorStop(0.6,'#aabbc8'); brimGrad.addColorStop(1,'#3a4450');
+  feedMiniCtx.fillStyle=brimGrad;
+  feedMiniCtx.beginPath(); feedMiniCtx.roundRect(cx-brimW/2-4,brimTop,brimW+8,brimH,2); feedMiniCtx.fill();
+  feedMiniCtx.strokeStyle='rgba(255,255,255,0.15)'; feedMiniCtx.lineWidth=0.8;
+  feedMiniCtx.beginPath(); feedMiniCtx.roundRect(cx-brimW/2-4,brimTop,brimW+8,brimH,2); feedMiniCtx.stroke();
+
+  // ── ORE PILE INSIDE HOPPER (piled iron ore balls) ──
+  const pileY=brimTop+brimH+2;
+  const pileH=funnelH*0.38;
+  // ore mass fill
+  const oreGrad=feedMiniCtx.createRadialGradient(cx,pileY+pileH*0.4,pileH*0.1,cx,pileY+pileH*0.4,brimW*0.5);
+  oreGrad.addColorStop(0,'rgba(110,70,40,0.9)'); oreGrad.addColorStop(0.7,'rgba(70,45,25,0.85)'); oreGrad.addColorStop(1,'rgba(40,25,15,0)');
+  feedMiniCtx.save();
+  feedMiniCtx.beginPath();
+  feedMiniCtx.moveTo(cx-brimW/2+4,hopTop); feedMiniCtx.lineTo(cx+brimW/2-4,hopTop);
+  feedMiniCtx.lineTo(cx+neckW/2,neckTop); feedMiniCtx.lineTo(cx-neckW/2,neckTop);
+  feedMiniCtx.closePath(); feedMiniCtx.clip();
+  feedMiniCtx.fillStyle=oreGrad;
+  feedMiniCtx.beginPath(); feedMiniCtx.ellipse(cx,pileY+pileH*0.55,brimW*0.44,pileH*0.85,0,0,Math.PI*2); feedMiniCtx.fill();
+  // individual ore balls on the surface
+  for(let b=0;b<26;b++){
+    const bx=cx-brimW*0.4+b*(brimW*0.8/25);
+    const wave=Math.sin(b*0.85+frame*0.008)*3;
+    const by=pileY+pileH*0.18+Math.abs(Math.sin(b*1.4))*pileH*0.18+wave;
+    const br=3+b%3*0.8;
+    const bg2=feedMiniCtx.createRadialGradient(bx-br*0.35,by-br*0.35,0,bx,by,br);
+    bg2.addColorStop(0,'rgba(160,95,50,0.95)'); bg2.addColorStop(0.6,'rgba(105,60,28,0.9)'); bg2.addColorStop(1,'rgba(60,35,15,0.8)');
+    feedMiniCtx.beginPath(); feedMiniCtx.arc(bx,by,br,0,Math.PI*2); feedMiniCtx.fillStyle=bg2; feedMiniCtx.fill();
+  }
+  feedMiniCtx.restore();
+
+  // ── FALLING ORE FROM ABOVE (raw feed falling into open top) ──
+  const speedMul = feedMiniActive ? 2.8 : (burst>0 ? 3.5 : 1.2);
+  const numP = feedMiniActive ? 18 : (burst>0 ? 24 : 9);
+  const period = 70;
   for(let p=0;p<numP;p++){
     const t=((frame*speedMul+p*(period/numP))%period)/period;
-    const sx=cx-neckW*0.42 + p*(neckW*0.84/Math.max(numP-1,1));
-    const dropH=H*0.38;
-    const fy=bot+2+t*dropH;
-    const alpha=(1-Math.pow(t,0.6))*0.9;
-    const r=1.8+p%4*0.5;
-    const baseOre=p%5===0?[200,140,60]:(p%3===0?[180,100,40]:[160,80,30]);
+    // spread across brim width, falling from ABOVE the hopper
+    const sx=cx-brimW*0.40 + p*(brimW*0.80/Math.max(numP-1,1)) + Math.sin(p*2.1+frame*0.03)*4;
+    const startY=brimTop-H*0.08;  // starts above the brim
+    const endY=brimTop+brimH+pileH*0.6;
+    const fy=startY + t*(endY-startY);
+    const alpha=t<0.15?(t/0.15):(t>0.75?(1-(t-0.75)/0.25):1)*0.88;
+    const r=1.6+p%4*0.55;
+    const bOre=feedMiniCtx.createRadialGradient(sx-r*0.3,fy-r*0.3,0,sx,fy,r);
+    bOre.addColorStop(0,`rgba(180,105,45,${alpha.toFixed(2)})`);
+    bOre.addColorStop(1,`rgba(100,55,20,${(alpha*0.5).toFixed(2)})`);
     feedMiniCtx.beginPath(); feedMiniCtx.arc(sx,fy,r,0,Math.PI*2);
-    feedMiniCtx.fillStyle=`rgba(${baseOre[0]},${baseOre[1]},${baseOre[2]},${alpha.toFixed(2)})`;
-    feedMiniCtx.fill();
+    feedMiniCtx.fillStyle=bOre; feedMiniCtx.fill();
   }
 
-  // Save burst particles (extra spray on save)
-  if(burst>0){
-    const bAlpha=Math.min(1,burst/10);
-    for(let b=0;b<24;b++){
-      const bAngle=(b/24)*Math.PI*2;
-      const bDist=(1-bAlpha)*W*0.20;
-      const bx=cx+Math.cos(bAngle)*bDist;
-      const by=cy+Math.sin(bAngle)*bDist*0.5;
-      const br=2+b%3;
-      feedMiniCtx.beginPath(); feedMiniCtx.arc(bx,by,br,0,Math.PI*2);
-      feedMiniCtx.fillStyle=`rgba(200,145,42,${(bAlpha*0.85).toFixed(2)})`;
-      feedMiniCtx.fill();
+  // ── DISCHARGE PARTICLES below chute outlet ──
+  if(burst>0||feedMiniActive){
+    const dSpd=feedMiniActive?2:3;
+    for(let d=0;d<6;d++){
+      const t=((frame*dSpd+d*12)%36)/36;
+      const dx=cx+(d-2.5)*3.5;
+      const dy=neckBot+2+t*H*0.08;
+      const da=Math.max(0,(1-t)*0.75);
+      feedMiniCtx.beginPath(); feedMiniCtx.arc(dx,dy,1.5,0,Math.PI*2);
+      feedMiniCtx.fillStyle=`rgba(160,90,35,${da.toFixed(2)})`; feedMiniCtx.fill();
     }
-    // Checkmark glow
+  }
+
+  // ── SAVE BURST (checkmark glow) ──
+  if(burst>0){
+    const bAlpha=Math.min(1,burst/18);
+    // particle spray
+    for(let b=0;b<20;b++){
+      const ang=(b/20)*Math.PI*2; const dist=(1-bAlpha)*W*0.18;
+      feedMiniCtx.beginPath(); feedMiniCtx.arc(cx+Math.cos(ang)*dist,brimTop+brimH/2+funnelH*0.4+Math.sin(ang)*dist*0.5,2,0,Math.PI*2);
+      feedMiniCtx.fillStyle=`rgba(200,145,42,${(bAlpha*0.8).toFixed(2)})`; feedMiniCtx.fill();
+    }
     feedMiniCtx.save();
-    feedMiniCtx.globalAlpha=bAlpha*0.9;
-    feedMiniCtx.shadowColor='#3aaa6a'; feedMiniCtx.shadowBlur=16;
-    feedMiniCtx.strokeStyle='#3aaa6a'; feedMiniCtx.lineWidth=3; feedMiniCtx.lineCap='round';
-    feedMiniCtx.beginPath(); feedMiniCtx.moveTo(cx-12,cy); feedMiniCtx.lineTo(cx-3,cy+9); feedMiniCtx.lineTo(cx+14,cy-9); feedMiniCtx.stroke();
+    feedMiniCtx.globalAlpha=bAlpha*0.95;
+    feedMiniCtx.shadowColor='#3aaa6a'; feedMiniCtx.shadowBlur=20;
+    feedMiniCtx.strokeStyle='#3aaa6a'; feedMiniCtx.lineWidth=3.5; feedMiniCtx.lineCap='round';
+    feedMiniCtx.beginPath(); feedMiniCtx.moveTo(cx-14,H*0.55); feedMiniCtx.lineTo(cx-3,H*0.55+11); feedMiniCtx.lineTo(cx+16,H*0.55-11); feedMiniCtx.stroke();
     feedMiniCtx.restore();
   }
 
-  // ── INFO PANEL (right side) ──
-  const panX=cx+tw*0.55+8, panY=H*0.15, panW=W-panX-10;
-  if(panW>50){
-    feedMiniCtx.fillStyle='rgba(255,255,255,0.04)'; feedMiniCtx.strokeStyle='rgba(100,140,180,0.2)'; feedMiniCtx.lineWidth=0.8;
-    feedMiniCtx.beginPath(); feedMiniCtx.roundRect(panX,panY,panW,H*0.72,4); feedMiniCtx.fill(); feedMiniCtx.stroke();
-    const ore=stageParams.feed.ore||'—';
-    const rate=stageParams.feed.feedRate||'—';
-    const zone=stageParams.feed.zone?stageParams.feed.zone+' Zone':'—';
-    const fe=stageParams.feed.chemFe||'—';
-    const rows=[{k:'Ore',v:ore},{k:'Feed Rate',v:rate+(rate!=='—'?' TPH':'')},{k:'Zone',v:zone},{k:'Fe%',v:fe+(fe!=='—'?' %':'')}];
-    rows.forEach((r,i)=>{
-      feedMiniCtx.fillStyle='rgba(120,160,200,0.55)'; feedMiniCtx.font='400 7px JetBrains Mono'; feedMiniCtx.textAlign='left';
-      feedMiniCtx.fillText(r.k,panX+8,panY+16+i*18);
-      feedMiniCtx.fillStyle='rgba(220,234,248,0.85)'; feedMiniCtx.font='600 7.5px JetBrains Mono';
-      feedMiniCtx.fillText(r.v,panX+8,panY+27+i*18);
-    });
-  }
+  // ── LABELS ──
+  feedMiniCtx.fillStyle='rgba(140,180,220,0.55)'; feedMiniCtx.font='500 8px JetBrains Mono'; feedMiniCtx.textAlign='center';
+  feedMiniCtx.fillText('IRON ORE FEED',cx,brimTop-6);
 
-  // Feed rate flow meter (bottom)
+  // live feed rate meter update
   const feedRate=parseFloat(stageParams.feed.feedRate)||0;
-  const maxRate=500;
-  const fillRatio=Math.min(feedRate/maxRate,1);
-  const meterX=cx-tw/2, meterY=H-14, meterW=tw, meterH=5;
-  feedMiniCtx.fillStyle='rgba(30,50,80,0.6)'; feedMiniCtx.beginPath(); feedMiniCtx.roundRect(meterX,meterY,meterW,meterH,2); feedMiniCtx.fill();
-  if(fillRatio>0){
-    const mFill=feedMiniCtx.createLinearGradient(meterX,0,meterX+meterW,0);
-    mFill.addColorStop(0,'#3a8fda'); mFill.addColorStop(1,'#5aafff');
-    feedMiniCtx.fillStyle=mFill; feedMiniCtx.beginPath(); feedMiniCtx.roundRect(meterX,meterY,meterW*fillRatio,meterH,2); feedMiniCtx.fill();
-  }
-  feedMiniCtx.fillStyle='rgba(130,170,210,0.55)'; feedMiniCtx.font='400 6px JetBrains Mono'; feedMiniCtx.textAlign='center';
-  feedMiniCtx.fillText('FEED RATE: '+(feedRate||0)+' TPH',cx,H-18);
+  const fillPct=Math.min(feedRate/500*100,100);
+  const bar=document.getElementById('feedMeterFill');
+  if(bar) bar.style.width=fillPct+'%';
 }
 
 function feedMiniLoop(){
