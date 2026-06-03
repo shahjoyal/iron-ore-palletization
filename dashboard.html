@@ -435,6 +435,123 @@ input.finp{cursor:text;}
   .feed-anim-card{width:96vw;}
 }
 
+/* ── GRINDING TWO-PANEL OVERLAY ── */
+.grind-anim-overlay{
+  position:fixed;inset:0;z-index:250;
+  background:rgba(15,31,58,.60);
+  backdrop-filter:blur(7px) saturate(1.2);
+  display:flex;align-items:center;justify-content:center;
+  opacity:0;pointer-events:none;
+  transition:opacity .3s ease;
+}
+.grind-anim-overlay.open{opacity:1;pointer-events:all;}
+
+.grind-anim-panels{
+  display:flex;
+  align-items:flex-start;
+  gap:12px;
+}
+
+.grind-anim-card{
+  background:#fff;
+  border:1px solid var(--border-strong);
+  border-radius:10px;
+  box-shadow:0 24px 80px rgba(26,48,87,.25);
+  width:min(520px,92vw);
+  max-height:88vh;
+  overflow-y:auto;
+  transform:translateY(16px) scale(.97);
+  transition:transform .35s cubic-bezier(.22,1,.36,1);
+  position:relative;
+  display:flex;flex-direction:column;
+}
+.grind-anim-overlay.open .grind-anim-card{transform:translateY(0) scale(1);}
+
+.grind-anim-header{
+  padding:1.4rem 1.6rem 1rem;
+  border-bottom:1px solid var(--border);
+  background:linear-gradient(135deg,var(--navy2) 0%,var(--navy3) 100%);
+  border-radius:10px 10px 0 0;
+  position:relative;flex-shrink:0;
+}
+.grind-anim-tag{font-family:'JetBrains Mono';font-size:.52rem;letter-spacing:2.5px;color:rgba(200,145,42,.7);text-transform:uppercase;margin-bottom:5px;}
+.grind-anim-title{font-family:'Cormorant Garamond',serif;font-size:1.5rem;font-weight:700;color:#fff;line-height:1.2;}
+.grind-anim-subtitle{font-size:.78rem;color:rgba(255,255,255,.45);margin-top:5px;}
+.grind-anim-close{
+  position:absolute;top:1.1rem;right:1.2rem;
+  background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);
+  color:rgba(255,255,255,.6);width:30px;height:30px;border-radius:50%;
+  font-size:.9rem;cursor:pointer;display:flex;align-items:center;justify-content:center;
+  transition:all .2s;
+}
+.grind-anim-close:hover{background:rgba(200,145,42,.3);color:#fff;}
+.grind-anim-body{padding:1.4rem 1.6rem;flex:1;}
+
+/* RIGHT ball mill diagram card */
+.grind-diagram-card{
+  width:320px;
+  flex-shrink:0;
+  background:linear-gradient(170deg,#0b1a2e 0%,#0f2040 55%,#081520 100%);
+  border:1px solid rgba(80,130,200,0.20);
+  border-radius:10px;
+  box-shadow:0 24px 80px rgba(8,18,40,.50);
+  display:flex;flex-direction:column;
+  align-self:stretch;overflow:hidden;
+  transform:translateY(16px) scale(.97);
+  transition:transform .35s cubic-bezier(.22,1,.36,1) .05s;
+}
+.grind-anim-overlay.open .grind-diagram-card{transform:translateY(0) scale(1);}
+
+.grind-diagram-header{
+  padding:1rem 1.2rem .8rem;
+  border-bottom:1px solid rgba(80,130,200,0.12);
+  flex-shrink:0;
+}
+.grind-diagram-tag{
+  font-family:'JetBrains Mono';font-size:.52rem;letter-spacing:2.5px;
+  color:rgba(200,145,42,.65);text-transform:uppercase;margin-bottom:5px;
+}
+.grind-diagram-title{
+  font-family:'Cormorant Garamond',serif;font-size:1.2rem;font-weight:700;
+  color:rgba(220,235,255,0.90);line-height:1.2;
+}
+
+.grind-diagram-canvas-wrap{
+  flex:1;position:relative;min-height:300px;
+}
+#grindMiniCanvas{
+  position:absolute;inset:0;width:100%;height:100%;display:block;
+}
+
+.grind-diagram-footer{
+  padding:.7rem 1.1rem .9rem;
+  border-top:1px solid rgba(80,130,200,0.10);
+  flex-shrink:0;
+}
+.grind-rpm-label{
+  font-family:'JetBrains Mono';font-size:.50rem;letter-spacing:1.5px;
+  color:rgba(120,160,200,0.50);text-transform:uppercase;margin-bottom:5px;
+}
+.grind-rpm-bar-bg{height:5px;background:rgba(20,40,70,0.8);border-radius:3px;overflow:hidden;}
+.grind-rpm-bar-fill{height:100%;background:linear-gradient(90deg,#e8a020,#ffcc44);border-radius:3px;transition:width .6s ease;}
+
+.grind-save-indicator{
+  position:absolute;bottom:12px;left:50%;transform:translateX(-50%);
+  font-family:'JetBrains Mono';font-size:.55rem;letter-spacing:1.5px;
+  color:#3aaa6a;text-transform:uppercase;
+  background:rgba(12,50,30,0.90);border:1px solid rgba(42,170,90,0.50);
+  border-radius:20px;padding:4px 16px;white-space:nowrap;
+  opacity:0;pointer-events:none;
+}
+.grind-save-indicator.show{animation:oreSaveBurst 2s ease forwards;}
+
+@media(max-width:920px){
+  .grind-diagram-card{display:none;}
+}
+@media(max-width:560px){
+  .grind-anim-card{width:96vw;}
+}
+
 </style>
 </head>
 <body>
@@ -471,6 +588,44 @@ input.finp{cursor:text;}
       <div class="feed-diagram-footer">
         <div class="feed-meter-label">Feed Rate</div>
         <div class="feed-meter-bar-bg"><div class="feed-meter-bar-fill" id="feedMeterFill" style="width:0%"></div></div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ══ GRINDING ANIMATION CARD ══ -->
+<div class="grind-anim-overlay" id="grindAnimOverlay">
+  <div class="grind-anim-panels">
+
+    <!-- LEFT: Parameters Card -->
+    <div class="grind-anim-card" id="grindAnimCard">
+      <div class="grind-anim-header">
+        <div class="grind-anim-tag">STAGE 02 · WET GRINDING</div>
+        <div class="grind-anim-title">Ball Mill Grinding</div>
+        <div class="grind-anim-subtitle">Configure mill speed, Blain fineness and retention time</div>
+        <button class="grind-anim-close" onclick="closeGrindCard()">✕</button>
+      </div>
+      <div class="grind-anim-body" id="grindAnimBody"></div>
+      <div class="modal-footer" style="padding:1rem 1.4rem 1.2rem;flex-shrink:0;">
+        <button class="btn-save" onclick="saveGrindCard()">Save Parameters</button>
+        <button class="btn-cancel" onclick="closeGrindCard()">Cancel</button>
+      </div>
+    </div>
+
+    <!-- RIGHT: Ball Mill Diagram Card -->
+    <div class="grind-diagram-card">
+      <div class="grind-diagram-header">
+        <div class="grind-diagram-tag">LIVE PREVIEW</div>
+        <div class="grind-diagram-title">Ball Mill — Rotating</div>
+      </div>
+      <div class="grind-diagram-canvas-wrap">
+        <canvas id="grindMiniCanvas"></canvas>
+        <div class="grind-save-indicator" id="grindSaveIndicator">✓ Parameters Saved</div>
+      </div>
+      <div class="grind-diagram-footer">
+        <div class="grind-rpm-label">Mill Speed</div>
+        <div class="grind-rpm-bar-bg"><div class="grind-rpm-bar-fill" id="grindRpmFill" style="width:0%"></div></div>
       </div>
     </div>
 
@@ -1395,15 +1550,155 @@ function drawMachineShape(shape,cx,cy,mW,mH,col,strokeCol,strokeW,isActive,isDon
       return{x:cx-brimW/2,y:brimTop,w:brimW,h:neckBot-brimTop};
     }
     case 'drum':{
-      const rw=mW*0.46,rh=mH*0.34;
-      ctx.beginPath(); ctx.ellipse(cx,cy,rw,rh,0,0,Math.PI*2); ctx.fill(); ctx.stroke();
-      ctx.save(); ctx.translate(cx,cy); ctx.rotate(isActive?frame*0.07:0.4);
-      ctx.strokeStyle='rgba(255,255,255,0.42)'; ctx.lineWidth=1.5;
-      for(let k=0;k<6;k++){const a=k*Math.PI/3;ctx.beginPath();ctx.moveTo(Math.cos(a)*rw*0.35,Math.sin(a)*rh*0.35);ctx.lineTo(Math.cos(a)*rw*0.88,Math.sin(a)*rh*0.88);ctx.stroke();}
-      for(let b=0;b<3;b++){const ba=frame*0.055+b*Math.PI*2/3;ctx.beginPath();ctx.arc(Math.cos(ba)*rw*0.44,Math.sin(ba)*rh*0.44,3,0,Math.PI*2);ctx.fillStyle='rgba(255,255,255,0.5)';ctx.fill();}
+      // ── BALL MILL — proper horizontal cylinder with rotation ──
+      const bmRx = mW * 0.44;   // half-length
+      const bmRy = mH * 0.30;   // vertical radius
+      const left  = cx - bmRx;
+      const right = cx + bmRx;
+      const rotSpeed = isActive ? 0.022 : 0.008;
+      const rot = frame * rotSpeed;
+
+      // Support pillars
+      const pillarW = bmRx * 0.12;
+      const pillarH = bmRy * 1.4;
+      const pillarTop = cy + bmRy * 0.72;
+      [cx - bmRx*0.50, cx + bmRx*0.50].forEach(px => {
+        const pg = ctx.createLinearGradient(px-pillarW/2, 0, px+pillarW/2, 0);
+        pg.addColorStop(0,'#8a8e96'); pg.addColorStop(0.45,'#c0c4cc'); pg.addColorStop(1,'#6a6e76');
+        ctx.fillStyle = pg; ctx.strokeStyle='rgba(40,44,52,0.5)'; ctx.lineWidth=0.7;
+        ctx.beginPath(); ctx.roundRect(px-pillarW/2, pillarTop, pillarW, pillarH, 1); ctx.fill(); ctx.stroke();
+        ctx.fillStyle='#8a8e96';
+        ctx.beginPath(); ctx.roundRect(px-pillarW*0.9, pillarTop+pillarH-2, pillarW*1.8, 5, 1); ctx.fill();
+      });
+
+      // Cylinder barrel shell
+      const shellGrad = ctx.createLinearGradient(cx, cy-bmRy, cx, cy+bmRy);
+      shellGrad.addColorStop(0,   '#8a9098');
+      shellGrad.addColorStop(0.22,'#b0b8c0');
+      shellGrad.addColorStop(0.50,'#c8cdd4');
+      shellGrad.addColorStop(0.72,'#9098a0');
+      shellGrad.addColorStop(1,   '#505560');
+      ctx.fillStyle = shellGrad;
+      ctx.strokeStyle = 'rgba(30,34,42,0.55)'; ctx.lineWidth = 1;
+      ctx.beginPath();
+      ctx.moveTo(left,  cy - bmRy);
+      ctx.lineTo(right, cy - bmRy);
+      ctx.lineTo(right, cy + bmRy);
+      ctx.lineTo(left,  cy + bmRy);
+      ctx.closePath();
+      ctx.fill(); ctx.stroke();
+
+      // Top sheen
+      const topHl = ctx.createLinearGradient(cx, cy-bmRy, cx, cy-bmRy*0.4);
+      topHl.addColorStop(0,'rgba(255,255,255,0.20)'); topHl.addColorStop(1,'rgba(255,255,255,0)');
+      ctx.fillStyle = topHl;
+      ctx.fillRect(left, cy-bmRy, bmRx*2, bmRy*0.6);
+
+      // Bottom shadow
+      const botSh = ctx.createLinearGradient(cx, cy+bmRy*0.5, cx, cy+bmRy);
+      botSh.addColorStop(0,'rgba(0,0,0,0)'); botSh.addColorStop(1,'rgba(0,0,0,0.38)');
+      ctx.fillStyle = botSh;
+      ctx.fillRect(left, cy+bmRy*0.5, bmRx*2, bmRy*0.5);
+
+      // Weld seam lines
+      ctx.strokeStyle='rgba(255,255,255,0.07)'; ctx.lineWidth=0.7;
+      [0.30,0.55,0.70].forEach(f=>{
+        const lx=left+bmRx*2*f;
+        ctx.beginPath(); ctx.moveTo(lx, cy-bmRy); ctx.lineTo(lx, cy+bmRy); ctx.stroke();
+      });
+
+      // Riding rings
+      [cx-bmRx*0.44, cx+bmRx*0.44].forEach(rpx=>{
+        const rw2=bmRx*0.055;
+        const rg=ctx.createLinearGradient(rpx,cy-bmRy,rpx,cy+bmRy);
+        rg.addColorStop(0,'#c8ccd4'); rg.addColorStop(0.5,'#eceef2'); rg.addColorStop(1,'#8a8e96');
+        ctx.fillStyle=rg; ctx.strokeStyle='rgba(30,34,42,0.5)'; ctx.lineWidth=0.8;
+        ctx.beginPath(); ctx.roundRect(rpx-rw2/2, cy-bmRy-2, rw2, bmRy*2+4, 1); ctx.fill(); ctx.stroke();
+      });
+
+      // End caps with rotating bolts
+      const drawMainEndCap = (ecx, ecRx2, ecRy2, rotOff) => {
+        const cg = ctx.createRadialGradient(ecx-ecRx2*0.15, cy-ecRy2*0.15, 0, ecx, cy, Math.max(ecRx2,ecRy2));
+        cg.addColorStop(0,'#8a8e98'); cg.addColorStop(0.5,'#606470'); cg.addColorStop(1,'#3c3f48');
+        ctx.save();
+        ctx.fillStyle=cg; ctx.strokeStyle='rgba(20,22,28,0.70)'; ctx.lineWidth=1.2;
+        ctx.beginPath(); ctx.ellipse(ecx, cy, ecRx2, ecRy2, 0, 0, Math.PI*2); ctx.fill(); ctx.stroke();
+        // Inner rings
+        [0.62, 0.38].forEach(f=>{
+          ctx.strokeStyle='rgba(100,105,118,0.55)'; ctx.lineWidth=0.8;
+          ctx.beginPath(); ctx.ellipse(ecx, cy, ecRx2*f, ecRy2*f, 0, 0, Math.PI*2); ctx.stroke();
+        });
+        // Rotating bolts
+        const bCnt=8;
+        for(let b=0;b<bCnt;b++){
+          const ba=(b/bCnt)*Math.PI*2+rotOff;
+          const bx=ecx+Math.cos(ba)*ecRx2*0.80;
+          const by=cy +Math.sin(ba)*ecRy2*0.80;
+          const br=Math.min(ecRx2,ecRy2)*0.10;
+          ctx.beginPath(); ctx.arc(bx,by,br,0,Math.PI*2);
+          ctx.fillStyle='#c0c4cc'; ctx.fill();
+          ctx.strokeStyle='#3a3d48'; ctx.lineWidth=0.6; ctx.stroke();
+          ctx.strokeStyle='#8a8e96'; ctx.lineWidth=0.5;
+          ctx.beginPath(); ctx.moveTo(bx-br*0.5,by); ctx.lineTo(bx+br*0.5,by); ctx.stroke();
+          ctx.beginPath(); ctx.moveTo(bx,by-br*0.5); ctx.lineTo(bx,by+br*0.5); ctx.stroke();
+        }
+        // Hub
+        ctx.beginPath(); ctx.arc(ecx, cy, Math.min(ecRx2,ecRy2)*0.20, 0, Math.PI*2);
+        ctx.fillStyle='#505460'; ctx.fill();
+        ctx.strokeStyle='rgba(20,22,28,0.55)'; ctx.lineWidth=0.9; ctx.stroke();
+        ctx.restore();
+      };
+
+      const ecRx = bmRy*0.18, ecRy = bmRy;
+      drawMainEndCap(right, ecRx, ecRy, rot);
+      drawMainEndCap(left,  ecRx, ecRy, rot + Math.PI*0.25);
+
+      // Trunnion pipes
+      const pipeH2 = bmRy*0.36, pipeLen2 = bmRx*0.18;
+      [{px:left,dir:-1},{px:right,dir:1}].forEach(({px,dir})=>{
+        const pg2=ctx.createLinearGradient(px, 0, px+dir*pipeLen2, 0);
+        pg2.addColorStop(0,'#606878'); pg2.addColorStop(0.5,'#90989e'); pg2.addColorStop(1,'#484e58');
+        ctx.fillStyle=pg2; ctx.strokeStyle='rgba(30,34,42,0.45)'; ctx.lineWidth=0.7;
+        ctx.beginPath(); ctx.roundRect(dir>0?px:px-pipeLen2, cy-pipeH2/2, pipeLen2, pipeH2, 2); ctx.fill(); ctx.stroke();
+      });
+
+      // Drive motor
+      const mX=cx-bmRx*0.96, mY=cy+bmRy*0.78, mW2=bmRx*0.26, mH2=bmRy*0.40;
+      const motorG=ctx.createLinearGradient(mX,mY,mX+mW2,mY+mH2);
+      motorG.addColorStop(0,'#1e3d6a'); motorG.addColorStop(0.5,'#2a5898'); motorG.addColorStop(1,'#162d50');
+      ctx.fillStyle=motorG; ctx.strokeStyle='rgba(18,36,72,0.6)'; ctx.lineWidth=0.9;
+      ctx.beginPath(); ctx.roundRect(mX,mY,mW2,mH2,3); ctx.fill(); ctx.stroke();
+      // spinning dot on motor
+      const mdAng=frame*rotSpeed*4;
+      const mdx=mX+mW2/2+Math.cos(mdAng)*mW2*0.26;
+      const mdy=mY+mH2*0.3+Math.sin(mdAng)*mH2*0.20;
+      ctx.fillStyle='#ffcc44';
+      ctx.beginPath(); ctx.arc(mdx,mdy,1.8,0,Math.PI*2); ctx.fill();
+
+      // Rotation arc indicator
+      const arcR=bmRy*1.18;
+      ctx.save(); ctx.globalAlpha=0.30+0.08*Math.sin(frame*0.07);
+      ctx.strokeStyle='#ffc840'; ctx.lineWidth=1.4; ctx.setLineDash([3,5]);
+      ctx.beginPath(); ctx.arc(cx,cy,arcR,-Math.PI*0.70,Math.PI*0.70); ctx.stroke();
+      ctx.setLineDash([]); ctx.restore();
+
+      // Feed arrow (left)
+      ctx.save(); ctx.globalAlpha=0.65;
+      ctx.strokeStyle='#4aacff'; ctx.lineWidth=1.8; ctx.lineCap='round';
+      ctx.beginPath(); ctx.moveTo(left-bmRx*0.22,cy); ctx.lineTo(left-bmRx*0.04,cy); ctx.stroke();
+      ctx.fillStyle='#4aacff';
+      ctx.beginPath(); ctx.moveTo(left-bmRx*0.04,cy-3.5); ctx.lineTo(left+bmRx*0.02,cy); ctx.lineTo(left-bmRx*0.04,cy+3.5); ctx.closePath(); ctx.fill();
       ctx.restore();
-      if(isActive){const dy=cy-rh-5+(frame%22)*1;ctx.beginPath();ctx.arc(cx+rw*0.55,dy,2.5,0,Math.PI*2);ctx.fillStyle='rgba(100,180,255,0.7)';ctx.fill();}
-      return{x:cx-rw,y:cy-rh,w:rw*2,h:rh*2};
+
+      // Discharge arrow (right)
+      ctx.save(); ctx.globalAlpha=0.60;
+      ctx.strokeStyle='#ffbb44'; ctx.lineWidth=1.8; ctx.lineCap='round';
+      ctx.beginPath(); ctx.moveTo(right+bmRx*0.04,cy); ctx.lineTo(right+bmRx*0.22,cy); ctx.stroke();
+      ctx.fillStyle='#ffbb44';
+      ctx.beginPath(); ctx.moveTo(right+bmRx*0.16,cy-3.5); ctx.lineTo(right+bmRx*0.24,cy); ctx.lineTo(right+bmRx*0.16,cy+3.5); ctx.closePath(); ctx.fill();
+      ctx.restore();
+
+      return{x:left-bmRx*0.28,y:cy-bmRy*1.15,w:bmRx*2+bmRx*0.56,h:bmRy*2.3+pillarH};
     }
     case 'conetank':{
       const rr=mW*0.36,th=mH*0.62; const top=cy-th/2,mid2=cy+th*0.18;
@@ -2589,6 +2884,7 @@ function isStageConfigured(id){
 
 function openModal(stageId){
   if(stageId==='feed'){openFeedCard();return;}
+  if(stageId==='grind'){openGrindCard();return;}
   currentModalStage=stageId;
   const s=STAGES.find(st=>st.id===stageId);
   const cfg=MODAL_CONFIGS[stageId];
@@ -2910,6 +3206,384 @@ function drawFeedMini(frame, burst){
   const bar=document.getElementById('feedMeterFill');
   if(bar) bar.style.width=fillPct+'%';
 }
+
+// ═══════════════════════════════════════════════════════════
+// BALL MILL GRINDING CARD
+// ═══════════════════════════════════════════════════════════
+let grindMiniAnimId = null;
+let grindMiniFrame  = 0;
+let grindMiniSaveBurst = 0;
+let grindMiniActive = false;
+
+function drawGrindMini(frame, burst) {
+  const canvas = document.getElementById('grindMiniCanvas');
+  if (!canvas) return;
+  const wrap = canvas.parentElement;
+  const W = wrap.clientWidth  || 320;
+  const H = wrap.clientHeight || 300;
+  canvas.width  = W;
+  canvas.height = H;
+  const g = canvas.getContext('2d');
+  g.clearRect(0, 0, W, H);
+
+  // ── BACKGROUND ──
+  const bgGrad = g.createLinearGradient(0, 0, 0, H);
+  bgGrad.addColorStop(0, '#0b1a2e');
+  bgGrad.addColorStop(1, '#071018');
+  g.fillStyle = bgGrad;
+  g.fillRect(0, 0, W, H);
+
+  // Subtle grid lines
+  g.strokeStyle = 'rgba(80,130,200,0.06)';
+  g.lineWidth = 0.8;
+  for (let y = 0; y < H; y += 28) {
+    g.beginPath(); g.moveTo(0, y); g.lineTo(W, y); g.stroke();
+  }
+  for (let x = 0; x < W; x += 28) {
+    g.beginPath(); g.moveTo(x, 0); g.lineTo(x, H); g.stroke();
+  }
+
+  // ── GEOMETRY ──
+  const cx      = W * 0.50;
+  const cy      = H * 0.42;
+  const rx      = W * 0.36;   // half-length (x radius of ellipse perspective)
+  const ry      = H * 0.22;   // vertical radius of the cylinder
+
+  // Angle from mill speed; 12–22 RPM maps to a rotation speed
+  const speedRpm = parseFloat(stageParams.grind.millSpeed) || 17;
+  const rotSpeed = (speedRpm / 22) * 0.04;  // radians per frame
+  const rot      = frame * rotSpeed;
+
+  // ── SUPPORT STRUCTURE (under the drum) ──
+  // Two concrete pillars
+  const pillarW = rx * 0.22;
+  const pillarH = ry * 1.6;
+  const pillarTop = cy + ry * 0.75;
+  [cx - rx * 0.55, cx + rx * 0.55].forEach(px => {
+    // pillar body
+    const pg = g.createLinearGradient(px - pillarW/2, 0, px + pillarW/2, 0);
+    pg.addColorStop(0, '#c0c4cc');
+    pg.addColorStop(0.4, '#dde0e6');
+    pg.addColorStop(1, '#9fa3aa');
+    g.fillStyle = pg;
+    g.beginPath();
+    g.roundRect(px - pillarW/2, pillarTop, pillarW, pillarH, 2);
+    g.fill();
+    g.strokeStyle = 'rgba(60,65,75,0.55)'; g.lineWidth = 0.8;
+    g.stroke();
+    // base plate
+    const baseW = pillarW * 1.8;
+    g.fillStyle = '#a8acb4';
+    g.beginPath(); g.roundRect(px - baseW/2, pillarTop + pillarH - 2, baseW, 7, 1); g.fill();
+  });
+
+  // ── RIDING RINGS on cylinder ──
+  const ringPositions = [cx - rx * 0.45, cx + rx * 0.45];
+
+  // ── GEAR RING (big ring gear on one end) ──
+  const gearCx = cx + rx * 0.85;
+  const gearRy = ry * 1.18;
+  const gearRx = gearRy * 0.18;
+  const toothCount = 28;
+  g.save();
+  g.globalAlpha = 0.85;
+  for (let t = 0; t < toothCount; t++) {
+    const a0 = (t / toothCount) * Math.PI * 2 + rot * 0.5;
+    const a1 = ((t + 0.45) / toothCount) * Math.PI * 2 + rot * 0.5;
+    const innerFrac = 0.82;
+    const ox0 = gearCx + Math.cos(a0) * gearRx * innerFrac;
+    const oy0 = cy   + Math.sin(a0) * gearRy * innerFrac;
+    const ox1 = gearCx + Math.cos(a1) * gearRx * innerFrac;
+    const oy1 = cy   + Math.sin(a1) * gearRy * innerFrac;
+    const ix0 = gearCx + Math.cos(a0) * gearRx * 1.0;
+    const iy0 = cy   + Math.sin(a0) * gearRy * 1.0;
+    const ix1 = gearCx + Math.cos(a1) * gearRx * 1.0;
+    const iy1 = cy   + Math.sin(a1) * gearRy * 1.0;
+    g.beginPath();
+    g.moveTo(ox0, oy0); g.lineTo(ix0, iy0); g.lineTo(ix1, iy1); g.lineTo(ox1, oy1);
+    g.closePath();
+    g.fillStyle = '#7a7e88';
+    g.strokeStyle = '#3a3d45'; g.lineWidth = 0.6;
+    g.fill(); g.stroke();
+  }
+  g.restore();
+
+  // ── DRUM BODY — 3-D cylinder ──
+  // Back face (far ellipse)
+  g.save();
+  const shellGrad = g.createLinearGradient(cx, cy - ry, cx, cy + ry);
+  shellGrad.addColorStop(0,   '#6a7080');
+  shellGrad.addColorStop(0.25,'#8a9098');
+  shellGrad.addColorStop(0.50,'#9fa5ae');
+  shellGrad.addColorStop(0.75,'#7a8088');
+  shellGrad.addColorStop(1,   '#4a4e56');
+
+  // Main cylinder body (rectangular barrel with rounded perspective end-caps)
+  const left = cx - rx;
+  const right = cx + rx;
+  g.beginPath();
+  g.moveTo(left,  cy - ry);
+  g.lineTo(right, cy - ry);
+  g.lineTo(right, cy + ry);
+  g.lineTo(left,  cy + ry);
+  g.closePath();
+  g.fillStyle = shellGrad;
+  g.fill();
+
+  // Top highlight
+  const topHl = g.createLinearGradient(cx, cy - ry, cx, cy - ry * 0.4);
+  topHl.addColorStop(0, 'rgba(255,255,255,0.22)');
+  topHl.addColorStop(1, 'rgba(255,255,255,0.00)');
+  g.fillStyle = topHl;
+  g.fillRect(left, cy - ry, rx * 2, ry * 0.65);
+
+  // Bottom shadow
+  const botSh = g.createLinearGradient(cx, cy + ry * 0.5, cx, cy + ry);
+  botSh.addColorStop(0, 'rgba(0,0,0,0)');
+  botSh.addColorStop(1, 'rgba(0,0,0,0.42)');
+  g.fillStyle = botSh;
+  g.fillRect(left, cy + ry * 0.5, rx * 2, ry * 0.5);
+  g.restore();
+
+  // ── BOLTED MANHOLE COVER (rotating) — drawn as repeating bolts around the end-cap ──
+  const drawEndCap = (ecx, ecRx, ecRy, rotOff) => {
+    // Base end-cap disc
+    const capGrad = g.createRadialGradient(ecx - ecRx*0.2, cy - ecRy*0.2, 0, ecx, cy, Math.max(ecRx, ecRy));
+    capGrad.addColorStop(0, '#7c8190');
+    capGrad.addColorStop(0.5,'#5a5e68');
+    capGrad.addColorStop(1, '#3a3d45');
+    g.save();
+    g.fillStyle = capGrad;
+    g.strokeStyle = 'rgba(20,22,28,0.75)';
+    g.lineWidth = 1.5;
+    g.beginPath(); g.ellipse(ecx, cy, ecRx, ecRy, 0, 0, Math.PI*2); g.fill(); g.stroke();
+
+    // Concentric rings on face
+    [0.65, 0.40].forEach(frac => {
+      g.strokeStyle = 'rgba(100,105,115,0.6)'; g.lineWidth = 1.0;
+      g.beginPath(); g.ellipse(ecx, cy, ecRx * frac, ecRy * frac, 0, 0, Math.PI*2); g.stroke();
+    });
+
+    // Bolts rotating with the drum
+    const bCount = 10;
+    for (let b = 0; b < bCount; b++) {
+      const bAng = (b / bCount) * Math.PI * 2 + rotOff;
+      const bx = ecx + Math.cos(bAng) * ecRx * 0.82;
+      const by = cy  + Math.sin(bAng) * ecRy * 0.82;
+      const br = Math.min(ecRx, ecRy) * 0.085;
+      g.beginPath(); g.arc(bx, by, br, 0, Math.PI*2);
+      g.fillStyle = '#c0c4cc'; g.fill();
+      g.strokeStyle = '#3a3d48'; g.lineWidth = 0.7; g.stroke();
+      // bolt head cross
+      g.strokeStyle = '#8a8e96'; g.lineWidth = 0.6;
+      g.beginPath(); g.moveTo(bx - br*0.55, by); g.lineTo(bx + br*0.55, by); g.stroke();
+      g.beginPath(); g.moveTo(bx, by - br*0.55); g.lineTo(bx, by + br*0.55); g.stroke();
+    }
+    // Center hub
+    g.beginPath(); g.arc(ecx, cy, Math.min(ecRx,ecRy)*0.22, 0, Math.PI*2);
+    g.fillStyle = '#5a5e68'; g.fill();
+    g.strokeStyle = 'rgba(20,22,28,0.6)'; g.lineWidth = 1; g.stroke();
+
+    g.restore();
+  };
+
+  const endCapRx = ry * 0.20;
+  const endCapRy = ry;
+
+  // Far (right) end-cap
+  drawEndCap(right, endCapRx, endCapRy, rot);
+  // Near (left) end-cap
+  drawEndCap(left, endCapRx, endCapRy, rot + Math.PI * 0.3);
+
+  // ── RIDING RINGS (over the drum) ──
+  ringPositions.forEach(rpx => {
+    const ringW = rx * 0.06;
+    const ringColor1 = '#b0b4bc';
+    const ringColor2 = '#78808c';
+    const rg = g.createLinearGradient(rpx, cy - ry, rpx, cy + ry);
+    rg.addColorStop(0, ringColor1);
+    rg.addColorStop(0.5, '#e0e4ea');
+    rg.addColorStop(1, ringColor2);
+    g.fillStyle = rg;
+    g.strokeStyle = 'rgba(30,32,36,0.6)'; g.lineWidth = 0.9;
+    g.beginPath(); g.roundRect(rpx - ringW/2, cy - ry - 3, ringW, ry*2 + 6, 2); g.fill(); g.stroke();
+  });
+
+  // ── TRUNNION FEED / DISCHARGE PIPE ──
+  // Feed pipe (left)
+  const pipeH = ry * 0.40;
+  const pipeW = ry * 0.18;
+  const drawPipe = (px, isLeft) => {
+    const pg2 = g.createLinearGradient(px - pipeW/2, 0, px + pipeW/2, 0);
+    pg2.addColorStop(0, '#4a5060');
+    pg2.addColorStop(0.5, '#8a9098');
+    pg2.addColorStop(1, '#3a4050');
+    g.fillStyle = pg2;
+    g.strokeStyle = 'rgba(30,32,36,0.5)'; g.lineWidth = 0.8;
+    // Pipe body extending outward
+    const pipeLen = rx * 0.25;
+    const pipeX = isLeft ? px - pipeLen : px;
+    g.beginPath(); g.roundRect(pipeX, cy - pipeH/2, pipeLen, pipeH, 3); g.fill(); g.stroke();
+    // Flange
+    const flangeW = pipeW * 1.4;
+    const flangeH = pipeH * 1.25;
+    const flangeX = isLeft ? px - pipeLen - flangeW * 0.4 : px + pipeLen - flangeW * 0.6;
+    g.fillStyle = '#7a8090';
+    g.strokeStyle = 'rgba(30,32,36,0.5)'; g.lineWidth = 0.8;
+    g.beginPath(); g.roundRect(flangeX, cy - flangeH/2, flangeW, flangeH, 2); g.fill(); g.stroke();
+  };
+  drawPipe(left, true);
+  drawPipe(right, false);
+
+  // ── SLURRY INLET ARROW (feed end) ──
+  const arrowX = left - rx * 0.28;
+  const arrowY = cy;
+  g.save();
+  g.globalAlpha = 0.70;
+  g.strokeStyle = '#4aacff'; g.lineWidth = 2.5; g.lineCap = 'round';
+  g.beginPath(); g.moveTo(arrowX - 14, arrowY); g.lineTo(arrowX + 4, arrowY); g.stroke();
+  g.fillStyle = '#4aacff';
+  g.beginPath(); g.moveTo(arrowX + 4, arrowY - 5); g.lineTo(arrowX + 14, arrowY); g.lineTo(arrowX + 4, arrowY + 5); g.closePath(); g.fill();
+  g.restore();
+
+  // ── DISCHARGE ARROW (right end) ──
+  const dArrX = right + rx * 0.28;
+  g.save();
+  g.globalAlpha = 0.65;
+  g.strokeStyle = '#ffbb44'; g.lineWidth = 2.5; g.lineCap = 'round';
+  g.beginPath(); g.moveTo(dArrX - 4, arrowY); g.lineTo(dArrX + 14, arrowY); g.stroke();
+  g.fillStyle = '#ffbb44';
+  g.beginPath(); g.moveTo(dArrX + 14, arrowY - 5); g.lineTo(dArrX + 24, arrowY); g.lineTo(dArrX + 14, arrowY + 5); g.closePath(); g.fill();
+  g.restore();
+
+  // ── ROTATION INDICATOR ARC ──
+  const indR = ry * 1.22;
+  g.save();
+  g.globalAlpha = 0.35 + 0.10 * Math.sin(frame * 0.08);
+  const arcGrad = g.createConicalGradient ? null : null;
+  g.strokeStyle = '#ffc840';
+  g.lineWidth = 1.8;
+  g.setLineDash([4, 6]);
+  g.beginPath();
+  g.arc(cx, cy, indR, -Math.PI * 0.72, Math.PI * 0.72);
+  g.stroke();
+  g.setLineDash([]);
+  // Small arrow tip at end of arc
+  const arcEndAng = Math.PI * 0.72;
+  const aex = cx + Math.cos(arcEndAng) * indR;
+  const aey = cy + Math.sin(arcEndAng) * indR;
+  g.globalAlpha = 0.45;
+  g.fillStyle = '#ffc840';
+  g.beginPath();
+  g.arc(aex, aey, 3.5, 0, Math.PI*2);
+  g.fill();
+  g.restore();
+
+  // ── DRIVE MOTOR (left side) ──
+  const motorX = cx - rx * 1.05;
+  const motorY = cy + ry * 1.10;
+  const motorW = rx * 0.28;
+  const motorH = ry * 0.42;
+  g.save();
+  g.globalAlpha = 0.92;
+  const motorGrad = g.createLinearGradient(motorX, motorY, motorX + motorW, motorY + motorH);
+  motorGrad.addColorStop(0, '#2a5080');
+  motorGrad.addColorStop(0.5,'#3a70a8');
+  motorGrad.addColorStop(1, '#1a3060');
+  g.fillStyle = motorGrad;
+  g.strokeStyle = 'rgba(20,40,80,0.7)'; g.lineWidth = 1;
+  g.beginPath(); g.roundRect(motorX, motorY, motorW, motorH, 4); g.fill(); g.stroke();
+  // Motor label
+  g.fillStyle = 'rgba(180,210,255,0.75)';
+  g.font = 'bold 7px JetBrains Mono';
+  g.textAlign = 'center';
+  g.fillText('MOTOR', motorX + motorW/2, motorY + motorH/2 + 2.5);
+  // Spinning indicator dot
+  const mDotAng = frame * rotSpeed * 3;
+  const mDotX = motorX + motorW/2 + Math.cos(mDotAng) * motorW * 0.28;
+  const mDotY = motorY + motorH * 0.28 + Math.sin(mDotAng) * motorH * 0.18;
+  g.fillStyle = '#ffcc44';
+  g.beginPath(); g.arc(mDotX, mDotY, 2.5, 0, Math.PI*2); g.fill();
+  g.restore();
+
+  // ── LABELS ──
+  g.save();
+  g.fillStyle = 'rgba(140,180,220,0.60)';
+  g.font = '500 8px JetBrains Mono';
+  g.textAlign = 'center';
+  g.fillText('BALL MILL', cx, cy - ry - 12);
+
+  g.fillStyle = 'rgba(100,150,200,0.45)';
+  g.font = '6px JetBrains Mono';
+  g.fillText('← ORE SLURRY IN', left - rx * 0.14, cy - ry * 0.55);
+  g.fillText('GROUND SLURRY OUT →', right + rx * 0.14, cy - ry * 0.55);
+  g.restore();
+
+  // ── SAVE BURST ──
+  if (burst > 0) {
+    const bAlpha = Math.min(1, burst / 18);
+    for (let b = 0; b < 20; b++) {
+      const ang = (b / 20) * Math.PI * 2;
+      const dist = (1 - bAlpha) * W * 0.18;
+      g.beginPath(); g.arc(cx + Math.cos(ang)*dist, cy + Math.sin(ang)*dist*0.55, 2, 0, Math.PI*2);
+      g.fillStyle = `rgba(255,200,64,${(bAlpha*0.8).toFixed(2)})`; g.fill();
+    }
+    g.save();
+    g.globalAlpha = bAlpha * 0.95;
+    g.shadowColor = '#3aaa6a'; g.shadowBlur = 20;
+    g.strokeStyle = '#3aaa6a'; g.lineWidth = 3.5; g.lineCap = 'round';
+    g.beginPath(); g.moveTo(cx-14, H*0.80); g.lineTo(cx-3, H*0.80+11); g.lineTo(cx+16, H*0.80-11); g.stroke();
+    g.restore();
+  }
+
+  // Update RPM bar
+  const rpmFill = document.getElementById('grindRpmFill');
+  if (rpmFill) {
+    const pct = Math.min(((speedRpm - 12) / (22 - 12)) * 100, 100);
+    rpmFill.style.width = pct + '%';
+  }
+}
+
+function grindMiniLoop() {
+  if (grindMiniSaveBurst > 0) grindMiniSaveBurst -= 0.5;
+  drawGrindMini(grindMiniFrame, grindMiniSaveBurst);
+  grindMiniFrame++;
+  grindMiniAnimId = requestAnimationFrame(grindMiniLoop);
+}
+
+function openGrindCard() {
+  const cfg = MODAL_CONFIGS['grind'];
+  document.getElementById('grindAnimBody').innerHTML = cfg.fields();
+  document.getElementById('grindAnimOverlay').classList.add('open');
+  if (grindMiniAnimId === null) grindMiniLoop();
+  setTimeout(() => {
+    const inputs = document.querySelectorAll('#grindAnimBody input, #grindAnimBody select');
+    inputs.forEach(inp => {
+      inp.addEventListener('input',  () => { grindMiniActive = true; setTimeout(() => grindMiniActive = false, 800); });
+      inp.addEventListener('change', () => { grindMiniActive = true; setTimeout(() => grindMiniActive = false, 800); });
+    });
+  }, 60);
+}
+
+function closeGrindCard() {
+  document.getElementById('grindAnimOverlay').classList.remove('open');
+  if (grindMiniAnimId) { cancelAnimationFrame(grindMiniAnimId); grindMiniAnimId = null; }
+}
+
+function saveGrindCard() {
+  const cfg = MODAL_CONFIGS['grind'];
+  cfg.save();
+  grindMiniSaveBurst = 20;
+  const ind = document.getElementById('grindSaveIndicator');
+  ind.classList.remove('show');
+  void ind.offsetWidth;
+  ind.classList.add('show');
+  setTimeout(() => { closeGrindCard(); updateSummaryParams(); }, 1800);
+}
+
+document.getElementById('grindAnimOverlay').addEventListener('click', function(e) { if (e.target === this) closeGrindCard(); });
+
+function grindMiniLoopStart() { if (grindMiniAnimId === null) grindMiniLoop(); }
 
 function feedMiniLoop(){
   if(feedMiniSaveBurst>0) feedMiniSaveBurst-=0.5;
