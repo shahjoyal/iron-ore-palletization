@@ -622,6 +622,76 @@ input.finp{cursor:text;}
 @media(max-width:980px){.thick-diagram-card{display:none;}}
 @media(max-width:560px){.thick-anim-card{width:96vw;}}
 
+/* ── FILTER CAKE TWO-PANEL OVERLAY ── */
+.filter-anim-overlay{
+  position:fixed;inset:0;z-index:250;
+  background:rgba(8,18,35,.65);
+  backdrop-filter:blur(7px) saturate(1.2);
+  display:flex;align-items:center;justify-content:center;
+  opacity:0;pointer-events:none;
+  transition:opacity .3s ease;
+}
+.filter-anim-overlay.open{opacity:1;pointer-events:all;}
+.filter-anim-panels{display:flex;align-items:flex-start;gap:12px;}
+.filter-anim-card{
+  background:#fff;border:1px solid var(--border-strong);border-radius:10px;
+  box-shadow:0 24px 80px rgba(26,48,87,.25);
+  width:min(520px,92vw);max-height:88vh;overflow-y:auto;
+  transform:translateY(16px) scale(.97);
+  transition:transform .35s cubic-bezier(.22,1,.36,1);
+  position:relative;display:flex;flex-direction:column;
+}
+.filter-anim-overlay.open .filter-anim-card{transform:translateY(0) scale(1);}
+.filter-anim-header{
+  padding:1.4rem 1.6rem 1rem;border-bottom:1px solid var(--border);
+  background:linear-gradient(135deg,#0f1e35 0%,#1a2e50 100%);
+  border-radius:10px 10px 0 0;position:relative;flex-shrink:0;
+}
+.filter-anim-tag{font-family:'JetBrains Mono';font-size:.52rem;letter-spacing:2.5px;color:rgba(52,182,255,.75);text-transform:uppercase;margin-bottom:5px;}
+.filter-anim-title{font-family:'Cormorant Garamond',serif;font-size:1.5rem;font-weight:700;color:#fff;line-height:1.2;}
+.filter-anim-subtitle{font-size:.78rem;color:rgba(255,255,255,.45);margin-top:5px;}
+.filter-anim-close{
+  position:absolute;top:1.1rem;right:1.2rem;
+  background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);
+  color:rgba(255,255,255,.6);width:30px;height:30px;border-radius:50%;
+  font-size:.9rem;cursor:pointer;display:flex;align-items:center;justify-content:center;
+  transition:all .2s;
+}
+.filter-anim-close:hover{background:rgba(52,182,255,.3);color:#fff;}
+.filter-anim-body{padding:1.4rem 1.6rem;flex:1;}
+
+/* RIGHT filter disk diagram card */
+.filter-diagram-card{
+  width:380px;flex-shrink:0;
+  background:linear-gradient(170deg,#060e1c 0%,#0a1830 55%,#040a14 100%);
+  border:1px solid rgba(52,182,255,0.22);
+  border-radius:10px;box-shadow:0 24px 80px rgba(4,10,25,.65);
+  display:flex;flex-direction:column;align-self:stretch;overflow:hidden;
+  transform:translateY(16px) scale(.97);
+  transition:transform .35s cubic-bezier(.22,1,.36,1) .05s;
+}
+.filter-anim-overlay.open .filter-diagram-card{transform:translateY(0) scale(1);}
+.filter-diagram-header{padding:1rem 1.2rem .8rem;border-bottom:1px solid rgba(52,182,255,0.12);flex-shrink:0;}
+.filter-diagram-tag{font-family:'JetBrains Mono';font-size:.52rem;letter-spacing:2.5px;color:rgba(52,182,255,.65);text-transform:uppercase;margin-bottom:5px;}
+.filter-diagram-title{font-family:'Cormorant Garamond',serif;font-size:1.2rem;font-weight:700;color:rgba(220,235,255,0.90);line-height:1.2;}
+.filter-diagram-canvas-wrap{flex:1;position:relative;min-height:380px;}
+#filterMiniCanvas{position:absolute;inset:0;width:100%;height:100%;display:block;}
+.filter-diagram-footer{padding:.7rem 1.1rem .9rem;border-top:1px solid rgba(52,182,255,0.10);flex-shrink:0;}
+.filter-moisture-label{font-family:'JetBrains Mono';font-size:.50rem;letter-spacing:1.5px;color:rgba(52,182,255,0.50);text-transform:uppercase;margin-bottom:5px;}
+.filter-moisture-bar-bg{height:5px;background:rgba(10,25,55,0.8);border-radius:3px;overflow:hidden;}
+.filter-moisture-bar-fill{height:100%;background:linear-gradient(90deg,#34b6ff,#00d4ff);border-radius:3px;transition:width .6s ease;}
+.filter-save-indicator{
+  position:absolute;bottom:12px;left:50%;transform:translateX(-50%);
+  font-family:'JetBrains Mono';font-size:.55rem;letter-spacing:1.5px;
+  color:#3aaa6a;text-transform:uppercase;
+  background:rgba(12,50,30,0.90);border:1px solid rgba(42,170,90,0.50);
+  border-radius:20px;padding:4px 16px;white-space:nowrap;
+  opacity:0;pointer-events:none;
+}
+.filter-save-indicator.show{animation:oreSaveBurst 2s ease forwards;}
+@media(max-width:1020px){.filter-diagram-card{display:none;}}
+@media(max-width:560px){.filter-anim-card{width:96vw;}}
+
 </style>
 </head>
 <body>
@@ -732,6 +802,41 @@ input.finp{cursor:text;}
       <div class="thick-diagram-footer">
         <div class="thick-rpm-label">Underflow Density</div>
         <div class="thick-rpm-bar-bg"><div class="thick-rpm-bar-fill" id="thickDensityFill" style="width:0%"></div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ FILTER CAKE ANIMATION CARD ══ -->
+<div class="filter-anim-overlay" id="filterAnimOverlay">
+  <div class="filter-anim-panels">
+    <!-- LEFT: Parameters Card -->
+    <div class="filter-anim-card" id="filterAnimCard">
+      <div class="filter-anim-header">
+        <div class="filter-anim-tag">STAGE 04 · VACUUM FILTRATION</div>
+        <div class="filter-anim-title">Filter Cake</div>
+        <div class="filter-anim-subtitle">Configure vacuum pressure and cake moisture for the mixing stage</div>
+        <button class="filter-anim-close" onclick="closeFilterCard()">✕</button>
+      </div>
+      <div class="filter-anim-body" id="filterAnimBody"></div>
+      <div class="modal-footer" style="padding:1rem 1.4rem 1.2rem;flex-shrink:0;">
+        <button class="btn-save" onclick="saveFilterCard()">Save Parameters</button>
+        <button class="btn-cancel" onclick="closeFilterCard()">Cancel</button>
+      </div>
+    </div>
+    <!-- RIGHT: Disk Filter Diagram Card -->
+    <div class="filter-diagram-card">
+      <div class="filter-diagram-header">
+        <div class="filter-diagram-tag">LIVE PREVIEW</div>
+        <div class="filter-diagram-title">Disk Filter — Vacuum Filtration</div>
+      </div>
+      <div class="filter-diagram-canvas-wrap">
+        <canvas id="filterMiniCanvas"></canvas>
+        <div class="filter-save-indicator" id="filterSaveIndicator">✓ Parameters Saved</div>
+      </div>
+      <div class="filter-diagram-footer">
+        <div class="filter-moisture-label">Cake Moisture</div>
+        <div class="filter-moisture-bar-bg"><div class="filter-moisture-bar-fill" id="filterMoistureFill" style="width:0%"></div></div>
       </div>
     </div>
   </div>
@@ -1081,7 +1186,7 @@ const stageParams = {
                chemBentonite:'', chemOb1205:'', chemCcs:'', chemTi:'', chemAi:'' },
   grind:     { rawFeedMoisture:'', blain:'', millSpeed:'', retentionTime:'' },
   thickner:  { underflowDensity:'', vacuumPressure:'' },
-  filter:    { cakeMoisture:'' },
+  filter:    { cakeMoisture:'', vacuumPressure:'' },
   mix:       { binder:'', bentonite:'', bentoniteType:'', bentoniteDosageValue:'', bentoniteDosageUnit:'kg',
                dosageValue:'', dosageUnit:'GPT', fluxes:[], mixMoisture:'', waterAddition:'' },
   ball:      { angle:'', motorRpm:'', discRpm:'', greenBallMoisture:'', waterSprayRate:'' },
@@ -1780,10 +1885,84 @@ function drawMachineShape(shape,cx,cy,mW,mH,col,strokeCol,strokeW,isActive,isDon
       return{x:cx-rr,y:top-14,w:rr*2,h:th+24};
     }
     case 'press':{
-      const fw=mW*0.46,fh=mH*0.58; const top=cy-fh/2;
-      ctx.beginPath(); ctx.roundRect(cx-fw/2,top,fw,fh,3); ctx.fill(); ctx.stroke();
-      for(let p=0;p<4;p++){const py=top+5+p*(fh-10)/4;ctx.fillStyle='rgba(255,255,255,0.14)';ctx.fillRect(cx-fw/2+4,py,fw-8,fh/4-6);ctx.strokeStyle='rgba(255,255,255,0.2)';ctx.lineWidth=0.7;ctx.strokeRect(cx-fw/2+4,py,fw-8,fh/4-6);}
-      if(isActive){for(let d=0;d<3;d++){const dy=cy+fh/2+2+(frame*1.8+d*14)%22;ctx.beginPath();ctx.arc(cx+(d-1)*10,dy,2,0,Math.PI*2);ctx.fillStyle='rgba(100,160,255,0.65)';ctx.fill();}}
+      const fw=mW*0.56, fh=mH*0.60; const top=cy-fh/2;
+      // Main cylindrical body
+      const bodyGrad = ctx.createLinearGradient(cx-fw/2,top,cx+fw/2,top+fh);
+      bodyGrad.addColorStop(0,'#b8bec4'); bodyGrad.addColorStop(0.4,'#c9ced3'); bodyGrad.addColorStop(1,'#8a8f94');
+      ctx.fillStyle=bodyGrad; ctx.strokeStyle=col; ctx.lineWidth=strokeW;
+      ctx.beginPath(); ctx.roundRect(cx-fw/2,top,fw,fh,4); ctx.fill(); ctx.stroke();
+
+      // Blue frame accent (left side)
+      ctx.fillStyle='#1e5bb8'; ctx.beginPath(); ctx.roundRect(cx-fw/2-4,top+fh*0.15,5,fh*0.7,2); ctx.fill();
+      ctx.fillStyle='#1e5bb8'; ctx.beginPath(); ctx.roundRect(cx+fw/2-1,top+fh*0.15,5,fh*0.7,2); ctx.fill();
+
+      // Rotating discs inside (5 discs visible)
+      const nDiscs=5; const discSpacing=fw*0.16;
+      for(let d=0;d<nDiscs;d++){
+        const dx=cx-fw*0.30+d*discSpacing;
+        const discRx=fw*0.09, discRy=fh*0.40;
+        const rotAngle=isActive?(frame*0.018+d*0.4):0.3+d*0.15;
+        ctx.save(); ctx.translate(dx,cy); ctx.rotate(rotAngle);
+        // Disc
+        const dg=ctx.createLinearGradient(-discRx,-discRy,discRx,discRy);
+        dg.addColorStop(0,'#3a3a3a'); dg.addColorStop(0.5,'#2b2b2b'); dg.addColorStop(1,'#1d1d1d');
+        ctx.fillStyle=dg; ctx.strokeStyle='rgba(255,255,255,0.12)'; ctx.lineWidth=0.8;
+        ctx.beginPath(); ctx.ellipse(0,0,discRx,discRy,0,0,Math.PI*2); ctx.fill(); ctx.stroke();
+        // Filter cake crust at bottom
+        const cakeThick=discRy*(0.22+0.08*Math.sin(rotAngle*2));
+        ctx.fillStyle='#1d1d1d'; ctx.strokeStyle='rgba(45,45,45,0.8)'; ctx.lineWidth=0.6;
+        ctx.beginPath(); ctx.ellipse(0,discRy*0.60,discRx*0.85,cakeThick,0,0,Math.PI); ctx.fill();
+        // Sector lines
+        for(let seg=0;seg<6;seg++){
+          const a=seg*Math.PI/3+rotAngle;
+          ctx.strokeStyle='rgba(255,255,255,0.08)'; ctx.lineWidth=0.5;
+          ctx.beginPath(); ctx.moveTo(0,0); ctx.lineTo(Math.cos(a)*discRx*0.9,Math.sin(a)*discRy*0.9); ctx.stroke();
+        }
+        ctx.restore();
+      }
+
+      // Central shaft
+      ctx.strokeStyle='#999'; ctx.lineWidth=2.5;
+      ctx.beginPath(); ctx.moveTo(cx-fw*0.48,cy); ctx.lineTo(cx+fw*0.48,cy); ctx.stroke();
+
+      // Slurry feed trough (bottom left)
+      if(fw>20){
+        ctx.fillStyle='rgba(107,63,34,0.70)'; ctx.strokeStyle='rgba(80,40,10,0.5)'; ctx.lineWidth=0.8;
+        ctx.beginPath(); ctx.roundRect(cx-fw/2,cy+fh*0.25,fw*0.35,fh*0.22,2); ctx.fill(); ctx.stroke();
+        if(isActive){
+          for(let sp=0;sp<3;sp++){
+            const sy=cy+fh*0.28+(frame*1.5+sp*8)%12; const sx=cx-fw*0.44+sp*8;
+            ctx.fillStyle='rgba(138,78,42,0.65)'; ctx.beginPath(); ctx.arc(sx,sy,1.5,0,Math.PI*2); ctx.fill();
+          }
+        }
+      }
+
+      // Blue filtrate water flowing down
+      if(isActive){
+        for(let w=0;w<4;w++){
+          const wy=top+fh*0.5+(frame*2.2+w*18)%fh*0.4;
+          const wx=cx-fw*0.35+w*(fw*0.2);
+          ctx.globalAlpha=0.55; ctx.fillStyle='#34b6ff';
+          ctx.beginPath(); ctx.roundRect(wx-1.5,wy,3,6,1); ctx.fill();
+          ctx.globalAlpha=1;
+        }
+      }
+
+      // Filter cake discharge (right side dark chunks)
+      if(fw>20){
+        for(let ck=0;ck<3;ck++){
+          const ckX=cx+fw*0.38+ck*4; const ckY=cy+fh*0.35+(isActive?(frame*1+ck*12)%fh*0.15:ck*6);
+          ctx.fillStyle=ck===0?'#2b2b2b':'#1d1d1d'; ctx.strokeStyle='rgba(60,60,60,0.6)'; ctx.lineWidth=0.5;
+          ctx.beginPath(); ctx.roundRect(ckX-4,ckY-3,8,6,1); ctx.fill(); ctx.stroke();
+        }
+      }
+
+      // Vacuum label
+      if(isActive){
+        ctx.fillStyle='rgba(52,182,255,0.80)'; ctx.font='500 6px JetBrains Mono'; ctx.textAlign='center';
+        ctx.fillText('VACUUM',cx,top-3);
+      }
+
       return{x:cx-fw/2,y:top,w:fw,h:fh};
     }
     case 'ellipse':{
@@ -2549,10 +2728,14 @@ const MODAL_CONFIGS={
 
   // ── STAGE 04: FILTER ────────────────────────────────────
   filter:{
-    title:'Filter Cake',desc:'Set filter cake moisture for the mixing stage',
+    title:'Filter Cake',desc:'Set filter cake moisture and vacuum pressure for the mixing stage',
     fields:()=>`
-      ${numField('m-fcm','Filter Cake Moisture (%)',stageParams.filter.cakeMoisture,8,13,'%',0.1)}`,
-    save:()=>{ stageParams.filter.cakeMoisture=document.getElementById('m-fcm').value; }
+      ${numField('m-fcm','Filter Cake Moisture (%)',stageParams.filter.cakeMoisture,8,13,'%',0.1)}
+      ${numField('m-fvp','Vacuum Pressure (mbar)',stageParams.filter.vacuumPressure,-800,-200,'mbar',10)}`,
+    save:()=>{
+      stageParams.filter.cakeMoisture=document.getElementById('m-fcm').value;
+      stageParams.filter.vacuumPressure=document.getElementById('m-fvp').value;
+    }
   },
 
   // ── STAGE 05: MIXING ────────────────────────────────────
@@ -2954,6 +3137,7 @@ function openModal(stageId){
   if(stageId==='feed'){openFeedCard();return;}
   if(stageId==='grind'){openGrindCard();return;}
   if(stageId==='thickner'){openThickCard();return;}
+  if(stageId==='filter'){openFilterCard();return;}
   currentModalStage=stageId;
   const s=STAGES.find(st=>st.id===stageId);
   const cfg=MODAL_CONFIGS[stageId];
@@ -3012,7 +3196,7 @@ function resetAll(){
     chemMoisture:'',chemFe:'',chemSio2:'',chemAl2o3:'',chemBlain:'',chemMic45:'',chemBentonite:'',chemOb1205:'',chemCcs:'',chemTi:'',chemAi:''});
   Object.assign(stageParams.grind,{rawFeedMoisture:'',blain:'',millSpeed:'',retentionTime:''});
   Object.assign(stageParams.thickner,{underflowDensity:'',vacuumPressure:''});
-  Object.assign(stageParams.filter,{cakeMoisture:''});
+  Object.assign(stageParams.filter,{cakeMoisture:'',vacuumPressure:''});
   Object.assign(stageParams.mix,{binder:'',bentonite:'',bentoniteType:'',bentoniteDosageValue:'',bentoniteDosageUnit:'kg',dosageValue:'',dosageUnit:'GPT',fluxes:[],mixMoisture:'',waterAddition:''});
   Object.assign(stageParams.ball,{angle:'',motorRpm:'',discRpm:'',greenBallMoisture:'',waterSprayRate:''});
   Object.assign(stageParams.greenball,{moisture:'',dropNumber:'',gcs:'',greenBallSize:'',porosity:''});
@@ -4051,5 +4235,310 @@ function saveThickCard() {
 }
 
 document.getElementById('thickAnimOverlay').addEventListener('click', function(e) { if (e.target === this) closeThickCard(); });
+
+// ═══════════════════════════════════════════════════════════
+// FILTER CAKE — DISK FILTER LIVE DIAGRAM
+// ═══════════════════════════════════════════════════════════
+let filterMiniFrame = 0, filterMiniAnimId = null, filterMiniSaveBurst = 0;
+
+function drawFilterMini(frame, burst) {
+  const canvas = document.getElementById('filterMiniCanvas');
+  if (!canvas) return;
+  const W = canvas.parentElement.clientWidth || 380;
+  const H = canvas.parentElement.clientHeight || 380;
+  const ratio = window.devicePixelRatio || 1;
+  canvas.width = W * ratio; canvas.height = H * ratio;
+  canvas.style.width = W + 'px'; canvas.style.height = H + 'px';
+  const g = canvas.getContext('2d');
+  g.scale(ratio, ratio);
+
+  // Background
+  g.fillStyle = '#060e1c';
+  g.fillRect(0, 0, W, H);
+
+  // Subtle grid
+  g.strokeStyle = 'rgba(52,182,255,0.04)'; g.lineWidth = 1;
+  for(let x=0;x<W;x+=20){g.beginPath();g.moveTo(x,0);g.lineTo(x,H);g.stroke();}
+  for(let y=0;y<H;y+=20){g.beginPath();g.moveTo(0,y);g.lineTo(W,y);g.stroke();}
+
+  // ── MACHINE GEOMETRY ──
+  const bodyX = W*0.08, bodyW = W*0.76, bodyH = H*0.38, bodyY = H*0.20;
+  const bodyMidY = bodyY + bodyH/2;
+
+  // ── SLURRY FEED TROUGH (left) ──
+  const troughX = bodyX, troughW = bodyW*0.32, troughH = bodyH*0.30, troughY = bodyMidY+bodyH*0.20;
+  const troughGrad = g.createLinearGradient(troughX, troughY, troughX, troughY+troughH);
+  troughGrad.addColorStop(0, '#8a4e2a'); troughGrad.addColorStop(1, '#6b3f22');
+  g.fillStyle = troughGrad; g.strokeStyle = '#4a2a10'; g.lineWidth = 1.5;
+  g.beginPath(); g.roundRect(troughX, troughY, troughW, troughH, 4); g.fill(); g.stroke();
+  // Slurry particles flowing in
+  for (let sp = 0; sp < 8; sp++) {
+    const t = ((frame * 1.8 + sp * 17) % 80) / 80;
+    const sx = troughX + 4 + t * (troughW - 8);
+    const sy = troughY + 5 + (sp % 3) * 4;
+    g.globalAlpha = 0.7; g.fillStyle = sp%2===0?'#8a4e2a':'#6b3f22';
+    g.beginPath(); g.arc(sx, sy, 2.5, 0, Math.PI*2); g.fill();
+  }
+  g.globalAlpha = 1;
+  g.fillStyle = 'rgba(138,78,42,0.35)'; g.font = '500 7px JetBrains Mono'; g.textAlign = 'center';
+  g.fillText('SLURRY FEED', troughX + troughW/2, troughY - 4);
+
+  // ── MAIN DRUM BODY ──
+  const drumGrad = g.createLinearGradient(bodyX, bodyY, bodyX+bodyW, bodyY+bodyH);
+  drumGrad.addColorStop(0, '#b8bec4'); drumGrad.addColorStop(0.4, '#c9ced3'); drumGrad.addColorStop(1, '#8a8f94');
+  g.fillStyle = drumGrad; g.strokeStyle = '#6a7080'; g.lineWidth = 2;
+  g.shadowColor = 'rgba(0,0,0,0.6)'; g.shadowBlur = 14;
+  g.beginPath(); g.roundRect(bodyX, bodyY, bodyW, bodyH, 6); g.fill(); g.stroke();
+  g.shadowBlur = 0;
+
+  // Body reflection
+  g.fillStyle = 'rgba(255,255,255,0.10)';
+  g.beginPath(); g.roundRect(bodyX+4, bodyY+4, bodyW-8, bodyH*0.25, 4); g.fill();
+
+  // ── BLUE FRAME SUPPORTS ──
+  g.fillStyle = '#1e5bb8'; g.strokeStyle = '#0e3a80'; g.lineWidth = 1;
+  // Left leg
+  g.beginPath(); g.roundRect(bodyX-6, bodyY+bodyH*0.15, 7, bodyH*0.7, 2); g.fill(); g.stroke();
+  // Right leg
+  g.beginPath(); g.roundRect(bodyX+bodyW-1, bodyY+bodyH*0.15, 7, bodyH*0.7, 2); g.fill(); g.stroke();
+  // Frame stand legs
+  g.fillStyle = '#1e5bb8';
+  [[bodyX-3, bodyY+bodyH], [bodyX+10, bodyY+bodyH], [bodyX+bodyW-8, bodyY+bodyH], [bodyX+bodyW+2, bodyY+bodyH]].forEach(([lx,ly])=>{
+    g.beginPath(); g.roundRect(lx, ly, 5, H*0.12, 1); g.fill();
+  });
+
+  // ── ROTATING DISCS ──
+  const nDiscs = 7;
+  const discAreaX = bodyX + bodyW*0.10;
+  const discAreaW = bodyW*0.72;
+  const discRx = bodyW*0.055, discRy = bodyH*0.44;
+  const centralShaftY = bodyMidY - bodyH*0.02;
+
+  for (let d = 0; d < nDiscs; d++) {
+    const dx = discAreaX + (d / (nDiscs-1)) * discAreaW;
+    const rotAngle = frame * 0.016 + d * (Math.PI / nDiscs);
+
+    g.save(); g.translate(dx, centralShaftY);
+
+    // Disc shadow
+    g.globalAlpha = 0.25; g.fillStyle = '#000';
+    g.beginPath(); g.ellipse(3, discRy*0.92, discRx*0.85, discRy*0.12, 0, 0, Math.PI*2); g.fill();
+    g.globalAlpha = 1;
+
+    g.rotate(rotAngle);
+
+    // Disc base
+    const dg = g.createLinearGradient(-discRx, -discRy, discRx, discRy);
+    dg.addColorStop(0, '#3a3a3a'); dg.addColorStop(0.4, '#2b2b2b'); dg.addColorStop(1, '#1d1d1d');
+    g.fillStyle = dg; g.strokeStyle = 'rgba(80,80,80,0.6)'; g.lineWidth = 1;
+    g.beginPath(); g.ellipse(0, 0, discRx, discRy, 0, 0, Math.PI*2); g.fill(); g.stroke();
+
+    // Filter cake forming on disc — thickness varies by rotation position
+    const cakeAngle = (rotAngle + Math.PI) % (Math.PI*2); // cake at bottom
+    const cakePct = 0.20 + 0.15*Math.sin(rotAngle*1.5 + d*0.5);
+    g.fillStyle = '#1d1d1d'; g.strokeStyle = 'rgba(50,50,50,0.7)'; g.lineWidth = 0.7;
+    for(let sec=0; sec<8; sec++){
+      const a1 = sec*Math.PI/4; const a2 = a1 + Math.PI/4 - 0.05;
+      const innerR = discRy*(1-cakePct-0.05);
+      const outerR = discRy*(1-0.02);
+      g.beginPath();
+      g.arc(0, 0, outerR, a1, a2); g.arc(0, 0, innerR, a2, a1, true);
+      g.closePath();
+      g.globalAlpha = 0.6 + 0.25*Math.sin(a1+rotAngle);
+      g.fill(); g.stroke();
+    }
+    g.globalAlpha = 1;
+
+    // Sector dividers on disc
+    for (let seg = 0; seg < 8; seg++) {
+      const a = seg * Math.PI / 4;
+      g.strokeStyle = 'rgba(255,255,255,0.06)'; g.lineWidth = 0.6;
+      g.beginPath(); g.moveTo(0, 0); g.lineTo(Math.cos(a)*discRx*0.92, Math.sin(a)*discRy*0.92); g.stroke();
+    }
+
+    // Hub highlight
+    g.fillStyle = '#888'; g.strokeStyle = '#aaa'; g.lineWidth = 0.8;
+    g.beginPath(); g.arc(0, 0, discRx*0.22, 0, Math.PI*2); g.fill(); g.stroke();
+
+    g.restore();
+  }
+
+  // ── CENTRAL SHAFT ──
+  g.strokeStyle = '#8a9099'; g.lineWidth = 5; g.lineCap = 'round';
+  g.beginPath(); g.moveTo(bodyX+6, centralShaftY); g.lineTo(bodyX+bodyW-6, centralShaftY); g.stroke();
+  // Shaft highlight
+  g.strokeStyle = 'rgba(200,210,220,0.35)'; g.lineWidth = 1.5;
+  g.beginPath(); g.moveTo(bodyX+6, centralShaftY-1.5); g.lineTo(bodyX+bodyW-6, centralShaftY-1.5); g.stroke();
+
+  // ── WATER COLLECTION CHAMBER (bottom) ──
+  const chamY = bodyY+bodyH, chamH = H*0.13, chamX = bodyX+bodyW*0.05, chamW = bodyW*0.60;
+  const chamGrad = g.createLinearGradient(chamX, chamY, chamX, chamY+chamH);
+  chamGrad.addColorStop(0, 'rgba(52,182,255,0.25)'); chamGrad.addColorStop(1, 'rgba(0,212,255,0.12)');
+  g.fillStyle = chamGrad; g.strokeStyle = 'rgba(52,182,255,0.40)'; g.lineWidth = 1.5;
+  g.beginPath(); g.roundRect(chamX, chamY, chamW, chamH, 3); g.fill(); g.stroke();
+
+  // Water ripples
+  for(let rip=0; rip<3; rip++){
+    const rw = ((frame*1.5+rip*30)%chamW)*0.9;
+    g.globalAlpha = 0.18; g.strokeStyle = '#34b6ff'; g.lineWidth = 1.2;
+    g.beginPath(); g.ellipse(chamX+chamW*0.15+rip*chamW*0.25, chamY+chamH*0.55, rw*0.3, 3, 0, 0, Math.PI*2); g.stroke();
+  }
+  g.globalAlpha = 1;
+
+  // Filtrate water falling into chamber
+  for(let w=0; w<6; w++){
+    const wx = chamX + chamW*0.1 + w*(chamW*0.14);
+    const progress = ((frame*2.5+w*19)%(bodyH*0.4)) / (bodyH*0.4);
+    const wy = bodyY + bodyH*0.55 + progress*(bodyH*0.45+chamH*0.3);
+    const wAlpha = 0.65 - progress*0.35;
+    g.globalAlpha = wAlpha;
+    g.fillStyle = '#34b6ff';
+    g.beginPath(); g.roundRect(wx-1.5, wy, 3, 7+progress*4, 1.5); g.fill();
+    // glow
+    g.shadowColor = '#00d4ff'; g.shadowBlur = 4;
+    g.beginPath(); g.roundRect(wx-1, wy+2, 2, 4, 1); g.fill();
+    g.shadowBlur = 0;
+  }
+  g.globalAlpha = 1;
+
+  // Drain pipe
+  g.strokeStyle = '#556070'; g.lineWidth = 5; g.lineCap = 'round';
+  g.beginPath(); g.moveTo(chamX+chamW*0.4, chamY+chamH); g.lineTo(chamX+chamW*0.4, chamY+chamH+H*0.06); g.stroke();
+  g.strokeStyle = '#34b6ff'; g.lineWidth = 2; g.globalAlpha = 0.5;
+  const drainT = ((frame*2)%(H*0.06))/(H*0.06);
+  g.beginPath(); g.arc(chamX+chamW*0.4, chamY+chamH+drainT*H*0.06, 2, 0, Math.PI*2); g.fill();
+  g.globalAlpha = 1;
+  g.fillStyle = 'rgba(52,182,255,0.45)'; g.font = '500 7px JetBrains Mono'; g.textAlign = 'center';
+  g.fillText('FILTRATE', chamX+chamW*0.5, chamY+chamH+H*0.09);
+
+  // ── CAKE DISCHARGE (right) ──
+  const dischargeX = bodyX + bodyW*0.82;
+  const dischargeTopY = bodyMidY + bodyH*0.15;
+  const conveyorX = dischargeX + 8, conveyorEndX = W*0.96;
+  const conveyorY = dischargeTopY + bodyH*0.20;
+
+  // Scraper blade
+  g.fillStyle = '#5a6070'; g.strokeStyle = '#8090a0'; g.lineWidth = 1;
+  g.beginPath(); g.moveTo(dischargeX, dischargeTopY); g.lineTo(dischargeX+10, dischargeTopY-6); g.lineTo(dischargeX+10, dischargeTopY+4); g.closePath(); g.fill(); g.stroke();
+
+  // Conveyor belt
+  const beltGrad = g.createLinearGradient(conveyorX, conveyorY, conveyorEndX, conveyorY);
+  beltGrad.addColorStop(0, '#1a1e26'); beltGrad.addColorStop(1, '#12161e');
+  g.fillStyle = beltGrad; g.strokeStyle = '#2a3040'; g.lineWidth = 1.5;
+  const convAngle = -0.22;
+  g.save(); g.translate(conveyorX, conveyorY); g.rotate(convAngle);
+  const beltLen = Math.hypot(conveyorEndX-conveyorX, (conveyorY+H*0.22)-conveyorY);
+  g.beginPath(); g.roundRect(0, -5, beltLen, 10, 2); g.fill(); g.stroke();
+  // Belt moving texture
+  for(let b=0; b<10; b++){
+    const bx = ((frame*3+b*beltLen/10)%beltLen);
+    g.strokeStyle = 'rgba(255,255,255,0.06)'; g.lineWidth = 0.8;
+    g.beginPath(); g.moveTo(bx,-5); g.lineTo(bx,5); g.stroke();
+  }
+  g.restore();
+  // Rollers
+  [[conveyorX, conveyorY],[conveyorEndX-12, conveyorY+H*0.22]].forEach(([rx,ry])=>{
+    g.fillStyle = '#404852'; g.strokeStyle = '#6a7580'; g.lineWidth = 1;
+    g.beginPath(); g.arc(rx, ry, 6, 0, Math.PI*2); g.fill(); g.stroke();
+  });
+
+  // Filter cake chunks falling onto conveyor
+  for(let ck=0; ck<5; ck++){
+    const ckProgress = ((frame*1.2+ck*22)%60)/60;
+    const ckFallX = dischargeX - 2 + ck*3;
+    const ckFallY = dischargeTopY + ckProgress*H*0.22;
+    g.globalAlpha = 0.8+0.2*Math.sin(ck);
+    g.fillStyle = ck%2===0?'#2b2b2b':'#1d1d1d'; g.strokeStyle = 'rgba(60,60,60,0.6)'; g.lineWidth = 0.5;
+    g.beginPath();
+    g.moveTo(ckFallX, ckFallY); g.lineTo(ckFallX+7, ckFallY+3); g.lineTo(ckFallX+5, ckFallY+9); g.lineTo(ckFallX-2, ckFallY+7); g.closePath();
+    g.fill(); g.stroke();
+  }
+  g.globalAlpha = 1;
+
+  // Cake pile on conveyor
+  for(let cp=0; cp<7; cp++){
+    const cpX = conveyorX+20 + cp*18; const cpY = conveyorY - 5 + cp*2.5;
+    g.fillStyle = cp%3===0?'#2b2b2b':cp%3===1?'#1d1d1d':'#3a3a3a';
+    g.strokeStyle = 'rgba(60,60,60,0.4)'; g.lineWidth = 0.5;
+    g.beginPath(); g.roundRect(cpX, cpY, 14, 9, 1.5); g.fill(); g.stroke();
+  }
+
+  // ── LABELS ──
+  g.fillStyle = 'rgba(52,182,255,0.40)'; g.font = '500 7px JetBrains Mono'; g.textAlign = 'center';
+  g.fillText('VACUUM DISK FILTER', W/2, bodyY - 6);
+  g.fillStyle = 'rgba(43,43,43,0.70)'; g.font = '500 7px JetBrains Mono';
+  g.fillText('FILTER CAKE', conveyorX + 40, conveyorY + H*0.22 + 14);
+
+  // ── VACUUM PRESSURE INDICATOR ──
+  const vac = parseFloat(stageParams.filter.vacuumPressure) || -600;
+  const vacPct = Math.min(Math.abs(vac)/800, 1);
+  const moisture = parseFloat(stageParams.filter.cakeMoisture) || 8;
+  const moistPct = Math.max(0, Math.min((moisture-8)/5, 1));
+
+  // Process labels (live values)
+  const liveVals = [
+    { label: 'VACUUM', val: vac + ' mbar', col: 'rgba(52,182,255,0.75)', x: bodyX+bodyW*0.22, y: bodyY+bodyH+chamH+H*0.12 },
+    { label: 'MOISTURE', val: moisture + '%', col: 'rgba(43,43,43,0.75)', x: W*0.78, y: conveyorY+H*0.22+H*0.06 },
+  ];
+  liveVals.forEach(lv=>{
+    g.fillStyle = lv.col; g.font = '600 7.5px JetBrains Mono'; g.textAlign = 'center';
+    g.fillText(lv.label, lv.x, lv.y);
+    g.font = '500 8px JetBrains Mono';
+    g.fillText(lv.val, lv.x, lv.y+11);
+  });
+
+  // Update moisture bar
+  const mFill = document.getElementById('filterMoistureFill');
+  if(mFill) mFill.style.width = (100 - moistPct*100) + '%';
+
+  // ── SAVE BURST ──
+  if (burst > 0) {
+    const bAlpha = Math.min(1, burst/18);
+    g.save(); g.globalAlpha = bAlpha * 0.95;
+    g.shadowColor = '#3aaa6a'; g.shadowBlur = 20;
+    g.strokeStyle = '#3aaa6a'; g.lineWidth = 3.5; g.lineCap = 'round';
+    g.beginPath(); g.moveTo(W/2-14, H*0.80); g.lineTo(W/2-3, H*0.80+11); g.lineTo(W/2+16, H*0.80-11); g.stroke();
+    g.restore();
+  }
+}
+
+function filterMiniLoop() {
+  if (filterMiniSaveBurst > 0) filterMiniSaveBurst -= 0.5;
+  drawFilterMini(filterMiniFrame, filterMiniSaveBurst);
+  filterMiniFrame++;
+  filterMiniAnimId = requestAnimationFrame(filterMiniLoop);
+}
+
+function openFilterCard() {
+  const cfg = MODAL_CONFIGS['filter'];
+  document.getElementById('filterAnimBody').innerHTML = cfg.fields();
+  document.getElementById('filterAnimOverlay').classList.add('open');
+  if (filterMiniAnimId === null) filterMiniLoop();
+  setTimeout(() => {
+    const inputs = document.querySelectorAll('#filterAnimBody input, #filterAnimBody select');
+    inputs.forEach(inp => {
+      inp.addEventListener('input',  () => { drawFilterMini(filterMiniFrame, 0); });
+      inp.addEventListener('change', () => { drawFilterMini(filterMiniFrame, 0); });
+    });
+  }, 60);
+}
+
+function closeFilterCard() {
+  document.getElementById('filterAnimOverlay').classList.remove('open');
+  if (filterMiniAnimId) { cancelAnimationFrame(filterMiniAnimId); filterMiniAnimId = null; }
+}
+
+function saveFilterCard() {
+  const cfg = MODAL_CONFIGS['filter'];
+  cfg.save();
+  filterMiniSaveBurst = 20;
+  const ind = document.getElementById('filterSaveIndicator');
+  ind.classList.remove('show');
+  void ind.offsetWidth;
+  ind.classList.add('show');
+  setTimeout(() => { closeFilterCard(); updateSummaryParams(); }, 1800);
+}
+
+document.getElementById('filterAnimOverlay').addEventListener('click', function(e) { if (e.target === this) closeFilterCard(); });
 </script>
 </html>
