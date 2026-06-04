@@ -1663,18 +1663,7 @@ function drawMachineShape(shape,cx,cy,mW,mH,col,strokeCol,strokeW,isActive,isDon
       const rotSpeed = isActive ? 0.022 : 0.008;
       const rot = frame * rotSpeed;
 
-      // Support pillars
-      const pillarW = bmRx * 0.12;
       const pillarH = bmRy * 1.4;
-      const pillarTop = cy + bmRy * 0.72;
-      [cx - bmRx*0.50, cx + bmRx*0.50].forEach(px => {
-        const pg = ctx.createLinearGradient(px-pillarW/2, 0, px+pillarW/2, 0);
-        pg.addColorStop(0,'#8a8e96'); pg.addColorStop(0.45,'#c0c4cc'); pg.addColorStop(1,'#6a6e76');
-        ctx.fillStyle = pg; ctx.strokeStyle='rgba(40,44,52,0.5)'; ctx.lineWidth=0.7;
-        ctx.beginPath(); ctx.roundRect(px-pillarW/2, pillarTop, pillarW, pillarH, 1); ctx.fill(); ctx.stroke();
-        ctx.fillStyle='#8a8e96';
-        ctx.beginPath(); ctx.roundRect(px-pillarW*0.9, pillarTop+pillarH-2, pillarW*1.8, 5, 1); ctx.fill();
-      });
 
       // Cylinder barrel shell
       const shellGrad = ctx.createLinearGradient(cx, cy-bmRy, cx, cy+bmRy);
