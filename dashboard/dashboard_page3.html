@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Dashboard – Stage 1–3 · Abhitech</title>
+<title>Dashboard – Stage 6B–10 · Abhitech</title>
 <link rel="icon" type="image/x-icon" href="abhitech-logo.png">
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=DM+Sans:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
@@ -20,7 +20,7 @@
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
 body{
   font-family:'DM Sans',sans-serif;background:var(--cream2);color:var(--text);
-  height:100vh;overflow:hidden;
+  min-height:100vh;overflow-x:hidden;
   background-image:
     radial-gradient(ellipse 80% 60% at 50% -10%,rgba(200,145,42,0.07) 0%,transparent 70%),
     repeating-linear-gradient(0deg,transparent,transparent 39px,rgba(200,145,42,0.04) 39px,rgba(200,145,42,0.04) 40px),
@@ -28,7 +28,7 @@ body{
 }
 nav{
   position:sticky;top:0;z-index:100;display:flex;align-items:center;justify-content:space-between;
-  padding:0 1.5rem;height:52px;background:rgba(253,248,240,0.96);
+  padding:0 2rem;height:64px;background:rgba(253,248,240,0.96);
   backdrop-filter:blur(24px) saturate(1.5);border-bottom:1px solid var(--border);
   box-shadow:0 1px 0 var(--border),0 4px 24px rgba(26,48,87,0.06);
 }
@@ -40,13 +40,13 @@ nav{
 .nav-btn{font-size:.78rem;font-weight:500;color:var(--text-mid);background:none;border:1px solid var(--border);padding:7px 16px;border-radius:3px;cursor:pointer;transition:all .25s;text-decoration:none;font-family:'DM Sans';}
 .nav-btn:hover{border-color:var(--gold);color:var(--gold);background:rgba(200,145,42,.05);}
 
-.page-wrap{display:flex;flex-direction:column;align-items:center;height:calc(100vh - 52px);padding:.6rem 1.2rem .5rem;overflow:hidden;}
+.page-wrap{display:flex;flex-direction:column;align-items:center;min-height:calc(100vh - 64px);padding:2rem 1.5rem 3rem;}
 
-.page-header{text-align:center;margin-bottom:.5rem;width:100%;max-width:1200px;position:relative;}
+.page-header{text-align:center;margin-bottom:2rem;width:100%;max-width:1200px;position:relative;}
 .page-header-inner{display:flex;align-items:center;justify-content:center;gap:1.25rem;flex-wrap:wrap;}
-.page-title{font-family:'Cormorant Garamond',serif;font-size:clamp(1.2rem,2.2vw,1.8rem);font-weight:700;color:var(--navy);letter-spacing:.5px;line-height:1.1;}
-.page-sub{font-family:'JetBrains Mono';font-size:.56rem;letter-spacing:2px;color:var(--text-dim);text-transform:uppercase;margin-top:.2rem;}
-.page-hint{font-size:.72rem;color:var(--text-dim);margin-top:.25rem;display:flex;align-items:center;gap:6px;justify-content:center;}
+.page-title{font-family:'Cormorant Garamond',serif;font-size:clamp(1.6rem,3vw,2.4rem);font-weight:700;color:var(--navy);letter-spacing:.5px;line-height:1.2;}
+.page-sub{font-family:'JetBrains Mono';font-size:.6rem;letter-spacing:2px;color:var(--text-dim);text-transform:uppercase;margin-top:.5rem;}
+.page-hint{font-size:.78rem;color:var(--text-dim);margin-top:.75rem;display:flex;align-items:center;gap:6px;justify-content:center;}
 .page-hint::before{content:'◈';color:var(--gold);font-size:.65rem;}
 
 .capacity-box{
@@ -75,24 +75,24 @@ nav{
 }
 .plant-name-select:focus{border-color:var(--gold);background-color:#fff;}
 
-.canvas-wrap{width:100%;max-width:1200px;flex:1;min-height:0;background:#fff;border:1px solid var(--border);border-radius:8px;box-shadow:var(--shadow-navy),inset 0 1px 0 rgba(255,255,255,.8);overflow:hidden;position:relative;display:flex;flex-direction:column;}
-#processCanvas{display:block;width:100%;flex:1;min-height:0;cursor:default;}
+.canvas-wrap{width:100%;max-width:1200px;background:#fff;border:1px solid var(--border);border-radius:8px;box-shadow:var(--shadow-navy),inset 0 1px 0 rgba(255,255,255,.8);overflow:hidden;position:relative;}
+#processCanvas{display:block;width:100%;height:auto;cursor:default;}
 
-.step-bar{display:flex;align-items:center;gap:5px;justify-content:center;padding:.35rem .8rem;border-top:1px solid var(--border);background:rgba(253,248,240,.7);flex-wrap:wrap;flex-shrink:0;}
+.step-bar{display:flex;align-items:center;gap:5px;justify-content:center;padding:.65rem 1rem;border-top:1px solid var(--border);background:rgba(253,248,240,.7);flex-wrap:wrap;}
 .step-pill{padding:3px 10px;font-family:'JetBrains Mono';font-size:.52rem;letter-spacing:1px;border:1px solid var(--border);border-radius:20px;color:var(--text-dim);transition:all .35s;white-space:nowrap;cursor:pointer;user-select:none;}
 .step-pill:hover{border-color:var(--gold);color:var(--gold);}
 .step-pill.active{background:var(--gold);border-color:var(--gold);color:#fff;box-shadow:0 2px 10px rgba(200,145,42,.4);}
 .step-pill.done{background:rgba(42,122,74,.09);border-color:var(--green);color:var(--green);}
 
-.action-row{display:flex;align-items:center;gap:1rem;margin-top:.5rem;justify-content:center;}
-.run-btn{background:linear-gradient(135deg,var(--navy),var(--blue));color:#fff;border:none;border-radius:4px;padding:9px 24px;font-family:'DM Sans';font-size:.9rem;font-weight:600;cursor:pointer;letter-spacing:.3px;transition:all .3s;display:flex;align-items:center;gap:8px;box-shadow:0 4px 16px rgba(26,48,87,.25);}
+.action-row{display:flex;align-items:center;gap:1rem;margin-top:1.5rem;justify-content:center;}
+.run-btn{background:linear-gradient(135deg,var(--navy),var(--blue));color:#fff;border:none;border-radius:4px;padding:13px 32px;font-family:'DM Sans';font-size:.9rem;font-weight:600;cursor:pointer;letter-spacing:.3px;transition:all .3s;display:flex;align-items:center;gap:8px;box-shadow:0 4px 16px rgba(26,48,87,.25);}
 .run-btn:hover:not(:disabled){background:linear-gradient(135deg,var(--gold),var(--gold-light));transform:translateY(-2px);box-shadow:0 6px 24px rgba(200,145,42,.4);}
 .run-btn:disabled{opacity:.45;pointer-events:none;}
-.reset-btn{background:transparent;color:var(--text-dim);border:1px solid var(--border);border-radius:4px;padding:9px 16px;font-family:'DM Sans';font-size:.85rem;cursor:pointer;transition:all .25s;}
+.reset-btn{background:transparent;color:var(--text-dim);border:1px solid var(--border);border-radius:4px;padding:13px 20px;font-family:'DM Sans';font-size:.85rem;cursor:pointer;transition:all .25s;}
 .reset-btn:hover{border-color:var(--red);color:var(--red);}
 
-.params-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:6px;width:100%;max-width:1200px;margin-top:.4rem;}
-.param-box{background:#fff;border:1px solid var(--border);border-radius:6px;padding:6px 10px;text-align:center;box-shadow:0 2px 8px rgba(26,48,87,.04);}
+.params-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:8px;width:100%;max-width:1200px;margin-top:1.2rem;}
+.param-box{background:#fff;border:1px solid var(--border);border-radius:6px;padding:10px 14px;text-align:center;box-shadow:0 2px 8px rgba(26,48,87,.04);}
 .param-box-label{font-family:'JetBrains Mono';font-size:.52rem;letter-spacing:1.2px;color:var(--text-dim);text-transform:uppercase;margin-bottom:4px;}
 .param-box-val{font-family:'Cormorant Garamond',serif;font-size:1.3rem;font-weight:700;color:var(--navy);line-height:1;}
 .param-box-val.good{color:var(--green);}.param-box-val.warn{color:var(--gold);}
@@ -766,7 +766,7 @@ input.finp{cursor:text;}
 /* ── PAGE NAVIGATION ── */
 .page-nav{
   display:flex;align-items:center;justify-content:center;gap:10px;
-  margin-top:.3rem;padding:.3rem .6rem;
+  margin-top:1.2rem;padding:.65rem 1rem;
   flex-wrap:wrap;
 }
 .page-nav-btn{
@@ -997,8 +997,8 @@ input.finp{cursor:text;}
   </a>
   <div class="nav-right">
     <a href="index.html" class="nav-btn">← Home</a>
+    <a href="dashboard_page2.html" class="nav-btn">← Prev</a>
     <a href="login.html" class="nav-btn">Sign Out</a>
-    <a href="dashboard_page2.html" class="nav-btn">Next →</a>
   </div>
 </nav>
 
@@ -1048,9 +1048,11 @@ input.finp{cursor:text;}
   <div class="canvas-wrap">
     <canvas id="processCanvas"></canvas>
     <div class="step-bar">
-      <div class="step-pill" data-step="0">Feed</div>
-      <div class="step-pill" data-step="1">Grinding</div>
-      <div class="step-pill" data-step="2">Thickener</div>
+      <div class="step-pill" data-step="5b">Green Ball</div>
+      <div class="step-pill" data-step="6">Screening</div>
+      <div class="step-pill" data-step="7">Induration</div>
+      <div class="step-pill" data-step="8">Cooling</div>
+      <div class="step-pill" data-step="9">Pellets</div>
     </div>
   </div>
 
@@ -1069,10 +1071,10 @@ input.finp{cursor:text;}
   </div>
 
   <div class="page-nav">
-    <span class="page-nav-btn disabled">← Previous</span>
-    <div class="page-dot-wrap"><a href="dashboard_page1.html" class="page-dot active"></a><a href="dashboard_page2.html" class="page-dot"></a><a href="dashboard_page3.html" class="page-dot"></a></div>
-    <span class="page-nav-label">Page 1 of 3 · Stages 01–03</span>
-    <a href="dashboard_page2.html" class="page-nav-btn">Next →</a>
+    <a href="dashboard_page2.html" class="page-nav-btn">← Previous</a>
+    <div class="page-dot-wrap"><a href="dashboard_page1.html" class="page-dot"></a><a href="dashboard_page2.html" class="page-dot"></a><a href="dashboard_page3.html" class="page-dot active"></a></div>
+    <span class="page-nav-label">Page 3 of 3 · Stages 06B–10</span>
+    <span class="page-nav-btn disabled">Next →</span>
   </div>
 </div>
 
@@ -1332,9 +1334,11 @@ let simRunning=false, simFrame=0, simStep=-1, animId=null, currentModalStage=nul
 
 // ═══════ STAGES ═══════
 const STAGES=[
-  {id:'feed',     label:'IRON ORE\nFEED',     tag:'STAGE 01',shape:'hopper',   color:'#8b4513',step:0},
-  {id:'grind',    label:'GRINDING',            tag:'STAGE 02',shape:'drum',     color:'#7a5a30',step:1},
-  {id:'thickner', label:'THICKENER',           tag:'STAGE 03',shape:'conetank', color:'#2d5fa6',step:2},
+  {id:'greenball',label:'GREEN\nBALL PROP',    tag:'STAGE 06B',shape:'screen',  color:'#5a8a3a',step:5},
+  {id:'screen',   label:'SCREENING',           tag:'STAGE 07',shape:'screen',   color:'#6a5a2a',step:6},
+  {id:'indu',     label:'INDURATION\nFURNACE',tag:'STAGE 08',shape:'furnace',  color:'#c04010',step:7},
+  {id:'cool',     label:'COOLING',             tag:'STAGE 09',shape:'trapezoid',color:'#2a7a4a',step:8},
+  {id:'pellet',   label:'FINISHED\nPELLETS',  tag:'STAGE 10',shape:'pellets',  color:'#1a3057',step:9},
 ];
 
 // ═══════ CANVAS ═══════
@@ -1345,7 +1349,7 @@ let hitZones=[];
 function sizeCanvas(){
   const W=canvas.parentElement.clientWidth;
   const ratio=window.devicePixelRatio||1;
-  const H=Math.max(300,canvas.parentElement.clientHeight||canvas.offsetHeight||400);
+  const H=Math.max(420,Math.min(W*0.70,620));
   canvas.width=W*ratio; canvas.height=H*ratio;
   canvas.style.width=W+'px'; canvas.style.height=H+'px';
   ctx.scale(ratio,ratio);
