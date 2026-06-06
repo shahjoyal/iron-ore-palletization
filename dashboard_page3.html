@@ -762,6 +762,205 @@ input.finp{cursor:text;}
 @media(max-width:1060px){.mix-diagram-card{display:none;}}
 @media(max-width:560px){.mix-anim-card{width:96vw;}}
 
+/* ── GREEN BALL TWO-PANEL OVERLAY ── */
+.gb-anim-overlay{
+  position:fixed;inset:0;z-index:250;
+  background:rgba(15,31,58,.62);
+  backdrop-filter:blur(7px) saturate(1.2);
+  display:flex;align-items:center;justify-content:center;
+  opacity:0;pointer-events:none;transition:opacity .3s ease;
+}
+.gb-anim-overlay.open{opacity:1;pointer-events:all;}
+.gb-anim-panels{display:flex;align-items:flex-start;gap:14px;}
+
+.gb-anim-card{
+  background:#fff;border:1px solid var(--border-strong);border-radius:10px;
+  box-shadow:0 24px 80px rgba(26,48,87,.25);
+  width:min(460px,92vw);max-height:88vh;overflow-y:auto;
+  transform:translateY(16px) scale(.97);
+  transition:transform .35s cubic-bezier(.22,1,.36,1);
+  position:relative;display:flex;flex-direction:column;
+}
+.gb-anim-overlay.open .gb-anim-card{transform:translateY(0) scale(1);}
+.gb-anim-header{
+  padding:1.4rem 1.6rem 1rem;border-bottom:1px solid var(--border);
+  background:linear-gradient(135deg,#1a3d20 0%,#2a5a30 100%);
+  border-radius:10px 10px 0 0;position:relative;flex-shrink:0;
+}
+.gb-anim-tag{font-family:'JetBrains Mono';font-size:.52rem;letter-spacing:2.5px;color:rgba(120,210,100,.75);text-transform:uppercase;margin-bottom:5px;}
+.gb-anim-title{font-family:'Cormorant Garamond',serif;font-size:1.5rem;font-weight:700;color:#fff;line-height:1.2;}
+.gb-anim-subtitle{font-size:.78rem;color:rgba(255,255,255,.4);margin-top:5px;}
+.gb-anim-close{
+  position:absolute;top:1.1rem;right:1.2rem;
+  background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);
+  color:rgba(255,255,255,.6);width:30px;height:30px;border-radius:50%;
+  font-size:.9rem;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s;
+}
+.gb-anim-close:hover{background:rgba(90,180,80,.35);color:#fff;}
+.gb-anim-body{padding:1.4rem 1.6rem;flex:1;}
+
+/* RIGHT card */
+.gb-diagram-card{
+  width:380px;flex-shrink:0;
+  background:linear-gradient(170deg,#f3f8f2 0%,#ffffff 40%,#edf5ec 100%);
+  border:1px solid rgba(60,140,60,0.25);border-radius:10px;
+  box-shadow:0 24px 80px rgba(26,48,87,.2);
+  display:flex;flex-direction:column;align-self:stretch;overflow:hidden;
+  transform:translateY(16px) scale(.97);
+  transition:transform .35s cubic-bezier(.22,1,.36,1) .05s;
+}
+.gb-anim-overlay.open .gb-diagram-card{transform:translateY(0) scale(1);}
+.gb-diagram-header{
+  padding:1rem 1.3rem .8rem;
+  background:linear-gradient(135deg,#1a3d20 0%,#2a5a30 100%);
+  border-bottom:1px solid rgba(60,140,60,0.2);flex-shrink:0;
+}
+.gb-diagram-tag{font-family:'JetBrains Mono';font-size:.52rem;letter-spacing:2.5px;color:rgba(120,210,100,.75);text-transform:uppercase;margin-bottom:4px;}
+.gb-diagram-title{font-family:'Cormorant Garamond',serif;font-size:1.25rem;font-weight:700;color:#fff;line-height:1.2;}
+.gb-diagram-subtitle{font-size:.72rem;color:rgba(255,255,255,.4);margin-top:3px;}
+.gb-diagram-body{flex:1;display:flex;flex-direction:column;padding:.9rem 1.1rem .8rem;gap:.7rem;overflow:hidden;}
+
+.gb-fall-container-wrap{
+  flex:1;position:relative;min-height:220px;
+  background:linear-gradient(180deg,#08131e 0%,#0b1a2c 100%);
+  border-radius:8px;border:1.5px solid rgba(60,180,60,0.22);
+  overflow:hidden;box-shadow:0 6px 24px rgba(26,48,87,.3),inset 0 -2px 0 rgba(60,180,60,0.08);
+}
+#gbFallCanvas{position:absolute;inset:0;width:100%;height:100%;display:block;}
+.gb-fill-readout{
+  position:absolute;top:10px;right:12px;
+  font-family:'Cormorant Garamond',serif;font-size:1.7rem;font-weight:700;
+  color:rgba(80,200,80,0.9);line-height:1;
+  text-shadow:0 0 14px rgba(60,200,60,0.5);transition:color .4s;
+}
+.gb-hint-label{
+  position:absolute;bottom:12px;left:50%;transform:translateX(-50%);
+  font-family:'JetBrains Mono';font-size:.5rem;letter-spacing:1.5px;
+  color:rgba(100,200,100,0.5);text-transform:uppercase;white-space:nowrap;
+  transition:opacity .6s;
+}
+.gb-hint-label.hidden{opacity:0;}
+
+.gb-fall-meter{flex-shrink:0;}
+.gb-meter-label{font-family:'JetBrains Mono';font-size:.48rem;letter-spacing:1.5px;color:rgba(40,90,40,.65);text-transform:uppercase;margin-bottom:4px;}
+.gb-meter-bg{height:5px;background:rgba(60,140,60,0.12);border-radius:3px;overflow:hidden;}
+.gb-meter-fill{height:100%;background:linear-gradient(90deg,#1a5a20,#3aaa4a,#5acc5a);border-radius:3px;transition:width .5s ease;}
+
+.gb-stat-row{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;flex-shrink:0;}
+.gb-stat{background:rgba(42,90,48,0.06);border:1px solid rgba(60,140,60,0.18);border-radius:5px;padding:6px 4px;text-align:center;}
+.gb-stat-label{display:block;font-family:'JetBrains Mono';font-size:.44rem;letter-spacing:1px;color:rgba(40,100,40,.6);text-transform:uppercase;margin-bottom:3px;}
+.gb-stat-val{display:block;font-family:'Cormorant Garamond',serif;font-size:1rem;font-weight:700;color:#1a4020;line-height:1;}
+
+@media(max-width:960px){.gb-diagram-card{width:300px;}}
+@media(max-width:740px){.gb-diagram-card{display:none;}}
+@media(max-width:560px){.gb-anim-card{width:96vw;}}
+
+/* ── PELLET TWO-PANEL OVERLAY ── */
+.pellet-anim-overlay{
+  position:fixed;inset:0;z-index:250;
+  background:rgba(15,31,58,.60);
+  backdrop-filter:blur(7px) saturate(1.2);
+  display:flex;align-items:center;justify-content:center;
+  opacity:0;pointer-events:none;
+  transition:opacity .3s ease;
+}
+.pellet-anim-overlay.open{opacity:1;pointer-events:all;}
+.pellet-anim-panels{display:flex;align-items:flex-start;gap:14px;}
+
+.pellet-anim-card{
+  background:#fff;border:1px solid var(--border-strong);border-radius:10px;
+  box-shadow:0 24px 80px rgba(26,48,87,.25);
+  width:min(480px,92vw);max-height:88vh;overflow-y:auto;
+  transform:translateY(16px) scale(.97);
+  transition:transform .35s cubic-bezier(.22,1,.36,1);
+  position:relative;display:flex;flex-direction:column;
+}
+.pellet-anim-overlay.open .pellet-anim-card{transform:translateY(0) scale(1);}
+.pellet-anim-header{
+  padding:1.4rem 1.6rem 1rem;border-bottom:1px solid var(--border);
+  background:linear-gradient(135deg,var(--navy2) 0%,var(--navy3) 100%);
+  border-radius:10px 10px 0 0;position:relative;flex-shrink:0;
+}
+.pellet-anim-tag{font-family:'JetBrains Mono';font-size:.52rem;letter-spacing:2.5px;color:rgba(200,145,42,.7);text-transform:uppercase;margin-bottom:5px;}
+.pellet-anim-title{font-family:'Cormorant Garamond',serif;font-size:1.5rem;font-weight:700;color:#fff;line-height:1.2;}
+.pellet-anim-subtitle{font-size:.78rem;color:rgba(255,255,255,.45);margin-top:5px;}
+.pellet-anim-close{
+  position:absolute;top:1.1rem;right:1.2rem;
+  background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);
+  color:rgba(255,255,255,.6);width:30px;height:30px;border-radius:50%;
+  font-size:.9rem;cursor:pointer;display:flex;align-items:center;justify-content:center;
+  transition:all .2s;
+}
+.pellet-anim-close:hover{background:rgba(200,145,42,.3);color:#fff;}
+.pellet-anim-body{padding:1.4rem 1.6rem;flex:1;}
+
+/* RIGHT diagram + animation card */
+.pellet-diagram-card{
+  width:420px;flex-shrink:0;
+  background:linear-gradient(170deg,#f8f5f0 0%,#ffffff 40%,#f0ede8 100%);
+  border:1px solid rgba(200,145,42,0.28);border-radius:10px;
+  box-shadow:0 24px 80px rgba(26,48,87,.22);
+  display:flex;flex-direction:column;align-self:stretch;overflow:hidden;
+  transform:translateY(16px) scale(.97);
+  transition:transform .35s cubic-bezier(.22,1,.36,1) .05s;
+}
+.pellet-anim-overlay.open .pellet-diagram-card{transform:translateY(0) scale(1);}
+.pellet-diagram-header{
+  padding:1rem 1.3rem .8rem;
+  border-bottom:1px solid rgba(200,145,42,0.15);
+  background:linear-gradient(135deg,#1a3057 0%,#253d5e 100%);
+  flex-shrink:0;
+}
+.pellet-diagram-tag{font-family:'JetBrains Mono';font-size:.52rem;letter-spacing:2.5px;color:rgba(200,145,42,.75);text-transform:uppercase;margin-bottom:4px;}
+.pellet-diagram-title{font-family:'Cormorant Garamond',serif;font-size:1.25rem;font-weight:700;color:#fff;line-height:1.2;}
+.pellet-diagram-subtitle{font-size:.72rem;color:rgba(255,255,255,.4);margin-top:3px;}
+.pellet-diagram-body{flex:1;display:flex;flex-direction:column;overflow:hidden;}
+
+/* SVG diagram section */
+.pellet-svg-section{padding:.9rem 1.1rem .5rem;flex-shrink:0;}
+.pellet-svg-label{font-family:'JetBrains Mono';font-size:.5rem;letter-spacing:2px;color:rgba(200,145,42,.8);text-transform:uppercase;margin-bottom:.5rem;}
+.pellet-svg-wrap{background:linear-gradient(135deg,#0d1e36 0%,#162840 100%);border-radius:8px;border:1px solid rgba(200,145,42,0.2);overflow:hidden;box-shadow:0 4px 20px rgba(26,48,87,.2),inset 0 1px 0 rgba(255,255,255,0.04);}
+.pellet-svg-wrap svg{display:block;width:100%;height:auto;}
+.pellet-sparkle{animation:pelletSparkle 2.4s ease-in-out infinite;}
+.pellet-sparkle:nth-child(2){animation-delay:0.8s;}
+.pellet-sparkle:nth-child(3){animation-delay:1.6s;}
+@keyframes pelletSparkle{0%,100%{opacity:0.2;r:1.5;}50%{opacity:1;r:3;}}
+
+/* Falling animation section */
+.pellet-fall-section{flex:1;padding:.6rem 1.1rem .8rem;display:flex;flex-direction:column;min-height:0;}
+.pellet-fall-label{font-family:'JetBrains Mono';font-size:.5rem;letter-spacing:2px;color:rgba(200,145,42,.8);text-transform:uppercase;margin-bottom:.5rem;flex-shrink:0;}
+.pellet-fall-container-wrap{
+  flex:1;position:relative;min-height:160px;
+  background:linear-gradient(180deg,#0a1520 0%,#0e1e32 100%);
+  border-radius:8px;border:1.5px solid rgba(200,145,42,0.25);
+  overflow:hidden;box-shadow:0 6px 24px rgba(26,48,87,.25),inset 0 -2px 0 rgba(200,145,42,0.08);
+}
+#pelletFallCanvas{position:absolute;inset:0;width:100%;height:100%;display:block;}
+.pellet-fill-readout{
+  position:absolute;top:10px;right:12px;
+  font-family:'Cormorant Garamond',serif;font-size:1.6rem;font-weight:700;
+  color:rgba(200,145,42,0.9);line-height:1;
+  text-shadow:0 0 12px rgba(200,145,42,0.5);
+  transition:color .4s;
+}
+.pellet-fall-controls{display:flex;gap:8px;margin-top:.6rem;flex-shrink:0;}
+.pellet-ctrl-btn{
+  flex:1;background:linear-gradient(135deg,var(--navy),var(--blue));color:#fff;
+  border:none;border-radius:5px;padding:8px;font-family:'DM Sans';font-size:.78rem;font-weight:600;
+  cursor:pointer;transition:all .25s;letter-spacing:.3px;
+}
+.pellet-ctrl-btn:hover{background:linear-gradient(135deg,var(--gold),var(--gold-light));transform:translateY(-1px);}
+.pellet-ctrl-reset{background:rgba(26,48,87,0.08)!important;color:var(--text-mid)!important;border:1px solid var(--border)!important;}
+.pellet-ctrl-reset:hover{background:rgba(200,145,42,0.1)!important;color:var(--gold)!important;border-color:var(--gold)!important;transform:none!important;}
+.pellet-fall-meter{margin-top:.5rem;flex-shrink:0;}
+.pellet-meter-label{font-family:'JetBrains Mono';font-size:.48rem;letter-spacing:1.5px;color:rgba(90,74,48,.65);text-transform:uppercase;margin-bottom:4px;}
+.pellet-meter-bg{height:5px;background:rgba(200,145,42,0.12);border-radius:3px;overflow:hidden;}
+.pellet-meter-fill{height:100%;background:linear-gradient(90deg,#1a3057,#2d5fa6,#c8912a);border-radius:3px;transition:width .5s ease;}
+
+@media(max-width:960px){.pellet-diagram-card{width:340px;}}
+@media(max-width:760px){.pellet-diagram-card{display:none;}}
+@media(max-width:560px){.pellet-anim-card{width:96vw;}}
+
 
 /* ── PAGE NAVIGATION ── */
 .page-nav{
@@ -971,6 +1170,189 @@ input.finp{cursor:text;}
         <div class="mix-shaft-bar-bg"><div class="mix-shaft-bar-fill" id="mixShaftFill" style="width:50%"></div></div>
       </div>
     </div>
+  </div>
+</div>
+
+<!-- ══ GREEN BALL ANIMATION CARD ══ -->
+<div class="gb-anim-overlay" id="gbAnimOverlay">
+  <div class="gb-anim-panels">
+
+    <!-- LEFT: Parameters Card -->
+    <div class="gb-anim-card" id="gbAnimCard">
+      <div class="gb-anim-header">
+        <div class="gb-anim-tag">STAGE 06B · GREEN BALL PROP</div>
+        <div class="gb-anim-title">Green Ball Properties</div>
+        <div class="gb-anim-subtitle">Enter measured green ball quality parameters</div>
+        <button class="gb-anim-close" onclick="closeGbCard()">✕</button>
+      </div>
+      <div class="gb-anim-body" id="gbAnimBody"></div>
+      <div class="modal-footer" style="padding:1rem 1.4rem 1.2rem;flex-shrink:0;">
+        <button class="btn-save" onclick="saveGbCard()">Save Parameters</button>
+        <button class="btn-cancel" onclick="closeGbCard()">Cancel</button>
+      </div>
+    </div>
+
+    <!-- RIGHT: Triangular container + falling balls -->
+    <div class="gb-diagram-card">
+      <div class="gb-diagram-header">
+        <div class="gb-diagram-tag">LIVE PREVIEW</div>
+        <div class="gb-diagram-title">Green Ball Accumulation</div>
+        <div class="gb-diagram-subtitle">Balls fall as you enter values</div>
+      </div>
+      <div class="gb-diagram-body">
+        <div class="gb-fall-container-wrap">
+          <canvas id="gbFallCanvas"></canvas>
+          <div class="gb-fill-readout" id="gbFillReadout">0%</div>
+          <div class="gb-hint-label" id="gbHintLabel">← Enter any value to begin</div>
+        </div>
+        <div class="gb-fall-meter">
+          <div class="gb-meter-label">HOPPER FILL</div>
+          <div class="gb-meter-bg"><div class="gb-meter-fill" id="gbMeterFill" style="width:0%"></div></div>
+        </div>
+        <div class="gb-stat-row" id="gbStatRow">
+          <div class="gb-stat"><span class="gb-stat-label">MOISTURE</span><span class="gb-stat-val" id="gbStatMoist">—</span></div>
+          <div class="gb-stat"><span class="gb-stat-label">DROP NO.</span><span class="gb-stat-val" id="gbStatDrop">—</span></div>
+          <div class="gb-stat"><span class="gb-stat-label">GCS</span><span class="gb-stat-val" id="gbStatGcs">—</span></div>
+          <div class="gb-stat"><span class="gb-stat-label">SIZE</span><span class="gb-stat-val" id="gbStatSize">—</span></div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ══ PELLET ANIMATION CARD ══ -->
+<div class="pellet-anim-overlay" id="pelletAnimOverlay">
+  <div class="pellet-anim-panels">
+
+    <!-- LEFT: Parameters Card -->
+    <div class="pellet-anim-card" id="pelletAnimCard">
+      <div class="pellet-anim-header">
+        <div class="pellet-anim-tag">STAGE 10 · FINISHED PELLETS</div>
+        <div class="pellet-anim-title">Pellet Quality Targets</div>
+        <div class="pellet-anim-subtitle">Configure size distribution, CCS, tumbler & abrasion indices</div>
+        <button class="pellet-anim-close" onclick="closePelletCard()">✕</button>
+      </div>
+      <div class="pellet-anim-body" id="pelletAnimBody"></div>
+      <div class="modal-footer" style="padding:1rem 1.4rem 1.2rem;flex-shrink:0;">
+        <button class="btn-save" onclick="savePelletCard()">Save Parameters</button>
+        <button class="btn-cancel" onclick="closePelletCard()">Cancel</button>
+      </div>
+    </div>
+
+    <!-- RIGHT: Diagram + Animation Card -->
+    <div class="pellet-diagram-card">
+      <div class="pellet-diagram-header">
+        <div class="pellet-diagram-tag">LIVE PREVIEW</div>
+        <div class="pellet-diagram-title">Finished Iron Ore Pellets</div>
+        <div class="pellet-diagram-subtitle">Visualising product accumulation in vessel</div>
+      </div>
+      <div class="pellet-diagram-body">
+        <!-- Enhanced SVG Diagram -->
+        <div class="pellet-svg-section">
+          <div class="pellet-svg-label">PELLET CROSS-SECTION</div>
+          <div class="pellet-svg-wrap">
+            <svg id="pelletDiagramSvg" viewBox="0 0 260 200" xmlns="http://www.w3.org/2000/svg">
+              <!-- Central large pellet -->
+              <defs>
+                <radialGradient id="pg1" cx="35%" cy="30%">
+                  <stop offset="0%" stop-color="#a8c8e0"/>
+                  <stop offset="50%" stop-color="#4a7a9a"/>
+                  <stop offset="100%" stop-color="#1a3a5a"/>
+                </radialGradient>
+                <radialGradient id="pg2" cx="35%" cy="30%">
+                  <stop offset="0%" stop-color="#9ab8cc"/>
+                  <stop offset="50%" stop-color="#3a6a8a"/>
+                  <stop offset="100%" stop-color="#152d4a"/>
+                </radialGradient>
+                <radialGradient id="pg3" cx="38%" cy="28%">
+                  <stop offset="0%" stop-color="#b0c8d8"/>
+                  <stop offset="45%" stop-color="#5a8aaa"/>
+                  <stop offset="100%" stop-color="#1e3a55"/>
+                </radialGradient>
+                <radialGradient id="pgCut" cx="45%" cy="40%">
+                  <stop offset="0%" stop-color="#c8a870"/>
+                  <stop offset="30%" stop-color="#8a6840"/>
+                  <stop offset="60%" stop-color="#4a3820"/>
+                  <stop offset="100%" stop-color="#2a1e10"/>
+                </radialGradient>
+                <filter id="pelletShadow">
+                  <feDropShadow dx="2" dy="3" stdDeviation="3" flood-color="rgba(26,48,87,0.4)"/>
+                </filter>
+                <filter id="glowGold">
+                  <feGaussianBlur stdDeviation="2" result="blur"/>
+                  <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+                </filter>
+              </defs>
+              <!-- Background pellets (depth) -->
+              <circle cx="40" cy="155" r="16" fill="url(#pg2)" opacity="0.6"/>
+              <circle cx="72" cy="168" r="13" fill="url(#pg2)" opacity="0.55"/>
+              <circle cx="220" cy="150" r="17" fill="url(#pg2)" opacity="0.6"/>
+              <circle cx="192" cy="165" r="13" fill="url(#pg2)" opacity="0.55"/>
+
+              <!-- Mid-layer pellets -->
+              <circle cx="55" cy="135" r="19" fill="url(#pg1)" filter="url(#pelletShadow)"/>
+              <circle cx="205" cy="133" r="18" fill="url(#pg1)" filter="url(#pelletShadow)"/>
+              <circle cx="130" cy="155" r="15" fill="url(#pg3)" filter="url(#pelletShadow)"/>
+
+              <!-- Cut-open pellet showing internal structure (bottom left) -->
+              <clipPath id="halfClip">
+                <rect x="0" y="100" width="130" height="100"/>
+              </clipPath>
+              <circle cx="88" cy="108" r="28" fill="url(#pgCut)" filter="url(#pelletShadow)"/>
+              <!-- Internal rings -->
+              <circle cx="88" cy="108" r="22" fill="none" stroke="rgba(180,140,80,0.3)" stroke-width="1"/>
+              <circle cx="88" cy="108" r="16" fill="none" stroke="rgba(180,140,80,0.25)" stroke-width="0.8"/>
+              <circle cx="88" cy="108" r="10" fill="none" stroke="rgba(180,140,80,0.2)" stroke-width="0.7"/>
+              <circle cx="88" cy="108" r="5" fill="rgba(120,90,50,0.6)"/>
+              <!-- Cut line -->
+              <line x1="88" y1="80" x2="88" y2="136" stroke="rgba(200,145,42,0.5)" stroke-width="0.8" stroke-dasharray="3,2"/>
+              <text x="60" y="148" font-family="JetBrains Mono, monospace" font-size="6" fill="rgba(200,145,42,0.8)" letter-spacing="1">CUT-OPEN</text>
+
+              <!-- Front main pellets -->
+              <circle cx="130" cy="105" r="34" fill="url(#pg1)" filter="url(#pelletShadow)"/>
+              <!-- Highlight -->
+              <ellipse cx="119" cy="93" rx="10" ry="7" fill="rgba(255,255,255,0.18)" transform="rotate(-20,119,93)"/>
+
+              <circle cx="178" cy="115" r="26" fill="url(#pg3)" filter="url(#pelletShadow)"/>
+              <ellipse cx="169" cy="105" rx="7" ry="5" fill="rgba(255,255,255,0.15)" transform="rotate(-15,169,105)"/>
+
+              <!-- Size dimension lines -->
+              <line x1="100" y1="70" x2="160" y2="70" stroke="rgba(200,145,42,0.6)" stroke-width="0.8"/>
+              <line x1="100" y1="67" x2="100" y2="73" stroke="rgba(200,145,42,0.6)" stroke-width="0.8"/>
+              <line x1="160" y1="67" x2="160" y2="73" stroke="rgba(200,145,42,0.6)" stroke-width="0.8"/>
+              <text x="130" y="66" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="7" fill="rgba(200,145,42,0.9)" letter-spacing="0.5">10–16 mm</text>
+
+              <!-- Labels -->
+              <text x="130" y="190" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="6.5" fill="rgba(90,74,48,0.7)" letter-spacing="1.5">Fe₂O₃ · SiO₂ · Al₂O₃</text>
+
+              <!-- Animated sparkle dots -->
+              <circle class="pellet-sparkle" cx="145" cy="88" r="2" fill="rgba(200,145,42,0.9)"/>
+              <circle class="pellet-sparkle" cx="118" cy="97" r="1.5" fill="rgba(255,220,120,0.8)"/>
+              <circle class="pellet-sparkle" cx="138" cy="115" r="1.8" fill="rgba(200,145,42,0.7)"/>
+            </svg>
+          </div>
+        </div>
+
+        <!-- Falling Balls Animation -->
+        <div class="pellet-fall-section">
+          <div class="pellet-fall-label">ACCUMULATION SIMULATOR</div>
+          <div class="pellet-fall-container-wrap">
+            <canvas id="pelletFallCanvas"></canvas>
+            <div class="pellet-fill-readout" id="pelletFillReadout">0%</div>
+          </div>
+          <div class="pellet-fall-controls">
+            <button class="pellet-ctrl-btn" id="pelletPlayBtn" onclick="togglePelletAnim()">▶ Start</button>
+            <button class="pellet-ctrl-btn pellet-ctrl-reset" onclick="resetPelletAnim()">↺ Reset</button>
+          </div>
+          <div class="pellet-fall-meter">
+            <div class="pellet-meter-label">VESSEL FILL</div>
+            <div class="pellet-meter-bg"><div class="pellet-meter-fill" id="pelletMeterFill" style="width:0%"></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
   </div>
 </div>
 
@@ -3371,6 +3753,8 @@ function openModal(stageId){
   if(stageId==='thickner'){openThickCard();return;}
   if(stageId==='filter'){openFilterCard();return;}
   if(stageId==='mix'){openMixCard();return;}
+  if(stageId==='pellet'){openPelletCard();return;}
+  if(stageId==='greenball'){openGbCard();return;}
   currentModalStage=stageId;
   const s=STAGES.find(st=>st.id===stageId);
   const cfg=MODAL_CONFIGS[stageId];
@@ -5262,6 +5646,540 @@ document.getElementById('plantCapacity').addEventListener('input', saveStateToSt
 
 const _origResetAll = resetAll;
 window.resetAll = function() { _origResetAll(); localStorage.removeItem(STATE_KEY); };
+
+
+
+// ═══════════════════════════════════════════════════════════
+// GREEN BALL ANIMATION CARD
+// ═══════════════════════════════════════════════════════════
+let gbFrame=0, gbAnimId=null, gbActive=false;
+let gbFillLevel=0;
+let gbBalls=[];
+let gbBurstMode=false, gbBurstFrames=0;
+
+const gbCanvas=document.getElementById('gbFallCanvas');
+const gbCtx=gbCanvas.getContext('2d');
+
+const GB_COLORS=[
+  {h1:'#a8e0a0',h2:'#4a8a42',h3:'#1a4a18'},
+  {h1:'#90d888',h2:'#3a7a32',h3:'#153a14'},
+  {h1:'#b8e8b0',h2:'#5a9a50',h3:'#224820'},
+  {h1:'#80cc78',h2:'#2a6a24',h3:'#103010'},
+];
+
+function sizeGbCanvas(){
+  const wrap=gbCanvas.parentElement;
+  const W=Math.max(wrap.clientWidth||340,10);
+  const H=Math.max(wrap.clientHeight||220,10);
+  const ratio=window.devicePixelRatio||1;
+  const wPx=Math.round(W*ratio), hPx=Math.round(H*ratio);
+  if(gbCanvas.width!==wPx||gbCanvas.height!==hPx){
+    gbCanvas.width=wPx; gbCanvas.height=hPx;
+    gbCtx.setTransform(ratio,0,0,ratio,0,0);
+  }
+  return{W,H};
+}
+
+function spawnGbBall(W, cx, triTopY){
+  const r=5+Math.random()*4.5;
+  const col=GB_COLORS[Math.floor(Math.random()*GB_COLORS.length)];
+  // Spawn near the top opening of the triangle
+  const spawnW=W*0.22;
+  return{
+    x: cx + (Math.random()-0.5)*spawnW,
+    y: triTopY - r - Math.random()*30,
+    vx:(Math.random()-0.5)*1.2,
+    vy:0.5+Math.random()*1.0,
+    r, col, settled:false,
+    spin:Math.random()*Math.PI*2,
+    spinV:(Math.random()-0.5)*0.04
+  };
+}
+
+function drawGbAnim(frame){
+  const{W,H}=sizeGbCanvas();
+  gbCtx.clearRect(0,0,W,H);
+
+  // Background
+  const bg=gbCtx.createLinearGradient(0,0,0,H);
+  bg.addColorStop(0,'#06100e'); bg.addColorStop(1,'#0a1a18');
+  gbCtx.fillStyle=bg; gbCtx.fillRect(0,0,W,H);
+
+  // Subtle grid
+  gbCtx.strokeStyle='rgba(60,160,60,0.04)'; gbCtx.lineWidth=0.6;
+  for(let x=0;x<W;x+=22){gbCtx.beginPath();gbCtx.moveTo(x,0);gbCtx.lineTo(x,H);gbCtx.stroke();}
+  for(let y=0;y<H;y+=22){gbCtx.beginPath();gbCtx.moveTo(0,y);gbCtx.lineTo(W,y);gbCtx.stroke();}
+
+  // ── TRIANGLE (hopper) geometry ──
+  const cx=W/2;
+  const triTopY=H*0.08;          // top opening y
+  const triHalfTopW=W*0.40;      // half-width of opening
+  const triTipY=H*0.90;          // tip y
+  const wallThick=4;
+
+  const tl={x:cx-triHalfTopW, y:triTopY};
+  const tr={x:cx+triHalfTopW, y:triTopY};
+  const tip={x:cx, y:triTipY};
+
+  // Outer wall glow
+  gbCtx.save();
+  gbCtx.shadowColor='rgba(60,200,60,0.18)';
+  gbCtx.shadowBlur=14;
+  gbCtx.strokeStyle='rgba(60,180,60,0.45)';
+  gbCtx.lineWidth=wallThick+2;
+  gbCtx.beginPath();
+  gbCtx.moveTo(tl.x-2,tl.y); gbCtx.lineTo(tip.x,tip.y+2); gbCtx.lineTo(tr.x+2,tr.y);
+  gbCtx.stroke();
+  gbCtx.restore();
+
+  // Steel wall lines
+  const wallGradL=gbCtx.createLinearGradient(tl.x,triTopY,tl.x+20,triTopY);
+  wallGradL.addColorStop(0,'rgba(80,160,80,0.55)'); wallGradL.addColorStop(1,'rgba(40,100,40,0)');
+  gbCtx.strokeStyle=wallGradL; gbCtx.lineWidth=wallThick;
+  gbCtx.beginPath(); gbCtx.moveTo(tl.x,tl.y); gbCtx.lineTo(tip.x,tip.y); gbCtx.stroke();
+
+  const wallGradR=gbCtx.createLinearGradient(tr.x,triTopY,tr.x-20,triTopY);
+  wallGradR.addColorStop(0,'rgba(80,160,80,0.55)'); wallGradR.addColorStop(1,'rgba(40,100,40,0)');
+  gbCtx.strokeStyle=wallGradR; gbCtx.lineWidth=wallThick;
+  gbCtx.beginPath(); gbCtx.moveTo(tr.x,tr.y); gbCtx.lineTo(tip.x,tip.y); gbCtx.stroke();
+
+  // Top rim
+  gbCtx.strokeStyle='rgba(90,200,80,0.55)'; gbCtx.lineWidth=2;
+  gbCtx.beginPath(); gbCtx.moveTo(tl.x,tl.y); gbCtx.lineTo(tr.x,tr.y); gbCtx.stroke();
+
+  // Corner bolts
+  [[tl.x,tl.y],[tr.x,tr.y],[tip.x,tip.y]].forEach(([bx,by])=>{
+    gbCtx.fillStyle='rgba(60,160,60,0.7)';
+    gbCtx.beginPath(); gbCtx.arc(bx,by,3,0,Math.PI*2); gbCtx.fill();
+  });
+
+  // Clip region for balls (inside triangle)
+  gbCtx.save();
+  gbCtx.beginPath();
+  gbCtx.moveTo(tl.x+wallThick, tl.y);
+  gbCtx.lineTo(tip.x, tip.y-wallThick);
+  gbCtx.lineTo(tr.x-wallThick, tr.y);
+  gbCtx.closePath();
+  gbCtx.clip();
+
+  // Fill level shading inside triangle
+  if(gbFillLevel>0.01){
+    // Compute fill line (interpolate from tip upward)
+    const fillT=1-gbFillLevel; // 0=full, 1=empty from top perspective
+    const fillY=tip.y - (tip.y-triTopY)*(gbFillLevel);
+    const fillHalfW=triHalfTopW*(1-(fillY-triTopY)/(tip.y-triTopY));
+    const fillGr=gbCtx.createLinearGradient(0,fillY,0,tip.y);
+    fillGr.addColorStop(0,'rgba(20,80,20,0.0)');
+    fillGr.addColorStop(1,'rgba(30,80,25,0.18)');
+    gbCtx.fillStyle=fillGr;
+    gbCtx.beginPath();
+    gbCtx.moveTo(cx-fillHalfW,fillY); gbCtx.lineTo(tip.x,tip.y); gbCtx.lineTo(cx+fillHalfW,fillY);
+    gbCtx.closePath(); gbCtx.fill();
+  }
+
+  // Spawn balls when active
+  if((gbActive||gbBurstMode) && gbBalls.filter(b=>!b.settled).length<3 && gbBalls.length<90){
+    if(frame%10===0) gbBalls.push(spawnGbBall(W,cx,triTopY));
+  }
+
+  // Triangle wall normals (for collision)
+  // Left wall: from tl to tip
+  const leftDx=tip.x-tl.x, leftDy=tip.y-tl.y;
+  const leftLen=Math.sqrt(leftDx*leftDx+leftDy*leftDy);
+  const leftNx=leftDy/leftLen, leftNy=-leftDx/leftLen; // inward normal
+  // Right wall: from tr to tip
+  const rightDx=tip.x-tr.x, rightDy=tip.y-tr.y;
+  const rightLen=Math.sqrt(rightDx*rightDx+rightDy*rightDy);
+  const rightNx=-rightDy/rightLen, rightNy=rightDx/rightLen; // inward normal
+
+  const GRAVITY=0.22, FRICTION=0.60, BOUNCE=0.22;
+
+  function distToSegment(px,py,ax,ay,bx,by){
+    const dx=bx-ax,dy=by-ay;
+    const t=Math.max(0,Math.min(1,((px-ax)*dx+(py-ay)*dy)/(dx*dx+dy*dy)));
+    return{dist:Math.sqrt((px-(ax+t*dx))**2+(py-(ay+t*dy))**2),nx:0,ny:0,t};
+  }
+
+  for(const b of gbBalls){
+    if(b.settled) continue;
+    b.vy+=GRAVITY; b.x+=b.vx; b.y+=b.vy;
+    b.spin+=b.spinV;
+
+    // Left wall collision
+    {
+      const{dist}=distToSegment(b.x,b.y,tl.x,tl.y,tip.x,tip.y);
+      if(dist<b.r){
+        const push=b.r-dist;
+        b.x+=leftNx*push; b.y+=leftNy*push;
+        const dot=b.vx*leftNx+b.vy*leftNy;
+        if(dot<0){b.vx-=(1+BOUNCE)*dot*leftNx; b.vy-=(1+BOUNCE)*dot*leftNy; b.vx*=FRICTION; b.vy*=FRICTION;}
+      }
+    }
+    // Right wall collision
+    {
+      const{dist}=distToSegment(b.x,b.y,tr.x,tr.y,tip.x,tip.y);
+      if(dist<b.r){
+        const push=b.r-dist;
+        b.x+=rightNx*push; b.y+=rightNy*push;
+        const dot=b.vx*rightNx+b.vy*rightNy;
+        if(dot<0){b.vx-=(1+BOUNCE)*dot*rightNx; b.vy-=(1+BOUNCE)*dot*rightNy; b.vx*=FRICTION; b.vy*=FRICTION;}
+      }
+    }
+    // Near-tip floor (prevent escaping tip)
+    if(b.y>tip.y-b.r*1.5){b.y=tip.y-b.r*1.5; b.vy*=-BOUNCE; b.vx*=FRICTION;}
+
+    // Ball-ball
+    for(const b2 of gbBalls){
+      if(b2===b) continue;
+      const dx=b2.x-b.x,dy=b2.y-b.y,dist=Math.sqrt(dx*dx+dy*dy),mn=b.r+b2.r;
+      if(dist<mn&&dist>0.01){
+        const nx=dx/dist,ny=dy/dist,ov=(mn-dist)*0.5;
+        b.x-=nx*ov; b.y-=ny*ov; b2.x+=nx*ov; b2.y+=ny*ov;
+        const dv=b.vx*nx+b.vy*ny-b2.vx*nx-b2.vy*ny;
+        if(dv>0){b.vx-=dv*nx*0.5;b.vy-=dv*ny*0.5;b2.vx+=dv*nx*0.5;b2.vy+=dv*ny*0.5;}
+        if(b2.settled&&Math.abs(b.vy)<0.5&&Math.abs(b.vx)<0.5){b.settled=true;}
+      }
+    }
+    if(Math.abs(b.vy)<0.15&&Math.abs(b.vx)<0.15) b.settled=true;
+  }
+
+  // Draw balls
+  const sorted=[...gbBalls].sort((a,bb2)=>bb2.y-a.y);
+  for(const b of sorted){
+    const gr=gbCtx.createRadialGradient(b.x-b.r*0.32,b.y-b.r*0.32,0,b.x,b.y,b.r);
+    gr.addColorStop(0,b.col.h1); gr.addColorStop(0.55,b.col.h2); gr.addColorStop(1,b.col.h3);
+    gbCtx.beginPath(); gbCtx.arc(b.x,b.y,b.r,0,Math.PI*2);
+    gbCtx.fillStyle=gr; gbCtx.fill();
+    gbCtx.save(); gbCtx.globalAlpha=0.3;
+    gbCtx.fillStyle='rgba(255,255,255,0.9)';
+    gbCtx.beginPath(); gbCtx.ellipse(b.x-b.r*0.3,b.y-b.r*0.3,b.r*0.32,b.r*0.2,-0.5,0,Math.PI*2); gbCtx.fill();
+    gbCtx.restore();
+    gbCtx.strokeStyle='rgba(120,220,80,0.15)'; gbCtx.lineWidth=0.5;
+    gbCtx.beginPath(); gbCtx.arc(b.x,b.y,b.r,0,Math.PI*2); gbCtx.stroke();
+  }
+
+  gbCtx.restore(); // end clip
+
+  // Redraw walls on top (crisp)
+  gbCtx.strokeStyle='rgba(60,180,60,0.3)'; gbCtx.lineWidth=1.5;
+  gbCtx.beginPath(); gbCtx.moveTo(tl.x,tl.y); gbCtx.lineTo(tip.x,tip.y); gbCtx.lineTo(tr.x,tr.y); gbCtx.stroke();
+
+  // Update fill level
+  const settled=gbBalls.filter(b=>b.settled).length;
+  const target=Math.min(1,settled/60);
+  gbFillLevel+=(target-gbFillLevel)*0.025;
+
+  const pct=Math.round(gbFillLevel*100);
+  const ro=document.getElementById('gbFillReadout');
+  if(ro){ro.textContent=pct+'%'; ro.style.color=pct>70?'#7ae870':pct>35?'#4ab840':'rgba(80,200,80,0.9)';}
+  const mf=document.getElementById('gbMeterFill');
+  if(mf) mf.style.width=pct+'%';
+
+  if(gbBurstMode){
+    gbBurstFrames--;
+    if(gbBurstFrames<=0) gbBurstMode=false;
+  }
+}
+
+function gbLoop(){
+  drawGbAnim(gbFrame);
+  gbFrame++;
+  gbAnimId=requestAnimationFrame(gbLoop);
+}
+
+function gbTriggerBurst(){
+  // Called whenever user types a value — spawn a burst of balls
+  gbBurstMode=true;
+  gbBurstFrames=80; // about 1.3 seconds of spawning
+  const hint=document.getElementById('gbHintLabel');
+  if(hint) hint.classList.add('hidden');
+  // Update stat readouts
+  const moist=document.getElementById('m-gbp-moist');
+  const drop=document.getElementById('m-gbp-drop');
+  const gcs=document.getElementById('m-gbp-gcs');
+  const size=document.getElementById('m-gbp-size');
+  if(document.getElementById('gbStatMoist')) document.getElementById('gbStatMoist').textContent=moist&&moist.value?moist.value+'%':'—';
+  if(document.getElementById('gbStatDrop')) document.getElementById('gbStatDrop').textContent=drop&&drop.value?drop.value:'—';
+  if(document.getElementById('gbStatGcs')) document.getElementById('gbStatGcs').textContent=gcs&&gcs.value?gcs.value+' kg':'—';
+  if(document.getElementById('gbStatSize')) document.getElementById('gbStatSize').textContent=size&&size.value?size.value+' mm':'—';
+}
+
+function attachGbInputListeners(){
+  const ids=['m-gbp-moist','m-gbp-drop','m-gbp-gcs','m-gbp-size','m-gbp-por'];
+  ids.forEach(id=>{
+    const el=document.getElementById(id);
+    if(el){
+      el.addEventListener('input',gbTriggerBurst);
+      el.addEventListener('change',gbTriggerBurst);
+    }
+  });
+}
+
+function openGbCard(){
+  const cfg=MODAL_CONFIGS['greenball'];
+  if(!cfg) return;
+  document.getElementById('gbAnimBody').innerHTML=cfg.fields();
+  document.getElementById('gbAnimOverlay').classList.add('open');
+  // Reset animation state
+  gbBalls=[]; gbFillLevel=0; gbFrame=0; gbBurstMode=false; gbBurstFrames=0;
+  const hint=document.getElementById('gbHintLabel');
+  if(hint) hint.classList.remove('hidden');
+  const ro=document.getElementById('gbFillReadout');
+  if(ro) ro.textContent='0%';
+  const mf=document.getElementById('gbMeterFill');
+  if(mf) mf.style.width='0%';
+  // Restore stat vals if already filled
+  ['gbStatMoist','gbStatDrop','gbStatGcs','gbStatSize'].forEach(id=>{
+    const el=document.getElementById(id); if(el) el.textContent='—';
+  });
+  if(gbAnimId) cancelAnimationFrame(gbAnimId);
+  gbLoop();
+  setTimeout(attachGbInputListeners, 50); // after DOM renders
+}
+
+function closeGbCard(){
+  document.getElementById('gbAnimOverlay').classList.remove('open');
+  if(gbAnimId){cancelAnimationFrame(gbAnimId); gbAnimId=null;}
+}
+
+function saveGbCard(){
+  const cfg=MODAL_CONFIGS['greenball'];
+  if(cfg) cfg.save();
+  closeGbCard();
+  updateSummaryParams();
+}
+
+document.getElementById('gbAnimOverlay').addEventListener('click',function(e){if(e.target===this)closeGbCard();});
+
+// ═══════════════════════════════════════════════════════════
+// PELLET ANIMATION CARD
+// ═══════════════════════════════════════════════════════════
+let pelletFallFrame=0, pelletFallAnimId=null, pelletFallActive=false;
+let pelletFillLevel=0; // 0..1
+let pelletBalls=[];    // array of {x,y,vx,vy,r,hue,settled}
+const pelletFallCanvas=document.getElementById('pelletFallCanvas');
+const pelletFallCtx=pelletFallCanvas.getContext('2d');
+
+const PELLET_COLORS=[
+  {h1:'#a8c8e0',h2:'#4a7a9a',h3:'#1a3a5a'},
+  {h1:'#9ab8cc',h2:'#3a6a8a',h3:'#152d4a'},
+  {h1:'#b0c8d8',h2:'#5a8aaa',h3:'#1e3a55'},
+  {h1:'#88aacc',h2:'#2a5a80',h3:'#122545'},
+];
+
+function sizePelletCanvas(){
+  const wrap=pelletFallCanvas.parentElement;
+  const W=Math.max(wrap.clientWidth||380,10);
+  const H=Math.max(wrap.clientHeight||170,10);
+  const ratio=window.devicePixelRatio||1;
+  const wPx=Math.round(W*ratio), hPx=Math.round(H*ratio);
+  if(pelletFallCanvas.width!==wPx||pelletFallCanvas.height!==hPx){
+    pelletFallCanvas.width=wPx; pelletFallCanvas.height=hPx;
+    pelletFallCtx.setTransform(ratio,0,0,ratio,0,0);
+  }
+  return{W,H};
+}
+
+function spawnPelletBall(W){
+  const r=6+Math.random()*5;
+  const col=PELLET_COLORS[Math.floor(Math.random()*PELLET_COLORS.length)];
+  return{
+    x: r*2 + Math.random()*(W-r*4),
+    y: -r*2 - Math.random()*60,
+    vx:(Math.random()-0.5)*0.8,
+    vy:0.8+Math.random()*1.2,
+    r, col, settled:false,
+    spin:Math.random()*Math.PI*2,
+    spinV:(Math.random()-0.5)*0.05
+  };
+}
+
+function drawPelletFall(frame){
+  const{W,H}=sizePelletCanvas();
+  pelletFallCtx.clearRect(0,0,W,H);
+
+  // Background
+  const bg=pelletFallCtx.createLinearGradient(0,0,0,H);
+  bg.addColorStop(0,'#08111e'); bg.addColorStop(1,'#0e1e34');
+  pelletFallCtx.fillStyle=bg; pelletFallCtx.fillRect(0,0,W,H);
+
+  // Subtle grid
+  pelletFallCtx.strokeStyle='rgba(80,130,200,0.04)'; pelletFallCtx.lineWidth=0.6;
+  for(let x=0;x<W;x+=24){pelletFallCtx.beginPath();pelletFallCtx.moveTo(x,0);pelletFallCtx.lineTo(x,H);pelletFallCtx.stroke();}
+  for(let y=0;y<H;y+=24){pelletFallCtx.beginPath();pelletFallCtx.moveTo(0,y);pelletFallCtx.lineTo(W,y);pelletFallCtx.stroke();}
+
+  // Container walls (industrial steel vessel)
+  const wallT=8, wallH=H*0.85, wallY=H-wallH;
+  const wallL=wallT, wallR=W-wallT;
+  // Left wall
+  const lwg=pelletFallCtx.createLinearGradient(0,0,wallT*2,0);
+  lwg.addColorStop(0,'#2a3d5a'); lwg.addColorStop(1,'rgba(42,61,90,0)');
+  pelletFallCtx.fillStyle=lwg; pelletFallCtx.fillRect(0,wallY,wallT,wallH);
+  // Right wall
+  const rwg=pelletFallCtx.createLinearGradient(W,0,W-wallT*2,0);
+  rwg.addColorStop(0,'#2a3d5a'); rwg.addColorStop(1,'rgba(42,61,90,0)');
+  pelletFallCtx.fillStyle=rwg; pelletFallCtx.fillRect(W-wallT,wallY,wallT,wallH);
+  // Bottom
+  const bwg=pelletFallCtx.createLinearGradient(0,H,0,H-wallT*1.5);
+  bwg.addColorStop(0,'#2a3d5a'); bwg.addColorStop(1,'rgba(42,61,90,0)');
+  pelletFallCtx.fillStyle=bwg; pelletFallCtx.fillRect(0,H-wallT,W,wallT);
+  // Wall borders (gold accent)
+  pelletFallCtx.strokeStyle='rgba(200,145,42,0.35)'; pelletFallCtx.lineWidth=1;
+  pelletFallCtx.strokeRect(wallT,wallY,W-wallT*2,wallH);
+
+  // Fill level indicator line
+  const fillY=H-wallT-(wallH-wallT*2)*pelletFillLevel;
+  if(pelletFillLevel>0.02){
+    pelletFallCtx.strokeStyle='rgba(200,145,42,0.5)'; pelletFallCtx.lineWidth=0.8;
+    pelletFallCtx.setLineDash([4,3]);
+    pelletFallCtx.beginPath(); pelletFallCtx.moveTo(wallT,fillY); pelletFallCtx.lineTo(W-wallT,fillY); pelletFallCtx.stroke();
+    pelletFallCtx.setLineDash([]);
+  }
+
+  // Spawn new balls when active
+  if(pelletFallActive && pelletBalls.filter(b=>!b.settled).length<4 && pelletBalls.length<120){
+    if(frame%8===0) pelletBalls.push(spawnPelletBall(W));
+  }
+
+  const GRAVITY=0.25, FRICTION=0.65, BOUNCE=0.25;
+  const floor=H-wallT;
+
+  // Physics
+  for(const b of pelletBalls){
+    if(b.settled) continue;
+    b.vy+=GRAVITY;
+    b.x+=b.vx; b.y+=b.vy;
+    b.spin+=b.spinV;
+
+    // Floor collision
+    if(b.y+b.r>=floor){
+      b.y=floor-b.r;
+      b.vy*=-BOUNCE;
+      b.vx*=FRICTION;
+      b.spinV*=0.8;
+      if(Math.abs(b.vy)<0.3 && Math.abs(b.vx)<0.3){b.settled=true;}
+    }
+    // Wall collisions
+    if(b.x-b.r<=wallT){b.x=wallT+b.r; b.vx=Math.abs(b.vx)*FRICTION;}
+    if(b.x+b.r>=W-wallT){b.x=W-wallT-b.r; b.vx=-Math.abs(b.vx)*FRICTION;}
+
+    // Ball-ball collision (simple)
+    for(const b2 of pelletBalls){
+      if(b2===b) continue;
+      const dx=b2.x-b.x, dy=b2.y-b.y;
+      const dist=Math.sqrt(dx*dx+dy*dy);
+      const minDist=b.r+b2.r;
+      if(dist<minDist && dist>0.01){
+        const nx=dx/dist, ny=dy/dist;
+        const overlap=(minDist-dist)*0.5;
+        b.x-=nx*overlap; b.y-=ny*overlap;
+        b2.x+=nx*overlap; b2.y+=ny*overlap;
+        const dvx=b.vx-b2.vx, dvy=b.vy-b2.vy;
+        const dot=dvx*nx+dvy*ny;
+        if(dot>0){
+          b.vx-=dot*nx*0.5; b.vy-=dot*ny*0.5;
+          b2.vx+=dot*nx*0.5; b2.vy+=dot*ny*0.5;
+        }
+        if(b2.settled && Math.abs(b.vy)<0.5){b.settled=true;}
+      }
+    }
+  }
+
+  // Draw balls (bottom to top for layering)
+  const sorted=[...pelletBalls].sort((a,b)=>b.y-a.y);
+  for(const b of sorted){
+    const px=b.x, py=b.y;
+    // Shadow
+    pelletFallCtx.save();
+    pelletFallCtx.globalAlpha=0.25;
+    pelletFallCtx.fillStyle='rgba(0,0,0,0.5)';
+    pelletFallCtx.beginPath(); pelletFallCtx.ellipse(px,floor-1,b.r*0.8,b.r*0.25,0,0,Math.PI*2); pelletFallCtx.fill();
+    pelletFallCtx.restore();
+    // Pellet body
+    const gr=pelletFallCtx.createRadialGradient(px-b.r*0.32,py-b.r*0.32,0,px,py,b.r);
+    gr.addColorStop(0,b.col.h1); gr.addColorStop(0.55,b.col.h2); gr.addColorStop(1,b.col.h3);
+    pelletFallCtx.beginPath(); pelletFallCtx.arc(px,py,b.r,0,Math.PI*2);
+    pelletFallCtx.fillStyle=gr; pelletFallCtx.fill();
+    // Highlight
+    pelletFallCtx.save(); pelletFallCtx.globalAlpha=0.28;
+    pelletFallCtx.fillStyle='rgba(255,255,255,0.9)';
+    pelletFallCtx.beginPath(); pelletFallCtx.ellipse(px-b.r*0.28,py-b.r*0.28,b.r*0.35,b.r*0.22,-0.5,0,Math.PI*2); pelletFallCtx.fill();
+    pelletFallCtx.restore();
+    // Edge
+    pelletFallCtx.strokeStyle='rgba(140,175,200,0.2)'; pelletFallCtx.lineWidth=0.5;
+    pelletFallCtx.beginPath(); pelletFallCtx.arc(px,py,b.r,0,Math.PI*2); pelletFallCtx.stroke();
+  }
+
+  // Chute at top
+  pelletFallCtx.fillStyle='rgba(42,61,90,0.85)';
+  pelletFallCtx.beginPath(); pelletFallCtx.moveTo(W*0.35,0); pelletFallCtx.lineTo(W*0.65,0); pelletFallCtx.lineTo(W*0.55,18); pelletFallCtx.lineTo(W*0.45,18); pelletFallCtx.closePath(); pelletFallCtx.fill();
+  pelletFallCtx.strokeStyle='rgba(200,145,42,0.4)'; pelletFallCtx.lineWidth=1;
+  pelletFallCtx.stroke();
+
+  // Update fill level
+  const settledCount=pelletBalls.filter(b=>b.settled).length;
+  const targetFill=Math.min(1, settledCount/80);
+  pelletFillLevel+=(targetFill-pelletFillLevel)*0.03;
+
+  // Update UI
+  const pct=Math.round(pelletFillLevel*100);
+  const ro=document.getElementById('pelletFillReadout');
+  if(ro){ro.textContent=pct+'%'; ro.style.color=pct>75?'#e8b84b':pct>40?'#c8912a':'rgba(200,145,42,0.9)';}
+  const mf=document.getElementById('pelletMeterFill');
+  if(mf) mf.style.width=pct+'%';
+}
+
+function pelletFallLoop(){
+  drawPelletFall(pelletFallFrame);
+  pelletFallFrame++;
+  pelletFallAnimId=requestAnimationFrame(pelletFallLoop);
+}
+
+function togglePelletAnim(){
+  pelletFallActive=!pelletFallActive;
+  const btn=document.getElementById('pelletPlayBtn');
+  if(btn) btn.textContent=pelletFallActive?'⏸ Pause':'▶ Start';
+}
+
+function resetPelletAnim(){
+  pelletFallActive=false;
+  pelletBalls=[];
+  pelletFillLevel=0;
+  pelletFallFrame=0;
+  const btn=document.getElementById('pelletPlayBtn');
+  if(btn) btn.textContent='▶ Start';
+  const ro=document.getElementById('pelletFillReadout');
+  if(ro){ro.textContent='0%';}
+  const mf=document.getElementById('pelletMeterFill');
+  if(mf) mf.style.width='0%';
+}
+
+function openPelletCard(){
+  const cfg=MODAL_CONFIGS['pellet'];
+  if(!cfg) return;
+  document.getElementById('pelletAnimBody').innerHTML=cfg.fields();
+  document.getElementById('pelletAnimOverlay').classList.add('open');
+  // Start render loop
+  if(pelletFallAnimId) cancelAnimationFrame(pelletFallAnimId);
+  pelletFallLoop();
+}
+
+function closePelletCard(){
+  document.getElementById('pelletAnimOverlay').classList.remove('open');
+  if(pelletFallAnimId){cancelAnimationFrame(pelletFallAnimId); pelletFallAnimId=null;}
+  pelletFallActive=false;
+  const btn=document.getElementById('pelletPlayBtn');
+  if(btn) btn.textContent='▶ Start';
+}
+
+function savePelletCard(){
+  const cfg=MODAL_CONFIGS['pellet'];
+  if(cfg) cfg.save();
+  closePelletCard();
+  updateSummaryParams();
+}
+
+document.getElementById('pelletAnimOverlay').addEventListener('click',function(e){if(e.target===this)closePelletCard();});
 
 // Load state on page load
 loadStateFromStorage();
