@@ -789,6 +789,124 @@ input.finp{cursor:text;}
 }
 .page-dot.active{background:var(--gold);border-color:var(--gold);}
 .page-dot:hover:not(.active){border-color:var(--gold);}
+/* ── IMAGE STAGE LAYOUT ── */
+#stageImgRow {
+  background: #fff;
+  gap: 0;
+}
+.stage-img-slot {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 18px 12px 10px;
+  cursor: pointer;
+  position: relative;
+  transition: background .2s;
+  gap: 10px;
+}
+.stage-img-slot:hover {
+  background: rgba(200,145,42,0.04);
+}
+.stage-img-inner {
+  width: 100%;
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  overflow: hidden;
+  border: 2px solid rgba(200,145,42,0.18);
+  transition: border-color .25s, box-shadow .25s;
+  box-shadow: 0 4px 20px rgba(26,48,87,0.08);
+  max-height: 220px;
+}
+.stage-img-slot:hover .stage-img-inner {
+  border-color: var(--gold);
+  box-shadow: 0 6px 28px rgba(200,145,42,0.22);
+}
+.stage-img-slot.active .stage-img-inner {
+  border-color: var(--gold);
+  box-shadow: 0 0 0 3px rgba(200,145,42,0.18), 0 6px 28px rgba(200,145,42,0.28);
+}
+.stage-img-slot.done .stage-img-inner {
+  border-color: var(--green);
+}
+.stage-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform .35s cubic-bezier(.22,1,.36,1);
+}
+.stage-img-slot:hover .stage-img {
+  transform: scale(1.04);
+}
+.stage-img-label {
+  font-family: 'JetBrains Mono';
+  font-size: .62rem;
+  letter-spacing: 2px;
+  color: var(--text-dim);
+  text-transform: uppercase;
+  text-align: center;
+  line-height: 1.45;
+  transition: color .2s;
+}
+.stage-img-slot.active .stage-img-label,
+.stage-img-slot:hover .stage-img-label {
+  color: var(--gold);
+}
+.stage-img-slot.done .stage-img-label { color: var(--green); }
+.stage-img-badge {
+  font-family: 'DM Sans';
+  font-size: .68rem;
+  color: rgba(200,145,42,0.55);
+  text-align: center;
+  margin-top: -2px;
+  min-height: 14px;
+}
+.stage-img-badge.configured { color: rgba(58,170,106,0.75); }
+.stage-arrow {
+  width: 40px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+.stage-arrow::before {
+  content: '';
+  position: absolute;
+  left: 4px; right: 16px;
+  top: 50%;
+  height: 2px;
+  background: rgba(200,145,42,0.22);
+  border-radius: 1px;
+}
+.stage-arrow::after {
+  content: '';
+  position: absolute;
+  right: 6px;
+  top: 50%;
+  transform: translateY(-50%);
+  border: 6px solid transparent;
+  border-left: 9px solid rgba(200,145,42,0.22);
+}
+.stage-arrow.lit::before { background: var(--gold); opacity: .75; }
+.stage-arrow.lit::after  { border-left-color: var(--gold); opacity: .85; }
+/* Configured dot on image */
+.stage-img-inner .cfg-dot {
+  position: absolute;
+  top: 8px; right: 8px;
+  width: 10px; height: 10px;
+  background: var(--green);
+  border-radius: 50%;
+  border: 2px solid #fff;
+  box-shadow: 0 1px 4px rgba(0,0,0,.2);
+  z-index: 3;
+}
 </style>
 </head>
 <body>
@@ -1045,8 +1163,41 @@ input.finp{cursor:text;}
     <div class="page-hint">Click any process stage to configure its parameters</div>
   </div>
 
-  <div class="canvas-wrap">
-    <canvas id="processCanvas"></canvas>
+  <div class="canvas-wrap" id="canvasWrap">
+    <canvas id="processCanvas" style="display:none;"></canvas>
+    <!-- Image-based stage display replacing canvas diagrams -->
+    <div id="stageImgRow" style="display:flex;flex:1;min-height:0;width:100%;position:relative;">
+      <!-- Grid overlay drawn on top -->
+      <canvas id="overlayCanvas" style="position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:2;"></canvas>
+      <!-- Stage 1: Iron Ore Feed -->
+      <div class="stage-img-slot" id="stage-feed" onclick="if(!simRunning)openModal('feed')" title="Iron Ore Feed — Click to configure">
+        <div class="stage-img-inner">
+          <img src="img1.jpeg" alt="Iron Ore Feed" class="stage-img">
+        </div>
+        <div class="stage-img-label" id="label-feed">IRON ORE<br>FEED</div>
+        <div class="stage-img-badge" id="badge-feed">⊕ configure</div>
+      </div>
+      <!-- Arrow 1→2 -->
+      <div class="stage-arrow" id="arrow-01"></div>
+      <!-- Stage 2: Grinding -->
+      <div class="stage-img-slot" id="stage-grind" onclick="if(!simRunning)openModal('grind')" title="Ball Mill Grinding — Click to configure">
+        <div class="stage-img-inner">
+          <img src="img2.jpeg" alt="Grinding" class="stage-img">
+        </div>
+        <div class="stage-img-label" id="label-grind">GRINDING</div>
+        <div class="stage-img-badge" id="badge-grind">⊕ configure</div>
+      </div>
+      <!-- Arrow 2→3 -->
+      <div class="stage-arrow" id="arrow-02"></div>
+      <!-- Stage 3: Thickener -->
+      <div class="stage-img-slot" id="stage-thickner" onclick="if(!simRunning)openModal('thickner')" title="Thickener — Click to configure">
+        <div class="stage-img-inner">
+          <img src="img3.jpeg" alt="Thickener" class="stage-img">
+        </div>
+        <div class="stage-img-label" id="label-thickner">THICKENER</div>
+        <div class="stage-img-badge" id="badge-thickner">⊕ configure</div>
+      </div>
+    </div>
     <div class="step-bar">
       <div class="step-pill" data-step="0">Feed</div>
       <div class="step-pill" data-step="1">Grinding</div>
@@ -1353,115 +1504,67 @@ function sizeCanvas(){
 }
 
 function draw(frame,activeStep){
-  const{W,H}=sizeCanvas();
-  ctx.clearRect(0,0,W,H);
-  ctx.fillStyle='#fff'; ctx.fillRect(0,0,W,H);
-  ctx.strokeStyle='rgba(200,145,42,0.035)'; ctx.lineWidth=1;
-  for(let x=0;x<W;x+=36){ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x,H);ctx.stroke();}
-  for(let y=0;y<H;y+=36){ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(W,y);ctx.stroke();}
+  // ── Update image-based stage slots ──
+  const stageIds = ['feed','grind','thickner'];
+  const arrowIds = ['arrow-01','arrow-02'];
 
-  hitZones=[];
-  const n=STAGES.length;
-  const padX=W*0.022;
-  const slotW=(W-padX*2)/n;
-  const midY=H*0.43;
-  const mH=H*0.50;
-  const mW=slotW*0.68;
-  const labelY=midY+mH*0.55+18;
+  stageIds.forEach((id, i) => {
+    const slot = document.getElementById('stage-' + id);
+    const badge = document.getElementById('badge-' + id);
+    const label = document.getElementById('label-' + id);
+    const stage = STAGES[i];
+    if (!slot) return;
+    const isActive = stage.step === activeStep;
+    const isDone   = stage.step < activeStep;
+    const isConfig = isStageConfigured(id);
+    slot.classList.toggle('active', isActive);
+    slot.classList.toggle('done', isDone);
+    if (badge) {
+      badge.textContent = isConfig ? '✓ configured' : '⊕ configure';
+      badge.classList.toggle('configured', isConfig);
+    }
+  });
 
-  if(activeStep>=0){
-    const info=[
+  // Arrows
+  arrowIds.forEach((aId, i) => {
+    const el = document.getElementById(aId);
+    if (!el) return;
+    const lit = STAGES[i].step < activeStep || STAGES[i].step === activeStep;
+    el.classList.toggle('lit', lit);
+  });
+
+  // Keep hit zones empty (click handled by onclick on divs)
+  hitZones = [];
+
+  // Draw subtle overlay for info box on overlay canvas
+  const overlayCanvas = document.getElementById('overlayCanvas');
+  if (!overlayCanvas) return;
+  const wrap = overlayCanvas.parentElement;
+  const W = wrap.clientWidth || 900;
+  const H = wrap.clientHeight || 300;
+  const ratio = window.devicePixelRatio || 1;
+  overlayCanvas.width = W * ratio;
+  overlayCanvas.height = H * ratio;
+  overlayCanvas.style.width = W + 'px';
+  overlayCanvas.style.height = H + 'px';
+  const g = overlayCanvas.getContext('2d');
+  g.scale(ratio, ratio);
+  g.clearRect(0, 0, W, H);
+
+  if (activeStep >= 0) {
+    const info = [
       {k:'Ore:',      v:stageParams.feed.ore?stageParams.feed.ore.substring(0,22):'—'},
       {k:'Binder:',   v:stageParams.mix.binder?stageParams.mix.binder.substring(0,22):'—'},
       {k:'Moisture:', v:stageParams.filter.cakeMoisture?stageParams.filter.cakeMoisture+'%':'—'},
       {k:'Blain:',    v:stageParams.grind.blain?stageParams.grind.blain+' cm²/g':'—'},
     ];
     const bw=210,bh=info.length*17+18;
-    ctx.fillStyle='rgba(253,248,240,0.95)'; ctx.strokeStyle='rgba(200,145,42,0.22)'; ctx.lineWidth=1;
-    ctx.beginPath(); ctx.roundRect(14,14,bw,bh,4); ctx.fill(); ctx.stroke();
+    g.fillStyle='rgba(253,248,240,0.95)'; g.strokeStyle='rgba(200,145,42,0.22)'; g.lineWidth=1;
+    g.beginPath(); g.roundRect(14,14,bw,bh,4); g.fill(); g.stroke();
     info.forEach((item,i)=>{
-      ctx.fillStyle='#9a8a70'; ctx.font='400 9px JetBrains Mono'; ctx.textAlign='left'; ctx.fillText(item.k,24,28+i*17);
-      ctx.fillStyle='#1a3057'; ctx.font='500 9px JetBrains Mono'; ctx.fillText(item.v,78,28+i*17);
+      g.fillStyle='#9a8a70'; g.font='400 9px JetBrains Mono'; g.textAlign='left'; g.fillText(item.k,24,28+i*17);
+      g.fillStyle='#1a3057'; g.font='500 9px JetBrains Mono'; g.fillText(item.v,78,28+i*17);
     });
-  }
-
-  if(activeStep>=4||activeStep<0){
-    const mcx=padX+4*slotW+slotW/2;
-    ctx.save(); ctx.globalAlpha=activeStep<0?0.3:0.88;
-    ctx.fillStyle='rgba(200,145,42,0.1)'; ctx.strokeStyle='rgba(200,145,42,0.45)'; ctx.lineWidth=1;
-    ctx.beginPath(); ctx.roundRect(mcx-40,midY-mH*0.52-46,80,26,3); ctx.fill(); ctx.stroke();
-    ctx.fillStyle='#c8912a'; ctx.font='600 8px JetBrains Mono'; ctx.textAlign='center';
-    ctx.fillText('OB DOSING',mcx,midY-mH*0.52-30);
-    if(activeStep>=4){
-      const dy=midY-mH*0.52-22+(frame%32)*0.72;
-      ctx.strokeStyle='rgba(200,145,42,0.3)'; ctx.lineWidth=0.8; ctx.setLineDash([2,3]);
-      ctx.beginPath(); ctx.moveTo(mcx,midY-mH*0.52-23); ctx.lineTo(mcx,midY-mH*0.52); ctx.stroke(); ctx.setLineDash([]);
-      ctx.beginPath(); ctx.arc(mcx,dy,2.5,0,Math.PI*2); ctx.fillStyle='rgba(200,145,42,0.75)'; ctx.fill();
-    }
-    ctx.restore();
-  }
-
-  for(let i=0;i<n-1;i++){
-    const s=STAGES[i];
-    const cx1=padX+i*slotW+slotW/2;
-    const cx2=padX+(i+1)*slotW+slotW/2;
-    const lit=s.step<activeStep||s.step===activeStep;
-    const x1=cx1+mW*0.46, x2=cx2-mW*0.46;
-    ctx.save();
-    ctx.strokeStyle=lit?s.color:'rgba(200,145,42,0.15)';
-    ctx.lineWidth=lit?2.5:1.5; ctx.globalAlpha=lit?0.8:0.38;
-    ctx.setLineDash(lit?[]:[5,5]);
-    ctx.beginPath(); ctx.moveTo(x1,midY); ctx.lineTo(x2,midY); ctx.stroke(); ctx.setLineDash([]);
-    ctx.fillStyle=lit?s.color:'rgba(200,145,42,0.22)'; ctx.globalAlpha=lit?0.9:0.65;
-    ctx.beginPath(); ctx.moveTo(x2,midY-5); ctx.lineTo(x2+9,midY); ctx.lineTo(x2,midY+5); ctx.fill();
-    ctx.restore();
-    if(lit){
-      const t=(frame%60)/60;
-      const px=x1+(x2-x1)*t;
-      const rg=ctx.createRadialGradient(px,midY,0,px,midY,7);
-      rg.addColorStop(0,'rgba(232,184,75,0.95)'); rg.addColorStop(1,'rgba(200,145,42,0)');
-      ctx.beginPath(); ctx.arc(px,midY,7,0,Math.PI*2); ctx.fillStyle=rg; ctx.fill();
-    }
-  }
-
-  STAGES.forEach((s,i)=>{
-    const cx=padX+i*slotW+slotW/2;
-    const isActive=s.step===activeStep;
-    const isDone=s.step<activeStep;
-    const isConfig=isStageConfigured(s.id);
-    const lit=isActive||isDone;
-    const alpha=activeStep>=0?(lit?1:0.33):1;
-    ctx.save(); ctx.globalAlpha=alpha;
-    if(isActive){ctx.shadowColor=s.color; ctx.shadowBlur=22;}
-    const col=lit?s.color:(isConfig?s.color:'#c0ae90');
-    const strokeCol=isActive?s.color:(isDone?s.color:(isConfig?'rgba(200,145,42,0.55)':'rgba(200,145,42,0.22)'));
-    const strokeW=isActive?2.5:(isConfig?1.8:1.2);
-    const bounds=drawMachineShape(s.shape,cx,midY,mW,mH,col,strokeCol,strokeW,isActive,isDone,frame,s);
-    ctx.shadowBlur=0;
-    hitZones.push({id:s.id,...bounds});
-    const lines=s.label.split('\n');
-    const fs=slotW<100?7:8;
-    ctx.font=`600 ${fs}px JetBrains Mono`; ctx.textAlign='center';
-    ctx.fillStyle=lit?s.color:(isConfig?s.color:'#8a7a60');
-    lines.forEach((line,li)=>ctx.fillText(line,cx,labelY+li*(fs+3)));
-    if(s.id==='pellet'&&activeStep===9){
-      ctx.fillStyle='#2a7a4a'; ctx.font='700 8px JetBrains Mono';
-      ctx.fillText('✓ PELLETS READY',cx,labelY+lines.length*(fs+3)+12);
-    }
-    if(isConfig&&activeStep<0){
-      ctx.fillStyle='#3aaa6a'; ctx.beginPath(); ctx.arc(bounds.x+bounds.w-6,bounds.y+6,4.5,0,Math.PI*2); ctx.fill();
-    }
-    if(activeStep<0){
-      ctx.fillStyle=isConfig?'rgba(58,170,106,0.6)':'rgba(200,145,42,0.42)';
-      ctx.font='400 6.5px DM Sans'; ctx.textAlign='center';
-      ctx.fillText(isConfig?'✓ configured':'⊕ configure',cx,bounds.y+bounds.h+13);
-    }
-    ctx.restore();
-  });
-
-  if(activeStep===9){
-    const pi=STAGES.findIndex(s=>s.id==='pellet');
-    drawPelletBurst(padX+pi*slotW+slotW/2,midY,frame,mW*0.48);
   }
 }
 
@@ -1843,7 +1946,7 @@ function drawMachineShape(shape,cx,cy,mW,mH,col,strokeCol,strokeW,isActive,isDon
 
       const ecRx = bmRy*0.18, ecRy = bmRy;
       drawMainEndCap(right, ecRx, ecRy, rot);
-      drawMainEndCap(left,  ecRx, ecRy, rot + Math.PI*0.25);
+      drawMainEndCap(left,  ecRx, ecRy, rot);
 
       // Trunnion pipes
       const pipeH2 = bmRy*0.36, pipeLen2 = bmRx*0.18;
@@ -1953,23 +2056,53 @@ function drawMachineShape(shape,cx,cy,mW,mH,col,strokeCol,strokeW,isActive,isDon
       shaftGrad.addColorStop(0,'#aaaaaa'); shaftGrad.addColorStop(0.5,'#eeeeee'); shaftGrad.addColorStop(1,'#888888');
       ctx.fillStyle=shaftGrad;
       ctx.fillRect(cx-shaftW/2,top-10,shaftW,coneBot-top+10);
-      // ── Rake arms rotating ──
-      ctx.save(); ctx.translate(cx,cylBot-th*0.1); ctx.rotate(isActive?-frame*0.018:-0.3);
-      ctx.strokeStyle='rgba(40,180,80,0.8)'; ctx.lineWidth=2;
-      for(let a=0;a<4;a++){
-        const ang=a*Math.PI/2;
-        const len=rr*(a%2===0?0.82:0.58);
-        ctx.beginPath(); ctx.moveTo(0,0);
-        ctx.lineTo(Math.cos(ang)*len,Math.sin(ang)*len*0.3); ctx.stroke();
-        // teeth
-        for(let t=1;t<=3;t++){
-          const tx=Math.cos(ang)*len*(t/3.5);
-          const ty=Math.sin(ang)*len*0.3*(t/3.5);
-          ctx.beginPath(); ctx.moveTo(tx,ty); ctx.lineTo(tx,ty+4);
-          ctx.strokeStyle='rgba(40,180,80,0.5)'; ctx.lineWidth=1; ctx.stroke();
-          ctx.strokeStyle='rgba(40,180,80,0.8)'; ctx.lineWidth=2;
+      // ── Rake arms rotating (horizontal mixer blade view — top-down elliptical perspective) ──
+      ctx.save();
+      ctx.translate(cx, cylBot - th * 0.1);
+      const rakeAng = isActive ? -frame * 0.018 : -0.3;
+      // Draw two long blades (cross) with elliptical foreshortening so they look horizontal
+      const bladeCount = 2;
+      for (let b = 0; b < bladeCount; b++) {
+        const a0 = rakeAng + b * Math.PI / bladeCount;
+        const a1 = a0 + Math.PI; // opposite end
+        const len = rr * 0.88;
+        const yScale = 0.22; // strong foreshortening = looks horizontal/flat
+        // Main blade line
+        ctx.strokeStyle = 'rgba(40,180,80,0.85)';
+        ctx.lineWidth = 2.2;
+        ctx.beginPath();
+        ctx.moveTo(Math.cos(a0) * len, Math.sin(a0) * len * yScale);
+        ctx.lineTo(Math.cos(a1) * len, Math.sin(a1) * len * yScale);
+        ctx.stroke();
+        // Rake teeth along each blade
+        for (let t = 1; t <= 4; t++) {
+          const frac = t / 4.5;
+          // Positive side
+          const tx1 = Math.cos(a0) * len * frac;
+          const ty1 = Math.sin(a0) * len * frac * yScale;
+          // Tooth points downward in the foreshortened plane
+          const toothLen = 5;
+          const perpA = a0 + Math.PI / 2;
+          ctx.strokeStyle = 'rgba(40,180,80,0.55)';
+          ctx.lineWidth = 1;
+          ctx.beginPath();
+          ctx.moveTo(tx1, ty1);
+          ctx.lineTo(tx1 + Math.cos(perpA) * toothLen * 0.4, ty1 + toothLen * yScale * 1.8);
+          ctx.stroke();
+          // Negative side
+          const tx2 = Math.cos(a1) * len * frac;
+          const ty2 = Math.sin(a1) * len * frac * yScale;
+          ctx.beginPath();
+          ctx.moveTo(tx2, ty2);
+          ctx.lineTo(tx2 + Math.cos(perpA + Math.PI) * toothLen * 0.4, ty2 + toothLen * yScale * 1.8);
+          ctx.stroke();
         }
       }
+      // Center hub circle
+      ctx.beginPath();
+      ctx.arc(0, 0, rr * 0.055, 0, Math.PI * 2);
+      ctx.fillStyle = 'rgba(40,180,80,0.9)';
+      ctx.fill();
       ctx.restore();
       // ── Motor box top right ──
       ctx.save(); ctx.globalAlpha=0.85;
@@ -2557,18 +2690,9 @@ function drawPelletBurst(cx,cy,frame,r){
   }
 }
 
-canvas.addEventListener('click',function(e){
-  if(simRunning)return;
-  const rect=canvas.getBoundingClientRect();
-  const mx=e.clientX-rect.left,my=e.clientY-rect.top;
-  for(const z of hitZones){if(mx>=z.x&&mx<=z.x+z.w&&my>=z.y&&my<=z.y+z.h){openModal(z.id);return;}}
-});
-canvas.addEventListener('mousemove',function(e){
-  if(simRunning){canvas.style.cursor='default';return;}
-  const rect=canvas.getBoundingClientRect();
-  const mx=e.clientX-rect.left,my=e.clientY-rect.top;
-  canvas.style.cursor=hitZones.some(z=>mx>=z.x&&mx<=z.x+z.w&&my>=z.y&&my<=z.y+z.h)?'pointer':'default';
-});
+// Click/hover handled by stage-img-slot onclick attributes above
+canvas.addEventListener('click',function(e){});
+canvas.addEventListener('mousemove',function(e){});
 
 function numField(id,label,val,mn,mx,unit,step){
   step=step||'any';
@@ -4290,28 +4414,38 @@ function drawThickMini(frame, burst) {
   g.beginPath(); g.roundRect(cx - shaftW/2, tankTop - 14, shaftW, coneBot - tankTop + 14, 2); g.fill();
   g.strokeStyle = 'rgba(30,35,45,0.7)'; g.lineWidth = 0.8; g.stroke();
 
-  // ── RAKE ARMS (rotating) ──
-  const rakeAngle = frame * 0.022; // slow rotation
+  // ── RAKE ARMS (rotating — horizontal mixer blade view, top-down elliptical perspective) ──
+  const rakeAngle = frame * 0.022;
   const rakeY = cylBot - cylH * 0.15;
   g.save();
   g.translate(cx, rakeY);
-  g.rotate(-rakeAngle);
-  // 4 arms at 90°
-  for (let arm = 0; arm < 4; arm++) {
-    g.save();
-    g.rotate(arm * Math.PI / 2);
-    const armLen = arm % 2 === 0 ? tankR * 0.82 : tankR * 0.58;
-    // Arm beam
+  const yScale = 0.22; // foreshortening factor — makes blades look horizontal/flat
+  // Two long blades forming a cross
+  for (let b = 0; b < 2; b++) {
+    const a0 = -rakeAngle + b * Math.PI / 2;
+    const a1 = a0 + Math.PI;
+    const bLen = tankR * 0.88;
     g.strokeStyle = 'rgba(40,185,80,0.88)'; g.lineWidth = 3; g.lineCap = 'round';
-    g.beginPath(); g.moveTo(0, 0); g.lineTo(armLen, 0); g.stroke();
-    // Rake teeth
-    const teethCount = arm % 2 === 0 ? 5 : 4;
+    g.beginPath();
+    g.moveTo(Math.cos(a0) * bLen, Math.sin(a0) * bLen * yScale);
+    g.lineTo(Math.cos(a1) * bLen, Math.sin(a1) * bLen * yScale);
+    g.stroke();
+    // Rake teeth along blade
+    const teethCount = 5;
     for (let t = 1; t <= teethCount; t++) {
-      const tx = armLen * (t / (teethCount + 1));
-      g.strokeStyle = 'rgba(40,185,80,0.60)'; g.lineWidth = 1.5;
-      g.beginPath(); g.moveTo(tx, 0); g.lineTo(tx, 7); g.stroke();
+      const frac = t / (teethCount + 1);
+      for (let side = 0; side < 2; side++) {
+        const ang = side === 0 ? a0 : a1;
+        const tx = Math.cos(ang) * bLen * frac;
+        const ty = Math.sin(ang) * bLen * frac * yScale;
+        const perpA = ang + Math.PI / 2;
+        g.strokeStyle = 'rgba(40,185,80,0.55)'; g.lineWidth = 1.5;
+        g.beginPath();
+        g.moveTo(tx, ty);
+        g.lineTo(tx + Math.cos(perpA) * 3, ty + 6 * yScale * 3.5);
+        g.stroke();
+      }
     }
-    g.restore();
   }
   // Hub
   g.fillStyle = '#4a5060'; g.strokeStyle = '#888'; g.lineWidth = 1;
