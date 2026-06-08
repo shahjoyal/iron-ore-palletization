@@ -956,6 +956,91 @@ input.finp{cursor:text;}
 @media(max-width:560px){.pellet-anim-card{width:96vw;}}
 
 
+/* ── COOLING KILN TWO-PANEL OVERLAY ── */
+.cool-anim-overlay{
+  position:fixed;inset:0;z-index:250;
+  background:rgba(15,31,58,.62);
+  backdrop-filter:blur(7px) saturate(1.2);
+  display:flex;align-items:center;justify-content:center;
+  opacity:0;pointer-events:none;transition:opacity .3s ease;
+}
+.cool-anim-overlay.open{opacity:1;pointer-events:all;}
+.cool-anim-panels{display:flex;align-items:flex-start;gap:14px;}
+
+.cool-anim-card{
+  background:#fff;border:1px solid var(--border-strong);border-radius:10px;
+  box-shadow:0 24px 80px rgba(26,48,87,.25);
+  width:min(460px,92vw);max-height:88vh;overflow-y:auto;
+  transform:translateY(16px) scale(.97);
+  transition:transform .35s cubic-bezier(.22,1,.36,1);
+  position:relative;display:flex;flex-direction:column;
+}
+.cool-anim-overlay.open .cool-anim-card{transform:translateY(0) scale(1);}
+.cool-anim-header{
+  padding:1.4rem 1.6rem 1rem;border-bottom:1px solid var(--border);
+  background:linear-gradient(135deg,var(--navy2) 0%,var(--navy3) 100%);
+  border-radius:10px 10px 0 0;position:relative;flex-shrink:0;
+}
+.cool-anim-tag{font-family:'JetBrains Mono';font-size:.52rem;letter-spacing:2.5px;color:rgba(200,145,42,.7);text-transform:uppercase;margin-bottom:5px;}
+.cool-anim-title{font-family:'Cormorant Garamond',serif;font-size:1.5rem;font-weight:700;color:#fff;line-height:1.2;}
+.cool-anim-subtitle{font-size:.78rem;color:rgba(255,255,255,.4);margin-top:5px;}
+.cool-anim-close{
+  position:absolute;top:1.1rem;right:1.2rem;
+  background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);
+  color:rgba(255,255,255,.6);width:30px;height:30px;border-radius:50%;
+  font-size:.9rem;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s;
+}
+.cool-anim-close:hover{background:rgba(200,145,42,.3);color:#fff;}
+.cool-anim-body{padding:1.4rem 1.6rem;flex:1;}
+
+/* RIGHT diagram card */
+.cool-diagram-card{
+  width:460px;flex-shrink:0;
+  background:linear-gradient(170deg,#f8f5f0 0%,#ffffff 40%,#f2efea 100%);
+  border:1px solid rgba(200,145,42,0.25);border-radius:10px;
+  box-shadow:0 24px 80px rgba(26,48,87,.2);
+  display:flex;flex-direction:column;align-self:stretch;overflow:hidden;
+  transform:translateY(16px) scale(.97);
+  transition:transform .35s cubic-bezier(.22,1,.36,1) .05s;
+}
+.cool-anim-overlay.open .cool-diagram-card{transform:translateY(0) scale(1);}
+.cool-diagram-header{
+  padding:1rem 1.3rem .8rem;
+  background:linear-gradient(135deg,var(--navy2) 0%,var(--navy3) 100%);
+  border-bottom:1px solid rgba(200,145,42,0.18);flex-shrink:0;
+}
+.cool-diagram-tag{font-family:'JetBrains Mono';font-size:.52rem;letter-spacing:2.5px;color:rgba(200,145,42,.75);text-transform:uppercase;margin-bottom:4px;}
+.cool-diagram-title{font-family:'Cormorant Garamond',serif;font-size:1.25rem;font-weight:700;color:#fff;line-height:1.2;}
+.cool-diagram-subtitle{font-size:.72rem;color:rgba(255,255,255,.4);margin-top:3px;}
+.cool-diagram-body{flex:1;display:flex;flex-direction:column;padding:.9rem 1.1rem .8rem;gap:.7rem;overflow:hidden;}
+
+.cool-canvas-wrap{
+  flex:1;position:relative;min-height:260px;
+  background:linear-gradient(180deg,#0c1520 0%,#101e30 100%);
+  border-radius:8px;border:1.5px solid rgba(200,145,42,0.25);
+  overflow:hidden;box-shadow:0 6px 24px rgba(26,48,87,.3);
+}
+#coolKilnCanvas{position:absolute;inset:0;width:100%;height:100%;display:block;}
+
+.cool-zone-legend{display:grid;grid-template-columns:repeat(4,1fr);gap:5px;flex-shrink:0;}
+.cool-zone-chip{
+  border-radius:5px;padding:6px 5px;text-align:center;
+  border:1px solid rgba(200,145,42,0.15);
+  background:rgba(255,255,255,0.6);
+}
+.cool-zone-chip-label{font-family:'JetBrains Mono';font-size:.42rem;letter-spacing:1px;color:var(--text-dim);text-transform:uppercase;margin-bottom:3px;}
+.cool-zone-chip-swatch{width:24px;height:10px;border-radius:3px;margin:0 auto 3px;border:1px solid rgba(0,0,0,0.12);}
+.cool-zone-chip-val{font-family:'Cormorant Garamond',serif;font-size:.95rem;font-weight:700;color:var(--navy);}
+
+.cool-stat-row{display:grid;grid-template-columns:repeat(2,1fr);gap:6px;flex-shrink:0;}
+.cool-stat{background:rgba(200,145,42,0.05);border:1px solid var(--border);border-radius:5px;padding:6px 8px;text-align:center;}
+.cool-stat-label{display:block;font-family:'JetBrains Mono';font-size:.44rem;letter-spacing:1px;color:var(--text-dim);text-transform:uppercase;margin-bottom:3px;}
+.cool-stat-val{display:block;font-family:'Cormorant Garamond',serif;font-size:1rem;font-weight:700;color:var(--navy);line-height:1;}
+
+@media(max-width:1060px){.cool-diagram-card{width:340px;}}
+@media(max-width:800px){.cool-diagram-card{display:none;}}
+@media(max-width:560px){.cool-anim-card{width:96vw;}}
+
 /* ── PAGE NAVIGATION ── */
 .page-nav{
   display:flex;align-items:center;justify-content:center;gap:10px;
@@ -1207,6 +1292,68 @@ input.finp{cursor:text;}
           <div class="gb-stat"><span class="gb-stat-label">DROP NO.</span><span class="gb-stat-val" id="gbStatDrop">—</span></div>
           <div class="gb-stat"><span class="gb-stat-label">GCS</span><span class="gb-stat-val" id="gbStatGcs">—</span></div>
           <div class="gb-stat"><span class="gb-stat-label">RECYCLE</span><span class="gb-stat-val" id="gbStatSize">—</span></div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ══ COOLING KILN ANIMATION CARD ══ -->
+<div class="cool-anim-overlay" id="coolAnimOverlay">
+  <div class="cool-anim-panels">
+
+    <!-- LEFT: Parameters Card -->
+    <div class="cool-anim-card" id="coolAnimCard">
+      <div class="cool-anim-header">
+        <div class="cool-anim-tag">STAGE 09 · COOLING</div>
+        <div class="cool-anim-title">Cooling Zone Parameters</div>
+        <div class="cool-anim-subtitle">Set temperature for each cooling zone — kiln colour updates live</div>
+        <button class="cool-anim-close" onclick="closeCoolCard()">✕</button>
+      </div>
+      <div class="cool-anim-body" id="coolAnimBody"></div>
+      <div class="modal-footer" style="padding:1rem 1.4rem 1.2rem;flex-shrink:0;">
+        <button class="btn-save" onclick="saveCoolCard()">Save Parameters</button>
+        <button class="btn-cancel" onclick="closeCoolCard()">Cancel</button>
+      </div>
+    </div>
+
+    <!-- RIGHT: Live Kiln Diagram -->
+    <div class="cool-diagram-card">
+      <div class="cool-diagram-header">
+        <div class="cool-diagram-tag">LIVE PREVIEW · TEMPERATURE</div>
+        <div class="cool-diagram-title">Rotary Cooling Kiln</div>
+        <div class="cool-diagram-subtitle">Zone colours update as you enter temperatures</div>
+      </div>
+      <div class="cool-diagram-body">
+        <div class="cool-canvas-wrap">
+          <canvas id="coolKilnCanvas"></canvas>
+        </div>
+        <div class="cool-zone-legend" id="coolZoneLegend">
+          <div class="cool-zone-chip" id="cool-chip-0">
+            <div class="cool-zone-chip-label">Zone 1</div>
+            <div class="cool-zone-chip-swatch" id="cool-swatch-0"></div>
+            <div class="cool-zone-chip-val" id="cool-val-0">—</div>
+          </div>
+          <div class="cool-zone-chip" id="cool-chip-1">
+            <div class="cool-zone-chip-label">Zone 2</div>
+            <div class="cool-zone-chip-swatch" id="cool-swatch-1"></div>
+            <div class="cool-zone-chip-val" id="cool-val-1">—</div>
+          </div>
+          <div class="cool-zone-chip" id="cool-chip-2">
+            <div class="cool-zone-chip-label">Zone 3</div>
+            <div class="cool-zone-chip-swatch" id="cool-swatch-2"></div>
+            <div class="cool-zone-chip-val" id="cool-val-2">—</div>
+          </div>
+          <div class="cool-zone-chip" id="cool-chip-3">
+            <div class="cool-zone-chip-label">Zone 4</div>
+            <div class="cool-zone-chip-swatch" id="cool-swatch-3"></div>
+            <div class="cool-zone-chip-val" id="cool-val-3">—</div>
+          </div>
+        </div>
+        <div class="cool-stat-row">
+          <div class="cool-stat"><span class="cool-stat-label">INLET TEMP</span><span class="cool-stat-val" id="coolStatIn">—</span></div>
+          <div class="cool-stat"><span class="cool-stat-label">EXIT TEMP</span><span class="cool-stat-val" id="coolStatOut">—</span></div>
         </div>
       </div>
     </div>
@@ -3833,6 +3980,7 @@ function openModal(stageId){
   if(stageId==='mix'){openMixCard();return;}
   if(stageId==='pellet'){openPelletCard();return;}
   if(stageId==='greenball'){openGbCard();return;}
+  if(stageId==='cool'){openCoolCard();return;}
   currentModalStage=stageId;
   const s=STAGES.find(st=>st.id===stageId);
   const cfg=MODAL_CONFIGS[stageId];
@@ -6288,6 +6436,304 @@ function savePelletCard(){
 }
 
 document.getElementById('pelletAnimOverlay').addEventListener('click',function(e){if(e.target===this)closePelletCard();});
+
+// ═══════════════════════════════════════════════════════════
+// COOLING KILN ANIMATION CARD
+// ═══════════════════════════════════════════════════════════
+let coolAnimId=null, coolFrame=0;
+const coolCanvas=document.getElementById('coolKilnCanvas');
+const coolCtx=coolCanvas.getContext('2d');
+
+// Live temps read from the input fields inside the card (or fall back to stageParams)
+function getCoolLiveTemps(){
+  const ids=['cool-z1','cool-z2','cool-z3','cool-z4'];
+  const defaults=[900,680,380,170];
+  return ids.map((id,i)=>{
+    const el=document.getElementById(id);
+    if(el&&el.value!=='') return Math.max(0,Number(el.value)||defaults[i]);
+    return safeNum(stageParams.cool['zone'+(i+1)], defaults[i]);
+  });
+}
+
+function sizeCoolCanvas(){
+  const wrap=coolCanvas.parentElement;
+  const W=Math.max(wrap.clientWidth||440,10);
+  const H=Math.max(wrap.clientHeight||260,10);
+  const ratio=window.devicePixelRatio||1;
+  const wPx=Math.round(W*ratio), hPx=Math.round(H*ratio);
+  if(coolCanvas.width!==wPx||coolCanvas.height!==hPx){
+    coolCanvas.width=wPx; coolCanvas.height=hPx;
+    coolCtx.setTransform(ratio,0,0,ratio,0,0);
+  }
+  return{W,H};
+}
+
+function drawCoolKilnAnim(frame){
+  const{W,H}=sizeCoolCanvas();
+  const temps=getCoolLiveTemps();
+  coolCtx.clearRect(0,0,W,H);
+
+  // Dark background with subtle grid
+  const bg=coolCtx.createLinearGradient(0,0,0,H);
+  bg.addColorStop(0,'#0c1520'); bg.addColorStop(1,'#101e30');
+  coolCtx.fillStyle=bg; coolCtx.fillRect(0,0,W,H);
+  coolCtx.strokeStyle='rgba(80,130,200,0.04)'; coolCtx.lineWidth=0.6;
+  for(let gx=0;gx<W;gx+=28){coolCtx.beginPath();coolCtx.moveTo(gx,0);coolCtx.lineTo(gx,H);coolCtx.stroke();}
+  for(let gy=0;gy<H;gy+=28){coolCtx.beginPath();coolCtx.moveTo(0,gy);coolCtx.lineTo(W,gy);coolCtx.stroke();}
+
+  // ── Kiln geometry — same proportions as main canvas version ──
+  const cx=W*0.5, cy=H*0.46;
+  const kilnW=W*0.82, kilnH=H*0.22, slopeY=H*0.10;
+  const left=cx-kilnW*0.5, right=cx+kilnW*0.5;
+  const topL=cy-kilnH*0.5-slopeY, topR=cy-kilnH*0.5+slopeY;
+  const botL=cy+kilnH*0.5-slopeY, botR=cy+kilnH*0.5+slopeY;
+  const shellPad=kilnH*0.30;
+  const shellTopL=topL-shellPad, shellTopR=topR-shellPad;
+  const shellBotL=botL+shellPad, shellBotR=botR+shellPad;
+
+  // Heat colour helpers (same logic as main drawCoolingKiln)
+  function heatCol(temp){
+    const t=clamp((temp-150)/(950-150),0,1);
+    if(t>=0.85) return `rgb(${Math.round(180+(t-0.85)/0.15*30)},${Math.round(20-(t-0.85)/0.15*10)},${Math.round(60+(t-0.85)/0.15*40)})`;
+    if(t>=0.65) return `rgb(${Math.round(215+(t-0.65)/0.20*25)},${Math.round(20+(t-0.65)/0.20*10)},${Math.round(10+(t-0.65)/0.20*30)})`;
+    if(t>=0.40) return `rgb(${Math.round(230+(t-0.40)/0.25*10)},${Math.round(80+(t-0.40)/0.25*30)},10)`;
+    if(t>=0.20) return `rgb(240,${Math.round(130+(t-0.20)/0.20*50)},${Math.round(10+(t-0.20)/0.20*20)})`;
+    const s=t/0.20; return `rgb(245,${Math.round(190+s*40)},${Math.round(60+s*60)})`;
+  }
+  function heatDark(temp){
+    const t=clamp((temp-150)/(950-150),0,1);
+    if(t>=0.85) return 'rgb(120,10,40)'; if(t>=0.65) return 'rgb(160,15,8)';
+    if(t>=0.40) return 'rgb(180,50,8)';  if(t>=0.20) return 'rgb(190,90,10)';
+    return 'rgb(200,140,40)';
+  }
+
+  // ── OUTER SHELL ──
+  coolCtx.fillStyle='#2e3035';
+  coolCtx.strokeStyle='rgba(20,22,26,0.90)'; coolCtx.lineWidth=1.6;
+  coolCtx.beginPath();
+  coolCtx.moveTo(left,shellTopL); coolCtx.lineTo(right,shellTopR);
+  coolCtx.lineTo(right,shellBotR); coolCtx.lineTo(left,shellBotL);
+  coolCtx.closePath(); coolCtx.fill(); coolCtx.stroke();
+  // Highlight strip
+  coolCtx.strokeStyle='rgba(90,95,105,0.45)'; coolCtx.lineWidth=0.8;
+  coolCtx.beginPath(); coolCtx.moveTo(left+1,shellTopL+1); coolCtx.lineTo(right-1,shellTopR+1); coolCtx.stroke();
+
+  // ── INNER TUBE — clipped zone slices with live colours ──
+  const sliceW=kilnW/4;
+  coolCtx.save();
+  coolCtx.beginPath();
+  coolCtx.moveTo(left,topL); coolCtx.lineTo(right,topR);
+  coolCtx.lineTo(right,botR); coolCtx.lineTo(left,botL);
+  coolCtx.closePath(); coolCtx.clip();
+
+  for(let z=0;z<4;z++){
+    const x0=left+z*sliceW, x1=x0+sliceW+1;
+    const f0=z/4, f1=(z+1)/4;
+    const t0=topL+f0*(slopeY*2)-slopeY, t1=topL+f1*(slopeY*2)-slopeY;
+    const b0=botL+f0*(slopeY*2)-slopeY, b1=botL+f1*(slopeY*2)-slopeY;
+    // Base heat fill
+    coolCtx.fillStyle=heatCol(temps[z]);
+    coolCtx.beginPath(); coolCtx.moveTo(x0,t0-2); coolCtx.lineTo(x1,t1-2);
+    coolCtx.lineTo(x1,b1+2); coolCtx.lineTo(x0,b0+2); coolCtx.closePath(); coolCtx.fill();
+    // Cylindrical shading
+    const shGr=coolCtx.createLinearGradient(x0,t0,x0,b0+2);
+    shGr.addColorStop(0,'rgba(255,255,255,0.18)'); shGr.addColorStop(0.35,'rgba(255,255,255,0.05)');
+    shGr.addColorStop(0.60,'rgba(0,0,0,0)'); shGr.addColorStop(1,'rgba(0,0,0,0.38)');
+    coolCtx.fillStyle=shGr;
+    coolCtx.beginPath(); coolCtx.moveTo(x0,t0-2); coolCtx.lineTo(x1,t1-2);
+    coolCtx.lineTo(x1,b1+2); coolCtx.lineTo(x0,b0+2); coolCtx.closePath(); coolCtx.fill();
+    // Seam blend
+    if(z<3){
+      const sx=left+(z+1)*sliceW;
+      const sGr=coolCtx.createLinearGradient(sx-7,0,sx+7,0);
+      sGr.addColorStop(0,'rgba(0,0,0,0)'); sGr.addColorStop(0.5,'rgba(0,0,0,0.22)'); sGr.addColorStop(1,'rgba(0,0,0,0)');
+      coolCtx.fillStyle=sGr; coolCtx.fillRect(sx-7,topL-4,14,(botL-topL)+slopeY*2+8);
+    }
+    // Animated heat shimmer for hot zones (temp > 500)
+    if(temps[z]>500){
+      const shimAlpha=clamp((temps[z]-500)/450*0.22,0,0.22);
+      const shimX=x0+sliceW*((frame*0.8+z*25)%100/100);
+      coolCtx.save(); coolCtx.globalAlpha=shimAlpha;
+      const shimGr=coolCtx.createRadialGradient(shimX,cy,0,shimX,cy,sliceW*0.5);
+      shimGr.addColorStop(0,'rgba(255,255,255,0.9)'); shimGr.addColorStop(1,'rgba(255,255,255,0)');
+      coolCtx.fillStyle=shimGr; coolCtx.fillRect(x0,t0-2,sliceW+1,b0-t0+4);
+      coolCtx.restore();
+    }
+  }
+
+  // Travelling shimmer trail
+  const p=(frame%100)/100;
+  coolCtx.globalAlpha=0.22; coolCtx.fillStyle='#ffffff';
+  coolCtx.beginPath(); coolCtx.ellipse(left+kilnW*p,topL+p*(slopeY*2)+kilnH*0.5,kilnW*0.030,kilnH*0.38,0,0,Math.PI*2); coolCtx.fill();
+  coolCtx.globalAlpha=1;
+  coolCtx.restore(); // end clip
+
+  // Inner tube outline
+  coolCtx.strokeStyle='rgba(20,22,26,0.70)'; coolCtx.lineWidth=1;
+  coolCtx.beginPath(); coolCtx.moveTo(left,topL); coolCtx.lineTo(right,topR);
+  coolCtx.lineTo(right,botR); coolCtx.lineTo(left,botL); coolCtx.closePath(); coolCtx.stroke();
+
+  // ── END CAP ELLIPSES ──
+  const shellCapRy=(shellBotL-shellTopL)/2, shellCapRx=shellCapRy*0.20;
+  const innerCapRy=kilnH*0.50, innerCapRx=innerCapRy*0.20;
+  // Left cap
+  coolCtx.fillStyle='#3a3d44'; coolCtx.strokeStyle='rgba(20,22,26,0.85)'; coolCtx.lineWidth=1.2;
+  coolCtx.beginPath(); coolCtx.ellipse(left,(shellTopL+shellBotL)/2,shellCapRx,shellCapRy,0,0,Math.PI*2); coolCtx.fill(); coolCtx.stroke();
+  coolCtx.fillStyle=heatDark(temps[0]);
+  coolCtx.beginPath(); coolCtx.ellipse(left,(topL+botL)/2,innerCapRx,innerCapRy,0,0,Math.PI*2); coolCtx.fill();
+  // Right cap
+  coolCtx.fillStyle='#3a3d44'; coolCtx.strokeStyle='rgba(20,22,26,0.85)'; coolCtx.lineWidth=1.2;
+  coolCtx.beginPath(); coolCtx.ellipse(right,(shellTopR+shellBotR)/2,shellCapRx,shellCapRy,0,0,Math.PI*2); coolCtx.fill(); coolCtx.stroke();
+  coolCtx.fillStyle=heatDark(temps[3]);
+  coolCtx.beginPath(); coolCtx.ellipse(right,(topR+botR)/2,innerCapRx,innerCapRy,0,0,Math.PI*2); coolCtx.fill();
+
+  // ── RIDING RINGS ──
+  [0.25,0.65].forEach(frac=>{
+    const rx=left+kilnW*frac;
+    const rMy=(shellTopL+shellBotL)/2+frac*((shellTopR+shellBotR)/2-(shellTopL+shellBotL)/2);
+    const ringH=shellCapRy*2, ringW=kilnW*0.048;
+    coolCtx.fillStyle='#878c96'; coolCtx.strokeStyle='rgba(30,32,36,0.70)'; coolCtx.lineWidth=0.8;
+    coolCtx.beginPath(); coolCtx.roundRect(rx-ringW/2,rMy-ringH/2,ringW,ringH,2); coolCtx.fill(); coolCtx.stroke();
+    coolCtx.fillStyle='rgba(180,185,195,0.35)';
+    coolCtx.beginPath(); coolCtx.roundRect(rx-ringW/2+1,rMy-ringH/2+1,ringW*0.4,ringH*0.45,1); coolCtx.fill();
+    // Roller + support block
+    const rollerSz=ringW*1.4, rollerY=rMy+ringH/2+1;
+    coolCtx.fillStyle='#6a6e78'; coolCtx.strokeStyle='rgba(30,32,36,0.65)'; coolCtx.lineWidth=0.7;
+    coolCtx.beginPath(); coolCtx.ellipse(rx,rollerY+rollerSz*0.3,rollerSz*0.55,rollerSz*0.30,0,0,Math.PI*2); coolCtx.fill(); coolCtx.stroke();
+    coolCtx.fillStyle='#4a4e56';
+    coolCtx.beginPath(); coolCtx.ellipse(rx,rollerY+rollerSz*0.3,rollerSz*0.22,rollerSz*0.12,0,0,Math.PI*2); coolCtx.fill();
+    const blkW=ringW*3.8, blkH=kilnH*0.55, blkY=rollerY+rollerSz*0.65;
+    coolCtx.fillStyle='#c8cace'; coolCtx.strokeStyle='rgba(100,102,108,0.55)'; coolCtx.lineWidth=0.8;
+    coolCtx.beginPath(); coolCtx.roundRect(rx-blkW/2,blkY,blkW,blkH,2); coolCtx.fill(); coolCtx.stroke();
+    coolCtx.fillStyle='rgba(0,0,0,0.10)';
+    coolCtx.beginPath(); coolCtx.roundRect(rx-blkW/2,blkY,blkW,blkH*0.18,1); coolCtx.fill();
+  });
+
+  // ── TEMPERATURE LABELS inside zones ──
+  coolCtx.font='bold 9px JetBrains Mono'; coolCtx.textAlign='center';
+  for(let z=0;z<4;z++){
+    const zx=left+(z+0.5)*sliceW;
+    const zy=cy+kilnH*0.1;
+    const t=clamp((temps[z]-150)/(950-150),0,1);
+    coolCtx.fillStyle=t>0.5?'rgba(255,255,255,0.85)':'rgba(30,20,10,0.75)';
+    coolCtx.fillText(temps[z]+'°',zx,zy);
+  }
+  coolCtx.textAlign='left';
+
+  // ── DIRECTION ARROWS (flow left → right) ──
+  coolCtx.strokeStyle='rgba(255,255,255,0.18)'; coolCtx.lineWidth=1;
+  [0.12,0.35,0.62,0.85].forEach(frac=>{
+    const ax=left+kilnW*frac, ay=cy;
+    coolCtx.beginPath(); coolCtx.moveTo(ax,ay); coolCtx.lineTo(ax+8,ay); coolCtx.stroke();
+    coolCtx.beginPath(); coolCtx.moveTo(ax+8,ay-3); coolCtx.lineTo(ax+8,ay+3); coolCtx.lineTo(ax+13,ay); coolCtx.closePath();
+    coolCtx.fillStyle='rgba(255,255,255,0.15)'; coolCtx.fill();
+  });
+
+  // Zone labels above kiln
+  coolCtx.font='500 7px JetBrains Mono'; coolCtx.textAlign='center'; coolCtx.fillStyle='rgba(200,145,42,0.7)';
+  ['Z1','Z2','Z3','Z4'].forEach((lbl,z)=>{
+    coolCtx.fillText(lbl, left+(z+0.5)*sliceW, shellTopL-4);
+  });
+  coolCtx.textAlign='left';
+
+  // Update legend chips
+  for(let z=0;z<4;z++){
+    const sw=document.getElementById('cool-swatch-'+z);
+    const vl=document.getElementById('cool-val-'+z);
+    if(sw) sw.style.background=heatCol(temps[z]);
+    if(vl) vl.textContent=temps[z]+'°C';
+  }
+  // Update stat readouts
+  const inEl=document.getElementById('coolStatIn'), outEl=document.getElementById('coolStatOut');
+  if(inEl) inEl.textContent=temps[0]+'°C';
+  if(outEl) outEl.textContent=temps[3]+'°C';
+}
+
+function coolLoop(){
+  drawCoolKilnAnim(coolFrame);
+  coolFrame++;
+  coolAnimId=requestAnimationFrame(coolLoop);
+}
+
+function openCoolCard(){
+  stageParams.cool.zoneCount=getCoolingZoneCount();
+  const cfg=MODAL_CONFIGS['cool'];
+  if(!cfg) return;
+  // Build fields with ids prefixed cool- so we can read live values
+  const count=getCoolingZoneCount();
+  const zoneNames=['Combustion','UDD Upper Draft','DD1 Down Draft','Exit'];
+  const defaults=[900,680,380,170];
+  let fieldsHTML=`
+    <div style="margin-bottom:.8rem;padding:8px 12px;background:linear-gradient(135deg,rgba(42,122,74,0.07),rgba(26,48,87,0.05));border:1.5px solid rgba(42,122,74,0.25);border-radius:5px;">
+      <div style="font-family:'JetBrains Mono';font-size:.56rem;letter-spacing:2px;color:var(--green);text-transform:uppercase;margin-bottom:3px;">Cooling Zones Active: ${count}</div>
+      <div style="font-family:'Cormorant Garamond',serif;font-size:1rem;font-weight:700;color:var(--navy);">Enter °C for each zone — diagram updates live</div>
+    </div>
+    <div style="margin-bottom:10px;">
+      <button type="button" class="btn-add-flux" style="width:auto;display:inline-flex;" onclick="addCoolingZone();rebuildCoolFields(); return false;">＋ Add Zone</button>
+    </div>`;
+  for(let i=0;i<count;i++){
+    const val=stageParams.cool['zone'+(i+1)]||'';
+    fieldsHTML+=`
+      <div class="field-group">
+        <div class="field-label">Zone ${i+1} — ${zoneNames[i]||'Zone '+(i+1)} (°C)</div>
+        <input type="number" class="finp" id="cool-z${i+1}" value="${val}" min="50" max="1000" step="1" placeholder="${defaults[i]}°C" oninput="onCoolTempInput()">
+        <div class="input-hint">Typical: ${defaults[i]}°C</div>
+      </div>`;
+  }
+  document.getElementById('coolAnimBody').innerHTML=fieldsHTML;
+  document.getElementById('coolAnimOverlay').classList.add('open');
+  coolFrame=0;
+  if(coolAnimId) cancelAnimationFrame(coolAnimId);
+  coolLoop();
+}
+
+function rebuildCoolFields(){
+  // Rebuild the input fields after adding a zone, preserving current values
+  const count=getCoolingZoneCount();
+  const zoneNames=['Combustion','UDD Upper Draft','DD1 Down Draft','Exit'];
+  const defaults=[900,680,380,170];
+  // Read current values before rebuilding
+  const curVals=[1,2,3,4].map(n=>{const el=document.getElementById('cool-z'+n);return el?el.value:'';});
+  let fieldsHTML=`
+    <div style="margin-bottom:.8rem;padding:8px 12px;background:linear-gradient(135deg,rgba(42,122,74,0.07),rgba(26,48,87,0.05));border:1.5px solid rgba(42,122,74,0.25);border-radius:5px;">
+      <div style="font-family:'JetBrains Mono';font-size:.56rem;letter-spacing:2px;color:var(--green);text-transform:uppercase;margin-bottom:3px;">Cooling Zones Active: ${count}</div>
+      <div style="font-family:'Cormorant Garamond',serif;font-size:1rem;font-weight:700;color:var(--navy);">Enter °C for each zone — diagram updates live</div>
+    </div>
+    <div style="margin-bottom:10px;">
+      <button type="button" class="btn-add-flux" style="width:auto;display:inline-flex;" onclick="addCoolingZone();rebuildCoolFields(); return false;">＋ Add Zone</button>
+    </div>`;
+  for(let i=0;i<count;i++){
+    const val=curVals[i]||stageParams.cool['zone'+(i+1)]||'';
+    fieldsHTML+=`
+      <div class="field-group">
+        <div class="field-label">Zone ${i+1} — ${zoneNames[i]||'Zone '+(i+1)} (°C)</div>
+        <input type="number" class="finp" id="cool-z${i+1}" value="${val}" min="50" max="1000" step="1" placeholder="${defaults[i]}°C" oninput="onCoolTempInput()">
+        <div class="input-hint">Typical: ${defaults[i]}°C</div>
+      </div>`;
+  }
+  document.getElementById('coolAnimBody').innerHTML=fieldsHTML;
+}
+
+function onCoolTempInput(){
+  // No-op: the animation loop reads live values each frame automatically
+}
+
+function closeCoolCard(){
+  document.getElementById('coolAnimOverlay').classList.remove('open');
+  if(coolAnimId){cancelAnimationFrame(coolAnimId);coolAnimId=null;}
+}
+
+function saveCoolCard(){
+  const count=getCoolingZoneCount();
+  if(count>=1){const el=document.getElementById('cool-z1');if(el)stageParams.cool.zone1=el.value;}
+  if(count>=2){const el=document.getElementById('cool-z2');if(el)stageParams.cool.zone2=el.value;}
+  if(count>=3){const el=document.getElementById('cool-z3');if(el)stageParams.cool.zone3=el.value;}
+  if(count>=4){const el=document.getElementById('cool-z4');if(el)stageParams.cool.zone4=el.value;}
+  closeCoolCard();
+  updateSummaryParams();
+}
+
+document.getElementById('coolAnimOverlay').addEventListener('click',function(e){if(e.target===this)closeCoolCard();});
 
 // Load state on page load
 loadStateFromStorage();
