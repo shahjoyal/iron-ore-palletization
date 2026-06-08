@@ -361,7 +361,7 @@ input.finp{cursor:text;}
 .feed-diagram-card{
   width:300px;
   flex-shrink:0;
-  background:#fff;
+  background:linear-gradient(170deg,#f8f5f0 0%,#ffffff 55%,#f2efea 100%);
   border:1px solid rgba(200,145,42,0.22);
   border-radius:10px;
   box-shadow:0 24px 80px rgba(26,48,87,.18);
@@ -388,52 +388,15 @@ input.finp{cursor:text;}
   color:#1a3057;line-height:1.2;
 }
 
-.preview-visual-wrap{
-  flex:1;
-  position:relative;
-  min-height:280px;
-  background:#fff;
-  padding:10px;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  overflow:hidden;
-}
-
-.preview-stage-img{
-  width:100%;
-  height:100%;
-  object-fit:contain;
-  display:block;
-  background:#fff;
-  border-radius:8px;
-  animation:previewFloat 6s ease-in-out infinite;
-  transform-origin:center center;
-}
-
-.preview-stage-canvas{
-  position:absolute;
-  inset:0;
-  width:100%;
-  height:100%;
-  display:none !important;
-}
-
-@keyframes previewFloat{
-  0%,100%{transform:translateY(0) scale(1);}
-  50%{transform:translateY(-2px) scale(1.01);}
-}
-
 .feed-diagram-canvas-wrap{
   flex:1;
   position:relative;
   min-height:280px;
-  background:#fff;
 }
 #feedMiniCanvas{
   position:absolute;inset:0;
   width:100%;height:100%;
-  display:none !important;
+  display:block;
 }
 
 .feed-diagram-footer{
@@ -466,9 +429,7 @@ input.finp{cursor:text;}
 }
 
 @media(max-width:880px){
-  .feed-anim-panels{flex-direction:column;align-items:stretch;}
-  .feed-diagram-card{width:100%;max-width:min(520px,92vw);align-self:stretch;}
-  .feed-diagram-canvas-wrap{min-height:220px;}
+  .feed-diagram-card{display:none;}
 }
 @media(max-width:560px){
   .feed-anim-card{width:96vw;}
@@ -530,7 +491,7 @@ input.finp{cursor:text;}
 .grind-diagram-card{
   width:320px;
   flex-shrink:0;
-  background:#fff;
+  background:linear-gradient(170deg,#f8f5f0 0%,#ffffff 55%,#f2efea 100%);
   border:1px solid rgba(200,145,42,0.22);
   border-radius:10px;
   box-shadow:0 24px 80px rgba(26,48,87,.18);
@@ -557,10 +518,9 @@ input.finp{cursor:text;}
 
 .grind-diagram-canvas-wrap{
   flex:1;position:relative;min-height:300px;
-  background:#fff;
 }
 #grindMiniCanvas{
-  position:absolute;inset:0;width:100%;height:100%;display:none !important;
+  position:absolute;inset:0;width:100%;height:100%;display:block;
 }
 
 .grind-diagram-footer{
@@ -586,9 +546,7 @@ input.finp{cursor:text;}
 .grind-save-indicator.show{animation:oreSaveBurst 2s ease forwards;}
 
 @media(max-width:920px){
-  .grind-anim-panels{flex-direction:column;align-items:stretch;}
-  .grind-diagram-card{width:100%;max-width:min(520px,92vw);align-self:stretch;}
-  .grind-diagram-canvas-wrap{min-height:220px;}
+  .grind-diagram-card{display:none;}
 }
 @media(max-width:560px){
   .grind-anim-card{width:96vw;}
@@ -635,7 +593,7 @@ input.finp{cursor:text;}
 /* RIGHT thickener diagram card */
 .thick-diagram-card{
   width:360px;flex-shrink:0;
-  background:#fff;
+  background:linear-gradient(170deg,#f8f5f0 0%,#ffffff 55%,#f2efea 100%);
   border:1px solid rgba(200,145,42,0.22);
   border-radius:10px;box-shadow:0 24px 80px rgba(26,48,87,.18);
   display:flex;flex-direction:column;align-self:stretch;overflow:hidden;
@@ -646,8 +604,8 @@ input.finp{cursor:text;}
 .thick-diagram-header{padding:1rem 1.2rem .8rem;border-bottom:1px solid rgba(200,145,42,0.15);flex-shrink:0;}
 .thick-diagram-tag{font-family:'JetBrains Mono';font-size:.52rem;letter-spacing:2.5px;color:rgba(200,145,42,.75);text-transform:uppercase;margin-bottom:5px;}
 .thick-diagram-title{font-family:'Cormorant Garamond',serif;font-size:1.2rem;font-weight:700;color:#1a3057;line-height:1.2;}
-.thick-diagram-canvas-wrap{flex:1;position:relative;min-height:360px;background:#fff;}
-#thickMiniCanvas{position:absolute;inset:0;width:100%;height:100%;display:none !important;}
+.thick-diagram-canvas-wrap{flex:1;position:relative;min-height:360px;}
+#thickMiniCanvas{position:absolute;inset:0;width:100%;height:100%;display:block;}
 .thick-diagram-footer{padding:.7rem 1.1rem .9rem;border-top:1px solid rgba(200,145,42,0.12);flex-shrink:0;}
 .thick-rpm-label{font-family:'JetBrains Mono';font-size:.50rem;letter-spacing:1.5px;color:rgba(90,74,48,0.65);text-transform:uppercase;margin-bottom:5px;}
 .thick-rpm-bar-bg{height:5px;background:rgba(200,145,42,0.12);border-radius:3px;overflow:hidden;}
@@ -661,11 +619,7 @@ input.finp{cursor:text;}
   opacity:0;pointer-events:none;
 }
 .thick-save-indicator.show{animation:oreSaveBurst 2s ease forwards;}
-@media(max-width:980px){
-  .thick-anim-panels{flex-direction:column;align-items:stretch;}
-  .thick-diagram-card{width:100%;max-width:min(520px,92vw);align-self:stretch;}
-  .thick-diagram-canvas-wrap{min-height:240px;}
-}
+@media(max-width:980px){.thick-diagram-card{display:none;}}
 @media(max-width:560px){.thick-anim-card{width:96vw;}}
 
 /* ── FILTER CAKE TWO-PANEL OVERLAY ── */
@@ -865,8 +819,7 @@ input.finp{cursor:text;}
         <div class="feed-diagram-title">Iron Ore Feed Hopper</div>
       </div>
       <div class="feed-diagram-canvas-wrap">
-        <img src="img1.jpeg" alt="Iron Ore Feed Hopper preview" class="preview-stage-img">
-        <canvas id="feedMiniCanvas" class="preview-stage-canvas"></canvas>
+        <canvas id="feedMiniCanvas"></canvas>
         <div class="ore-save-indicator" id="oreSaveIndicator">✓ Parameters Saved</div>
       </div>
       <div class="feed-diagram-footer">
@@ -904,8 +857,7 @@ input.finp{cursor:text;}
         <div class="grind-diagram-title">Ball Mill-Grinding and mixing</div>
       </div>
       <div class="grind-diagram-canvas-wrap">
-        <img src="img2.jpeg" alt="Ball mill grinding preview" class="preview-stage-img">
-        <canvas id="grindMiniCanvas" class="preview-stage-canvas"></canvas>
+        <canvas id="grindMiniCanvas"></canvas>
         <div class="grind-save-indicator" id="grindSaveIndicator">✓ Parameters Saved</div>
       </div>
       <div class="grind-diagram-footer">
@@ -941,8 +893,7 @@ input.finp{cursor:text;}
         <div class="thick-diagram-title">Thickener — Settling & Rake</div>
       </div>
       <div class="thick-diagram-canvas-wrap">
-        <img src="img3.jpeg" alt="Thickener preview" class="preview-stage-img">
-        <canvas id="thickMiniCanvas" class="preview-stage-canvas"></canvas>
+        <canvas id="thickMiniCanvas"></canvas>
         <div class="thick-save-indicator" id="thickSaveIndicator">✓ Parameters Saved</div>
       </div>
       <div class="thick-diagram-footer">
@@ -1386,6 +1337,66 @@ const STAGES=[
   {id:'thickner', label:'THICKENER',           tag:'STAGE 03',shape:'conetank', color:'#2d5fa6',step:2},
 ];
 
+// ═══════ STAGE IMAGE PREVIEW ASSETS ═══════
+// Supports both typed filenames with and without spaces so the page keeps working
+// even if the root-folder filenames are entered a little differently.
+const stagePreviewSources = {
+  feed: ['img1.jpeg', 'img 1.jpeg'],
+  grind: ['img2.jpeg', 'img2 .jpeg', 'img 2.jpeg'],
+  thickner: ['img3.jpeg', 'img 3.jpeg'],
+};
+const stagePreviewImages = {};
+const stagePreviewLoaded = { feed:false, grind:false, thickner:false };
+
+function createStagePreviewImage(key){
+  const img = new Image();
+  const sources = stagePreviewSources[key] || [];
+  let idx = 0;
+
+  const tryNext = () => {
+    if (idx >= sources.length) return;
+    img.src = sources[idx++];
+  };
+
+  img.onload = () => {
+    stagePreviewLoaded[key] = true;
+    // Redraw the main canvas when an image becomes available.
+    if (typeof draw === 'function') {
+      try { draw(simFrame, simStep); } catch(e) {}
+    }
+  };
+  img.onerror = () => {
+    if (idx < sources.length) tryNext();
+  };
+  tryNext();
+  stagePreviewImages[key] = img;
+}
+
+['feed','grind','thickner'].forEach(createStagePreviewImage);
+
+function drawContainImage(img, x, y, w, h, inset = 0.06){
+  if (!img || !img.complete || !img.naturalWidth) return false;
+  const padX = w * inset;
+  const padY = h * inset;
+  const boxX = x + padX;
+  const boxY = y + padY;
+  const boxW = w - padX * 2;
+  const boxH = h - padY * 2;
+  if (boxW <= 0 || boxH <= 0) return false;
+
+  const scale = Math.min(boxW / img.naturalWidth, boxH / img.naturalHeight);
+  const dw = img.naturalWidth * scale;
+  const dh = img.naturalHeight * scale;
+  const dx = boxX + (boxW - dw) / 2;
+  const dy = boxY + (boxH - dh) / 2;
+  ctx.save();
+  ctx.imageSmoothingEnabled = true;
+  ctx.imageSmoothingQuality = 'high';
+  ctx.drawImage(img, dx, dy, dw, dh);
+  ctx.restore();
+  return true;
+}
+
 // ═══════ CANVAS ═══════
 const canvas=document.getElementById('processCanvas');
 const ctx=canvas.getContext('2d');
@@ -1415,7 +1426,7 @@ function draw(frame,activeStep){
   const slotW=(W-padX*2)/n;
   const midY=H*0.43;
   const mH=H*0.50;
-  const mW=slotW*0.68;
+  const mW=Math.min(slotW*0.88, slotW-20);
   const labelY=midY+mH*0.55+18;
 
   if(activeStep>=0){
@@ -1708,7 +1719,6 @@ function drawMachineShape(shape,cx,cy,mW,mH,col,strokeCol,strokeW,isActive,isDon
   ctx.fillStyle=col; ctx.strokeStyle=strokeCol; ctx.lineWidth=strokeW;
   switch(shape){
     case 'hopper':{
-      // Real pellet plant hopper: wide open brim → steep V-funnel → narrow vertical chute
       const brimW=mW*0.82, brimH=mH*0.06;
       const brimTop=cy-mH*0.40;
       const hopTop=brimTop+brimH;
@@ -1717,345 +1727,44 @@ function drawMachineShape(shape,cx,cy,mW,mH,col,strokeCol,strokeW,isActive,isDon
       const chuteH=mH*0.10;
       const neckTop=hopTop+funnelH;
       const neckBot=neckTop+chuteH;
-
-      // V-funnel gradient (dark steel, left-lit)
-      const fGrad=ctx.createLinearGradient(cx-brimW/2,0,cx+brimW/2,0);
-      fGrad.addColorStop(0,'#2a3340');
-      fGrad.addColorStop(0.10,'#4a5a68');
-      fGrad.addColorStop(0.30,'#6a7a88');
-      fGrad.addColorStop(0.50,'#8a9aaa');
-      fGrad.addColorStop(0.70,'#6a7a88');
-      fGrad.addColorStop(0.90,'#4a5a68');
-      fGrad.addColorStop(1,'#2a3340');
-      ctx.beginPath();
-      ctx.moveTo(cx-brimW/2,hopTop); ctx.lineTo(cx+brimW/2,hopTop);
-      ctx.lineTo(cx+neckW/2,neckTop); ctx.lineTo(cx-neckW/2,neckTop);
-      ctx.closePath();
-      ctx.fillStyle=fGrad; ctx.fill();
-
-      // Panel seam lines on funnel
-      ctx.strokeStyle='rgba(255,255,255,0.06)'; ctx.lineWidth=0.7;
-      for(let p=1;p<=3;p++){
-        const t=p/4;
-        const lx=cx-brimW/2+(brimW/2-neckW/2)*t;
-        const rx=cx+brimW/2-(brimW/2-neckW/2)*t;
-        const py=hopTop+funnelH*t;
-        ctx.beginPath(); ctx.moveTo(lx,py); ctx.lineTo(rx,py); ctx.stroke();
-      }
-      // Left highlight / right shadow
-      ctx.strokeStyle='rgba(200,220,240,0.16)'; ctx.lineWidth=1.3;
-      ctx.beginPath(); ctx.moveTo(cx-brimW/2+2,hopTop+2); ctx.lineTo(cx-neckW/2+1,neckTop-1); ctx.stroke();
-      ctx.strokeStyle='rgba(0,0,0,0.22)'; ctx.lineWidth=1.3;
-      ctx.beginPath(); ctx.moveTo(cx+brimW/2-2,hopTop+2); ctx.lineTo(cx+neckW/2-1,neckTop-1); ctx.stroke();
-
-      // Funnel outer stroke
-      ctx.strokeStyle=strokeCol; ctx.lineWidth=strokeW;
-      ctx.beginPath();
-      ctx.moveTo(cx-brimW/2,hopTop); ctx.lineTo(cx+brimW/2,hopTop);
-      ctx.lineTo(cx+neckW/2,neckTop); ctx.lineTo(cx-neckW/2,neckTop);
-      ctx.closePath(); ctx.stroke();
-
-      // Vertical chute
-      const cGrad=ctx.createLinearGradient(cx-neckW/2,0,cx+neckW/2,0);
-      cGrad.addColorStop(0,'#2a3340'); cGrad.addColorStop(0.5,'#5a6a78'); cGrad.addColorStop(1,'#2a3340');
-      ctx.fillStyle=cGrad; ctx.fillRect(cx-neckW/2,neckTop,neckW,chuteH);
-      ctx.strokeStyle=strokeCol; ctx.lineWidth=strokeW;
-      ctx.strokeRect(cx-neckW/2,neckTop,neckW,chuteH);
-
-      // Wide brim rim
-      const rimG=ctx.createLinearGradient(cx-brimW/2-3,brimTop,cx+brimW/2+3,brimTop+brimH);
-      rimG.addColorStop(0,'#3a4450'); rimG.addColorStop(0.4,'#7a8a98'); rimG.addColorStop(0.6,'#aabbc8'); rimG.addColorStop(1,'#3a4450');
-      ctx.fillStyle=rimG;
-      ctx.beginPath(); ctx.roundRect(cx-brimW/2-3,brimTop,brimW+6,brimH,2); ctx.fill();
-      ctx.strokeStyle='rgba(255,255,255,0.13)'; ctx.lineWidth=0.7;
-      ctx.beginPath(); ctx.roundRect(cx-brimW/2-3,brimTop,brimW+6,brimH,2); ctx.stroke();
-
-      // Support legs (small, below chute)
-      const legW=4, legH2=mH*0.10;
-      const l1=cx-brimW*0.32, l2=cx+brimW*0.32;
-      ctx.fillStyle='#3a4450';
-      ctx.fillRect(l1-legW/2,neckBot,legW,legH2);
-      ctx.fillRect(l2-legW/2,neckBot,legW,legH2);
-
-      // Ore pile inside (visible through open top)
+      const boxX=cx-brimW/2, boxY=brimTop, boxW=brimW, boxH=neckBot-brimTop;
       ctx.save();
-      ctx.beginPath();
-      ctx.moveTo(cx-brimW/2+3,hopTop); ctx.lineTo(cx+brimW/2-3,hopTop);
-      ctx.lineTo(cx+neckW/2,neckTop); ctx.lineTo(cx-neckW/2,neckTop);
-      ctx.closePath(); ctx.clip();
-      const oreG=ctx.createRadialGradient(cx,hopTop+funnelH*0.3,funnelH*0.05,cx,hopTop+funnelH*0.3,brimW*0.45);
-      oreG.addColorStop(0,'rgba(110,70,38,0.85)'); oreG.addColorStop(0.7,'rgba(65,42,22,0.80)'); oreG.addColorStop(1,'rgba(35,22,10,0)');
-      ctx.fillStyle=oreG;
-      ctx.beginPath(); ctx.ellipse(cx,hopTop+funnelH*0.35,brimW*0.42,funnelH*0.55,0,0,Math.PI*2); ctx.fill();
+      ctx.fillStyle='#fff';
+      ctx.fillRect(boxX, boxY, boxW, boxH);
+      drawContainImage(stagePreviewImages.feed, boxX, boxY, boxW, boxH, 0.01);
       ctx.restore();
-
-      // Falling ore FROM ABOVE when active
-      if(lit){
-        const numOre=8;
-        for(let p=0;p<numOre;p++){
-          const t=((frame*1.8+p*(55/numOre))%55)/55;
-          const sx=cx-brimW*0.38+p*(brimW*0.76/(numOre-1));
-          const startY=brimTop-mH*0.10;
-          const endY=hopTop+funnelH*0.45;
-          const fy=startY+t*(endY-startY);
-          const alpha=t<0.15?(t/0.15):(t>0.7?(1-(t-0.7)/0.3):1)*0.85;
-          const r=1.5+p%3*0.5;
-          ctx.beginPath(); ctx.arc(sx,fy,r,0,Math.PI*2);
-          ctx.fillStyle=`rgba(175,98,38,${alpha.toFixed(2)})`; ctx.fill();
-        }
-      }
-      return{x:cx-brimW/2,y:brimTop,w:brimW,h:neckBot-brimTop};
+      return{x:boxX,y:boxY,w:boxW,h:boxH};
     }
     case 'drum':{
-      // ── BALL MILL — proper horizontal cylinder with rotation ──
-      const bmRx = mW * 0.44;   // half-length
-      const bmRy = mH * 0.30;   // vertical radius
+      const bmRx = mW * 0.44;
+      const bmRy = mH * 0.30;
       const left  = cx - bmRx;
       const right = cx + bmRx;
-      const rotSpeed = isActive ? 0.022 : 0.008;
-      const rot = frame * rotSpeed;
-
       const pillarH = bmRy * 1.4;
-
-      // Cylinder barrel shell
-      const shellGrad = ctx.createLinearGradient(cx, cy-bmRy, cx, cy+bmRy);
-      shellGrad.addColorStop(0,   '#8a9098');
-      shellGrad.addColorStop(0.22,'#b0b8c0');
-      shellGrad.addColorStop(0.50,'#c8cdd4');
-      shellGrad.addColorStop(0.72,'#9098a0');
-      shellGrad.addColorStop(1,   '#505560');
-      ctx.fillStyle = shellGrad;
-      ctx.strokeStyle = 'rgba(30,34,42,0.55)'; ctx.lineWidth = 1;
-      ctx.beginPath();
-      ctx.moveTo(left,  cy - bmRy);
-      ctx.lineTo(right, cy - bmRy);
-      ctx.lineTo(right, cy + bmRy);
-      ctx.lineTo(left,  cy + bmRy);
-      ctx.closePath();
-      ctx.fill(); ctx.stroke();
-
-      // Top sheen
-      const topHl = ctx.createLinearGradient(cx, cy-bmRy, cx, cy-bmRy*0.4);
-      topHl.addColorStop(0,'rgba(255,255,255,0.20)'); topHl.addColorStop(1,'rgba(255,255,255,0)');
-      ctx.fillStyle = topHl;
-      ctx.fillRect(left, cy-bmRy, bmRx*2, bmRy*0.6);
-
-      // Bottom shadow
-      const botSh = ctx.createLinearGradient(cx, cy+bmRy*0.5, cx, cy+bmRy);
-      botSh.addColorStop(0,'rgba(0,0,0,0)'); botSh.addColorStop(1,'rgba(0,0,0,0.38)');
-      ctx.fillStyle = botSh;
-      ctx.fillRect(left, cy+bmRy*0.5, bmRx*2, bmRy*0.5);
-
-
-
-      // Riding rings
-      [cx-bmRx*0.44, cx+bmRx*0.44].forEach(rpx=>{
-        const rw2=bmRx*0.055;
-        const rg=ctx.createLinearGradient(rpx,cy-bmRy,rpx,cy+bmRy);
-        rg.addColorStop(0,'#c8ccd4'); rg.addColorStop(0.5,'#eceef2'); rg.addColorStop(1,'#8a8e96');
-        ctx.fillStyle=rg; ctx.strokeStyle='rgba(30,34,42,0.5)'; ctx.lineWidth=0.8;
-        ctx.beginPath(); ctx.roundRect(rpx-rw2/2, cy-bmRy-2, rw2, bmRy*2+4, 1); ctx.fill(); ctx.stroke();
-      });
-
-      // End caps with rotating bolts
-      const drawMainEndCap = (ecx, ecRx2, ecRy2, rotOff) => {
-        const cg = ctx.createRadialGradient(ecx-ecRx2*0.15, cy-ecRy2*0.15, 0, ecx, cy, Math.max(ecRx2,ecRy2));
-        cg.addColorStop(0,'#8a8e98'); cg.addColorStop(0.5,'#606470'); cg.addColorStop(1,'#3c3f48');
-        ctx.save();
-        ctx.fillStyle=cg; ctx.strokeStyle='rgba(20,22,28,0.70)'; ctx.lineWidth=1.2;
-        ctx.beginPath(); ctx.ellipse(ecx, cy, ecRx2, ecRy2, 0, 0, Math.PI*2); ctx.fill(); ctx.stroke();
-        // Inner rings
-        [0.62, 0.38].forEach(f=>{
-          ctx.strokeStyle='rgba(100,105,118,0.55)'; ctx.lineWidth=0.8;
-          ctx.beginPath(); ctx.ellipse(ecx, cy, ecRx2*f, ecRy2*f, 0, 0, Math.PI*2); ctx.stroke();
-        });
-        // Rotating bolts
-        const bCnt=8;
-        for(let b=0;b<bCnt;b++){
-          const ba=(b/bCnt)*Math.PI*2+rotOff;
-          const bx=ecx+Math.cos(ba)*ecRx2*0.80;
-          const by=cy +Math.sin(ba)*ecRy2*0.80;
-          const br=Math.min(ecRx2,ecRy2)*0.10;
-          ctx.beginPath(); ctx.arc(bx,by,br,0,Math.PI*2);
-          ctx.fillStyle='#c0c4cc'; ctx.fill();
-          ctx.strokeStyle='#3a3d48'; ctx.lineWidth=0.6; ctx.stroke();
-          ctx.strokeStyle='#8a8e96'; ctx.lineWidth=0.5;
-          ctx.beginPath(); ctx.moveTo(bx-br*0.5,by); ctx.lineTo(bx+br*0.5,by); ctx.stroke();
-          ctx.beginPath(); ctx.moveTo(bx,by-br*0.5); ctx.lineTo(bx,by+br*0.5); ctx.stroke();
-        }
-        // Hub
-        ctx.beginPath(); ctx.arc(ecx, cy, Math.min(ecRx2,ecRy2)*0.20, 0, Math.PI*2);
-        ctx.fillStyle='#505460'; ctx.fill();
-        ctx.strokeStyle='rgba(20,22,28,0.55)'; ctx.lineWidth=0.9; ctx.stroke();
-        ctx.restore();
-      };
-
-      const ecRx = bmRy*0.18, ecRy = bmRy;
-      drawMainEndCap(right, ecRx, ecRy, rot);
-      drawMainEndCap(left,  ecRx, ecRy, rot + Math.PI*0.25);
-
-      // Trunnion pipes
-      const pipeH2 = bmRy*0.36, pipeLen2 = bmRx*0.18;
-      [{px:left,dir:-1},{px:right,dir:1}].forEach(({px,dir})=>{
-        const pg2=ctx.createLinearGradient(px, 0, px+dir*pipeLen2, 0);
-        pg2.addColorStop(0,'#606878'); pg2.addColorStop(0.5,'#90989e'); pg2.addColorStop(1,'#484e58');
-        ctx.fillStyle=pg2; ctx.strokeStyle='rgba(30,34,42,0.45)'; ctx.lineWidth=0.7;
-        ctx.beginPath(); ctx.roundRect(dir>0?px:px-pipeLen2, cy-pipeH2/2, pipeLen2, pipeH2, 2); ctx.fill(); ctx.stroke();
-      });
-
-      // Drive motor
-      const mX=cx-bmRx*0.96, mY=cy+bmRy*0.78, mW2=bmRx*0.26, mH2=bmRy*0.40;
-      const motorG=ctx.createLinearGradient(mX,mY,mX+mW2,mY+mH2);
-      motorG.addColorStop(0,'#1e3d6a'); motorG.addColorStop(0.5,'#2a5898'); motorG.addColorStop(1,'#162d50');
-      ctx.fillStyle=motorG; ctx.strokeStyle='rgba(18,36,72,0.6)'; ctx.lineWidth=0.9;
-      ctx.beginPath(); ctx.roundRect(mX,mY,mW2,mH2,3); ctx.fill(); ctx.stroke();
-      // spinning dot on motor
-      const mdAng=frame*rotSpeed*4;
-      const mdx=mX+mW2/2+Math.cos(mdAng)*mW2*0.26;
-      const mdy=mY+mH2*0.3+Math.sin(mdAng)*mH2*0.20;
-      ctx.fillStyle='#ffcc44';
-      ctx.beginPath(); ctx.arc(mdx,mdy,1.8,0,Math.PI*2); ctx.fill();
-
-      // Rotation arc indicator
-      const arcR=bmRy*1.18;
-      ctx.save(); ctx.globalAlpha=0.30+0.08*Math.sin(frame*0.07);
-      ctx.strokeStyle='#ffc840'; ctx.lineWidth=1.4; ctx.setLineDash([3,5]);
-      ctx.beginPath(); ctx.arc(cx,cy,arcR,-Math.PI*0.70,Math.PI*0.70); ctx.stroke();
-      ctx.setLineDash([]); ctx.restore();
-
-      // Feed arrow (left)
-      ctx.save(); ctx.globalAlpha=0.65;
-      ctx.strokeStyle='#4aacff'; ctx.lineWidth=1.8; ctx.lineCap='round';
-      ctx.beginPath(); ctx.moveTo(left-bmRx*0.22,cy); ctx.lineTo(left-bmRx*0.04,cy); ctx.stroke();
-      ctx.fillStyle='#4aacff';
-      ctx.beginPath(); ctx.moveTo(left-bmRx*0.04,cy-3.5); ctx.lineTo(left+bmRx*0.02,cy); ctx.lineTo(left-bmRx*0.04,cy+3.5); ctx.closePath(); ctx.fill();
+      const boxX = left - bmRx * 0.28;
+      const boxY = cy - bmRy * 1.15;
+      const boxW = bmRx * 2 + bmRx * 0.56;
+      const boxH = bmRy * 2.3 + pillarH;
+      ctx.save();
+      ctx.fillStyle='#fff';
+      ctx.fillRect(boxX, boxY, boxW, boxH);
+      drawContainImage(stagePreviewImages.grind, boxX, boxY, boxW, boxH, 0.01);
       ctx.restore();
-
-      // Discharge arrow (right)
-      ctx.save(); ctx.globalAlpha=0.60;
-      ctx.strokeStyle='#ffbb44'; ctx.lineWidth=1.8; ctx.lineCap='round';
-      ctx.beginPath(); ctx.moveTo(right+bmRx*0.04,cy); ctx.lineTo(right+bmRx*0.22,cy); ctx.stroke();
-      ctx.fillStyle='#ffbb44';
-      ctx.beginPath(); ctx.moveTo(right+bmRx*0.16,cy-3.5); ctx.lineTo(right+bmRx*0.24,cy); ctx.lineTo(right+bmRx*0.16,cy+3.5); ctx.closePath(); ctx.fill();
-      ctx.restore();
-
-      return{x:left-bmRx*0.28,y:cy-bmRy*1.15,w:bmRx*2+bmRx*0.56,h:bmRy*2.3+pillarH};
+      return{x:boxX,y:boxY,w:boxW,h:boxH};
     }
     case 'conetank':{
       const rr=mW*0.38,th=mH*0.72;
       const top=cy-th*0.48, cylBot=cy+th*0.18, coneBot=cy+th*0.52;
-      // ── Slurry layers inside (drawn before walls) ──
+      const boxX = cx - rr;
+      const boxY = top - 14;
+      const boxW = rr * 2;
+      const boxH = th + 24;
       ctx.save();
-      ctx.beginPath();
-      ctx.moveTo(cx-rr+2,top+4); ctx.lineTo(cx+rr-2,top+4);
-      ctx.lineTo(cx+rr-2,cylBot); ctx.lineTo(cx,coneBot-2); ctx.lineTo(cx-rr+2,cylBot);
-      ctx.closePath();
-      // Dense bottom layer
-      const slurryGrad=ctx.createLinearGradient(cx,cylBot,cx,coneBot);
-      slurryGrad.addColorStop(0,'rgba(120,60,20,0.85)');
-      slurryGrad.addColorStop(1,'rgba(80,30,10,0.95)');
-      ctx.fillStyle=slurryGrad; ctx.fill();
-      // Middle dilute layer
-      const midGrad=ctx.createLinearGradient(cx,top+th*0.22,cx,cylBot);
-      midGrad.addColorStop(0,'rgba(160,100,50,0.55)');
-      midGrad.addColorStop(1,'rgba(120,65,25,0.75)');
-      ctx.beginPath();
-      ctx.moveTo(cx-rr+2,top+th*0.22); ctx.lineTo(cx+rr-2,top+th*0.22);
-      ctx.lineTo(cx+rr-2,cylBot); ctx.lineTo(cx-rr+2,cylBot); ctx.closePath();
-      ctx.fillStyle=midGrad; ctx.fill();
-      // Top clear water
-      const waterGrad=ctx.createLinearGradient(cx,top+4,cx,top+th*0.22);
-      waterGrad.addColorStop(0,'rgba(140,180,220,0.35)');
-      waterGrad.addColorStop(1,'rgba(160,110,60,0.45)');
-      ctx.beginPath();
-      ctx.moveTo(cx-rr+2,top+4); ctx.lineTo(cx+rr-2,top+4);
-      ctx.lineTo(cx+rr-2,top+th*0.22); ctx.lineTo(cx-rr+2,top+th*0.22); ctx.closePath();
-      ctx.fillStyle=waterGrad; ctx.fill();
-      // Settling particles
-      for(let p=0;p<5;p++){
-        const px=cx-rr*0.5+(p/4)*rr; const py=(top+th*0.08)+(((frame*0.4+p*17)%(th*0.35)));
-        ctx.beginPath(); ctx.arc(px,py,1.2,0,Math.PI*2);
-        ctx.fillStyle='rgba(160,90,40,0.6)'; ctx.fill();
-      }
+      ctx.fillStyle = '#fff';
+      ctx.fillRect(boxX, boxY, boxW, boxH);
+      drawContainImage(stagePreviewImages.thickner, boxX, boxY, boxW, boxH, 0.01);
       ctx.restore();
-      // ── Tank walls ──
-      const wallGrad=ctx.createLinearGradient(cx-rr,0,cx+rr,0);
-      wallGrad.addColorStop(0,'rgba(45,95,166,0.7)');
-      wallGrad.addColorStop(0.5,'rgba(65,120,195,0.5)');
-      wallGrad.addColorStop(1,'rgba(45,95,166,0.7)');
-      ctx.fillStyle=wallGrad;
-      ctx.strokeStyle=stage.color; ctx.lineWidth=1.5;
-      ctx.beginPath(); ctx.moveTo(cx-rr,top); ctx.lineTo(cx+rr,top); ctx.lineTo(cx+rr,cylBot); ctx.lineTo(cx,coneBot); ctx.lineTo(cx-rr,cylBot); ctx.closePath();
-      ctx.stroke();
-      // ── Top ellipse rim ──
-      ctx.beginPath(); ctx.ellipse(cx,top,rr,rr*0.14,0,0,Math.PI*2);
-      ctx.strokeStyle=stage.color; ctx.lineWidth=1.5; ctx.stroke();
-      // ── Bridge / truss ──
-      ctx.save(); ctx.strokeStyle='rgba(40,180,80,0.85)'; ctx.lineWidth=2.5;
-      ctx.beginPath(); ctx.moveTo(cx-rr,top-2); ctx.lineTo(cx+rr,top-2); ctx.stroke();
-      ctx.lineWidth=1; ctx.strokeStyle='rgba(40,180,80,0.5)';
-      for(let b=-1;b<=1;b+=2){ctx.beginPath();ctx.moveTo(cx+b*rr*0.5,top-2);ctx.lineTo(cx,top-7);ctx.stroke();}
-      ctx.restore();
-      // ── Central shaft ──
-      const shaftW=rr*0.08;
-      const shaftGrad=ctx.createLinearGradient(cx-shaftW,0,cx+shaftW,0);
-      shaftGrad.addColorStop(0,'#aaaaaa'); shaftGrad.addColorStop(0.5,'#eeeeee'); shaftGrad.addColorStop(1,'#888888');
-      ctx.fillStyle=shaftGrad;
-      ctx.fillRect(cx-shaftW/2,top-10,shaftW,coneBot-top+10);
-      // ── Rake arms rotating ──
-      ctx.save(); ctx.translate(cx,cylBot-th*0.1); ctx.rotate(isActive?-frame*0.018:-0.3);
-      ctx.strokeStyle='rgba(40,180,80,0.8)'; ctx.lineWidth=2;
-      for(let a=0;a<4;a++){
-        const ang=a*Math.PI/2;
-        const len=rr*(a%2===0?0.82:0.58);
-        ctx.beginPath(); ctx.moveTo(0,0);
-        ctx.lineTo(Math.cos(ang)*len,Math.sin(ang)*len*0.3); ctx.stroke();
-        // teeth
-        for(let t=1;t<=3;t++){
-          const tx=Math.cos(ang)*len*(t/3.5);
-          const ty=Math.sin(ang)*len*0.3*(t/3.5);
-          ctx.beginPath(); ctx.moveTo(tx,ty); ctx.lineTo(tx,ty+4);
-          ctx.strokeStyle='rgba(40,180,80,0.5)'; ctx.lineWidth=1; ctx.stroke();
-          ctx.strokeStyle='rgba(40,180,80,0.8)'; ctx.lineWidth=2;
-        }
-      }
-      ctx.restore();
-      // ── Motor box top right ──
-      ctx.save(); ctx.globalAlpha=0.85;
-      ctx.fillStyle='#2a3a5a'; ctx.strokeStyle='rgba(60,120,200,0.5)'; ctx.lineWidth=1;
-      ctx.beginPath(); ctx.roundRect(cx+rr-16,top-14,14,10,2); ctx.fill(); ctx.stroke();
-      ctx.fillStyle='rgba(255,200,80,0.8)'; ctx.font='4px sans-serif'; ctx.textAlign='center';
-      ctx.fillText('M',cx+rr-9,top-7);
-      ctx.restore();
-      // ── Safety railing ──
-      ctx.save(); ctx.strokeStyle='rgba(220,180,60,0.65)'; ctx.lineWidth=1.2;
-      ctx.beginPath(); ctx.ellipse(cx,top,rr+3,rr*0.14+1,0,0,Math.PI*2); ctx.stroke();
-      for(let r=-1;r<=1;r+=2){ctx.beginPath();ctx.moveTo(cx+r*(rr+3),top);ctx.lineTo(cx+r*(rr+3),top-7);ctx.stroke();}
-      ctx.restore();
-      // ── Feed inlet pipe ──
-      ctx.save(); ctx.strokeStyle='rgba(160,100,50,0.8)'; ctx.lineWidth=3; ctx.lineCap='round';
-      ctx.beginPath(); ctx.moveTo(cx-rr-12,cy-th*0.1); ctx.lineTo(cx-rr,cy-th*0.1); ctx.stroke();
-      if(isActive){
-        const fp=((frame*1.5)%14); ctx.beginPath(); ctx.arc(cx-rr-fp,cy-th*0.1,2,0,Math.PI*2);
-        ctx.fillStyle='rgba(160,90,40,0.75)'; ctx.fill();
-      }
-      ctx.restore();
-      // ── Overflow water at top edge (animated) ──
-      if(isActive){
-        ctx.save(); ctx.globalAlpha=0.6;
-        const wf=((frame*0.8)%8); ctx.strokeStyle='rgba(120,180,240,0.7)'; ctx.lineWidth=1.5;
-        ctx.beginPath(); ctx.moveTo(cx+rr,top+5+wf); ctx.lineTo(cx+rr+8,top+5+wf); ctx.stroke();
-        ctx.restore();
-      }
-      // ── Underflow discharge bottom ──
-      ctx.save(); ctx.strokeStyle='rgba(100,45,15,0.9)'; ctx.lineWidth=3; ctx.lineCap='round';
-      ctx.beginPath(); ctx.moveTo(cx,coneBot); ctx.lineTo(cx,coneBot+10); ctx.stroke();
-      if(isActive){
-        const uf=((frame*1.2)%10); ctx.beginPath(); ctx.arc(cx+(uf-5)*0.3,coneBot+4+uf*0.5,2,0,Math.PI*2);
-        ctx.fillStyle='rgba(100,40,10,0.8)'; ctx.fill();
-      }
-      ctx.restore();
-      return{x:cx-rr,y:top-14,w:rr*2,h:th+24};
+      return{x:boxX,y:boxY,w:boxW,h:boxH};
     }
     case 'press':{
       const fw=mW*0.56, fh=mH*0.60; const top=cy-fh/2;

@@ -2947,18 +2947,99 @@ function drawMachineShape(shape,cx,cy,mW,mH,col,strokeCol,strokeW,isActive,isDon
       return{x:bx, y:Math.min(p2.y,p3.y), w:sw, h:Math.abs(p0.y - Math.min(p2.y,p3.y))+thk*0.1};
     }
     case 'furnace':{
-      const fw=mW*0.50,fh=mH*0.72; const top=cy-fh/2;
-      ctx.beginPath(); ctx.roundRect(cx-fw/2,top,fw,fh,3); ctx.fill(); ctx.stroke();
-      const fg=safeRadialGradient(ctx,cx,cy,0,cx,cy,fw*0.65);
-      fg.addColorStop(0,'rgba(255,150,30,0.5)'); fg.addColorStop(1,'rgba(200,60,0,0)');
-      ctx.fillStyle=fg; ctx.beginPath(); ctx.ellipse(cx,cy,fw*0.52,fh*0.32,0,0,Math.PI*2); ctx.fill();
-      if(isActive){
-        for(let f=0;f<3;f++){const fx=cx+(f-1)*12,fh2=12+Math.sin(frame*0.18+f*1.2)*7;ctx.fillStyle=`rgba(255,${120+f*40},0,0.8)`;ctx.beginPath();ctx.moveTo(fx-6,cy);ctx.quadraticCurveTo(fx,cy-fh2-6,fx+6,cy);ctx.closePath();ctx.fill();}
-        ctx.shadowColor='#ff6b1a'; ctx.shadowBlur=18;
-        ctx.strokeStyle='rgba(255,140,0,0.35)'; ctx.lineWidth=1.5;
-        ctx.beginPath(); ctx.roundRect(cx-fw/2,top,fw,fh,3); ctx.stroke(); ctx.shadowBlur=0;
+      const isGrateMode = stage && stage.id==='indu' && stageParams.indu.mode==='grate';
+      if(isGrateMode){
+        // GRATE KILN: horizontal rotary drum with riding rings
+        const kw=mW*0.80, kh=mH*0.30;
+        const kx=cx-kw/2, ky=cy-kh/2;
+        // drum body gradient (steel cylinder, top-lit)
+        const dg=ctx.createLinearGradient(kx,ky,kx,ky+kh);
+        dg.addColorStop(0,'#8a7a60'); dg.addColorStop(0.18,'#c0ae90'); dg.addColorStop(0.5,'#a89070'); dg.addColorStop(0.82,'#7a6a50'); dg.addColorStop(1,'#504030');
+        ctx.fillStyle=dg;
+        ctx.beginPath(); ctx.roundRect(kx,ky,kw,kh,3); ctx.fill();
+        ctx.strokeStyle=strokeCol; ctx.lineWidth=strokeW;
+        ctx.beginPath(); ctx.roundRect(kx,ky,kw,kh,3); ctx.stroke();
+        // heat glow inside drum
+        const heatAlpha=isActive?0.55+Math.sin(frame*0.12)*0.18:0.30;
+        const hg=safeRadialGradient(ctx,cx,cy,0,cx,cy,kw*0.38);
+        hg.addColorStop(0,`rgba(255,140,30,${heatAlpha})`); hg.addColorStop(0.55,`rgba(220,80,10,${heatAlpha*0.55})`); hg.addColorStop(1,'rgba(180,50,0,0)');
+        ctx.fillStyle=hg; ctx.beginPath(); ctx.ellipse(cx,cy,kw*0.42,kh*0.40,0,0,Math.PI*2); ctx.fill();
+        // riding rings (2 dark bands)
+        [-0.28,0.28].forEach(ox=>{
+          const rx=cx+kw*ox, rw=kw*0.08;
+          const rg2=ctx.createLinearGradient(rx-rw/2,ky,rx-rw/2,ky+kh);
+          rg2.addColorStop(0,'#3a2e20'); rg2.addColorStop(0.35,'#6a5a40'); rg2.addColorStop(0.65,'#4a3c28'); rg2.addColorStop(1,'#2a2018');
+          ctx.fillStyle=rg2;
+          ctx.beginPath(); ctx.rect(rx-rw/2,ky,rw,kh); ctx.fill();
+          ctx.strokeStyle='rgba(200,145,42,0.28)'; ctx.lineWidth=0.7;
+          ctx.beginPath(); ctx.rect(rx-rw/2,ky,rw,kh); ctx.stroke();
+        });
+        // end caps
+        [[kx,kx+kw*0.06],[kx+kw-kw*0.06,kx+kw]].forEach(([x0,x1])=>{
+          const eg=ctx.createLinearGradient(x0,ky,x0,ky+kh);
+          eg.addColorStop(0,'#6a5a42'); eg.addColorStop(0.5,'#8a7a5a'); eg.addColorStop(1,'#4a3c28');
+          ctx.fillStyle=eg;
+          ctx.beginPath(); ctx.rect(x0,ky,x1-x0,kh); ctx.fill();
+        });
+        // support rollers below drum
+        [-0.25,0.25].forEach(ox=>{
+          const rlx=cx+kw*ox, rly=ky+kh+4, rlr=3.5;
+          const rlg=safeRadialGradient(ctx,rlx-rlr*0.3,rly-rlr*0.3,0,rlx,rly,rlr);
+          if(rlg.addColorStop){ rlg.addColorStop(0,'#b0a080'); rlg.addColorStop(1,'#5a4a30'); }
+          ctx.fillStyle=rlg; ctx.beginPath(); ctx.arc(rlx,rly,rlr,0,Math.PI*2); ctx.fill();
+        });
+        // active: rotation shimmer
+        if(isActive){
+          const shimAngle=frame*0.04;
+          const sx=cx+Math.cos(shimAngle)*kw*0.32, sy=cy+Math.sin(shimAngle)*kh*0.32;
+          const sg2=safeRadialGradient(ctx,sx,sy,0,sx,sy,kw*0.14);
+          if(sg2.addColorStop){ sg2.addColorStop(0,'rgba(255,200,80,0.55)'); sg2.addColorStop(1,'rgba(255,200,80,0)'); }
+          ctx.fillStyle=sg2; ctx.beginPath(); ctx.ellipse(sx,sy,kw*0.13,kh*0.22,0,0,Math.PI*2); ctx.fill();
+          ctx.shadowColor='#ff8020'; ctx.shadowBlur=14;
+          ctx.strokeStyle='rgba(255,140,0,0.3)'; ctx.lineWidth=1.2;
+          ctx.beginPath(); ctx.roundRect(kx,ky,kw,kh,3); ctx.stroke(); ctx.shadowBlur=0;
+        }
+        return{x:kx,y:ky,w:kw,h:kh+8};
+      } else {
+        // INDURATION FURNACE: straight grate — long low tunnel furnace
+        const fw=mW*0.82, fh=mH*0.34; const ftop=cy-fh/2;
+        // furnace body (dark refractory brick tones)
+        const fbg=ctx.createLinearGradient(cx-fw/2,ftop,cx-fw/2,ftop+fh);
+        fbg.addColorStop(0,'#5a3820'); fbg.addColorStop(0.2,'#7a4e2e'); fbg.addColorStop(0.5,'#6a3e20'); fbg.addColorStop(0.8,'#4a2e14'); fbg.addColorStop(1,'#362210');
+        ctx.fillStyle=fbg;
+        ctx.beginPath(); ctx.roundRect(cx-fw/2,ftop,fw,fh,4); ctx.fill();
+        ctx.strokeStyle=strokeCol; ctx.lineWidth=strokeW;
+        ctx.beginPath(); ctx.roundRect(cx-fw/2,ftop,fw,fh,4); ctx.stroke();
+        // inner heat glow (wide tunnel)
+        const heatA=isActive?0.62+Math.sin(frame*0.10)*0.15:0.38;
+        const ifg=safeRadialGradient(ctx,cx,cy,0,cx,cy,fw*0.42);
+        ifg.addColorStop(0,`rgba(255,160,30,${heatA})`); ifg.addColorStop(0.45,`rgba(230,90,10,${heatA*0.6})`); ifg.addColorStop(1,'rgba(180,50,0,0)');
+        ctx.fillStyle=ifg; ctx.beginPath(); ctx.ellipse(cx,cy,fw*0.46,fh*0.38,0,0,Math.PI*2); ctx.fill();
+        // burner ports on top
+        for(let b=0;b<5;b++){
+          const bx=cx-fw*0.36+b*(fw*0.18), by=ftop-2, bw=fw*0.07, bh=5;
+          const bg2=ctx.createLinearGradient(bx,by,bx,by+bh);
+          bg2.addColorStop(0,'#8a5030'); bg2.addColorStop(1,'#5a3010');
+          ctx.fillStyle=bg2; ctx.beginPath(); ctx.roundRect(bx-bw/2,by,bw,bh,2); ctx.fill();
+          if(isActive){
+            const flame=4+Math.sin(frame*0.20+b*1.3)*2;
+            ctx.fillStyle=`rgba(255,${140+b*15},0,0.75)`;
+            ctx.beginPath(); ctx.moveTo(bx-bw*0.4,by); ctx.quadraticCurveTo(bx,by-flame-4,bx+bw*0.4,by); ctx.closePath(); ctx.fill();
+          }
+        }
+        // inlet/outlet hoods
+        [[cx-fw/2-2,12],[cx+fw/2-10,12]].forEach(([hx,hw])=>{
+          const hg2=ctx.createLinearGradient(hx,ftop,hx,ftop+fh);
+          hg2.addColorStop(0,'#5a4828'); hg2.addColorStop(1,'#2e2210');
+          ctx.fillStyle=hg2; ctx.beginPath(); ctx.rect(hx,ftop,hw,fh); ctx.fill();
+        });
+        if(isActive){
+          ctx.shadowColor='#ff7010'; ctx.shadowBlur=16;
+          ctx.strokeStyle='rgba(255,130,0,0.28)'; ctx.lineWidth=1.4;
+          ctx.beginPath(); ctx.roundRect(cx-fw/2,ftop,fw,fh,4); ctx.stroke(); ctx.shadowBlur=0;
+        }
+        return{x:cx-fw/2,y:ftop,w:fw,h:fh};
       }
-      return{x:cx-fw/2,y:top,w:fw,h:fh};
     }
     case 'trapezoid':{
       return drawCoolingKiln(cx, cy, mW, mH, stage, isActive, isDone, frame);
