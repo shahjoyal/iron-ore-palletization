@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Dashboard – Stage 6B–10 · Abhitech</title>
+<title>Dashboard – Stage 1–3 · Abhitech</title>
 <link rel="icon" type="image/x-icon" href="abhitech-logo.png">
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=DM+Sans:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
@@ -361,7 +361,7 @@ input.finp{cursor:text;}
 .feed-diagram-card{
   width:300px;
   flex-shrink:0;
-  background:linear-gradient(170deg,#f8f5f0 0%,#ffffff 55%,#f2efea 100%);
+  background:#fff;
   border:1px solid rgba(200,145,42,0.22);
   border-radius:10px;
   box-shadow:0 24px 80px rgba(26,48,87,.18);
@@ -388,15 +388,52 @@ input.finp{cursor:text;}
   color:#1a3057;line-height:1.2;
 }
 
+.preview-visual-wrap{
+  flex:1;
+  position:relative;
+  min-height:280px;
+  background:#fff;
+  padding:10px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  overflow:hidden;
+}
+
+.preview-stage-img{
+  width:100%;
+  height:100%;
+  object-fit:contain;
+  display:block;
+  background:#fff;
+  border-radius:8px;
+  animation:previewFloat 6s ease-in-out infinite;
+  transform-origin:center center;
+}
+
+.preview-stage-canvas{
+  position:absolute;
+  inset:0;
+  width:100%;
+  height:100%;
+  display:none !important;
+}
+
+@keyframes previewFloat{
+  0%,100%{transform:translateY(0) scale(1);}
+  50%{transform:translateY(-2px) scale(1.01);}
+}
+
 .feed-diagram-canvas-wrap{
   flex:1;
   position:relative;
   min-height:280px;
+  background:#fff;
 }
 #feedMiniCanvas{
   position:absolute;inset:0;
   width:100%;height:100%;
-  display:block;
+  display:none !important;
 }
 
 .feed-diagram-footer{
@@ -429,7 +466,9 @@ input.finp{cursor:text;}
 }
 
 @media(max-width:880px){
-  .feed-diagram-card{display:none;}
+  .feed-anim-panels{flex-direction:column;align-items:stretch;}
+  .feed-diagram-card{width:100%;max-width:min(520px,92vw);align-self:stretch;}
+  .feed-diagram-canvas-wrap{min-height:220px;}
 }
 @media(max-width:560px){
   .feed-anim-card{width:96vw;}
@@ -491,7 +530,7 @@ input.finp{cursor:text;}
 .grind-diagram-card{
   width:320px;
   flex-shrink:0;
-  background:linear-gradient(170deg,#f8f5f0 0%,#ffffff 55%,#f2efea 100%);
+  background:#fff;
   border:1px solid rgba(200,145,42,0.22);
   border-radius:10px;
   box-shadow:0 24px 80px rgba(26,48,87,.18);
@@ -518,9 +557,10 @@ input.finp{cursor:text;}
 
 .grind-diagram-canvas-wrap{
   flex:1;position:relative;min-height:300px;
+  background:#fff;
 }
 #grindMiniCanvas{
-  position:absolute;inset:0;width:100%;height:100%;display:block;
+  position:absolute;inset:0;width:100%;height:100%;display:none !important;
 }
 
 .grind-diagram-footer{
@@ -546,7 +586,9 @@ input.finp{cursor:text;}
 .grind-save-indicator.show{animation:oreSaveBurst 2s ease forwards;}
 
 @media(max-width:920px){
-  .grind-diagram-card{display:none;}
+  .grind-anim-panels{flex-direction:column;align-items:stretch;}
+  .grind-diagram-card{width:100%;max-width:min(520px,92vw);align-self:stretch;}
+  .grind-diagram-canvas-wrap{min-height:220px;}
 }
 @media(max-width:560px){
   .grind-anim-card{width:96vw;}
@@ -593,7 +635,7 @@ input.finp{cursor:text;}
 /* RIGHT thickener diagram card */
 .thick-diagram-card{
   width:360px;flex-shrink:0;
-  background:linear-gradient(170deg,#f8f5f0 0%,#ffffff 55%,#f2efea 100%);
+  background:#fff;
   border:1px solid rgba(200,145,42,0.22);
   border-radius:10px;box-shadow:0 24px 80px rgba(26,48,87,.18);
   display:flex;flex-direction:column;align-self:stretch;overflow:hidden;
@@ -604,8 +646,8 @@ input.finp{cursor:text;}
 .thick-diagram-header{padding:1rem 1.2rem .8rem;border-bottom:1px solid rgba(200,145,42,0.15);flex-shrink:0;}
 .thick-diagram-tag{font-family:'JetBrains Mono';font-size:.52rem;letter-spacing:2.5px;color:rgba(200,145,42,.75);text-transform:uppercase;margin-bottom:5px;}
 .thick-diagram-title{font-family:'Cormorant Garamond',serif;font-size:1.2rem;font-weight:700;color:#1a3057;line-height:1.2;}
-.thick-diagram-canvas-wrap{flex:1;position:relative;min-height:360px;}
-#thickMiniCanvas{position:absolute;inset:0;width:100%;height:100%;display:block;}
+.thick-diagram-canvas-wrap{flex:1;position:relative;min-height:360px;background:#fff;}
+#thickMiniCanvas{position:absolute;inset:0;width:100%;height:100%;display:none !important;}
 .thick-diagram-footer{padding:.7rem 1.1rem .9rem;border-top:1px solid rgba(200,145,42,0.12);flex-shrink:0;}
 .thick-rpm-label{font-family:'JetBrains Mono';font-size:.50rem;letter-spacing:1.5px;color:rgba(90,74,48,0.65);text-transform:uppercase;margin-bottom:5px;}
 .thick-rpm-bar-bg{height:5px;background:rgba(200,145,42,0.12);border-radius:3px;overflow:hidden;}
@@ -619,7 +661,11 @@ input.finp{cursor:text;}
   opacity:0;pointer-events:none;
 }
 .thick-save-indicator.show{animation:oreSaveBurst 2s ease forwards;}
-@media(max-width:980px){.thick-diagram-card{display:none;}}
+@media(max-width:980px){
+  .thick-anim-panels{flex-direction:column;align-items:stretch;}
+  .thick-diagram-card{width:100%;max-width:min(520px,92vw);align-self:stretch;}
+  .thick-diagram-canvas-wrap{min-height:240px;}
+}
 @media(max-width:560px){.thick-anim-card{width:96vw;}}
 
 /* ── FILTER CAKE TWO-PANEL OVERLAY ── */
@@ -762,353 +808,6 @@ input.finp{cursor:text;}
 @media(max-width:1060px){.mix-diagram-card{display:none;}}
 @media(max-width:560px){.mix-anim-card{width:96vw;}}
 
-/* ── GREEN BALL TWO-PANEL OVERLAY ── */
-.gb-anim-overlay{
-  position:fixed;inset:0;z-index:250;
-  background:rgba(15,31,58,.62);
-  backdrop-filter:blur(7px) saturate(1.2);
-  display:flex;align-items:center;justify-content:center;
-  opacity:0;pointer-events:none;transition:opacity .3s ease;
-}
-.gb-anim-overlay.open{opacity:1;pointer-events:all;}
-.gb-anim-panels{display:flex;align-items:flex-start;gap:14px;}
-
-.gb-anim-card{
-  background:#fff;border:1px solid var(--border-strong);border-radius:10px;
-  box-shadow:0 24px 80px rgba(26,48,87,.25);
-  width:min(460px,92vw);max-height:88vh;overflow-y:auto;
-  transform:translateY(16px) scale(.97);
-  transition:transform .35s cubic-bezier(.22,1,.36,1);
-  position:relative;display:flex;flex-direction:column;
-}
-.gb-anim-overlay.open .gb-anim-card{transform:translateY(0) scale(1);}
-.gb-anim-header{
-  padding:1.4rem 1.6rem 1rem;border-bottom:1px solid var(--border);
-  background:linear-gradient(135deg,var(--navy2) 0%,var(--navy3) 100%);
-  border-radius:10px 10px 0 0;position:relative;flex-shrink:0;
-}
-.gb-anim-tag{font-family:'JetBrains Mono';font-size:.52rem;letter-spacing:2.5px;color:rgba(200,145,42,.7);text-transform:uppercase;margin-bottom:5px;}
-.gb-anim-title{font-family:'Cormorant Garamond',serif;font-size:1.5rem;font-weight:700;color:#fff;line-height:1.2;}
-.gb-anim-subtitle{font-size:.78rem;color:rgba(255,255,255,.4);margin-top:5px;}
-.gb-anim-close{
-  position:absolute;top:1.1rem;right:1.2rem;
-  background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);
-  color:rgba(255,255,255,.6);width:30px;height:30px;border-radius:50%;
-  font-size:.9rem;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s;
-}
-.gb-anim-close:hover{background:rgba(200,145,42,.3);color:#fff;}
-.gb-anim-body{padding:1.4rem 1.6rem;flex:1;}
-
-/* RIGHT card */
-.gb-diagram-card{
-  width:460px;flex-shrink:0;
-  background:linear-gradient(170deg,#f8f5f0 0%,#ffffff 40%,#f2efea 100%);
-  border:1px solid rgba(200,145,42,0.25);border-radius:10px;
-  box-shadow:0 24px 80px rgba(26,48,87,.2);
-  display:flex;flex-direction:column;align-self:stretch;overflow:hidden;
-  transform:translateY(16px) scale(.97);
-  transition:transform .35s cubic-bezier(.22,1,.36,1) .05s;
-}
-.gb-anim-overlay.open .gb-diagram-card{transform:translateY(0) scale(1);}
-.gb-diagram-header{
-  padding:1rem 1.3rem .8rem;
-  background:linear-gradient(135deg,var(--navy2) 0%,var(--navy3) 100%);
-  border-bottom:1px solid rgba(200,145,42,0.18);flex-shrink:0;
-}
-.gb-diagram-tag{font-family:'JetBrains Mono';font-size:.52rem;letter-spacing:2.5px;color:rgba(200,145,42,.75);text-transform:uppercase;margin-bottom:4px;}
-.gb-diagram-title{font-family:'Cormorant Garamond',serif;font-size:1.25rem;font-weight:700;color:#fff;line-height:1.2;}
-.gb-diagram-subtitle{font-size:.72rem;color:rgba(255,255,255,.4);margin-top:3px;}
-.gb-diagram-body{flex:1;display:flex;flex-direction:column;padding:.9rem 1.1rem .8rem;gap:.7rem;overflow:hidden;}
-
-.gb-fall-container-wrap{
-  flex:1;position:relative;min-height:300px;
-  background:linear-gradient(180deg,#fdf8f0 0%,#f5ede0 100%);
-  border-radius:8px;border:1.5px solid rgba(200,145,42,0.35);
-  overflow:hidden;box-shadow:0 6px 24px rgba(26,48,87,.12),inset 0 -2px 0 rgba(200,145,42,0.12);
-}
-#gbFallCanvas{position:absolute;inset:0;width:100%;height:100%;display:block;}
-.gb-hint-label{
-  position:absolute;bottom:12px;left:50%;transform:translateX(-50%);
-  font-family:'JetBrains Mono';font-size:.5rem;letter-spacing:1.5px;
-  color:rgba(130,100,30,0.65);text-transform:uppercase;white-space:nowrap;
-  transition:opacity .6s;
-}
-.gb-hint-label.hidden{opacity:0;}
-
-.gb-fall-meter{flex-shrink:0;}
-.gb-meter-label{font-family:'JetBrains Mono';font-size:.48rem;letter-spacing:1.5px;color:rgba(90,74,48,.65);text-transform:uppercase;margin-bottom:4px;}
-.gb-meter-bg{height:5px;background:rgba(200,145,42,0.12);border-radius:3px;overflow:hidden;}
-.gb-meter-fill{height:100%;background:linear-gradient(90deg,var(--navy),var(--blue),var(--gold));border-radius:3px;transition:width .5s ease;}
-
-.gb-stat-row{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;flex-shrink:0;}
-.gb-stat{background:rgba(200,145,42,0.05);border:1px solid var(--border);border-radius:5px;padding:6px 4px;text-align:center;}
-.gb-stat-label{display:block;font-family:'JetBrains Mono';font-size:.44rem;letter-spacing:1px;color:var(--text-dim);text-transform:uppercase;margin-bottom:3px;}
-.gb-stat-val{display:block;font-family:'Cormorant Garamond',serif;font-size:1rem;font-weight:700;color:var(--navy);line-height:1;}
-
-@media(max-width:1060px){.gb-diagram-card{width:340px;}}
-@media(max-width:800px){.gb-diagram-card{display:none;}}
-@media(max-width:560px){.gb-anim-card{width:96vw;}}
-
-/* ── PELLET TWO-PANEL OVERLAY ── */
-.pellet-anim-overlay{
-  position:fixed;inset:0;z-index:250;
-  background:rgba(15,31,58,.60);
-  backdrop-filter:blur(7px) saturate(1.2);
-  display:flex;align-items:center;justify-content:center;
-  opacity:0;pointer-events:none;
-  transition:opacity .3s ease;
-}
-.pellet-anim-overlay.open{opacity:1;pointer-events:all;}
-.pellet-anim-panels{display:flex;align-items:flex-start;gap:14px;}
-
-.pellet-anim-card{
-  background:#fff;border:1px solid var(--border-strong);border-radius:10px;
-  box-shadow:0 24px 80px rgba(26,48,87,.25);
-  width:min(480px,92vw);max-height:88vh;overflow-y:auto;
-  transform:translateY(16px) scale(.97);
-  transition:transform .35s cubic-bezier(.22,1,.36,1);
-  position:relative;display:flex;flex-direction:column;
-}
-.pellet-anim-overlay.open .pellet-anim-card{transform:translateY(0) scale(1);}
-.pellet-anim-header{
-  padding:1.4rem 1.6rem 1rem;border-bottom:1px solid var(--border);
-  background:linear-gradient(135deg,var(--navy2) 0%,var(--navy3) 100%);
-  border-radius:10px 10px 0 0;position:relative;flex-shrink:0;
-}
-.pellet-anim-tag{font-family:'JetBrains Mono';font-size:.52rem;letter-spacing:2.5px;color:rgba(200,145,42,.7);text-transform:uppercase;margin-bottom:5px;}
-.pellet-anim-title{font-family:'Cormorant Garamond',serif;font-size:1.5rem;font-weight:700;color:#fff;line-height:1.2;}
-.pellet-anim-subtitle{font-size:.78rem;color:rgba(255,255,255,.45);margin-top:5px;}
-.pellet-anim-close{
-  position:absolute;top:1.1rem;right:1.2rem;
-  background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);
-  color:rgba(255,255,255,.6);width:30px;height:30px;border-radius:50%;
-  font-size:.9rem;cursor:pointer;display:flex;align-items:center;justify-content:center;
-  transition:all .2s;
-}
-.pellet-anim-close:hover{background:rgba(200,145,42,.3);color:#fff;}
-.pellet-anim-body{padding:1.4rem 1.6rem;flex:1;}
-
-/* RIGHT diagram + animation card */
-.pellet-diagram-card{
-  width:420px;flex-shrink:0;
-  background:linear-gradient(170deg,#f8f5f0 0%,#ffffff 40%,#f0ede8 100%);
-  border:1px solid rgba(200,145,42,0.28);border-radius:10px;
-  box-shadow:0 24px 80px rgba(26,48,87,.22);
-  display:flex;flex-direction:column;align-self:stretch;overflow:hidden;
-  transform:translateY(16px) scale(.97);
-  transition:transform .35s cubic-bezier(.22,1,.36,1) .05s;
-}
-.pellet-anim-overlay.open .pellet-diagram-card{transform:translateY(0) scale(1);}
-.pellet-diagram-header{
-  padding:1rem 1.3rem .8rem;
-  border-bottom:1px solid rgba(200,145,42,0.15);
-  background:linear-gradient(135deg,#1a3057 0%,#253d5e 100%);
-  flex-shrink:0;
-}
-.pellet-diagram-tag{font-family:'JetBrains Mono';font-size:.52rem;letter-spacing:2.5px;color:rgba(200,145,42,.75);text-transform:uppercase;margin-bottom:4px;}
-.pellet-diagram-title{font-family:'Cormorant Garamond',serif;font-size:1.25rem;font-weight:700;color:#fff;line-height:1.2;}
-.pellet-diagram-subtitle{font-size:.72rem;color:rgba(255,255,255,.4);margin-top:3px;}
-.pellet-diagram-body{flex:1;display:flex;flex-direction:column;overflow:hidden;}
-
-/* SVG diagram section */
-.pellet-svg-section{padding:.9rem 1.1rem .5rem;flex-shrink:0;}
-.pellet-svg-label{font-family:'JetBrains Mono';font-size:.5rem;letter-spacing:2px;color:rgba(200,145,42,.8);text-transform:uppercase;margin-bottom:.5rem;}
-.pellet-svg-wrap{background:linear-gradient(135deg,#0d1e36 0%,#162840 100%);border-radius:8px;border:1px solid rgba(200,145,42,0.2);overflow:hidden;box-shadow:0 4px 20px rgba(26,48,87,.2),inset 0 1px 0 rgba(255,255,255,0.04);}
-.pellet-svg-wrap svg{display:block;width:100%;height:auto;}
-.pellet-sparkle{animation:pelletSparkle 2.4s ease-in-out infinite;}
-.pellet-sparkle:nth-child(2){animation-delay:0.8s;}
-.pellet-sparkle:nth-child(3){animation-delay:1.6s;}
-@keyframes pelletSparkle{0%,100%{opacity:0.2;r:1.5;}50%{opacity:1;r:3;}}
-
-/* Falling animation section */
-.pellet-fall-section{flex:1;padding:.6rem 1.1rem .8rem;display:flex;flex-direction:column;min-height:0;}
-.pellet-fall-label{font-family:'JetBrains Mono';font-size:.5rem;letter-spacing:2px;color:rgba(200,145,42,.8);text-transform:uppercase;margin-bottom:.5rem;flex-shrink:0;}
-.pellet-fall-container-wrap{
-  flex:1;position:relative;min-height:160px;
-  background:linear-gradient(180deg,#0a1520 0%,#0e1e32 100%);
-  border-radius:8px;border:1.5px solid rgba(200,145,42,0.25);
-  overflow:hidden;box-shadow:0 6px 24px rgba(26,48,87,.25),inset 0 -2px 0 rgba(200,145,42,0.08);
-}
-#pelletFallCanvas{position:absolute;inset:0;width:100%;height:100%;display:block;}
-.pellet-fill-readout{
-  position:absolute;top:10px;right:12px;
-  font-family:'Cormorant Garamond',serif;font-size:1.6rem;font-weight:700;
-  color:rgba(200,145,42,0.9);line-height:1;
-  text-shadow:0 0 12px rgba(200,145,42,0.5);
-  transition:color .4s;
-}
-.pellet-fall-controls{display:flex;gap:8px;margin-top:.6rem;flex-shrink:0;}
-.pellet-ctrl-btn{
-  flex:1;background:linear-gradient(135deg,var(--navy),var(--blue));color:#fff;
-  border:none;border-radius:5px;padding:8px;font-family:'DM Sans';font-size:.78rem;font-weight:600;
-  cursor:pointer;transition:all .25s;letter-spacing:.3px;
-}
-.pellet-ctrl-btn:hover{background:linear-gradient(135deg,var(--gold),var(--gold-light));transform:translateY(-1px);}
-.pellet-ctrl-reset{background:rgba(26,48,87,0.08)!important;color:var(--text-mid)!important;border:1px solid var(--border)!important;}
-.pellet-ctrl-reset:hover{background:rgba(200,145,42,0.1)!important;color:var(--gold)!important;border-color:var(--gold)!important;transform:none!important;}
-.pellet-fall-meter{margin-top:.5rem;flex-shrink:0;}
-.pellet-meter-label{font-family:'JetBrains Mono';font-size:.48rem;letter-spacing:1.5px;color:rgba(90,74,48,.65);text-transform:uppercase;margin-bottom:4px;}
-.pellet-meter-bg{height:5px;background:rgba(200,145,42,0.12);border-radius:3px;overflow:hidden;}
-.pellet-meter-fill{height:100%;background:linear-gradient(90deg,#1a3057,#2d5fa6,#c8912a);border-radius:3px;transition:width .5s ease;}
-
-@media(max-width:960px){.pellet-diagram-card{width:340px;}}
-@media(max-width:760px){.pellet-diagram-card{display:none;}}
-@media(max-width:560px){.pellet-anim-card{width:96vw;}}
-
-
-/* ── COOLING KILN TWO-PANEL OVERLAY ── */
-.cool-anim-overlay{
-  position:fixed;inset:0;z-index:250;
-  background:rgba(15,31,58,.62);
-  backdrop-filter:blur(7px) saturate(1.2);
-  display:flex;align-items:center;justify-content:center;
-  opacity:0;pointer-events:none;transition:opacity .3s ease;
-}
-.cool-anim-overlay.open{opacity:1;pointer-events:all;}
-.cool-anim-panels{display:flex;align-items:flex-start;gap:14px;}
-
-.cool-anim-card{
-  background:#fff;border:1px solid var(--border-strong);border-radius:10px;
-  box-shadow:0 24px 80px rgba(26,48,87,.25);
-  width:min(460px,92vw);max-height:88vh;overflow-y:auto;
-  transform:translateY(16px) scale(.97);
-  transition:transform .35s cubic-bezier(.22,1,.36,1);
-  position:relative;display:flex;flex-direction:column;
-}
-.cool-anim-overlay.open .cool-anim-card{transform:translateY(0) scale(1);}
-.cool-anim-header{
-  padding:1.4rem 1.6rem 1rem;border-bottom:1px solid var(--border);
-  background:linear-gradient(135deg,var(--navy2) 0%,var(--navy3) 100%);
-  border-radius:10px 10px 0 0;position:relative;flex-shrink:0;
-}
-.cool-anim-tag{font-family:'JetBrains Mono';font-size:.52rem;letter-spacing:2.5px;color:rgba(200,145,42,.7);text-transform:uppercase;margin-bottom:5px;}
-.cool-anim-title{font-family:'Cormorant Garamond',serif;font-size:1.5rem;font-weight:700;color:#fff;line-height:1.2;}
-.cool-anim-subtitle{font-size:.78rem;color:rgba(255,255,255,.4);margin-top:5px;}
-.cool-anim-close{
-  position:absolute;top:1.1rem;right:1.2rem;
-  background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);
-  color:rgba(255,255,255,.6);width:30px;height:30px;border-radius:50%;
-  font-size:.9rem;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s;
-}
-.cool-anim-close:hover{background:rgba(200,145,42,.3);color:#fff;}
-.cool-anim-body{padding:1.4rem 1.6rem;flex:1;}
-
-/* RIGHT diagram card */
-.cool-diagram-card{
-  width:460px;flex-shrink:0;
-  background:linear-gradient(170deg,#f8f5f0 0%,#ffffff 40%,#f2efea 100%);
-  border:1px solid rgba(200,145,42,0.25);border-radius:10px;
-  box-shadow:0 24px 80px rgba(26,48,87,.2);
-  display:flex;flex-direction:column;align-self:stretch;overflow:hidden;
-  transform:translateY(16px) scale(.97);
-  transition:transform .35s cubic-bezier(.22,1,.36,1) .05s;
-}
-.cool-anim-overlay.open .cool-diagram-card{transform:translateY(0) scale(1);}
-.cool-diagram-header{
-  padding:1rem 1.3rem .8rem;
-  background:linear-gradient(135deg,var(--navy2) 0%,var(--navy3) 100%);
-  border-bottom:1px solid rgba(200,145,42,0.18);flex-shrink:0;
-}
-.cool-diagram-tag{font-family:'JetBrains Mono';font-size:.52rem;letter-spacing:2.5px;color:rgba(200,145,42,.75);text-transform:uppercase;margin-bottom:4px;}
-.cool-diagram-title{font-family:'Cormorant Garamond',serif;font-size:1.25rem;font-weight:700;color:#fff;line-height:1.2;}
-.cool-diagram-subtitle{font-size:.72rem;color:rgba(255,255,255,.4);margin-top:3px;}
-.cool-diagram-body{flex:1;display:flex;flex-direction:column;padding:.9rem 1.1rem .8rem;gap:.7rem;overflow:hidden;}
-
-.cool-canvas-wrap{
-  flex:1;position:relative;min-height:260px;
-  background:linear-gradient(180deg,#0c1520 0%,#101e30 100%);
-  border-radius:8px;border:1.5px solid rgba(200,145,42,0.25);
-  overflow:hidden;box-shadow:0 6px 24px rgba(26,48,87,.3);
-}
-#coolKilnCanvas{position:absolute;inset:0;width:100%;height:100%;display:block;}
-
-.cool-zone-legend{display:grid;grid-template-columns:repeat(4,1fr);gap:5px;flex-shrink:0;}
-.cool-zone-chip{
-  border-radius:5px;padding:6px 5px;text-align:center;
-  border:1px solid rgba(200,145,42,0.15);
-  background:rgba(255,255,255,0.6);
-}
-.cool-zone-chip-label{font-family:'JetBrains Mono';font-size:.42rem;letter-spacing:1px;color:var(--text-dim);text-transform:uppercase;margin-bottom:3px;}
-.cool-zone-chip-swatch{width:24px;height:10px;border-radius:3px;margin:0 auto 3px;border:1px solid rgba(0,0,0,0.12);}
-.cool-zone-chip-val{font-family:'Cormorant Garamond',serif;font-size:.95rem;font-weight:700;color:var(--navy);}
-
-.cool-stat-row{display:grid;grid-template-columns:repeat(2,1fr);gap:6px;flex-shrink:0;}
-.cool-stat{background:rgba(200,145,42,0.05);border:1px solid var(--border);border-radius:5px;padding:6px 8px;text-align:center;}
-.cool-stat-label{display:block;font-family:'JetBrains Mono';font-size:.44rem;letter-spacing:1px;color:var(--text-dim);text-transform:uppercase;margin-bottom:3px;}
-.cool-stat-val{display:block;font-family:'Cormorant Garamond',serif;font-size:1rem;font-weight:700;color:var(--navy);line-height:1;}
-
-@media(max-width:1060px){.cool-diagram-card{width:340px;}}
-@media(max-width:800px){.cool-diagram-card{display:none;}}
-@media(max-width:560px){.cool-anim-card{width:96vw;}}
-
-/* ── INDURATION TWO-PANEL OVERLAY ── */
-.indu-anim-overlay{
-  position:fixed;inset:0;z-index:250;
-  background:rgba(15,31,58,.60);
-  backdrop-filter:blur(7px) saturate(1.2);
-  display:flex;align-items:center;justify-content:center;
-  opacity:0;pointer-events:none;
-  transition:opacity .3s ease;
-}
-.indu-anim-overlay.open{opacity:1;pointer-events:all;}
-.indu-anim-panels{display:flex;align-items:flex-start;gap:12px;}
-.indu-anim-card{
-  background:#fff;border:1px solid var(--border-strong);border-radius:10px;
-  box-shadow:0 24px 80px rgba(26,48,87,.25);
-  width:min(520px,92vw);max-height:88vh;overflow-y:auto;
-  transform:translateY(16px) scale(.97);
-  transition:transform .35s cubic-bezier(.22,1,.36,1);
-  position:relative;display:flex;flex-direction:column;
-}
-.indu-anim-overlay.open .indu-anim-card{transform:translateY(0) scale(1);}
-.indu-anim-header{
-  padding:1.4rem 1.6rem 1rem;border-bottom:1px solid var(--border);
-  background:linear-gradient(135deg,#1a1208 0%,#2e1f0a 100%);
-  border-radius:10px 10px 0 0;position:relative;flex-shrink:0;
-}
-.indu-anim-tag{font-family:'JetBrains Mono';font-size:.52rem;letter-spacing:2.5px;color:rgba(200,145,42,.85);text-transform:uppercase;margin-bottom:5px;}
-.indu-anim-title{font-family:'Cormorant Garamond',serif;font-size:1.5rem;font-weight:700;color:#fff;line-height:1.2;}
-.indu-anim-subtitle{font-size:.78rem;color:rgba(255,255,255,.45);margin-top:5px;}
-.indu-anim-close{
-  position:absolute;top:1.1rem;right:1.2rem;
-  background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);
-  color:rgba(255,255,255,.6);width:30px;height:30px;border-radius:50%;
-  font-size:.9rem;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s;
-}
-.indu-anim-close:hover{background:rgba(200,145,42,.35);color:#fff;}
-.indu-anim-body{padding:1.4rem 1.6rem;flex:1;}
-.indu-diagram-card{
-  width:400px;flex-shrink:0;
-  background:linear-gradient(170deg,#f8f5f0 0%,#ffffff 55%,#f2efea 100%);
-  border:1px solid rgba(200,145,42,0.22);
-  border-radius:10px;box-shadow:0 24px 80px rgba(26,48,87,.18);
-  display:flex;flex-direction:column;align-self:stretch;overflow:hidden;
-  transform:translateY(16px) scale(.97);
-  transition:transform .35s cubic-bezier(.22,1,.36,1) .05s;
-}
-.indu-anim-overlay.open .indu-diagram-card{transform:translateY(0) scale(1);}
-.indu-diagram-header{padding:1rem 1.2rem .8rem;border-bottom:1px solid rgba(200,145,42,0.15);flex-shrink:0;}
-.indu-diagram-tag{font-family:'JetBrains Mono';font-size:.52rem;letter-spacing:2.5px;color:rgba(200,145,42,.75);text-transform:uppercase;margin-bottom:5px;}
-.indu-diagram-title{font-family:'Cormorant Garamond',serif;font-size:1.2rem;font-weight:700;color:#1a3057;line-height:1.2;}
-.indu-diagram-subtitle{font-size:.72rem;color:rgba(90,74,48,.55);margin-top:3px;}
-.indu-diagram-body{flex:1;display:flex;align-items:center;justify-content:center;padding:1rem;background:linear-gradient(160deg,#f9f6f1 0%,#ffffff 60%,#f4f0ea 100%);min-height:380px;position:relative;overflow:hidden;}
-.indu-diagram-footer{padding:.7rem 1.1rem .9rem;border-top:1px solid rgba(200,145,42,0.12);flex-shrink:0;}
-.indu-type-badge{display:inline-flex;align-items:center;gap:5px;background:rgba(200,145,42,0.1);border:1px solid rgba(200,145,42,0.3);border-radius:20px;padding:3px 10px;font-family:'JetBrains Mono';font-size:.5rem;letter-spacing:1.5px;color:var(--gold);text-transform:uppercase;}
-.indu-svg-wrap{width:100%;height:100%;display:flex;align-items:center;justify-content:center;}
-@media(max-width:1080px){.indu-diagram-card{width:300px;}}
-@media(max-width:820px){.indu-diagram-card{display:none;}}
-@media(max-width:560px){.indu-anim-card{width:96vw;}}
-
-/* ── FURNACE SVG ANIMATIONS ── */
-@keyframes furnaceRotate{from{transform:rotate(0deg);}to{transform:rotate(360deg);}}
-@keyframes heatPulse{0%,100%{transform:scale(1);opacity:1;}50%{transform:scale(1.15);opacity:0.85;}}
-@keyframes steamRise{0%{opacity:0;transform:translateY(0);}40%{opacity:0.7;}100%{opacity:0;transform:translateY(-25px);}}
-@keyframes corePulse{0%,100%{opacity:0.85;r:20px;}50%{opacity:1;r:23px;}}
-/* ── KILN SVG ANIMATIONS ── */
-@keyframes kilnRotate{from{transform:rotate(0deg);}to{transform:rotate(360deg);}}
-@keyframes rollerSpin{from{transform:rotate(0deg);}to{transform:rotate(-360deg);}}
-@keyframes shineSwipe{0%{transform:translateX(-100%);}100%{transform:translateX(200%);}}
-@keyframes heatGlow{0%,100%{opacity:0.6;}50%{opacity:1;}}
 
 /* ── PAGE NAVIGATION ── */
 .page-nav{
@@ -1166,7 +865,8 @@ input.finp{cursor:text;}
         <div class="feed-diagram-title">Iron Ore Feed Hopper</div>
       </div>
       <div class="feed-diagram-canvas-wrap">
-        <canvas id="feedMiniCanvas"></canvas>
+        <img src="img1.jpeg" alt="Iron Ore Feed Hopper preview" class="preview-stage-img">
+        <canvas id="feedMiniCanvas" class="preview-stage-canvas"></canvas>
         <div class="ore-save-indicator" id="oreSaveIndicator">✓ Parameters Saved</div>
       </div>
       <div class="feed-diagram-footer">
@@ -1204,7 +904,8 @@ input.finp{cursor:text;}
         <div class="grind-diagram-title">Ball Mill-Grinding and mixing</div>
       </div>
       <div class="grind-diagram-canvas-wrap">
-        <canvas id="grindMiniCanvas"></canvas>
+        <img src="img2.jpeg" alt="Ball mill grinding preview" class="preview-stage-img">
+        <canvas id="grindMiniCanvas" class="preview-stage-canvas"></canvas>
         <div class="grind-save-indicator" id="grindSaveIndicator">✓ Parameters Saved</div>
       </div>
       <div class="grind-diagram-footer">
@@ -1240,7 +941,8 @@ input.finp{cursor:text;}
         <div class="thick-diagram-title">Thickener — Settling & Rake</div>
       </div>
       <div class="thick-diagram-canvas-wrap">
-        <canvas id="thickMiniCanvas"></canvas>
+        <img src="img3.jpeg" alt="Thickener preview" class="preview-stage-img">
+        <canvas id="thickMiniCanvas" class="preview-stage-canvas"></canvas>
         <div class="thick-save-indicator" id="thickSaveIndicator">✓ Parameters Saved</div>
       </div>
       <div class="thick-diagram-footer">
@@ -1321,287 +1023,6 @@ input.finp{cursor:text;}
   </div>
 </div>
 
-<!-- ══ GREEN BALL PROP + SCREENING MERGED CARD ══ -->
-<div class="gb-anim-overlay" id="gbAnimOverlay">
-  <div class="gb-anim-panels">
-
-    <!-- LEFT: Merged Parameters Card -->
-    <div class="gb-anim-card" id="gbAnimCard">
-      <div class="gb-anim-header">
-        <div class="gb-anim-tag">STAGE 06B + 07 · MERGED</div>
-        <div class="gb-anim-title">Green Ball Prop &amp; Screening</div>
-        <div class="gb-anim-subtitle">Green ball quality and size screening distribution</div>
-        <button class="gb-anim-close" onclick="closeGbCard()">✕</button>
-      </div>
-      <div class="gb-anim-body" id="gbAnimBody"></div>
-      <div class="modal-footer" style="padding:1rem 1.4rem 1.2rem;flex-shrink:0;">
-        <button class="btn-save" onclick="saveGbCard()">Save Parameters</button>
-        <button class="btn-cancel" onclick="closeGbCard()">Cancel</button>
-      </div>
-    </div>
-
-    <!-- RIGHT: Conveyor Belt Diagram + Animation -->
-    <div class="gb-diagram-card">
-      <div class="gb-diagram-header">
-        <div class="gb-diagram-tag">LIVE PREVIEW · SCREENING</div>
-        <div class="gb-diagram-title">Inclined Conveyor Belt</div>
-        <div class="gb-diagram-subtitle">Iron ore pellets in continuous screening operation</div>
-      </div>
-      <div class="gb-diagram-body">
-        <div class="gb-fall-container-wrap">
-          <canvas id="gbFallCanvas"></canvas>
-          <div class="gb-hint-label" id="gbHintLabel">← Enter any value to activate</div>
-        </div>
-        <div class="gb-fall-meter">
-          <div class="gb-meter-label">BELT SPEED</div>
-          <div class="gb-meter-bg"><div class="gb-meter-fill" id="gbMeterFill" style="width:65%"></div></div>
-        </div>
-        <div class="gb-stat-row" id="gbStatRow">
-          <div class="gb-stat"><span class="gb-stat-label">MOISTURE</span><span class="gb-stat-val" id="gbStatMoist">—</span></div>
-          <div class="gb-stat"><span class="gb-stat-label">DROP NO.</span><span class="gb-stat-val" id="gbStatDrop">—</span></div>
-          <div class="gb-stat"><span class="gb-stat-label">GCS</span><span class="gb-stat-val" id="gbStatGcs">—</span></div>
-          <div class="gb-stat"><span class="gb-stat-label">RECYCLE</span><span class="gb-stat-val" id="gbStatSize">—</span></div>
-        </div>
-      </div>
-    </div>
-
-  </div>
-</div>
-
-<!-- ══ COOLING KILN ANIMATION CARD ══ -->
-<div class="cool-anim-overlay" id="coolAnimOverlay">
-  <div class="cool-anim-panels">
-
-    <!-- LEFT: Parameters Card -->
-    <div class="cool-anim-card" id="coolAnimCard">
-      <div class="cool-anim-header">
-        <div class="cool-anim-tag">STAGE 09 · COOLING</div>
-        <div class="cool-anim-title">Cooling Zone Parameters</div>
-        <div class="cool-anim-subtitle">Set temperature for each cooling zone — kiln colour updates live</div>
-        <button class="cool-anim-close" onclick="closeCoolCard()">✕</button>
-      </div>
-      <div class="cool-anim-body" id="coolAnimBody"></div>
-      <div class="modal-footer" style="padding:1rem 1.4rem 1.2rem;flex-shrink:0;">
-        <button class="btn-save" onclick="saveCoolCard()">Save Parameters</button>
-        <button class="btn-cancel" onclick="closeCoolCard()">Cancel</button>
-      </div>
-    </div>
-
-    <!-- RIGHT: Live Kiln Diagram -->
-    <div class="cool-diagram-card">
-      <div class="cool-diagram-header">
-        <div class="cool-diagram-tag">LIVE PREVIEW · TEMPERATURE</div>
-        <div class="cool-diagram-title">Rotary Cooling Kiln</div>
-        <div class="cool-diagram-subtitle">Zone colours update as you enter temperatures</div>
-      </div>
-      <div class="cool-diagram-body">
-        <div class="cool-canvas-wrap">
-          <canvas id="coolKilnCanvas"></canvas>
-        </div>
-        <div class="cool-zone-legend" id="coolZoneLegend">
-          <div class="cool-zone-chip" id="cool-chip-0">
-            <div class="cool-zone-chip-label">Zone 1</div>
-            <div class="cool-zone-chip-swatch" id="cool-swatch-0"></div>
-            <div class="cool-zone-chip-val" id="cool-val-0">—</div>
-          </div>
-          <div class="cool-zone-chip" id="cool-chip-1">
-            <div class="cool-zone-chip-label">Zone 2</div>
-            <div class="cool-zone-chip-swatch" id="cool-swatch-1"></div>
-            <div class="cool-zone-chip-val" id="cool-val-1">—</div>
-          </div>
-          <div class="cool-zone-chip" id="cool-chip-2">
-            <div class="cool-zone-chip-label">Zone 3</div>
-            <div class="cool-zone-chip-swatch" id="cool-swatch-2"></div>
-            <div class="cool-zone-chip-val" id="cool-val-2">—</div>
-          </div>
-          <div class="cool-zone-chip" id="cool-chip-3">
-            <div class="cool-zone-chip-label">Zone 4</div>
-            <div class="cool-zone-chip-swatch" id="cool-swatch-3"></div>
-            <div class="cool-zone-chip-val" id="cool-val-3">—</div>
-          </div>
-        </div>
-        <div class="cool-stat-row">
-          <div class="cool-stat"><span class="cool-stat-label">INLET TEMP</span><span class="cool-stat-val" id="coolStatIn">—</span></div>
-          <div class="cool-stat"><span class="cool-stat-label">EXIT TEMP</span><span class="cool-stat-val" id="coolStatOut">—</span></div>
-        </div>
-      </div>
-    </div>
-
-  </div>
-</div>
-
-<!-- ══ PELLET ANIMATION CARD ══ -->
-<div class="pellet-anim-overlay" id="pelletAnimOverlay">
-  <div class="pellet-anim-panels">
-
-    <!-- LEFT: Parameters Card -->
-    <div class="pellet-anim-card" id="pelletAnimCard">
-      <div class="pellet-anim-header">
-        <div class="pellet-anim-tag">STAGE 10 · FINISHED PELLETS</div>
-        <div class="pellet-anim-title">Pellet Quality Targets</div>
-        <div class="pellet-anim-subtitle">Configure size distribution, CCS, tumbler & abrasion indices</div>
-        <button class="pellet-anim-close" onclick="closePelletCard()">✕</button>
-      </div>
-      <div class="pellet-anim-body" id="pelletAnimBody"></div>
-      <div class="modal-footer" style="padding:1rem 1.4rem 1.2rem;flex-shrink:0;">
-        <button class="btn-save" onclick="savePelletCard()">Save Parameters</button>
-        <button class="btn-cancel" onclick="closePelletCard()">Cancel</button>
-      </div>
-    </div>
-
-    <!-- RIGHT: Diagram + Animation Card -->
-    <div class="pellet-diagram-card">
-      <div class="pellet-diagram-header">
-        <div class="pellet-diagram-tag">LIVE PREVIEW</div>
-        <div class="pellet-diagram-title">Finished Iron Ore Pellets</div>
-        <div class="pellet-diagram-subtitle">Visualising product accumulation in vessel</div>
-      </div>
-      <div class="pellet-diagram-body">
-        <!-- Enhanced SVG Diagram -->
-        <div class="pellet-svg-section">
-          <div class="pellet-svg-label">PELLET CROSS-SECTION</div>
-          <div class="pellet-svg-wrap">
-            <svg id="pelletDiagramSvg" viewBox="0 0 260 200" xmlns="http://www.w3.org/2000/svg">
-              <!-- Central large pellet -->
-              <defs>
-                <radialGradient id="pg1" cx="35%" cy="30%">
-                  <stop offset="0%" stop-color="#a8c8e0"/>
-                  <stop offset="50%" stop-color="#4a7a9a"/>
-                  <stop offset="100%" stop-color="#1a3a5a"/>
-                </radialGradient>
-                <radialGradient id="pg2" cx="35%" cy="30%">
-                  <stop offset="0%" stop-color="#9ab8cc"/>
-                  <stop offset="50%" stop-color="#3a6a8a"/>
-                  <stop offset="100%" stop-color="#152d4a"/>
-                </radialGradient>
-                <radialGradient id="pg3" cx="38%" cy="28%">
-                  <stop offset="0%" stop-color="#b0c8d8"/>
-                  <stop offset="45%" stop-color="#5a8aaa"/>
-                  <stop offset="100%" stop-color="#1e3a55"/>
-                </radialGradient>
-                <radialGradient id="pgCut" cx="45%" cy="40%">
-                  <stop offset="0%" stop-color="#c8a870"/>
-                  <stop offset="30%" stop-color="#8a6840"/>
-                  <stop offset="60%" stop-color="#4a3820"/>
-                  <stop offset="100%" stop-color="#2a1e10"/>
-                </radialGradient>
-                <filter id="pelletShadow">
-                  <feDropShadow dx="2" dy="3" stdDeviation="3" flood-color="rgba(26,48,87,0.4)"/>
-                </filter>
-                <filter id="glowGold">
-                  <feGaussianBlur stdDeviation="2" result="blur"/>
-                  <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
-                </filter>
-              </defs>
-              <!-- Background pellets (depth) -->
-              <circle cx="40" cy="155" r="16" fill="url(#pg2)" opacity="0.6"/>
-              <circle cx="72" cy="168" r="13" fill="url(#pg2)" opacity="0.55"/>
-              <circle cx="220" cy="150" r="17" fill="url(#pg2)" opacity="0.6"/>
-              <circle cx="192" cy="165" r="13" fill="url(#pg2)" opacity="0.55"/>
-
-              <!-- Mid-layer pellets -->
-              <circle cx="55" cy="135" r="19" fill="url(#pg1)" filter="url(#pelletShadow)"/>
-              <circle cx="205" cy="133" r="18" fill="url(#pg1)" filter="url(#pelletShadow)"/>
-              <circle cx="130" cy="155" r="15" fill="url(#pg3)" filter="url(#pelletShadow)"/>
-
-              <!-- Cut-open pellet showing internal structure (bottom left) -->
-              <clipPath id="halfClip">
-                <rect x="0" y="100" width="130" height="100"/>
-              </clipPath>
-              <circle cx="88" cy="108" r="28" fill="url(#pgCut)" filter="url(#pelletShadow)"/>
-              <!-- Internal rings -->
-              <circle cx="88" cy="108" r="22" fill="none" stroke="rgba(180,140,80,0.3)" stroke-width="1"/>
-              <circle cx="88" cy="108" r="16" fill="none" stroke="rgba(180,140,80,0.25)" stroke-width="0.8"/>
-              <circle cx="88" cy="108" r="10" fill="none" stroke="rgba(180,140,80,0.2)" stroke-width="0.7"/>
-              <circle cx="88" cy="108" r="5" fill="rgba(120,90,50,0.6)"/>
-              <!-- Cut line -->
-              <line x1="88" y1="80" x2="88" y2="136" stroke="rgba(200,145,42,0.5)" stroke-width="0.8" stroke-dasharray="3,2"/>
-              <text x="60" y="148" font-family="JetBrains Mono, monospace" font-size="6" fill="rgba(200,145,42,0.8)" letter-spacing="1">CUT-OPEN</text>
-
-              <!-- Front main pellets -->
-              <circle cx="130" cy="105" r="34" fill="url(#pg1)" filter="url(#pelletShadow)"/>
-              <!-- Highlight -->
-              <ellipse cx="119" cy="93" rx="10" ry="7" fill="rgba(255,255,255,0.18)" transform="rotate(-20,119,93)"/>
-
-              <circle cx="178" cy="115" r="26" fill="url(#pg3)" filter="url(#pelletShadow)"/>
-              <ellipse cx="169" cy="105" rx="7" ry="5" fill="rgba(255,255,255,0.15)" transform="rotate(-15,169,105)"/>
-
-              <!-- Size dimension lines -->
-              <line x1="100" y1="70" x2="160" y2="70" stroke="rgba(200,145,42,0.6)" stroke-width="0.8"/>
-              <line x1="100" y1="67" x2="100" y2="73" stroke="rgba(200,145,42,0.6)" stroke-width="0.8"/>
-              <line x1="160" y1="67" x2="160" y2="73" stroke="rgba(200,145,42,0.6)" stroke-width="0.8"/>
-              <text x="130" y="66" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="7" fill="rgba(200,145,42,0.9)" letter-spacing="0.5">10–16 mm</text>
-
-              <!-- Labels -->
-              <text x="130" y="190" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="6.5" fill="rgba(90,74,48,0.7)" letter-spacing="1.5">Fe₂O₃ · SiO₂ · Al₂O₃</text>
-
-              <!-- Animated sparkle dots -->
-              <circle class="pellet-sparkle" cx="145" cy="88" r="2" fill="rgba(200,145,42,0.9)"/>
-              <circle class="pellet-sparkle" cx="118" cy="97" r="1.5" fill="rgba(255,220,120,0.8)"/>
-              <circle class="pellet-sparkle" cx="138" cy="115" r="1.8" fill="rgba(200,145,42,0.7)"/>
-            </svg>
-          </div>
-        </div>
-
-        <!-- Falling Balls Animation -->
-        <div class="pellet-fall-section">
-          <div class="pellet-fall-label">ACCUMULATION SIMULATOR</div>
-          <div class="pellet-fall-container-wrap">
-            <canvas id="pelletFallCanvas"></canvas>
-            <div class="pellet-fill-readout" id="pelletFillReadout">0%</div>
-          </div>
-          <div class="pellet-fall-controls">
-            <button class="pellet-ctrl-btn" id="pelletPlayBtn" onclick="togglePelletAnim()">▶ Start</button>
-            <button class="pellet-ctrl-btn pellet-ctrl-reset" onclick="resetPelletAnim()">↺ Reset</button>
-          </div>
-          <div class="pellet-fall-meter">
-            <div class="pellet-meter-label">VESSEL FILL</div>
-            <div class="pellet-meter-bg"><div class="pellet-meter-fill" id="pelletMeterFill" style="width:0%"></div></div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-  </div>
-</div>
-
-<!-- ══ INDURATION ANIMATION CARD ══ -->
-<div class="indu-anim-overlay" id="induAnimOverlay">
-  <div class="indu-anim-panels">
-
-    <!-- LEFT: Parameters Card -->
-    <div class="indu-anim-card" id="induAnimCard">
-      <div class="indu-anim-header">
-        <div class="indu-anim-tag" id="induAnimTag">STAGE 08 · INDURATION</div>
-        <div class="indu-anim-title" id="induAnimTitle">Induration Furnace</div>
-        <div class="indu-anim-subtitle" id="induAnimSubtitle">Select machine type and configure process parameters</div>
-        <button class="indu-anim-close" onclick="closeInduCard()">✕</button>
-      </div>
-      <div class="indu-anim-body" id="induAnimBody"></div>
-      <div class="modal-footer" style="padding:1rem 1.4rem 1.2rem;flex-shrink:0;">
-        <button class="btn-save" onclick="saveInduCard()">Save Parameters</button>
-        <button class="btn-cancel" onclick="closeInduCard()">Cancel</button>
-      </div>
-    </div>
-
-    <!-- RIGHT: Diagram Card -->
-    <div class="indu-diagram-card" id="induDiagramCard">
-      <div class="indu-diagram-header">
-        <div class="indu-diagram-tag">LIVE PREVIEW</div>
-        <div class="indu-diagram-title" id="induDiagramTitle">Induration Furnace</div>
-        <div class="indu-diagram-subtitle" id="induDiagramSubtitle">Straight Grate Technology</div>
-      </div>
-      <div class="indu-diagram-body" id="induDiagramBody">
-        <!-- SVG injected by JS -->
-      </div>
-      <div class="indu-diagram-footer">
-        <div class="indu-type-badge" id="induTypeBadge">⬡ STRAIGHT GRATE</div>
-      </div>
-    </div>
-
-  </div>
-</div>
-
 <div class="modal-overlay" id="modalOverlay">
   <div class="modal-card">
     <div class="modal-header">
@@ -1625,8 +1046,8 @@ input.finp{cursor:text;}
   </a>
   <div class="nav-right">
     <a href="index.html" class="nav-btn">← Home</a>
-    <a href="dashboard_page2.html" class="nav-btn">← Prev</a>
     <a href="login.html" class="nav-btn">Sign Out</a>
+    <a href="dashboard_page2.html" class="nav-btn">Next →</a>
   </div>
 </nav>
 
@@ -1676,11 +1097,9 @@ input.finp{cursor:text;}
   <div class="canvas-wrap">
     <canvas id="processCanvas"></canvas>
     <div class="step-bar">
-      <div class="step-pill" data-step="5b">Green Ball</div>
-      <div class="step-pill" data-step="6">Screening</div>
-      <div class="step-pill" data-step="7">Induration</div>
-      <div class="step-pill" data-step="8">Cooling</div>
-      <div class="step-pill" data-step="9">Pellets</div>
+      <div class="step-pill" data-step="0">Feed</div>
+      <div class="step-pill" data-step="1">Grinding</div>
+      <div class="step-pill" data-step="2">Thickener</div>
     </div>
   </div>
 
@@ -1699,10 +1118,10 @@ input.finp{cursor:text;}
   </div>
 
   <div class="page-nav">
-    <a href="dashboard_page2.html" class="page-nav-btn">← Previous</a>
-    <div class="page-dot-wrap"><a href="dashboard_page1.html" class="page-dot"></a><a href="dashboard_page2.html" class="page-dot"></a><a href="dashboard_page3.html" class="page-dot active"></a></div>
-    <span class="page-nav-label">Page 3 of 3 · Stages 06B–10</span>
-    <span class="page-nav-btn disabled">Next →</span>
+    <span class="page-nav-btn disabled">← Previous</span>
+    <div class="page-dot-wrap"><a href="dashboard_page1.html" class="page-dot active"></a><a href="dashboard_page2.html" class="page-dot"></a><a href="dashboard_page3.html" class="page-dot"></a></div>
+    <span class="page-nav-label">Page 1 of 3 · Stages 01–03</span>
+    <a href="dashboard_page2.html" class="page-nav-btn">Next →</a>
   </div>
 </div>
 
@@ -1918,16 +1337,6 @@ function onPlantChange() {
   const tech = PLANT_TECH[plant];
   if (tech === "straight_grate") { stageParams.indu.mode = "furnace"; if (induStage) induStage.label = "INDURATION\nFURNACE"; }
   else { stageParams.indu.mode = "grate"; if (induStage) induStage.label = "TRAVELING\nGRATE &\nKILN"; }
-  // If indu card is already open, refresh diagram
-  if(document.getElementById('induAnimOverlay').classList.contains('open')){
-    const isGrate=stageParams.indu.mode==='grate';
-    const d=document.getElementById('induDiagramBody');
-    if(d) d.innerHTML=isGrate?buildKilnSVG():buildFurnaceSVG();
-    const t=document.getElementById('induDiagramTitle');
-    if(t) t.textContent=isGrate?'Grate Kiln':'Induration Furnace';
-    const b=document.getElementById('induTypeBadge');
-    if(b) b.textContent=isGrate?'⬡ TRAVELING GRATE':'⬡ STRAIGHT GRATE';
-  }
   draw(simFrame, simStep);
 }
 
@@ -1972,10 +1381,9 @@ let simRunning=false, simFrame=0, simStep=-1, animId=null, currentModalStage=nul
 
 // ═══════ STAGES ═══════
 const STAGES=[
-  {id:'greenball',label:'GREEN BALL\nPROP + SCREEN',tag:'STAGE 06B–07',shape:'screen',color:'#5a8a3a',step:5},
-  {id:'indu',     label:'INDURATION\nFURNACE',tag:'STAGE 08',shape:'furnace',  color:'#c04010',step:7},
-  {id:'cool',     label:'COOLING',             tag:'STAGE 09',shape:'trapezoid',color:'#2a7a4a',step:8},
-  {id:'pellet',   label:'FINISHED\nPELLETS',  tag:'STAGE 10',shape:'pellets',  color:'#1a3057',step:9},
+  {id:'feed',     label:'IRON ORE\nFEED',     tag:'STAGE 01',shape:'hopper',   color:'#8b4513',step:0},
+  {id:'grind',    label:'GRINDING',            tag:'STAGE 02',shape:'drum',     color:'#7a5a30',step:1},
+  {id:'thickner', label:'THICKENER',           tag:'STAGE 03',shape:'conetank', color:'#2d5fa6',step:2},
 ];
 
 // ═══════ CANVAS ═══════
@@ -1995,7 +1403,6 @@ function sizeCanvas(){
 
 function draw(frame,activeStep){
   const{W,H}=sizeCanvas();
-  if(W<=0||H<=0)return;
   ctx.clearRect(0,0,W,H);
   ctx.fillStyle='#fff'; ctx.fillRect(0,0,W,H);
   ctx.strokeStyle='rgba(200,145,42,0.035)'; ctx.lineWidth=1;
@@ -2060,7 +1467,7 @@ function draw(frame,activeStep){
     if(lit){
       const t=(frame%60)/60;
       const px=x1+(x2-x1)*t;
-      const rg=safeRadialGradient(ctx,px,midY,0,px,midY,7);
+      const rg=ctx.createRadialGradient(px,midY,0,px,midY,7);
       rg.addColorStop(0,'rgba(232,184,75,0.95)'); rg.addColorStop(1,'rgba(200,145,42,0)');
       ctx.beginPath(); ctx.arc(px,midY,7,0,Math.PI*2); ctx.fillStyle=rg; ctx.fill();
     }
@@ -2217,7 +1624,7 @@ function drawBallingDiscEnhanced(cx,cy,mW,mH,frame,stage,isActive,isDone){
     const x = Math.cos(phase) * discRx * orbitBias;
     const y = Math.sin(phase) * discRy * (0.50 - angleT * 0.04) + discRy * (0.18 + angleT * 0.12);
     const size = 3 + (p % 3);
-    const g = safeRadialGradient(ctx,x - size * 0.3, y - size * 0.3, 0, x, y, size);
+    const g = ctx.createRadialGradient(x - size * 0.3, y - size * 0.3, 0, x, y, size);
     g.addColorStop(0, '#aebccc');
     g.addColorStop(1, '#354552');
     ctx.beginPath();
@@ -2237,7 +1644,7 @@ function drawBallingDiscEnhanced(cx,cy,mW,mH,frame,stage,isActive,isDone){
     const sx = discRx * 0.30 + t * discRx * 0.42;
     const sy = -discRy * 0.04 + t * discRy * 0.24 + Math.pow(t, 1.12) * discRy * 0.22;
     const sr = 2.1 + (p % 2) * 0.5;
-    const sg = safeRadialGradient(ctx,sx - sr * 0.3, sy - sr * 0.3, 0, sx, sy, sr);
+    const sg = ctx.createRadialGradient(sx - sr * 0.3, sy - sr * 0.3, 0, sx, sy, sr);
     sg.addColorStop(0, '#c6d0d8');
     sg.addColorStop(1, '#5b6873');
     ctx.beginPath();
@@ -2376,7 +1783,7 @@ function drawMachineShape(shape,cx,cy,mW,mH,col,strokeCol,strokeW,isActive,isDon
       ctx.moveTo(cx-brimW/2+3,hopTop); ctx.lineTo(cx+brimW/2-3,hopTop);
       ctx.lineTo(cx+neckW/2,neckTop); ctx.lineTo(cx-neckW/2,neckTop);
       ctx.closePath(); ctx.clip();
-      const oreG=safeRadialGradient(ctx,cx,hopTop+funnelH*0.3,funnelH*0.05,cx,hopTop+funnelH*0.3,brimW*0.45);
+      const oreG=ctx.createRadialGradient(cx,hopTop+funnelH*0.3,funnelH*0.05,cx,hopTop+funnelH*0.3,brimW*0.45);
       oreG.addColorStop(0,'rgba(110,70,38,0.85)'); oreG.addColorStop(0.7,'rgba(65,42,22,0.80)'); oreG.addColorStop(1,'rgba(35,22,10,0)');
       ctx.fillStyle=oreG;
       ctx.beginPath(); ctx.ellipse(cx,hopTop+funnelH*0.35,brimW*0.42,funnelH*0.55,0,0,Math.PI*2); ctx.fill();
@@ -2452,7 +1859,7 @@ function drawMachineShape(shape,cx,cy,mW,mH,col,strokeCol,strokeW,isActive,isDon
 
       // End caps with rotating bolts
       const drawMainEndCap = (ecx, ecRx2, ecRy2, rotOff) => {
-        const cg = safeRadialGradient(ctx,ecx-ecRx2*0.15, cy-ecRy2*0.15, 0, ecx, cy, Math.max(ecRx2,ecRy2));
+        const cg = ctx.createRadialGradient(ecx-ecRx2*0.15, cy-ecRy2*0.15, 0, ecx, cy, Math.max(ecRx2,ecRy2));
         cg.addColorStop(0,'#8a8e98'); cg.addColorStop(0.5,'#606470'); cg.addColorStop(1,'#3c3f48');
         ctx.save();
         ctx.fillStyle=cg; ctx.strokeStyle='rgba(20,22,28,0.70)'; ctx.lineWidth=1.2;
@@ -2848,108 +2255,21 @@ function drawMachineShape(shape,cx,cy,mW,mH,col,strokeCol,strokeW,isActive,isDon
       return drawBallingDiscEnhanced(cx,cy,mW,mH,frame,stage,isActive,isDone);
     }
     case 'screen':{
-      // Main dashboard: thick inclined conveyor belt with dense visible pellet balls
-      const sw=mW*0.72, sh=mH*0.58;
-      const bx=cx-sw/2, by=cy+sh*0.05;
-      const tilt=0.20; // inclination
-      const thk=sh*0.50; // belt thickness — THICK
-      // Four corners of belt parallelogram
-      const p0={x:bx,        y:by};
-      const p1={x:bx+sw,     y:by - sw*Math.tan(tilt)};
-      // Perpendicular normal (upward from belt surface — negative y in canvas)
-      const bLenS=Math.sqrt((p1.x-p0.x)**2+(p1.y-p0.y)**2);
-      const nxS=(p1.y-p0.y)/bLenS, nyS=-(p1.x-p0.x)/bLenS;  // points UP (negative y)
-      const p2={x:p1.x+nxS*thk, y:p1.y+nyS*thk};
-      const p3={x:p0.x+nxS*thk, y:p0.y+nyS*thk};
-
-      // END DRUMS (ellipses at each end)
-      [[p0,p3],[p1,p2]].forEach(([bot,top2])=>{
-        const mx=(bot.x+top2.x)/2, my=(bot.y+top2.y)/2, dr=thk/2;
-        if(dr<=0)return;
-        const rg=safeRadialGradient(ctx,mx-dr*0.2,my-dr*0.3,0,mx,my,dr);
-        rg.addColorStop(0,'#7a8a9a'); rg.addColorStop(0.6,'#3a4a5a'); rg.addColorStop(1,'#1a2530');
-        ctx.fillStyle=rg;
-        ctx.beginPath(); ctx.ellipse(mx,my,dr*0.2,dr,0,0,Math.PI*2); ctx.fill();
-        ctx.strokeStyle='rgba(60,85,110,0.85)'; ctx.lineWidth=1.2; ctx.stroke();
-      });
-
-      // Belt surface (clip to parallelogram)
-      ctx.save();
-      ctx.beginPath(); ctx.moveTo(p0.x,p0.y); ctx.lineTo(p1.x,p1.y); ctx.lineTo(p2.x,p2.y); ctx.lineTo(p3.x,p3.y); ctx.closePath(); ctx.clip();
-
-      // Belt rubber — dark charcoal
-      const bG=ctx.createLinearGradient(p3.x,p3.y,p0.x,p0.y);
-      bG.addColorStop(0,'#1c2430'); bG.addColorStop(0.5,'#141c26'); bG.addColorStop(1,'#0e141e');
-      ctx.fillStyle=bG; ctx.fillRect(bx-4,Math.min(p2.y,p3.y)-4,sw+8,Math.abs(p0.y-Math.min(p2.y,p3.y))+thk+8);
-
-      // Transverse ribs
-      ctx.strokeStyle='rgba(50,68,82,0.9)'; ctx.lineWidth=0.8;
-      const ribSp=9, ribOff=isActive?(frame*1.4%ribSp):0;
-      for(let r=-1;r<bLenS/ribSp+1;r++){
-        const t=(r*ribSp+ribOff)/bLenS;
-        const rx2=p0.x+t*(p1.x-p0.x), ry2=p0.y+t*(p1.y-p0.y);
-        ctx.beginPath(); ctx.moveTo(rx2,ry2); ctx.lineTo(rx2+nxS*thk,ry2+nyS*thk); ctx.stroke();
-      }
-
-      // DENSE PELLET BALLS — many rows, with BORDERS
-      const pelletScroll=isActive?(frame*1.8%sw):0;
-      const ROWS2=8, COLS2=22;
-      for(let row=0;row<ROWS2;row++){
-        const hexOff=(row%2)*0.5;
-        for(let col=0;col<COLS2;col++){
-          const rawT=((col+hexOff)/COLS2*sw + pelletScroll)%sw;
-          const pt=rawT/sw;
-          const crossT=0.06+(row/Math.max(ROWS2-1,1))*0.88;
-          const ptx=p0.x+pt*(p1.x-p0.x)+crossT*nxS*thk;
-          const pty=p0.y+pt*(p1.y-p0.y)+crossT*nyS*thk;
-          const seed=col*13+row*7;
-          const pr2=2.2+Math.sin(seed*3.7)*0.6;
-          const shd=0.68+Math.sin(seed*5.1)*0.28;
-          const pg2=safeRadialGradient(ctx,ptx-pr2*0.32,pty-pr2*0.35,0,ptx,pty,pr2);
-          pg2.addColorStop(0,`rgba(${Math.round(115*shd)},${Math.round(132*shd)},${Math.round(152*shd)},1)`);
-          pg2.addColorStop(0.55,`rgba(${Math.round(44*shd)},${Math.round(57*shd)},${Math.round(74*shd)},1)`);
-          pg2.addColorStop(1,`rgba(10,14,20,1)`);
-          ctx.beginPath(); ctx.arc(ptx,pty,pr2,0,Math.PI*2);
-          ctx.fillStyle=pg2; ctx.fill();
-          // VISIBLE BORDER on every ball
-          ctx.strokeStyle=`rgba(${Math.round(155*shd)},${Math.round(178*shd)},${Math.round(205*shd)},0.8)`;
-          ctx.lineWidth=0.55; ctx.stroke();
-          // Specular highlight
-          if(shd>0.82){
-            ctx.save(); ctx.globalAlpha=0.22;
-            ctx.fillStyle='rgba(210,230,255,0.9)';
-            ctx.beginPath(); ctx.ellipse(ptx-pr2*0.27,pty-pr2*0.3,pr2*0.28,pr2*0.17,-0.4,0,Math.PI*2); ctx.fill();
-            ctx.restore();
-          }
-        }
-      }
-      ctx.restore(); // end clip
-
-      // FRAME RAILS — gold top, steel bottom
-      ctx.strokeStyle='rgba(185,130,18,0.9)'; ctx.lineWidth=2;
-      ctx.beginPath(); ctx.moveTo(p3.x,p3.y); ctx.lineTo(p2.x,p2.y); ctx.stroke();
-      ctx.strokeStyle='rgba(55,72,90,0.95)'; ctx.lineWidth=2.2;
-      ctx.beginPath(); ctx.moveTo(p0.x,p0.y); ctx.lineTo(p1.x,p1.y); ctx.stroke();
-      // Vertical support posts (gold)
-      ctx.strokeStyle='rgba(185,130,18,0.8)'; ctx.lineWidth=1.4;
-      [0,0.25,0.5,0.75,1.0].forEach(t=>{
-        const px2=p3.x+t*(p2.x-p3.x), py2=p3.y+t*(p2.y-p3.y);
-        const pb2x=p0.x+t*(p1.x-p0.x), pb2y=p0.y+t*(p1.y-p0.y);
-        ctx.beginPath(); ctx.moveTo(px2,py2); ctx.lineTo(pb2x,pb2y); ctx.stroke();
-        ctx.fillStyle='rgba(175,125,18,0.9)';
-        ctx.beginPath(); ctx.arc(px2,py2,1.8,0,Math.PI*2); ctx.fill();
-      });
-      // Underside shadow
-      const panGr=ctx.createLinearGradient(p0.x,p0.y,p0.x,p0.y+sh*0.14);
-      panGr.addColorStop(0,'rgba(35,45,58,0.7)'); panGr.addColorStop(1,'rgba(18,25,32,0)');
-      ctx.fillStyle=panGr;
-      ctx.beginPath(); ctx.moveTo(p0.x,p0.y); ctx.lineTo(p1.x,p1.y); ctx.lineTo(p1.x,p1.y+sh*0.12); ctx.lineTo(p0.x,p0.y+sh*0.12); ctx.closePath(); ctx.fill();
-      return{x:bx, y:Math.min(p2.y,p3.y), w:sw, h:Math.abs(p0.y - Math.min(p2.y,p3.y))+thk*0.1};
+      const sw=mW*0.58,sh=mH*0.46; const top=cy-sh/2;
+      const vib=isActive?Math.sin(frame*0.5)*2:0;
+      ctx.save(); ctx.translate(0,vib);
+      ctx.beginPath(); ctx.roundRect(cx-sw/2,top,sw,sh,3); ctx.fill(); ctx.stroke();
+      ctx.strokeStyle='rgba(255,255,255,0.22)'; ctx.lineWidth=0.8;
+      for(let g=1;g<5;g++){ctx.beginPath();ctx.moveTo(cx-sw/2,top+g*sh/5);ctx.lineTo(cx+sw/2,top+g*sh/5);ctx.stroke();}
+      for(let g=1;g<7;g++){ctx.beginPath();ctx.moveTo(cx-sw/2+g*sw/7,top);ctx.lineTo(cx-sw/2+g*sw/7,top+sh);ctx.stroke();}
+      ctx.restore();
+      if(isActive){for(let p=0;p<3;p++){const py2=cy+sh/2+1+(frame*2+p*18)%(sh*0.5);const pg=ctx.createRadialGradient(cx+(p-1)*12,py2,0,cx+(p-1)*12,py2,3.5);pg.addColorStop(0,'#8ba3b5');pg.addColorStop(1,'#2a4a5a');ctx.beginPath();ctx.arc(cx+(p-1)*12,py2,3.5,0,Math.PI*2);ctx.fillStyle=pg;ctx.fill();}}
+      return{x:cx-sw/2,y:top,w:sw,h:sh};
     }
     case 'furnace':{
       const fw=mW*0.50,fh=mH*0.72; const top=cy-fh/2;
       ctx.beginPath(); ctx.roundRect(cx-fw/2,top,fw,fh,3); ctx.fill(); ctx.stroke();
-      const fg=safeRadialGradient(ctx,cx,cy,0,cx,cy,fw*0.65);
+      const fg=ctx.createRadialGradient(cx,cy,0,cx,cy,fw*0.65);
       fg.addColorStop(0,'rgba(255,150,30,0.5)'); fg.addColorStop(1,'rgba(200,60,0,0)');
       ctx.fillStyle=fg; ctx.beginPath(); ctx.ellipse(cx,cy,fw*0.52,fh*0.32,0,0,Math.PI*2); ctx.fill();
       if(isActive){
@@ -2970,7 +2290,7 @@ function drawMachineShape(shape,cx,cy,mW,mH,col,strokeCol,strokeW,isActive,isDon
       pelletDefs.forEach(pd=>{
         const px=cx+pd.ox*Math.cos(ang)-pd.oy*Math.sin(ang)*0.3;
         const py=cy+pd.ox*Math.sin(ang)*0.3+pd.oy*Math.cos(ang);
-        const pg=safeRadialGradient(ctx,px-pd.rr*0.35,py-pd.rr*0.35,0,px,py,pd.rr);
+        const pg=ctx.createRadialGradient(px-pd.rr*0.35,py-pd.rr*0.35,0,px,py,pd.rr);
         pg.addColorStop(0,'#9ab8cc'); pg.addColorStop(0.6,'#4a7a9a'); pg.addColorStop(1,'#1a3a5a');
         ctx.beginPath(); ctx.arc(px,py,pd.rr,0,Math.PI*2); ctx.fillStyle=pg; ctx.fill();
         ctx.strokeStyle='rgba(140,175,200,0.35)'; ctx.lineWidth=0.7; ctx.stroke();
@@ -2987,22 +2307,6 @@ function safeNum(v, fallback=null){
   const n = Number(v);
   return Number.isFinite(n) ? n : fallback;
 }
-
-function safeRadialGradient(ctx, x0, y0, r0, x1, y1, r1, fallback='#888'){
-  if(!Number.isFinite(x0)||!Number.isFinite(y0)||!Number.isFinite(r0)||
-     !Number.isFinite(x1)||!Number.isFinite(y1)||!Number.isFinite(r1)||
-     r0<0||r1<=0){
-    return ctx.createLinearGradient(0,0,1,0); // safe fallback
-  }
-  return ctx.createRadialGradient(x0,y0,r0,x1,y1,r1);
-}
-function safeLinearGradient(ctx, x0, y0, x1, y1){
-  if(!Number.isFinite(x0)||!Number.isFinite(y0)||!Number.isFinite(x1)||!Number.isFinite(y1)){
-    return ctx.createLinearGradient(0,0,1,0);
-  }
-  return ctx.createLinearGradient(x0,y0,x1,y1);
-}
-
 function hslTempColor(temp, variant='main'){
   const t = clamp((safeNum(temp, 0) - 120) / (950 - 120), 0, 1);
   const hue = 200 - t * 170; // cool blue -> hot red/orange
@@ -3034,7 +2338,6 @@ function tempZoneColors(temp){
 
 
 function drawCoolingKiln(cx, cy, mW, mH, stage, isActive, isDone, frame){
-  if(mW<=0||mH<=0) return{x:cx,y:cy,w:0,h:0};
   const temps = coolingTemps();
 
   // Temperature → heat color (hot pink/magenta → red → orange → yellow → pale)
@@ -3290,14 +2593,13 @@ function drawCoolingKiln(cx, cy, mW, mH, stage, isActive, isDone, frame){
 
 
 function drawPelletBurst(cx,cy,frame,r){
-  if(r<=0)return;
   const count=12;
   for(let p=0;p<count;p++){
     const ang=(frame*0.03)+p*Math.PI*2/count;
     const dist=r+16+Math.sin(frame*0.08+p)*7;
     const pr=5+p%3;
     const px=cx+Math.cos(ang)*dist,py=cy+Math.sin(ang)*dist*0.5;
-    const pg=safeRadialGradient(ctx,px-pr*0.4,py-pr*0.4,0,px,py,pr);
+    const pg=ctx.createRadialGradient(px-pr*0.4,py-pr*0.4,0,px,py,pr);
     pg.addColorStop(0,'#9ab8cc'); pg.addColorStop(1,'#1a3a5a');
     ctx.beginPath(); ctx.arc(px,py,pr,0,Math.PI*2); ctx.fillStyle=pg; ctx.fill();
     ctx.strokeStyle='rgba(140,175,200,0.4)'; ctx.lineWidth=0.6; ctx.stroke();
@@ -4082,20 +3384,6 @@ function switchInduMode(mode){
   document.getElementById('indu-params-area').innerHTML=getInduFields(mode);
   const s=STAGES.find(st=>st.id==='indu');
   if(s)s.label=mode==='furnace'?'INDURATION\nFURNACE':'GRATE\nKILN';
-  // Update diagram card live
-  const isGrate=mode==='grate';
-  const dTitle=document.getElementById('induDiagramTitle');
-  const dSub=document.getElementById('induDiagramSubtitle');
-  const dBadge=document.getElementById('induTypeBadge');
-  const dBody=document.getElementById('induDiagramBody');
-  const aTitle=document.getElementById('induAnimTitle');
-  const aSub=document.getElementById('induAnimSubtitle');
-  if(dTitle) dTitle.textContent=isGrate?'Grate Kiln':'Induration Furnace';
-  if(dSub) dSub.textContent=isGrate?'Traveling Grate Technology':'Straight Grate Technology';
-  if(dBadge) dBadge.textContent=isGrate?'⬡ TRAVELING GRATE':'⬡ STRAIGHT GRATE';
-  if(dBody) dBody.innerHTML=isGrate?buildKilnSVG():buildFurnaceSVG();
-  if(aTitle) aTitle.textContent=isGrate?'Grate Kiln':'Induration Furnace';
-  if(aSub) aSub.textContent=isGrate?'Configure traveling grate kiln parameters':'Configure induration furnace parameters';
 }
 
 function selectFeedZone(zone){
@@ -4118,7 +3406,7 @@ function isStageConfigured(id){
   if(id==='thickner')  return !!stageParams.thickner.underflowDensity;
   if(id==='filter')    return !!stageParams.filter.cakeMoisture;
   if(id==='mix')       return !!stageParams.mix.binder;
-  if(id==='greenball') return !!stageParams.greenball.moisture || !!stageParams.screen.s8_10;
+  if(id==='greenball') return !!stageParams.greenball.moisture;
   return false;
 }
 
@@ -4128,10 +3416,6 @@ function openModal(stageId){
   if(stageId==='thickner'){openThickCard();return;}
   if(stageId==='filter'){openFilterCard();return;}
   if(stageId==='mix'){openMixCard();return;}
-  if(stageId==='pellet'){openPelletCard();return;}
-  if(stageId==='greenball'){openGbCard();return;}
-  if(stageId==='cool'){openCoolCard();return;}
-  if(stageId==='indu'){openInduCard();return;}
   currentModalStage=stageId;
   const s=STAGES.find(st=>st.id===stageId);
   const cfg=MODAL_CONFIGS[stageId];
@@ -4357,7 +3641,7 @@ function drawFeedMini(frame, burst){
     const oreAlpha = Math.min(feedFillLevel * 1.1, 0.92);
     // The pile top rises as fill level increases (starts at bottom of funnel, rises up)
     const pileTopOffset = pileH * 0.85 * (1 - feedFillLevel);
-    const oreGrad=safeRadialGradient(feedMiniCtx,cx,pileY+pileH*0.4+pileTopOffset,pileH*0.05,cx,pileY+pileH*0.4+pileTopOffset,brimW*0.44);
+    const oreGrad=feedMiniCtx.createRadialGradient(cx,pileY+pileH*0.4+pileTopOffset,pileH*0.05,cx,pileY+pileH*0.4+pileTopOffset,brimW*0.44);
     oreGrad.addColorStop(0,`rgba(110,70,40,${oreAlpha})`);
     oreGrad.addColorStop(0.7,`rgba(70,45,25,${oreAlpha*0.95})`);
     oreGrad.addColorStop(1,`rgba(40,25,15,0)`);
@@ -4378,7 +3662,7 @@ function drawFeedMini(frame, burst){
       const wave=Math.sin(b*0.85+frame*0.008)*3;
       const by=pileY+pileTopOffset+pileH*0.18+Math.abs(Math.sin(b*1.4))*pileH*0.18+wave;
       const br=3+b%3*0.8;
-      const bg2=safeRadialGradient(feedMiniCtx,bx-br*0.35,by-br*0.35,0,bx,by,br);
+      const bg2=feedMiniCtx.createRadialGradient(bx-br*0.35,by-br*0.35,0,bx,by,br);
       bg2.addColorStop(0,`rgba(160,95,50,${ballAlpha})`);
       bg2.addColorStop(0.6,`rgba(105,60,28,${ballAlpha*0.9})`);
       bg2.addColorStop(1,`rgba(60,35,15,${ballAlpha*0.8})`);
@@ -4404,7 +3688,7 @@ function drawFeedMini(frame, burst){
       if(Math.abs(sx-cx)>maxX+4) continue;
       const alpha=(t<0.15?(t/0.15):(t>0.75?(1-(t-0.75)/0.25):1))*0.88*feedFillLevel;
       const r=1.6+p%4*0.55;
-      const bOre=safeRadialGradient(feedMiniCtx,sx-r*0.3,fy-r*0.3,0,sx,fy,r);
+      const bOre=feedMiniCtx.createRadialGradient(sx-r*0.3,fy-r*0.3,0,sx,fy,r);
       bOre.addColorStop(0,`rgba(180,105,45,${alpha.toFixed(2)})`);
       bOre.addColorStop(1,`rgba(100,55,20,${(alpha*0.5).toFixed(2)})`);
       feedMiniCtx.beginPath(); feedMiniCtx.arc(sx,fy,r,0,Math.PI*2);
@@ -4606,7 +3890,7 @@ function drawGrindMini(frame, burst) {
   // ── BOLTED MANHOLE COVER (rotating) — drawn as repeating bolts around the end-cap ──
   const drawEndCap = (ecx, ecRx, ecRy, rotOff) => {
     // Base end-cap disc
-    const capGrad = safeRadialGradient(g,ecx - ecRx*0.2, cy - ecRy*0.2, 0, ecx, cy, Math.max(ecRx, ecRy));
+    const capGrad = g.createRadialGradient(ecx - ecRx*0.2, cy - ecRy*0.2, 0, ecx, cy, Math.max(ecRx, ecRy));
     capGrad.addColorStop(0, '#7c8190');
     capGrad.addColorStop(0.5,'#5a5e68');
     capGrad.addColorStop(1, '#3a3d45');
@@ -5334,7 +4618,7 @@ function drawFilterMini(frame, burst) {
     g.rotate(rot);
 
     // Disc body — dark grey so it contrasts on white
-    const dg = safeRadialGradient(g,0, 0, discRy*0.1, 0, 0, discRy);
+    const dg = g.createRadialGradient(0, 0, discRy*0.1, 0, 0, discRy);
     dg.addColorStop(0, '#555'); dg.addColorStop(0.6, '#3a3a3a'); dg.addColorStop(1, '#222');
     g.fillStyle = dg; g.strokeStyle = 'rgba(80,80,80,0.5)'; g.lineWidth = 1;
     g.beginPath(); g.ellipse(0, 0, discRx, discRy, 0, 0, Math.PI*2); g.fill(); g.stroke();
@@ -6023,1207 +5307,6 @@ document.getElementById('plantCapacity').addEventListener('input', saveStateToSt
 
 const _origResetAll = resetAll;
 window.resetAll = function() { _origResetAll(); localStorage.removeItem(STATE_KEY); };
-
-
-// ═══════════════════════════════════════════════════════════
-// GREEN BALL PROP + SCREENING — CONVEYOR BELT ANIMATION
-// ═══════════════════════════════════════════════════════════
-let gbFrame=0, gbAnimId=null, gbActive=false;
-let gbBeltOffset=0;
-const GB_BELT_SPEED=1.8; // px per frame
-
-const gbCanvas=document.getElementById('gbFallCanvas');
-const gbCtx=gbCanvas.getContext('2d');
-
-function sizeGbCanvas(){
-  const wrap=gbCanvas.parentElement;
-  const W=Math.max(wrap.clientWidth||440,10);
-  const H=Math.max(wrap.clientHeight||300,10);
-  const ratio=window.devicePixelRatio||1;
-  const wPx=Math.round(W*ratio), hPx=Math.round(H*ratio);
-  if(gbCanvas.width!==wPx||gbCanvas.height!==hPx){
-    gbCanvas.width=wPx; gbCanvas.height=hPx;
-    gbCtx.setTransform(ratio,0,0,ratio,0,0);
-  }
-  return{W,H};
-}
-
-// Pre-generate pellet positions on the belt (static layout, belt scrolls underneath)
-let GB_PELLETS=null;
-function buildPellets(beltW, beltH, count){
-  const pels=[];
-  const TILE=beltH*2.6; // vertical repeat tile
-  for(let i=0;i<count;i++){
-    pels.push({
-      lx: (Math.random()-0.15)*beltW,           // local x across belt width
-      ly: Math.random()*TILE,                    // local y in tile
-      r:  3.2+Math.random()*3.8,                 // radius
-      jx: (Math.random()-0.5)*1.2,               // jitter x
-      jy: (Math.random()-0.5)*0.6,               // jitter y
-      shade: 0.78+Math.random()*0.22,            // brightness 0..1
-    });
-  }
-  return{pels, TILE};
-}
-
-function drawConveyorBelt(frame){
-  const{W,H}=sizeGbCanvas();
-  gbCtx.clearRect(0,0,W,H);
-
-  // ── Light cream background ──
-  const bg=gbCtx.createLinearGradient(0,0,W,H);
-  bg.addColorStop(0,'#fdf8f0'); bg.addColorStop(1,'#f5ede0');
-  gbCtx.fillStyle=bg; gbCtx.fillRect(0,0,W,H);
-
-  // Subtle grid lines on cream background
-  gbCtx.strokeStyle='rgba(200,145,42,0.08)'; gbCtx.lineWidth=1;
-  for(let gx=0;gx<W;gx+=40){gbCtx.beginPath();gbCtx.moveTo(gx,0);gbCtx.lineTo(gx,H);gbCtx.stroke();}
-  for(let gy=0;gy<H;gy+=40){gbCtx.beginPath();gbCtx.moveTo(0,gy);gbCtx.lineTo(W,gy);gbCtx.stroke();}
-
-  // ── Belt geometry — CENTRED and slanted ──
-  // Belt occupies 80% of width, centred horizontally, vertically centred
-  const TILT = 0.18;  // incline angle (radians) — clearly slanted
-  const beltW = W * 0.82;
-  const startX = (W - beltW) / 2;
-  const centreY = H * 0.52; // vertical centre
-  const x1 = startX;
-  const x2 = startX + beltW;
-  const tiltRise = beltW * Math.tan(TILT);
-  const y1 = centreY + tiltRise * 0.5;   // bottom-left lower rail
-  const y2 = centreY - tiltRise * 0.5;   // bottom-right lower rail (higher)
-  const beltDX=x2-x1, beltDY=y2-y1;
-  const beltLen=Math.sqrt(beltDX*beltDX+beltDY*beltDY);
-
-  // Belt is THICK — 38% of H  
-  const BELT_THK = H*0.42;
-  // Perpendicular (upward normal from belt surface)
-  const nxU=-beltDY/beltLen, nyU=beltDX/beltLen; // points "up" from lower rail
-
-  // Four belt corners
-  const bBL={x:x1,              y:y1};
-  const bBR={x:x2,              y:y2};
-  const bTR={x:x2+nxU*BELT_THK, y:y2+nyU*BELT_THK};
-  const bTL={x:x1+nxU*BELT_THK, y:y1+nyU*BELT_THK};
-
-  // ── END DRUMS first (behind belt) ──
-  [[bBL,bTL,'left'],[bBR,bTR,'right']].forEach(([bot,top,side])=>{
-    const mx=(bot.x+top.x)/2, my=(bot.y+top.y)/2;
-    const dr=BELT_THK/2;
-    const dg=safeRadialGradient(gbCtx,mx-(side==='left'?dr*0.3:-dr*0.1),my-dr*0.25,0,mx,my,dr);
-    dg.addColorStop(0,'#8a9aaa'); dg.addColorStop(0.5,'#4a5a6a'); dg.addColorStop(1,'#1e2c3c');
-    gbCtx.fillStyle=dg;
-    gbCtx.beginPath(); gbCtx.ellipse(mx,my,dr*0.18,dr,0,0,Math.PI*2); gbCtx.fill();
-    gbCtx.strokeStyle='rgba(60,80,100,0.8)'; gbCtx.lineWidth=2.5;
-    gbCtx.stroke();
-    // Drum bolts
-    for(let b=0;b<6;b++){
-      const ba=b*Math.PI/3;
-      const bx2=mx+Math.cos(ba)*dr*0.55*0.18, by2=my+Math.sin(ba)*dr*0.55;
-      gbCtx.fillStyle='rgba(70,90,110,0.9)';
-      gbCtx.beginPath(); gbCtx.arc(bx2,by2,1.5,0,Math.PI*2); gbCtx.fill();
-    }
-  });
-
-  // ── UNDERSIDE ROLLERS (cylindrical, showing beneath belt) ──
-  const rollerCount=10;
-  for(let ri=1;ri<rollerCount;ri++){
-    const rt=ri/rollerCount;
-    const rx=bBL.x+rt*beltDX, ry=bBL.y+rt*beltDY;
-    const rcx=rx-nxU*BELT_THK*0.06, rcy=ry-nyU*BELT_THK*0.06;
-    const rr=BELT_THK*0.055;
-    const rg=safeRadialGradient(gbCtx,rcx-rr*0.15,rcy-rr*0.3,0,rcx,rcy,rr);
-    rg.addColorStop(0,'#6a7a8a'); rg.addColorStop(0.7,'#2e3e50'); rg.addColorStop(1,'#141e28');
-    gbCtx.fillStyle=rg;
-    gbCtx.beginPath(); gbCtx.ellipse(rcx,rcy,rr*0.28,rr,0,0,Math.PI*2); gbCtx.fill();
-    gbCtx.strokeStyle='rgba(70,100,130,0.6)'; gbCtx.lineWidth=1; gbCtx.stroke();
-  }
-
-  // ── BELT SURFACE + PELLETS (clipped to parallelogram) ──
-  gbCtx.save();
-  gbCtx.beginPath();
-  gbCtx.moveTo(bBL.x,bBL.y); gbCtx.lineTo(bBR.x,bBR.y);
-  gbCtx.lineTo(bTR.x,bTR.y); gbCtx.lineTo(bTL.x,bTL.y);
-  gbCtx.closePath();
-  gbCtx.clip();
-
-  // Belt rubber base — darker for contrast against cream
-  const bGr=gbCtx.createLinearGradient(bTL.x,bTL.y,bBL.x,bBL.y);
-  bGr.addColorStop(0,'#1e2830'); bGr.addColorStop(0.45,'#151c24'); bGr.addColorStop(1,'#0e1520');
-  gbCtx.fillStyle=bGr; gbCtx.fillRect(-10,-10,W+20,H+20);
-
-  // Transverse ribs moving with belt
-  const ribSpacing=14;
-  const ribOff=gbActive?(gbBeltOffset*GB_BELT_SPEED)%ribSpacing:0;
-  gbCtx.strokeStyle='rgba(38,52,62,0.9)'; gbCtx.lineWidth=1.1;
-  for(let r=-2;r<beltLen/ribSpacing+2;r++){
-    const t=(r*ribSpacing+ribOff)/beltLen;
-    const rx=bBL.x+t*beltDX, ry=bBL.y+t*beltDY;
-    gbCtx.beginPath();
-    gbCtx.moveTo(rx,ry);
-    gbCtx.lineTo(rx+nxU*BELT_THK, ry+nyU*BELT_THK);
-    gbCtx.stroke();
-  }
-
-  // ── DENSE PELLETS ──
-  if(!GB_PELLETS){
-    // Build pellet grid: small, packed tightly
-    const ROWS=28, COLS=80;
-    const pels=[];
-    for(let row=0;row<ROWS;row++){
-      for(let col=0;col<COLS;col++){
-        const offset=(row%2)*0.5; // hex offset
-        pels.push({
-          col: col+offset,
-          row,
-          COLS,
-          ROWS,
-          r: 2.4 + Math.random()*1.2,  // small: 2.4–3.6px
-          jx:(Math.random()-0.5)*2.0,
-          jy:(Math.random()-0.5)*1.5,
-          shade: 0.65+Math.random()*0.35,
-          phase: Math.random()*Math.PI*2,
-        });
-      }
-    }
-    GB_PELLETS={pels,ROWS,COLS};
-  }
-
-  const{pels,ROWS,COLS}=GB_PELLETS;
-  const scrollAlong=gbActive?gbBeltOffset*GB_BELT_SPEED:0;
-  const TOTAL_SCROLL_LEN=beltLen; // wrap over full length
-
-  for(const p of pels){
-    // Cross-belt position (0..1)
-    const crossT = (p.row+0.5)/ROWS;
-    // Along-belt position scrolling
-    const rawAlong = ((p.col/COLS)*beltLen - scrollAlong + p.jx + beltLen*2) % beltLen;
-    const alongT = rawAlong / beltLen;
-
-    // World coordinates
-    const wx = bBL.x + alongT*beltDX + crossT*nxU*BELT_THK + p.jx*0.3;
-    const wy = bBL.y + alongT*beltDY + crossT*nyU*BELT_THK + p.jy*0.3;
-
-    const r=p.r, s=p.shade;
-    // Dark near-black with blue-grey sheen — like real iron ore pellets
-    const pg=safeRadialGradient(gbCtx,wx-r*0.32,wy-r*0.35,0,wx,wy,r);
-    pg.addColorStop(0,   `rgba(${Math.round(118*s)},${Math.round(132*s)},${Math.round(150*s)},1)`);
-    pg.addColorStop(0.5, `rgba(${Math.round(48*s)}, ${Math.round(60*s)}, ${Math.round(75*s)},1)`);
-    pg.addColorStop(1,   `rgba(10,15,22,1)`);
-    gbCtx.beginPath(); gbCtx.arc(wx,wy,r,0,Math.PI*2);
-    gbCtx.fillStyle=pg; gbCtx.fill();
-    // VISIBLE BORDER on every ball for contrast against cream background
-    gbCtx.strokeStyle=`rgba(${Math.round(160*s)},${Math.round(185*s)},${Math.round(210*s)},0.75)`;
-    gbCtx.lineWidth=0.7;
-    gbCtx.stroke();
-
-    // Tiny specular
-    if(s>0.8){
-      gbCtx.save(); gbCtx.globalAlpha=0.3;
-      gbCtx.fillStyle='rgba(210,230,250,0.9)';
-      gbCtx.beginPath(); gbCtx.ellipse(wx-r*0.28,wy-r*0.3,r*0.3,r*0.18,-0.4,0,Math.PI*2); gbCtx.fill();
-      gbCtx.restore();
-    }
-  }
-
-  // Subtle depth-of-field vignette on top surface
-  const vig=gbCtx.createLinearGradient(bTL.x,bTL.y,bBL.x,bBL.y);
-  vig.addColorStop(0,'rgba(0,0,0,0.35)'); vig.addColorStop(0.15,'rgba(0,0,0,0)');
-  vig.addColorStop(0.85,'rgba(0,0,0,0)'); vig.addColorStop(1,'rgba(0,0,0,0.25)');
-  gbCtx.fillStyle=vig; gbCtx.fillRect(-10,-10,W+20,H+20);
-
-  // Dust/mist rising from pellet layer
-  if(gbActive){
-    for(let d=0;d<12;d++){
-      const dt=((d/12 + frame*0.003)%1);
-      const dBx=bBL.x+dt*beltDX + nxU*BELT_THK*0.7;
-      const dBy=bBL.y+dt*beltDY + nyU*BELT_THK*0.7;
-      const rise=(frame*0.4+d*22)%35;
-      const alpha=Math.max(0,0.08*(1-rise/35));
-      gbCtx.beginPath(); gbCtx.arc(dBx,dBy-rise,5+rise*0.3,0,Math.PI*2);
-      gbCtx.fillStyle=`rgba(170,185,195,${alpha})`; gbCtx.fill();
-    }
-  }
-
-  gbCtx.restore(); // end belt clip
-
-  // ── STEEL FRAME (drawn on top) ──
-  // Yellow guard rail (like real image — safety yellow)
-  const railY='rgba(185,130,15,0.9)';
-  gbCtx.strokeStyle=railY; gbCtx.lineWidth=3.5;
-  // Top guard rail (along upper edge of belt)
-  gbCtx.beginPath(); gbCtx.moveTo(bTL.x,bTL.y); gbCtx.lineTo(bTR.x,bTR.y); gbCtx.stroke();
-  // Bottom frame rail
-  gbCtx.strokeStyle='rgba(55,72,90,0.95)'; gbCtx.lineWidth=4;
-  gbCtx.beginPath(); gbCtx.moveTo(bBL.x,bBL.y); gbCtx.lineTo(bBR.x,bBR.y); gbCtx.stroke();
-
-  // Vertical support posts (yellow, like image)
-  gbCtx.strokeStyle=railY; gbCtx.lineWidth=2.5;
-  const postTs=[0.0,0.15,0.32,0.5,0.68,0.85,1.0];
-  postTs.forEach(t=>{
-    const px2=bTL.x+t*(bTR.x-bTL.x), py2=bTL.y+t*(bTR.y-bTL.y);
-    const pb2x=bBL.x+t*(bBR.x-bBL.x), pb2y=bBL.y+t*(bBR.y-bBL.y);
-    gbCtx.beginPath(); gbCtx.moveTo(px2,py2); gbCtx.lineTo(pb2x,pb2y); gbCtx.stroke();
-    // Post bolt
-    gbCtx.fillStyle='rgba(175,130,20,0.95)';
-    gbCtx.beginPath(); gbCtx.arc(px2,py2,3,0,Math.PI*2); gbCtx.fill();
-    gbCtx.beginPath(); gbCtx.arc(pb2x,pb2y,3,0,Math.PI*2); gbCtx.fill();
-  });
-
-  // Outer side plates (dark steel panel beneath belt)
-  const panelGr=gbCtx.createLinearGradient(bBL.x,bBL.y,bBL.x,bBL.y+H*0.18);
-  panelGr.addColorStop(0,'rgba(38,50,65,0.88)'); panelGr.addColorStop(1,'rgba(18,25,32,0.0)');
-  gbCtx.fillStyle=panelGr;
-  gbCtx.beginPath(); gbCtx.moveTo(bBL.x,bBL.y); gbCtx.lineTo(bBR.x,bBR.y); gbCtx.lineTo(bBR.x,bBR.y+H*0.16); gbCtx.lineTo(bBL.x,bBL.y+H*0.16); gbCtx.closePath(); gbCtx.fill();
-
-  // Belt edge glow (gold)
-  gbCtx.save(); gbCtx.shadowColor='rgba(185,130,20,0.35)'; gbCtx.shadowBlur=10;
-  gbCtx.strokeStyle='rgba(185,130,20,0.5)'; gbCtx.lineWidth=2;
-  gbCtx.beginPath(); gbCtx.moveTo(bTL.x,bTL.y); gbCtx.lineTo(bTR.x,bTR.y); gbCtx.stroke();
-  gbCtx.restore();
-
-  // Status label — dark text visible on cream
-  gbCtx.font='500 8px JetBrains Mono'; gbCtx.fillStyle='rgba(130,100,30,0.75)';
-  gbCtx.textAlign='right'; gbCtx.fillText('SCREENING CONVEYOR · LIVE',W-8,H-8); gbCtx.textAlign='left';
-
-  // Advance belt
-  if(gbActive) gbBeltOffset++;
-}
-
-function gbLoop(){
-  drawConveyorBelt(gbFrame);
-  gbFrame++;
-  gbAnimId=requestAnimationFrame(gbLoop);
-}
-
-function gbTriggerBurst(){
-  gbActive=true;
-  const hint=document.getElementById('gbHintLabel');
-  if(hint) hint.classList.add('hidden');
-  // Update stat tiles
-  const moist=document.getElementById('m-gbp-moist');
-  const drop=document.getElementById('m-gbp-drop');
-  const gcs=document.getElementById('m-gbp-gcs');
-  const recycled=document.getElementById('m-recycled');
-  if(document.getElementById('gbStatMoist')) document.getElementById('gbStatMoist').textContent=moist&&moist.value?moist.value+'%':'—';
-  if(document.getElementById('gbStatDrop'))  document.getElementById('gbStatDrop').textContent=drop&&drop.value?drop.value:'—';
-  if(document.getElementById('gbStatGcs'))   document.getElementById('gbStatGcs').textContent=gcs&&gcs.value?gcs.value+' kg':'—';
-  if(document.getElementById('gbStatSize'))  document.getElementById('gbStatSize').textContent=recycled&&recycled.value?recycled.value+'%':'—';
-}
-
-function attachGbInputListeners(){
-  ['m-gbp-moist','m-gbp-drop','m-gbp-gcs','m-gbp-size','m-gbp-por',
-   'm-s8','m-s10','m-s12','m-s14','m-recycled','m-recycled-unit'].forEach(id=>{
-    const el=document.getElementById(id);
-    if(el){ el.addEventListener('input',gbTriggerBurst); el.addEventListener('change',gbTriggerBurst); }
-  });
-}
-
-function openGbCard(){
-  // Render BOTH greenball and screen fields merged
-  const gbCfg=MODAL_CONFIGS['greenball'];
-  const sCfg=MODAL_CONFIGS['screen'];
-  if(!gbCfg||!sCfg) return;
-  document.getElementById('gbAnimBody').innerHTML=`
-    <div style="margin-bottom:.4rem;padding:6px 10px;background:rgba(26,48,87,0.06);border-left:3px solid var(--gold);border-radius:0 4px 4px 0;font-family:'JetBrains Mono';font-size:.5rem;letter-spacing:2px;color:var(--gold);text-transform:uppercase;">Green Ball Properties</div>
-    ${gbCfg.fields()}
-    <div style="margin:1rem 0 .4rem;padding:6px 10px;background:rgba(26,48,87,0.06);border-left:3px solid var(--gold);border-radius:0 4px 4px 0;font-family:'JetBrains Mono';font-size:.5rem;letter-spacing:2px;color:var(--gold);text-transform:uppercase;">Screening</div>
-    ${sCfg.fields()}
-  `;
-  GB_PELLETS=null; // rebuild pellet layout
-  gbActive=false;
-  gbBeltOffset=0;
-  gbFrame=0;
-  const hint=document.getElementById('gbHintLabel');
-  if(hint) hint.classList.remove('hidden');
-  ['gbStatMoist','gbStatDrop','gbStatGcs','gbStatSize'].forEach(id=>{const el=document.getElementById(id);if(el)el.textContent='—';});
-  document.getElementById('gbAnimOverlay').classList.add('open');
-  if(gbAnimId) cancelAnimationFrame(gbAnimId);
-  gbLoop();
-  setTimeout(attachGbInputListeners,50);
-}
-
-function closeGbCard(){
-  document.getElementById('gbAnimOverlay').classList.remove('open');
-  if(gbAnimId){cancelAnimationFrame(gbAnimId); gbAnimId=null;}
-  gbActive=false;
-}
-
-function saveGbCard(){
-  const gbCfg=MODAL_CONFIGS['greenball'];
-  const sCfg=MODAL_CONFIGS['screen'];
-  if(gbCfg) gbCfg.save();
-  if(sCfg) sCfg.save();
-  closeGbCard();
-  updateSummaryParams();
-}
-
-document.getElementById('gbAnimOverlay').addEventListener('click',function(e){if(e.target===this)closeGbCard();});
-// ═══════════════════════════════════════════════════════════
-// PELLET ANIMATION CARD
-// ═══════════════════════════════════════════════════════════
-let pelletFallFrame=0, pelletFallAnimId=null, pelletFallActive=false;
-let pelletFillLevel=0; // 0..1
-let pelletBalls=[];    // array of {x,y,vx,vy,r,hue,settled}
-const pelletFallCanvas=document.getElementById('pelletFallCanvas');
-const pelletFallCtx=pelletFallCanvas.getContext('2d');
-
-const PELLET_COLORS=[
-  {h1:'#a8c8e0',h2:'#4a7a9a',h3:'#1a3a5a'},
-  {h1:'#9ab8cc',h2:'#3a6a8a',h3:'#152d4a'},
-  {h1:'#b0c8d8',h2:'#5a8aaa',h3:'#1e3a55'},
-  {h1:'#88aacc',h2:'#2a5a80',h3:'#122545'},
-];
-
-function sizePelletCanvas(){
-  const wrap=pelletFallCanvas.parentElement;
-  const W=Math.max(wrap.clientWidth||380,10);
-  const H=Math.max(wrap.clientHeight||170,10);
-  const ratio=window.devicePixelRatio||1;
-  const wPx=Math.round(W*ratio), hPx=Math.round(H*ratio);
-  if(pelletFallCanvas.width!==wPx||pelletFallCanvas.height!==hPx){
-    pelletFallCanvas.width=wPx; pelletFallCanvas.height=hPx;
-    pelletFallCtx.setTransform(ratio,0,0,ratio,0,0);
-  }
-  return{W,H};
-}
-
-function spawnPelletBall(W){
-  const r=6+Math.random()*5;
-  const col=PELLET_COLORS[Math.floor(Math.random()*PELLET_COLORS.length)];
-  return{
-    x: r*2 + Math.random()*(W-r*4),
-    y: -r*2 - Math.random()*60,
-    vx:(Math.random()-0.5)*0.8,
-    vy:0.8+Math.random()*1.2,
-    r, col, settled:false,
-    spin:Math.random()*Math.PI*2,
-    spinV:(Math.random()-0.5)*0.05
-  };
-}
-
-function drawPelletFall(frame){
-  const{W,H}=sizePelletCanvas();
-  pelletFallCtx.clearRect(0,0,W,H);
-
-  // Background
-  const bg=pelletFallCtx.createLinearGradient(0,0,0,H);
-  bg.addColorStop(0,'#08111e'); bg.addColorStop(1,'#0e1e34');
-  pelletFallCtx.fillStyle=bg; pelletFallCtx.fillRect(0,0,W,H);
-
-  // Subtle grid
-  pelletFallCtx.strokeStyle='rgba(80,130,200,0.04)'; pelletFallCtx.lineWidth=0.6;
-  for(let x=0;x<W;x+=24){pelletFallCtx.beginPath();pelletFallCtx.moveTo(x,0);pelletFallCtx.lineTo(x,H);pelletFallCtx.stroke();}
-  for(let y=0;y<H;y+=24){pelletFallCtx.beginPath();pelletFallCtx.moveTo(0,y);pelletFallCtx.lineTo(W,y);pelletFallCtx.stroke();}
-
-  // Container walls (industrial steel vessel)
-  const wallT=8, wallH=H*0.85, wallY=H-wallH;
-  const wallL=wallT, wallR=W-wallT;
-  // Left wall
-  const lwg=pelletFallCtx.createLinearGradient(0,0,wallT*2,0);
-  lwg.addColorStop(0,'#2a3d5a'); lwg.addColorStop(1,'rgba(42,61,90,0)');
-  pelletFallCtx.fillStyle=lwg; pelletFallCtx.fillRect(0,wallY,wallT,wallH);
-  // Right wall
-  const rwg=pelletFallCtx.createLinearGradient(W,0,W-wallT*2,0);
-  rwg.addColorStop(0,'#2a3d5a'); rwg.addColorStop(1,'rgba(42,61,90,0)');
-  pelletFallCtx.fillStyle=rwg; pelletFallCtx.fillRect(W-wallT,wallY,wallT,wallH);
-  // Bottom
-  const bwg=pelletFallCtx.createLinearGradient(0,H,0,H-wallT*1.5);
-  bwg.addColorStop(0,'#2a3d5a'); bwg.addColorStop(1,'rgba(42,61,90,0)');
-  pelletFallCtx.fillStyle=bwg; pelletFallCtx.fillRect(0,H-wallT,W,wallT);
-  // Wall borders (gold accent)
-  pelletFallCtx.strokeStyle='rgba(200,145,42,0.35)'; pelletFallCtx.lineWidth=1;
-  pelletFallCtx.strokeRect(wallT,wallY,W-wallT*2,wallH);
-
-  // Fill level indicator line
-  const fillY=H-wallT-(wallH-wallT*2)*pelletFillLevel;
-  if(pelletFillLevel>0.02){
-    pelletFallCtx.strokeStyle='rgba(200,145,42,0.5)'; pelletFallCtx.lineWidth=0.8;
-    pelletFallCtx.setLineDash([4,3]);
-    pelletFallCtx.beginPath(); pelletFallCtx.moveTo(wallT,fillY); pelletFallCtx.lineTo(W-wallT,fillY); pelletFallCtx.stroke();
-    pelletFallCtx.setLineDash([]);
-  }
-
-  // Spawn new balls when active
-  if(pelletFallActive && pelletBalls.filter(b=>!b.settled).length<4 && pelletBalls.length<120){
-    if(frame%8===0) pelletBalls.push(spawnPelletBall(W));
-  }
-
-  const GRAVITY=0.25, FRICTION=0.65, BOUNCE=0.25;
-  const floor=H-wallT;
-
-  // Physics
-  for(const b of pelletBalls){
-    if(b.settled) continue;
-    b.vy+=GRAVITY;
-    b.x+=b.vx; b.y+=b.vy;
-    b.spin+=b.spinV;
-
-    // Floor collision
-    if(b.y+b.r>=floor){
-      b.y=floor-b.r;
-      b.vy*=-BOUNCE;
-      b.vx*=FRICTION;
-      b.spinV*=0.8;
-      if(Math.abs(b.vy)<0.3 && Math.abs(b.vx)<0.3){b.settled=true;}
-    }
-    // Wall collisions
-    if(b.x-b.r<=wallT){b.x=wallT+b.r; b.vx=Math.abs(b.vx)*FRICTION;}
-    if(b.x+b.r>=W-wallT){b.x=W-wallT-b.r; b.vx=-Math.abs(b.vx)*FRICTION;}
-
-    // Ball-ball collision (simple)
-    for(const b2 of pelletBalls){
-      if(b2===b) continue;
-      const dx=b2.x-b.x, dy=b2.y-b.y;
-      const dist=Math.sqrt(dx*dx+dy*dy);
-      const minDist=b.r+b2.r;
-      if(dist<minDist && dist>0.01){
-        const nx=dx/dist, ny=dy/dist;
-        const overlap=(minDist-dist)*0.5;
-        b.x-=nx*overlap; b.y-=ny*overlap;
-        b2.x+=nx*overlap; b2.y+=ny*overlap;
-        const dvx=b.vx-b2.vx, dvy=b.vy-b2.vy;
-        const dot=dvx*nx+dvy*ny;
-        if(dot>0){
-          b.vx-=dot*nx*0.5; b.vy-=dot*ny*0.5;
-          b2.vx+=dot*nx*0.5; b2.vy+=dot*ny*0.5;
-        }
-        if(b2.settled && Math.abs(b.vy)<0.5){b.settled=true;}
-      }
-    }
-  }
-
-  // Draw balls (bottom to top for layering)
-  const sorted=[...pelletBalls].sort((a,b)=>b.y-a.y);
-  for(const b of sorted){
-    const px=b.x, py=b.y;
-    // Shadow
-    pelletFallCtx.save();
-    pelletFallCtx.globalAlpha=0.25;
-    pelletFallCtx.fillStyle='rgba(0,0,0,0.5)';
-    pelletFallCtx.beginPath(); pelletFallCtx.ellipse(px,floor-1,b.r*0.8,b.r*0.25,0,0,Math.PI*2); pelletFallCtx.fill();
-    pelletFallCtx.restore();
-    // Pellet body
-    const gr=safeRadialGradient(pelletFallCtx,px-b.r*0.32,py-b.r*0.32,0,px,py,b.r);
-    gr.addColorStop(0,b.col.h1); gr.addColorStop(0.55,b.col.h2); gr.addColorStop(1,b.col.h3);
-    pelletFallCtx.beginPath(); pelletFallCtx.arc(px,py,b.r,0,Math.PI*2);
-    pelletFallCtx.fillStyle=gr; pelletFallCtx.fill();
-    // Highlight
-    pelletFallCtx.save(); pelletFallCtx.globalAlpha=0.28;
-    pelletFallCtx.fillStyle='rgba(255,255,255,0.9)';
-    pelletFallCtx.beginPath(); pelletFallCtx.ellipse(px-b.r*0.28,py-b.r*0.28,b.r*0.35,b.r*0.22,-0.5,0,Math.PI*2); pelletFallCtx.fill();
-    pelletFallCtx.restore();
-    // Edge
-    pelletFallCtx.strokeStyle='rgba(140,175,200,0.2)'; pelletFallCtx.lineWidth=0.5;
-    pelletFallCtx.beginPath(); pelletFallCtx.arc(px,py,b.r,0,Math.PI*2); pelletFallCtx.stroke();
-  }
-
-  // Chute at top
-  pelletFallCtx.fillStyle='rgba(42,61,90,0.85)';
-  pelletFallCtx.beginPath(); pelletFallCtx.moveTo(W*0.35,0); pelletFallCtx.lineTo(W*0.65,0); pelletFallCtx.lineTo(W*0.55,18); pelletFallCtx.lineTo(W*0.45,18); pelletFallCtx.closePath(); pelletFallCtx.fill();
-  pelletFallCtx.strokeStyle='rgba(200,145,42,0.4)'; pelletFallCtx.lineWidth=1;
-  pelletFallCtx.stroke();
-
-  // Update fill level
-  const settledCount=pelletBalls.filter(b=>b.settled).length;
-  const targetFill=Math.min(1, settledCount/80);
-  pelletFillLevel+=(targetFill-pelletFillLevel)*0.03;
-
-  // Update UI
-  const pct=Math.round(pelletFillLevel*100);
-  const ro=document.getElementById('pelletFillReadout');
-  if(ro){ro.textContent=pct+'%'; ro.style.color=pct>75?'#e8b84b':pct>40?'#c8912a':'rgba(200,145,42,0.9)';}
-  const mf=document.getElementById('pelletMeterFill');
-  if(mf) mf.style.width=pct+'%';
-}
-
-function pelletFallLoop(){
-  drawPelletFall(pelletFallFrame);
-  pelletFallFrame++;
-  pelletFallAnimId=requestAnimationFrame(pelletFallLoop);
-}
-
-function togglePelletAnim(){
-  pelletFallActive=!pelletFallActive;
-  const btn=document.getElementById('pelletPlayBtn');
-  if(btn) btn.textContent=pelletFallActive?'⏸ Pause':'▶ Start';
-}
-
-function resetPelletAnim(){
-  pelletFallActive=false;
-  pelletBalls=[];
-  pelletFillLevel=0;
-  pelletFallFrame=0;
-  const btn=document.getElementById('pelletPlayBtn');
-  if(btn) btn.textContent='▶ Start';
-  const ro=document.getElementById('pelletFillReadout');
-  if(ro){ro.textContent='0%';}
-  const mf=document.getElementById('pelletMeterFill');
-  if(mf) mf.style.width='0%';
-}
-
-function openPelletCard(){
-  const cfg=MODAL_CONFIGS['pellet'];
-  if(!cfg) return;
-  document.getElementById('pelletAnimBody').innerHTML=cfg.fields();
-  document.getElementById('pelletAnimOverlay').classList.add('open');
-  // Start render loop
-  if(pelletFallAnimId) cancelAnimationFrame(pelletFallAnimId);
-  pelletFallLoop();
-}
-
-function closePelletCard(){
-  document.getElementById('pelletAnimOverlay').classList.remove('open');
-  if(pelletFallAnimId){cancelAnimationFrame(pelletFallAnimId); pelletFallAnimId=null;}
-  pelletFallActive=false;
-  const btn=document.getElementById('pelletPlayBtn');
-  if(btn) btn.textContent='▶ Start';
-}
-
-function savePelletCard(){
-  const cfg=MODAL_CONFIGS['pellet'];
-  if(cfg) cfg.save();
-  closePelletCard();
-  updateSummaryParams();
-}
-
-document.getElementById('pelletAnimOverlay').addEventListener('click',function(e){if(e.target===this)closePelletCard();});
-
-// ═══════════════════════════════════════════════════════════
-// COOLING KILN ANIMATION CARD
-// ═══════════════════════════════════════════════════════════
-let coolAnimId=null, coolFrame=0;
-const coolCanvas=document.getElementById('coolKilnCanvas');
-const coolCtx=coolCanvas.getContext('2d');
-
-// Live temps read from the input fields inside the card (or fall back to stageParams)
-function getCoolLiveTemps(){
-  const ids=['cool-z1','cool-z2','cool-z3','cool-z4'];
-  const defaults=[900,680,380,170];
-  return ids.map((id,i)=>{
-    const el=document.getElementById(id);
-    if(el&&el.value!=='') return Math.max(0,Number(el.value)||defaults[i]);
-    return safeNum(stageParams.cool['zone'+(i+1)], defaults[i]);
-  });
-}
-
-function sizeCoolCanvas(){
-  const wrap=coolCanvas.parentElement;
-  const W=Math.max(wrap.clientWidth||440,10);
-  const H=Math.max(wrap.clientHeight||260,10);
-  const ratio=window.devicePixelRatio||1;
-  const wPx=Math.round(W*ratio), hPx=Math.round(H*ratio);
-  if(coolCanvas.width!==wPx||coolCanvas.height!==hPx){
-    coolCanvas.width=wPx; coolCanvas.height=hPx;
-    coolCtx.setTransform(ratio,0,0,ratio,0,0);
-  }
-  return{W,H};
-}
-
-function drawCoolKilnAnim(frame){
-  const{W,H}=sizeCoolCanvas();
-  const temps=getCoolLiveTemps();
-  coolCtx.clearRect(0,0,W,H);
-
-  // Dark background with subtle grid
-  const bg=safeLinearGradient(coolCtx,0,0,0,H);
-  bg.addColorStop(0,'#0c1520'); bg.addColorStop(1,'#101e30');
-  coolCtx.fillStyle=bg; coolCtx.fillRect(0,0,W,H);
-  coolCtx.strokeStyle='rgba(80,130,200,0.04)'; coolCtx.lineWidth=0.6;
-  for(let gx=0;gx<W;gx+=28){coolCtx.beginPath();coolCtx.moveTo(gx,0);coolCtx.lineTo(gx,H);coolCtx.stroke();}
-  for(let gy=0;gy<H;gy+=28){coolCtx.beginPath();coolCtx.moveTo(0,gy);coolCtx.lineTo(W,gy);coolCtx.stroke();}
-
-  // ── Kiln geometry — same proportions as main canvas version ──
-  const cx=W*0.5, cy=H*0.46;
-  const kilnW=W*0.82, kilnH=H*0.22, slopeY=H*0.10;
-  const left=cx-kilnW*0.5, right=cx+kilnW*0.5;
-  const topL=cy-kilnH*0.5-slopeY, topR=cy-kilnH*0.5+slopeY;
-  const botL=cy+kilnH*0.5-slopeY, botR=cy+kilnH*0.5+slopeY;
-  const shellPad=kilnH*0.30;
-  const shellTopL=topL-shellPad, shellTopR=topR-shellPad;
-  const shellBotL=botL+shellPad, shellBotR=botR+shellPad;
-
-  // Heat colour helpers (same logic as main drawCoolingKiln)
-  function heatCol(temp){
-    const t=clamp((temp-150)/(950-150),0,1);
-    if(t>=0.85) return `rgb(${Math.round(180+(t-0.85)/0.15*30)},${Math.round(20-(t-0.85)/0.15*10)},${Math.round(60+(t-0.85)/0.15*40)})`;
-    if(t>=0.65) return `rgb(${Math.round(215+(t-0.65)/0.20*25)},${Math.round(20+(t-0.65)/0.20*10)},${Math.round(10+(t-0.65)/0.20*30)})`;
-    if(t>=0.40) return `rgb(${Math.round(230+(t-0.40)/0.25*10)},${Math.round(80+(t-0.40)/0.25*30)},10)`;
-    if(t>=0.20) return `rgb(240,${Math.round(130+(t-0.20)/0.20*50)},${Math.round(10+(t-0.20)/0.20*20)})`;
-    const s=t/0.20; return `rgb(245,${Math.round(190+s*40)},${Math.round(60+s*60)})`;
-  }
-  function heatDark(temp){
-    const t=clamp((temp-150)/(950-150),0,1);
-    if(t>=0.85) return 'rgb(120,10,40)'; if(t>=0.65) return 'rgb(160,15,8)';
-    if(t>=0.40) return 'rgb(180,50,8)';  if(t>=0.20) return 'rgb(190,90,10)';
-    return 'rgb(200,140,40)';
-  }
-
-  // ── OUTER SHELL ──
-  coolCtx.fillStyle='#2e3035';
-  coolCtx.strokeStyle='rgba(20,22,26,0.90)'; coolCtx.lineWidth=1.6;
-  coolCtx.beginPath();
-  coolCtx.moveTo(left,shellTopL); coolCtx.lineTo(right,shellTopR);
-  coolCtx.lineTo(right,shellBotR); coolCtx.lineTo(left,shellBotL);
-  coolCtx.closePath(); coolCtx.fill(); coolCtx.stroke();
-  // Highlight strip
-  coolCtx.strokeStyle='rgba(90,95,105,0.45)'; coolCtx.lineWidth=0.8;
-  coolCtx.beginPath(); coolCtx.moveTo(left+1,shellTopL+1); coolCtx.lineTo(right-1,shellTopR+1); coolCtx.stroke();
-
-  // ── INNER TUBE — clipped zone slices with live colours ──
-  const sliceW=kilnW/4;
-  coolCtx.save();
-  coolCtx.beginPath();
-  coolCtx.moveTo(left,topL); coolCtx.lineTo(right,topR);
-  coolCtx.lineTo(right,botR); coolCtx.lineTo(left,botL);
-  coolCtx.closePath(); coolCtx.clip();
-
-  for(let z=0;z<4;z++){
-    const x0=left+z*sliceW, x1=x0+sliceW+1;
-    const f0=z/4, f1=(z+1)/4;
-    const t0=topL+f0*(slopeY*2)-slopeY, t1=topL+f1*(slopeY*2)-slopeY;
-    const b0=botL+f0*(slopeY*2)-slopeY, b1=botL+f1*(slopeY*2)-slopeY;
-    // Base heat fill
-    coolCtx.fillStyle=heatCol(temps[z]);
-    coolCtx.beginPath(); coolCtx.moveTo(x0,t0-2); coolCtx.lineTo(x1,t1-2);
-    coolCtx.lineTo(x1,b1+2); coolCtx.lineTo(x0,b0+2); coolCtx.closePath(); coolCtx.fill();
-    // Cylindrical shading
-    const shGr=safeLinearGradient(coolCtx,x0,t0,x0,b0+2);
-    shGr.addColorStop(0,'rgba(255,255,255,0.18)'); shGr.addColorStop(0.35,'rgba(255,255,255,0.05)');
-    shGr.addColorStop(0.60,'rgba(0,0,0,0)'); shGr.addColorStop(1,'rgba(0,0,0,0.38)');
-    coolCtx.fillStyle=shGr;
-    coolCtx.beginPath(); coolCtx.moveTo(x0,t0-2); coolCtx.lineTo(x1,t1-2);
-    coolCtx.lineTo(x1,b1+2); coolCtx.lineTo(x0,b0+2); coolCtx.closePath(); coolCtx.fill();
-    // Seam blend
-    if(z<3){
-      const sx=left+(z+1)*sliceW;
-      const sGr=safeLinearGradient(coolCtx,sx-7,0,sx+7,0);
-      sGr.addColorStop(0,'rgba(0,0,0,0)'); sGr.addColorStop(0.5,'rgba(0,0,0,0.22)'); sGr.addColorStop(1,'rgba(0,0,0,0)');
-      coolCtx.fillStyle=sGr; coolCtx.fillRect(sx-7,topL-4,14,(botL-topL)+slopeY*2+8);
-    }
-    // Animated heat shimmer for hot zones (temp > 500)
-    if(temps[z]>500 && sliceW>0){
-      const shimAlpha=clamp((temps[z]-500)/450*0.22,0,0.22);
-      const shimX=x0+sliceW*((frame*0.8+z*25)%100/100);
-      coolCtx.save(); coolCtx.globalAlpha=shimAlpha;
-      const shimGr=safeRadialGradient(coolCtx,shimX,cy,0,shimX,cy,sliceW*0.5);
-      shimGr.addColorStop(0,'rgba(255,255,255,0.9)'); shimGr.addColorStop(1,'rgba(255,255,255,0)');
-      coolCtx.fillStyle=shimGr; coolCtx.fillRect(x0,t0-2,sliceW+1,b0-t0+4);
-      coolCtx.restore();
-    }
-  }
-
-  // Travelling shimmer trail
-  const p=(frame%100)/100;
-  coolCtx.globalAlpha=0.22; coolCtx.fillStyle='#ffffff';
-  coolCtx.beginPath(); coolCtx.ellipse(left+kilnW*p,topL+p*(slopeY*2)+kilnH*0.5,kilnW*0.030,kilnH*0.38,0,0,Math.PI*2); coolCtx.fill();
-  coolCtx.globalAlpha=1;
-  coolCtx.restore(); // end clip
-
-  // Inner tube outline
-  coolCtx.strokeStyle='rgba(20,22,26,0.70)'; coolCtx.lineWidth=1;
-  coolCtx.beginPath(); coolCtx.moveTo(left,topL); coolCtx.lineTo(right,topR);
-  coolCtx.lineTo(right,botR); coolCtx.lineTo(left,botL); coolCtx.closePath(); coolCtx.stroke();
-
-  // ── END CAP ELLIPSES ──
-  const shellCapRy=(shellBotL-shellTopL)/2, shellCapRx=shellCapRy*0.20;
-  const innerCapRy=kilnH*0.50, innerCapRx=innerCapRy*0.20;
-  // Left cap
-  coolCtx.fillStyle='#3a3d44'; coolCtx.strokeStyle='rgba(20,22,26,0.85)'; coolCtx.lineWidth=1.2;
-  coolCtx.beginPath(); coolCtx.ellipse(left,(shellTopL+shellBotL)/2,shellCapRx,shellCapRy,0,0,Math.PI*2); coolCtx.fill(); coolCtx.stroke();
-  coolCtx.fillStyle=heatDark(temps[0]);
-  coolCtx.beginPath(); coolCtx.ellipse(left,(topL+botL)/2,innerCapRx,innerCapRy,0,0,Math.PI*2); coolCtx.fill();
-  // Right cap
-  coolCtx.fillStyle='#3a3d44'; coolCtx.strokeStyle='rgba(20,22,26,0.85)'; coolCtx.lineWidth=1.2;
-  coolCtx.beginPath(); coolCtx.ellipse(right,(shellTopR+shellBotR)/2,shellCapRx,shellCapRy,0,0,Math.PI*2); coolCtx.fill(); coolCtx.stroke();
-  coolCtx.fillStyle=heatDark(temps[3]);
-  coolCtx.beginPath(); coolCtx.ellipse(right,(topR+botR)/2,innerCapRx,innerCapRy,0,0,Math.PI*2); coolCtx.fill();
-
-  // ── RIDING RINGS ──
-  [0.25,0.65].forEach(frac=>{
-    const rx=left+kilnW*frac;
-    const rMy=(shellTopL+shellBotL)/2+frac*((shellTopR+shellBotR)/2-(shellTopL+shellBotL)/2);
-    const ringH=shellCapRy*2, ringW=kilnW*0.048;
-    coolCtx.fillStyle='#878c96'; coolCtx.strokeStyle='rgba(30,32,36,0.70)'; coolCtx.lineWidth=0.8;
-    coolCtx.beginPath(); coolCtx.roundRect(rx-ringW/2,rMy-ringH/2,ringW,ringH,2); coolCtx.fill(); coolCtx.stroke();
-    coolCtx.fillStyle='rgba(180,185,195,0.35)';
-    coolCtx.beginPath(); coolCtx.roundRect(rx-ringW/2+1,rMy-ringH/2+1,ringW*0.4,ringH*0.45,1); coolCtx.fill();
-    // Roller + support block
-    const rollerSz=ringW*1.4, rollerY=rMy+ringH/2+1;
-    coolCtx.fillStyle='#6a6e78'; coolCtx.strokeStyle='rgba(30,32,36,0.65)'; coolCtx.lineWidth=0.7;
-    coolCtx.beginPath(); coolCtx.ellipse(rx,rollerY+rollerSz*0.3,rollerSz*0.55,rollerSz*0.30,0,0,Math.PI*2); coolCtx.fill(); coolCtx.stroke();
-    coolCtx.fillStyle='#4a4e56';
-    coolCtx.beginPath(); coolCtx.ellipse(rx,rollerY+rollerSz*0.3,rollerSz*0.22,rollerSz*0.12,0,0,Math.PI*2); coolCtx.fill();
-    const blkW=ringW*3.8, blkH=kilnH*0.55, blkY=rollerY+rollerSz*0.65;
-    coolCtx.fillStyle='#c8cace'; coolCtx.strokeStyle='rgba(100,102,108,0.55)'; coolCtx.lineWidth=0.8;
-    coolCtx.beginPath(); coolCtx.roundRect(rx-blkW/2,blkY,blkW,blkH,2); coolCtx.fill(); coolCtx.stroke();
-    coolCtx.fillStyle='rgba(0,0,0,0.10)';
-    coolCtx.beginPath(); coolCtx.roundRect(rx-blkW/2,blkY,blkW,blkH*0.18,1); coolCtx.fill();
-  });
-
-  // ── TEMPERATURE LABELS inside zones ──
-  coolCtx.font='bold 9px JetBrains Mono'; coolCtx.textAlign='center';
-  for(let z=0;z<4;z++){
-    const zx=left+(z+0.5)*sliceW;
-    const zy=cy+kilnH*0.1;
-    const t=clamp((temps[z]-150)/(950-150),0,1);
-    coolCtx.fillStyle=t>0.5?'rgba(255,255,255,0.85)':'rgba(30,20,10,0.75)';
-    coolCtx.fillText(temps[z]+'°',zx,zy);
-  }
-  coolCtx.textAlign='left';
-
-  // ── DIRECTION ARROWS (flow left → right) ──
-  coolCtx.strokeStyle='rgba(255,255,255,0.18)'; coolCtx.lineWidth=1;
-  [0.12,0.35,0.62,0.85].forEach(frac=>{
-    const ax=left+kilnW*frac, ay=cy;
-    coolCtx.beginPath(); coolCtx.moveTo(ax,ay); coolCtx.lineTo(ax+8,ay); coolCtx.stroke();
-    coolCtx.beginPath(); coolCtx.moveTo(ax+8,ay-3); coolCtx.lineTo(ax+8,ay+3); coolCtx.lineTo(ax+13,ay); coolCtx.closePath();
-    coolCtx.fillStyle='rgba(255,255,255,0.15)'; coolCtx.fill();
-  });
-
-  // Zone labels above kiln
-  coolCtx.font='500 7px JetBrains Mono'; coolCtx.textAlign='center'; coolCtx.fillStyle='rgba(200,145,42,0.7)';
-  ['Z1','Z2','Z3','Z4'].forEach((lbl,z)=>{
-    coolCtx.fillText(lbl, left+(z+0.5)*sliceW, shellTopL-4);
-  });
-  coolCtx.textAlign='left';
-
-  // Update legend chips
-  for(let z=0;z<4;z++){
-    const sw=document.getElementById('cool-swatch-'+z);
-    const vl=document.getElementById('cool-val-'+z);
-    if(sw) sw.style.background=heatCol(temps[z]);
-    if(vl) vl.textContent=temps[z]+'°C';
-  }
-  // Update stat readouts
-  const inEl=document.getElementById('coolStatIn'), outEl=document.getElementById('coolStatOut');
-  if(inEl) inEl.textContent=temps[0]+'°C';
-  if(outEl) outEl.textContent=temps[3]+'°C';
-}
-
-function coolLoop(){
-  drawCoolKilnAnim(coolFrame);
-  coolFrame++;
-  coolAnimId=requestAnimationFrame(coolLoop);
-}
-
-function openCoolCard(){
-  stageParams.cool.zoneCount=getCoolingZoneCount();
-  const cfg=MODAL_CONFIGS['cool'];
-  if(!cfg) return;
-  // Build fields with ids prefixed cool- so we can read live values
-  const count=getCoolingZoneCount();
-  const zoneNames=['Combustion','UDD Upper Draft','DD1 Down Draft','Exit'];
-  const defaults=[900,680,380,170];
-  let fieldsHTML=`
-    <div style="margin-bottom:.8rem;padding:8px 12px;background:linear-gradient(135deg,rgba(42,122,74,0.07),rgba(26,48,87,0.05));border:1.5px solid rgba(42,122,74,0.25);border-radius:5px;">
-      <div style="font-family:'JetBrains Mono';font-size:.56rem;letter-spacing:2px;color:var(--green);text-transform:uppercase;margin-bottom:3px;">Cooling Zones Active: ${count}</div>
-      <div style="font-family:'Cormorant Garamond',serif;font-size:1rem;font-weight:700;color:var(--navy);">Enter °C for each zone — diagram updates live</div>
-    </div>
-    <div style="margin-bottom:10px;">
-      <button type="button" class="btn-add-flux" style="width:auto;display:inline-flex;" onclick="addCoolingZone();rebuildCoolFields(); return false;">＋ Add Zone</button>
-    </div>`;
-  for(let i=0;i<count;i++){
-    const val=stageParams.cool['zone'+(i+1)]||'';
-    fieldsHTML+=`
-      <div class="field-group">
-        <div class="field-label">Zone ${i+1} — ${zoneNames[i]||'Zone '+(i+1)} (°C)</div>
-        <input type="number" class="finp" id="cool-z${i+1}" value="${val}" min="50" max="1000" step="1" placeholder="${defaults[i]}°C" oninput="onCoolTempInput()">
-        <div class="input-hint">Typical: ${defaults[i]}°C</div>
-      </div>`;
-  }
-  document.getElementById('coolAnimBody').innerHTML=fieldsHTML;
-  document.getElementById('coolAnimOverlay').classList.add('open');
-  coolFrame=0;
-  if(coolAnimId) cancelAnimationFrame(coolAnimId);
-  coolLoop();
-}
-
-function rebuildCoolFields(){
-  // Rebuild the input fields after adding a zone, preserving current values
-  const count=getCoolingZoneCount();
-  const zoneNames=['Combustion','UDD Upper Draft','DD1 Down Draft','Exit'];
-  const defaults=[900,680,380,170];
-  // Read current values before rebuilding
-  const curVals=[1,2,3,4].map(n=>{const el=document.getElementById('cool-z'+n);return el?el.value:'';});
-  let fieldsHTML=`
-    <div style="margin-bottom:.8rem;padding:8px 12px;background:linear-gradient(135deg,rgba(42,122,74,0.07),rgba(26,48,87,0.05));border:1.5px solid rgba(42,122,74,0.25);border-radius:5px;">
-      <div style="font-family:'JetBrains Mono';font-size:.56rem;letter-spacing:2px;color:var(--green);text-transform:uppercase;margin-bottom:3px;">Cooling Zones Active: ${count}</div>
-      <div style="font-family:'Cormorant Garamond',serif;font-size:1rem;font-weight:700;color:var(--navy);">Enter °C for each zone — diagram updates live</div>
-    </div>
-    <div style="margin-bottom:10px;">
-      <button type="button" class="btn-add-flux" style="width:auto;display:inline-flex;" onclick="addCoolingZone();rebuildCoolFields(); return false;">＋ Add Zone</button>
-    </div>`;
-  for(let i=0;i<count;i++){
-    const val=curVals[i]||stageParams.cool['zone'+(i+1)]||'';
-    fieldsHTML+=`
-      <div class="field-group">
-        <div class="field-label">Zone ${i+1} — ${zoneNames[i]||'Zone '+(i+1)} (°C)</div>
-        <input type="number" class="finp" id="cool-z${i+1}" value="${val}" min="50" max="1000" step="1" placeholder="${defaults[i]}°C" oninput="onCoolTempInput()">
-        <div class="input-hint">Typical: ${defaults[i]}°C</div>
-      </div>`;
-  }
-  document.getElementById('coolAnimBody').innerHTML=fieldsHTML;
-}
-
-function onCoolTempInput(){
-  // No-op: the animation loop reads live values each frame automatically
-}
-
-function closeCoolCard(){
-  document.getElementById('coolAnimOverlay').classList.remove('open');
-  if(coolAnimId){cancelAnimationFrame(coolAnimId);coolAnimId=null;}
-}
-
-function saveCoolCard(){
-  const count=getCoolingZoneCount();
-  if(count>=1){const el=document.getElementById('cool-z1');if(el)stageParams.cool.zone1=el.value;}
-  if(count>=2){const el=document.getElementById('cool-z2');if(el)stageParams.cool.zone2=el.value;}
-  if(count>=3){const el=document.getElementById('cool-z3');if(el)stageParams.cool.zone3=el.value;}
-  if(count>=4){const el=document.getElementById('cool-z4');if(el)stageParams.cool.zone4=el.value;}
-  closeCoolCard();
-  updateSummaryParams();
-}
-
-document.getElementById('coolAnimOverlay').addEventListener('click',function(e){if(e.target===this)closeCoolCard();});
-
-// ═══════════════════════════════════════════════════════════
-// INDURATION ANIMATION CARD
-// ═══════════════════════════════════════════════════════════
-
-function buildFurnaceSVG() {
-  return `<svg viewBox="0 0 360 360" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:340px;height:auto;overflow:visible;">
-    <defs>
-      <radialGradient id="fCoreGlow" cx="50%" cy="50%" r="50%">
-        <stop offset="0%" stop-color="#FFD54A"/>
-        <stop offset="40%" stop-color="#FF6B00"/>
-        <stop offset="100%" stop-color="#FF6B00" stop-opacity="0"/>
-      </radialGradient>
-      <radialGradient id="fChamberGlow" cx="50%" cy="50%" r="50%">
-        <stop offset="0%" stop-color="#FF6B00" stop-opacity="0.4"/>
-        <stop offset="100%" stop-color="#5E646B" stop-opacity="0"/>
-      </radialGradient>
-      <filter id="fGlow" x="-50%" y="-50%" width="200%" height="200%">
-        <feGaussianBlur stdDeviation="5" result="blur"/>
-        <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
-      </filter>
-      <filter id="fShadow">
-        <feDropShadow dx="0" dy="5" stdDeviation="10" flood-color="rgba(26,48,87,0.15)"/>
-      </filter>
-    </defs>
-
-    <!-- Ground shadow -->
-    <ellipse cx="180" cy="340" rx="130" ry="12" fill="rgba(26,48,87,0.09)"/>
-
-    <!-- ROTATING PLATFORM -->
-    <g style="transform-origin:180px 180px;animation:furnaceRotate 40s linear infinite;">
-
-      <!-- Safety railing outer ring -->
-      <circle cx="180" cy="180" r="165" fill="none" stroke="#F2B233" stroke-width="3.5" stroke-dasharray="20,12" opacity="0.8"/>
-
-      <!-- Railing posts at 8 positions -->
-      <g stroke="#F2B233" stroke-width="2.2" opacity="0.75">
-        <line x1="180" y1="15" x2="180" y2="34"/>
-        <line x1="297" y1="52" x2="286" y2="68"/>
-        <line x1="345" y1="180" x2="326" y2="180"/>
-        <line x1="297" y1="308" x2="286" y2="292"/>
-        <line x1="180" y1="345" x2="180" y2="326"/>
-        <line x1="63" y1="308" x2="74" y2="292"/>
-        <line x1="15" y1="180" x2="34" y2="180"/>
-        <line x1="63" y1="52" x2="74" y2="68"/>
-      </g>
-
-      <!-- Outer ring body -->
-      <circle cx="180" cy="180" r="150" fill="#4A4F55" stroke="#3a3f44" stroke-width="2"/>
-      <!-- Outer ring top highlight -->
-      <path d="M 95 72 A 120 120 0 0 1 265 72" fill="none" stroke="rgba(255,255,255,0.15)" stroke-width="8"/>
-
-      <!-- PIPE RIGHT -->
-      <rect x="320" y="164" width="54" height="32" rx="16" fill="#C2C8CF" stroke="#adb3ba" stroke-width="1.2"/>
-      <rect x="320" y="168" width="54" height="8" fill="rgba(255,255,255,0.28)"/>
-      <ellipse cx="370" cy="180" rx="11" ry="16" fill="#B5BCC3" stroke="#9da3aa" stroke-width="1"/>
-      <!-- steam joint R -->
-      <circle cx="320" cy="170" r="2.5" fill="rgba(200,145,42,0.5)" style="animation:steamRise 3s ease-in-out infinite;"/>
-      <circle cx="316" cy="176" r="1.8" fill="rgba(200,145,42,0.35)" style="animation:steamRise 3s ease-in-out 0.8s infinite;"/>
-
-      <!-- PIPE LEFT -->
-      <rect x="-14" y="164" width="54" height="32" rx="16" fill="#C2C8CF" stroke="#adb3ba" stroke-width="1.2"/>
-      <rect x="-14" y="168" width="54" height="8" fill="rgba(255,255,255,0.28)"/>
-      <ellipse cx="-10" cy="180" rx="11" ry="16" fill="#B5BCC3" stroke="#9da3aa" stroke-width="1"/>
-      <!-- steam joint L -->
-      <circle cx="40" cy="170" r="2.5" fill="rgba(200,145,42,0.5)" style="animation:steamRise 3s ease-in-out 1.2s infinite;"/>
-      <circle cx="44" cy="177" r="1.8" fill="rgba(200,145,42,0.35)" style="animation:steamRise 3s ease-in-out 1.9s infinite;"/>
-
-      <!-- PIPE BOTTOM -->
-      <rect x="164" y="308" width="32" height="56" rx="16" fill="#C2C8CF" stroke="#adb3ba" stroke-width="1.2"/>
-      <rect x="168" y="308" width="8" height="56" fill="rgba(255,255,255,0.28)"/>
-      <ellipse cx="180" cy="360" rx="16" ry="10" fill="#B5BCC3" stroke="#9da3aa" stroke-width="1"/>
-      <!-- steam bottom -->
-      <circle cx="170" cy="310" r="2.5" fill="rgba(200,145,42,0.5)" style="animation:steamRise 3s ease-in-out 0.4s infinite;"/>
-
-      <!-- PIPE TOP -->
-      <rect x="164" y="-4" width="32" height="50" rx="16" fill="#C2C8CF" stroke="#adb3ba" stroke-width="1.2"/>
-      <rect x="168" y="-4" width="8" height="50" fill="rgba(255,255,255,0.28)"/>
-      <ellipse cx="180" cy="-4" rx="16" ry="10" fill="#B5BCC3" stroke="#9da3aa" stroke-width="1"/>
-      <!-- steam top -->
-      <circle cx="190" cy="46" r="2.5" fill="rgba(200,145,42,0.5)" style="animation:steamRise 3s ease-in-out 2s infinite;"/>
-
-      <!-- Support legs -->
-      <g fill="#6e747b">
-        <rect x="173" y="322" width="14" height="36" rx="3"/>
-        <rect x="173" y="-4" width="14" height="36" rx="3"/>
-        <rect x="320" y="173" width="14" height="36" rx="3" transform="rotate(90,327,191)"/>
-        <rect x="26" y="173" width="14" height="36" rx="3" transform="rotate(90,33,191)"/>
-      </g>
-
-      <!-- Main furnace body -->
-      <circle cx="180" cy="180" r="130" fill="#5E646B" stroke="#4a4f54" stroke-width="2" filter="url(#fShadow)"/>
-      <!-- Body top highlight -->
-      <path d="M 88 94 A 110 110 0 0 1 272 94" fill="none" stroke="rgba(255,255,255,0.16)" stroke-width="14"/>
-      <!-- Body concentric ring -->
-      <circle cx="180" cy="180" r="112" fill="none" stroke="rgba(60,68,76,0.6)" stroke-width="2"/>
-      <!-- Bolts on rim (12 bolts) -->
-      <g fill="#8a9098" opacity="0.8">
-        <circle cx="180" cy="52"/><circle cx="244" cy="75"/><circle cx="296" cy="124"/>
-        <circle cx="308" cy="180"/><circle cx="296" cy="236"/><circle cx="244" cy="285"/>
-        <circle cx="180" cy="308"/><circle cx="116" cy="285"/><circle cx="64" cy="236"/>
-        <circle cx="52" cy="180"/><circle cx="64" cy="124"/><circle cx="116" cy="75"/>
-      </g>
-
-      <!-- Inner heating chamber -->
-      <circle cx="180" cy="180" r="72" fill="#42474d" stroke="#363b40" stroke-width="2.5"/>
-      <circle cx="180" cy="180" r="66" fill="#363b40" stroke="rgba(255,107,0,0.3)" stroke-width="1.5"/>
-      <circle cx="180" cy="180" r="62" fill="url(#fChamberGlow)"/>
-      <!-- Chamber rings -->
-      <circle cx="180" cy="180" r="54" fill="none" stroke="rgba(255,107,0,0.2)" stroke-width="1.2"/>
-      <circle cx="180" cy="180" r="44" fill="none" stroke="rgba(255,107,0,0.3)" stroke-width="1"/>
-
-      <!-- Core heat glow (pulsing) -->
-      <g style="transform-origin:180px 180px;animation:heatPulse 2s ease-in-out infinite;">
-        <circle cx="180" cy="180" r="36" fill="url(#fCoreGlow)" opacity="0.9" filter="url(#fGlow)"/>
-        <circle cx="180" cy="180" r="24" fill="#FF6B00" opacity="0.95"/>
-        <circle cx="180" cy="180" r="16" fill="#FFD54A"/>
-        <circle cx="177" cy="177" r="8" fill="rgba(255,255,255,0.75)"/>
-      </g>
-    </g>
-
-    <!-- Static staircase -->
-    <g fill="none" stroke="#F2B233" stroke-width="1.8" opacity="0.7">
-      <line x1="150" y1="326" x2="136" y2="352"/>
-      <line x1="164" y1="334" x2="150" y2="360"/>
-      <line x1="136" y1="340" x2="164" y2="340"/>
-      <line x1="136" y1="352" x2="164" y2="352"/>
-      <rect x="132" y="350" width="4" height="16" fill="#F2B233"/>
-      <rect x="162" y="350" width="4" height="16" fill="#F2B233"/>
-    </g>
-
-    <!-- Label -->
-    <text x="180" y="26" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="8.5" font-weight="700" fill="rgba(200,145,42,0.85)" letter-spacing="2">INDURATION FURNACE</text>
-  </svg>`;
-}
-
-function buildKilnSVG() {
-  return `<svg viewBox="0 0 440 230" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:420px;height:auto;overflow:visible;">
-    <defs>
-      <linearGradient id="kBodyGrad" x1="0%" y1="0%" x2="0%" y2="100%">
-        <stop offset="0%" stop-color="#d4d8de"/>
-        <stop offset="25%" stop-color="#A1A7AE"/>
-        <stop offset="65%" stop-color="#8c9299"/>
-        <stop offset="100%" stop-color="#6e7378"/>
-      </linearGradient>
-      <linearGradient id="kShineGrad" x1="0%" y1="0%" x2="100%" y2="20%">
-        <stop offset="0%" stop-color="rgba(255,255,255,0)"/>
-        <stop offset="45%" stop-color="rgba(255,255,255,0.38)"/>
-        <stop offset="55%" stop-color="rgba(255,255,255,0.22)"/>
-        <stop offset="100%" stop-color="rgba(255,255,255,0)"/>
-      </linearGradient>
-      <radialGradient id="kHeatGrad" cx="38%" cy="50%" r="62%">
-        <stop offset="0%" stop-color="#FFD54A"/>
-        <stop offset="28%" stop-color="#FF7A00"/>
-        <stop offset="65%" stop-color="#c04010"/>
-        <stop offset="100%" stop-color="#1e0400"/>
-      </radialGradient>
-      <radialGradient id="kRollerGrad" cx="33%" cy="30%" r="68%">
-        <stop offset="0%" stop-color="#a0a5aa"/>
-        <stop offset="100%" stop-color="#48505a"/>
-      </radialGradient>
-      <filter id="kShadow">
-        <feDropShadow dx="0" dy="6" stdDeviation="10" flood-color="rgba(26,48,87,0.18)"/>
-      </filter>
-      <clipPath id="kBodyClip">
-        <rect x="62" y="48" width="304" height="120" rx="2"/>
-      </clipPath>
-    </defs>
-
-    <!-- Ground shadow -->
-    <ellipse cx="215" cy="218" rx="185" ry="10" fill="rgba(26,48,87,0.09)"/>
-
-    <!-- BASE FRAME -->
-    <rect x="35" y="190" width="372" height="18" rx="3" fill="#444B52" stroke="#2e3338" stroke-width="1"/>
-    <rect x="35" y="190" width="372" height="4" fill="rgba(255,255,255,0.1)"/>
-    <!-- Frame vertical ribs -->
-    <g stroke="#3a4048" stroke-width="0.8" opacity="0.55">
-      <line x1="88" y1="190" x2="88" y2="208"/>
-      <line x1="150" y1="190" x2="150" y2="208"/>
-      <line x1="215" y1="190" x2="215" y2="208"/>
-      <line x1="280" y1="190" x2="280" y2="208"/>
-      <line x1="345" y1="190" x2="345" y2="208"/>
-    </g>
-
-    <!-- ROLLER PEDESTALS -->
-    <g fill="#3c4248" stroke="#2a3038" stroke-width="0.7">
-      <rect x="72" y="178" width="28" height="14" rx="2"/>
-      <rect x="122" y="178" width="28" height="14" rx="2"/>
-      <rect x="178" y="178" width="28" height="14" rx="2"/>
-      <rect x="228" y="178" width="28" height="14" rx="2"/>
-      <rect x="284" y="178" width="28" height="14" rx="2"/>
-      <rect x="334" y="178" width="28" height="14" rx="2"/>
-    </g>
-
-    <!-- ROLLERS (6) -->
-    <g>
-      <!-- R1 -->
-      <g style="transform-origin:86px 164px;animation:rollerSpin 4s linear infinite;">
-        <circle cx="86" cy="164" r="16" fill="url(#kRollerGrad)" stroke="#3a3f44" stroke-width="1"/>
-        <line x1="86" y1="150" x2="86" y2="178" stroke="rgba(255,255,255,0.18)" stroke-width="1.2"/>
-        <line x1="72" y1="164" x2="100" y2="164" stroke="rgba(255,255,255,0.18)" stroke-width="1.2"/>
-        <circle cx="86" cy="164" r="4" fill="#5a6068"/>
-      </g>
-      <!-- R2 -->
-      <g style="transform-origin:136px 164px;animation:rollerSpin 4s linear infinite;">
-        <circle cx="136" cy="164" r="16" fill="url(#kRollerGrad)" stroke="#3a3f44" stroke-width="1"/>
-        <line x1="136" y1="150" x2="136" y2="178" stroke="rgba(255,255,255,0.18)" stroke-width="1.2"/>
-        <line x1="122" y1="164" x2="150" y2="164" stroke="rgba(255,255,255,0.18)" stroke-width="1.2"/>
-        <circle cx="136" cy="164" r="4" fill="#5a6068"/>
-      </g>
-      <!-- R3 -->
-      <g style="transform-origin:192px 164px;animation:rollerSpin 4s linear infinite;">
-        <circle cx="192" cy="164" r="16" fill="url(#kRollerGrad)" stroke="#3a3f44" stroke-width="1"/>
-        <line x1="192" y1="150" x2="192" y2="178" stroke="rgba(255,255,255,0.18)" stroke-width="1.2"/>
-        <line x1="178" y1="164" x2="206" y2="164" stroke="rgba(255,255,255,0.18)" stroke-width="1.2"/>
-        <circle cx="192" cy="164" r="4" fill="#5a6068"/>
-      </g>
-      <!-- R4 -->
-      <g style="transform-origin:242px 164px;animation:rollerSpin 4s linear infinite;">
-        <circle cx="242" cy="164" r="16" fill="url(#kRollerGrad)" stroke="#3a3f44" stroke-width="1"/>
-        <line x1="242" y1="150" x2="242" y2="178" stroke="rgba(255,255,255,0.18)" stroke-width="1.2"/>
-        <line x1="228" y1="164" x2="256" y2="164" stroke="rgba(255,255,255,0.18)" stroke-width="1.2"/>
-        <circle cx="242" cy="164" r="4" fill="#5a6068"/>
-      </g>
-      <!-- R5 -->
-      <g style="transform-origin:298px 164px;animation:rollerSpin 4s linear infinite;">
-        <circle cx="298" cy="164" r="16" fill="url(#kRollerGrad)" stroke="#3a3f44" stroke-width="1"/>
-        <line x1="298" y1="150" x2="298" y2="178" stroke="rgba(255,255,255,0.18)" stroke-width="1.2"/>
-        <line x1="284" y1="164" x2="312" y2="164" stroke="rgba(255,255,255,0.18)" stroke-width="1.2"/>
-        <circle cx="298" cy="164" r="4" fill="#5a6068"/>
-      </g>
-      <!-- R6 -->
-      <g style="transform-origin:348px 164px;animation:rollerSpin 4s linear infinite;">
-        <circle cx="348" cy="164" r="16" fill="url(#kRollerGrad)" stroke="#3a3f44" stroke-width="1"/>
-        <line x1="348" y1="150" x2="348" y2="178" stroke="rgba(255,255,255,0.18)" stroke-width="1.2"/>
-        <line x1="334" y1="164" x2="362" y2="164" stroke="rgba(255,255,255,0.18)" stroke-width="1.2"/>
-        <circle cx="348" cy="164" r="4" fill="#5a6068"/>
-      </g>
-    </g>
-
-    <!-- KILN CYLINDER -->
-    <g filter="url(#kShadow)">
-      <rect x="62" y="48" width="304" height="120" fill="url(#kBodyGrad)"/>
-      <!-- Top highlight -->
-      <rect x="62" y="48" width="304" height="24" fill="rgba(255,255,255,0.18)"/>
-      <!-- Bottom shadow -->
-      <rect x="62" y="142" width="304" height="26" fill="rgba(0,0,0,0.15)"/>
-
-      <!-- Animated stripe lines (suggest rotation) -->
-      <g clip-path="url(#kBodyClip)">
-        <g style="animation:kilnRotate 20s linear infinite;transform-origin:214px 108px;">
-          <line x1="62" y1="48" x2="366" y2="48" stroke="rgba(255,255,255,0.07)" stroke-width="1"/>
-          <line x1="62" y1="72" x2="366" y2="72" stroke="rgba(255,255,255,0.05)" stroke-width="1"/>
-          <line x1="62" y1="96" x2="366" y2="96" stroke="rgba(0,0,0,0.06)" stroke-width="1"/>
-          <line x1="62" y1="120" x2="366" y2="120" stroke="rgba(0,0,0,0.1)" stroke-width="1"/>
-          <line x1="62" y1="144" x2="366" y2="144" stroke="rgba(0,0,0,0.08)" stroke-width="1"/>
-          <line x1="62" y1="166" x2="366" y2="166" stroke="rgba(0,0,0,0.06)" stroke-width="1"/>
-        </g>
-      </g>
-
-      <!-- Metallic shine sweep -->
-      <rect x="62" y="48" width="304" height="120" fill="url(#kShineGrad)" clip-path="url(#kBodyClip)" style="animation:shineSwipe 4s linear infinite;"/>
-
-      <!-- Support rings (3 rings, static) -->
-      <rect x="120" y="48" width="22" height="120" fill="#686E74" stroke="#565c62" stroke-width="1"/>
-      <rect x="120" y="48" width="22" height="7" fill="rgba(255,255,255,0.22)"/>
-      <rect x="220" y="48" width="22" height="120" fill="#686E74" stroke="#565c62" stroke-width="1"/>
-      <rect x="220" y="48" width="22" height="7" fill="rgba(255,255,255,0.22)"/>
-      <rect x="322" y="48" width="22" height="120" fill="#686E74" stroke="#565c62" stroke-width="1"/>
-      <rect x="322" y="48" width="22" height="7" fill="rgba(255,255,255,0.22)"/>
-
-      <!-- LEFT endcap heat zone -->
-      <ellipse cx="62" cy="108" rx="18" ry="60" fill="url(#kHeatGrad)" stroke="#2a0800" stroke-width="1.2" style="animation:heatGlow 2s ease-in-out infinite;"/>
-      <!-- Heat bloom -->
-      <ellipse cx="62" cy="108" rx="28" ry="68" fill="rgba(255,122,0,0.14)" style="animation:heatGlow 2s ease-in-out infinite;"/>
-
-      <!-- RIGHT endcap -->
-      <ellipse cx="366" cy="108" rx="15" ry="60" fill="#7e8490" stroke="#5a6068" stroke-width="1.2"/>
-      <ellipse cx="366" cy="108" rx="9" ry="44" fill="#6a7078"/>
-      <ellipse cx="366" cy="108" rx="5" ry="26" fill="#5a6068"/>
-      <!-- Exit bolts -->
-      <g fill="#9ea3a8" opacity="0.65">
-        <circle cx="366" cy="50" r="2.5"/>
-        <circle cx="378" cy="68" r="2.5"/>
-        <circle cx="380" cy="90" r="2.5"/>
-        <circle cx="380" cy="126" r="2.5"/>
-        <circle cx="378" cy="148" r="2.5"/>
-        <circle cx="366" cy="166" r="2.5"/>
-        <circle cx="354" cy="148" r="2.5"/>
-        <circle cx="352" cy="108" r="2.5"/>
-        <circle cx="354" cy="68" r="2.5"/>
-      </g>
-    </g>
-
-    <!-- Label -->
-    <text x="215" y="24" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="8.5" font-weight="700" fill="rgba(200,145,42,0.85)" letter-spacing="2">GRATE KILN</text>
-  </svg>`;
-}
-
-function openInduCard() {
-  const mode = stageParams.indu.mode || 'furnace';
-  const isGrate = mode === 'grate';
-
-  // Update header
-  document.getElementById('induAnimTag').textContent = 'STAGE 08 · INDURATION';
-  document.getElementById('induAnimTitle').textContent = isGrate ? 'Grate Kiln' : 'Induration Furnace';
-  document.getElementById('induAnimSubtitle').textContent = isGrate
-    ? 'Configure traveling grate kiln parameters'
-    : 'Configure induration furnace parameters';
-
-  // Update diagram card
-  document.getElementById('induDiagramTitle').textContent = isGrate ? 'Grate Kiln' : 'Induration Furnace';
-  document.getElementById('induDiagramSubtitle').textContent = isGrate ? 'Traveling Grate Technology' : 'Straight Grate Technology';
-  document.getElementById('induTypeBadge').textContent = isGrate ? '⬡ TRAVELING GRATE' : '⬡ STRAIGHT GRATE';
-  document.getElementById('induDiagramBody').innerHTML = isGrate ? buildKilnSVG() : buildFurnaceSVG();
-
-  // Build input fields
-  const cfg = MODAL_CONFIGS['indu'];
-  document.getElementById('induAnimBody').innerHTML = cfg.fields();
-
-  document.getElementById('induAnimOverlay').classList.add('open');
-}
-
-function closeInduCard() {
-  document.getElementById('induAnimOverlay').classList.remove('open');
-}
-
-function saveInduCard() {
-  const cfg = MODAL_CONFIGS['indu'];
-  cfg.save();
-  closeInduCard();
-  updateSummaryParams();
-}
-
-document.getElementById('induAnimOverlay').addEventListener('click', function(e) {
-  if (e.target === this) closeInduCard();
-});
-
-
 
 // Load state on page load
 loadStateFromStorage();
