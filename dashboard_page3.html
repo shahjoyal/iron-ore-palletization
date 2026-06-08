@@ -1041,8 +1041,76 @@ input.finp{cursor:text;}
 @media(max-width:800px){.cool-diagram-card{display:none;}}
 @media(max-width:560px){.cool-anim-card{width:96vw;}}
 
-/* ── PAGE NAVIGATION ── */
-.page-nav{
+/* ── INDURATION TWO-PANEL OVERLAY ── */
+.indu-anim-overlay{
+  position:fixed;inset:0;z-index:250;
+  background:rgba(15,31,58,.60);
+  backdrop-filter:blur(7px) saturate(1.2);
+  display:flex;align-items:center;justify-content:center;
+  opacity:0;pointer-events:none;
+  transition:opacity .3s ease;
+}
+.indu-anim-overlay.open{opacity:1;pointer-events:all;}
+.indu-anim-panels{display:flex;align-items:flex-start;gap:12px;}
+.indu-anim-card{
+  background:#fff;border:1px solid var(--border-strong);border-radius:10px;
+  box-shadow:0 24px 80px rgba(26,48,87,.25);
+  width:min(520px,92vw);max-height:88vh;overflow-y:auto;
+  transform:translateY(16px) scale(.97);
+  transition:transform .35s cubic-bezier(.22,1,.36,1);
+  position:relative;display:flex;flex-direction:column;
+}
+.indu-anim-overlay.open .indu-anim-card{transform:translateY(0) scale(1);}
+.indu-anim-header{
+  padding:1.4rem 1.6rem 1rem;border-bottom:1px solid var(--border);
+  background:linear-gradient(135deg,#1a1208 0%,#2e1f0a 100%);
+  border-radius:10px 10px 0 0;position:relative;flex-shrink:0;
+}
+.indu-anim-tag{font-family:'JetBrains Mono';font-size:.52rem;letter-spacing:2.5px;color:rgba(200,145,42,.85);text-transform:uppercase;margin-bottom:5px;}
+.indu-anim-title{font-family:'Cormorant Garamond',serif;font-size:1.5rem;font-weight:700;color:#fff;line-height:1.2;}
+.indu-anim-subtitle{font-size:.78rem;color:rgba(255,255,255,.45);margin-top:5px;}
+.indu-anim-close{
+  position:absolute;top:1.1rem;right:1.2rem;
+  background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);
+  color:rgba(255,255,255,.6);width:30px;height:30px;border-radius:50%;
+  font-size:.9rem;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s;
+}
+.indu-anim-close:hover{background:rgba(200,145,42,.35);color:#fff;}
+.indu-anim-body{padding:1.4rem 1.6rem;flex:1;}
+.indu-diagram-card{
+  width:400px;flex-shrink:0;
+  background:linear-gradient(170deg,#f8f5f0 0%,#ffffff 55%,#f2efea 100%);
+  border:1px solid rgba(200,145,42,0.22);
+  border-radius:10px;box-shadow:0 24px 80px rgba(26,48,87,.18);
+  display:flex;flex-direction:column;align-self:stretch;overflow:hidden;
+  transform:translateY(16px) scale(.97);
+  transition:transform .35s cubic-bezier(.22,1,.36,1) .05s;
+}
+.indu-anim-overlay.open .indu-diagram-card{transform:translateY(0) scale(1);}
+.indu-diagram-header{padding:1rem 1.2rem .8rem;border-bottom:1px solid rgba(200,145,42,0.15);flex-shrink:0;}
+.indu-diagram-tag{font-family:'JetBrains Mono';font-size:.52rem;letter-spacing:2.5px;color:rgba(200,145,42,.75);text-transform:uppercase;margin-bottom:5px;}
+.indu-diagram-title{font-family:'Cormorant Garamond',serif;font-size:1.2rem;font-weight:700;color:#1a3057;line-height:1.2;}
+.indu-diagram-subtitle{font-size:.72rem;color:rgba(90,74,48,.55);margin-top:3px;}
+.indu-diagram-body{flex:1;display:flex;align-items:center;justify-content:center;padding:1rem;background:linear-gradient(160deg,#f9f6f1 0%,#ffffff 60%,#f4f0ea 100%);min-height:380px;position:relative;overflow:hidden;}
+.indu-diagram-footer{padding:.7rem 1.1rem .9rem;border-top:1px solid rgba(200,145,42,0.12);flex-shrink:0;}
+.indu-type-badge{display:inline-flex;align-items:center;gap:5px;background:rgba(200,145,42,0.1);border:1px solid rgba(200,145,42,0.3);border-radius:20px;padding:3px 10px;font-family:'JetBrains Mono';font-size:.5rem;letter-spacing:1.5px;color:var(--gold);text-transform:uppercase;}
+.indu-svg-wrap{width:100%;height:100%;display:flex;align-items:center;justify-content:center;}
+@media(max-width:1080px){.indu-diagram-card{width:300px;}}
+@media(max-width:820px){.indu-diagram-card{display:none;}}
+@media(max-width:560px){.indu-anim-card{width:96vw;}}
+
+/* ── FURNACE SVG ANIMATIONS ── */
+@keyframes furnaceRotate{from{transform:rotate(0deg);}to{transform:rotate(360deg);}}
+@keyframes heatPulse{0%,100%{transform:scale(1);opacity:1;}50%{transform:scale(1.15);opacity:0.85;}}
+@keyframes steamRise{0%{opacity:0;transform:translateY(0);}40%{opacity:0.7;}100%{opacity:0;transform:translateY(-25px);}}
+@keyframes corePulse{0%,100%{opacity:0.85;r:20px;}50%{opacity:1;r:23px;}}
+/* ── KILN SVG ANIMATIONS ── */
+@keyframes kilnRotate{from{transform:rotate(0deg);}to{transform:rotate(360deg);}}
+@keyframes rollerSpin{from{transform:rotate(0deg);}to{transform:rotate(-360deg);}}
+@keyframes shineSwipe{0%{transform:translateX(-100%);}100%{transform:translateX(200%);}}
+@keyframes heatGlow{0%,100%{opacity:0.6;}50%{opacity:1;}}
+
+
   display:flex;align-items:center;justify-content:center;gap:10px;
   margin-top:.3rem;padding:.3rem .6rem;
   flex-wrap:wrap;
@@ -1496,6 +1564,43 @@ input.finp{cursor:text;}
   </div>
 </div>
 
+<!-- ══ INDURATION ANIMATION CARD ══ -->
+<div class="indu-anim-overlay" id="induAnimOverlay">
+  <div class="indu-anim-panels">
+
+    <!-- LEFT: Parameters Card -->
+    <div class="indu-anim-card" id="induAnimCard">
+      <div class="indu-anim-header">
+        <div class="indu-anim-tag" id="induAnimTag">STAGE 08 · INDURATION</div>
+        <div class="indu-anim-title" id="induAnimTitle">Induration Furnace</div>
+        <div class="indu-anim-subtitle" id="induAnimSubtitle">Select machine type and configure process parameters</div>
+        <button class="indu-anim-close" onclick="closeInduCard()">✕</button>
+      </div>
+      <div class="indu-anim-body" id="induAnimBody"></div>
+      <div class="modal-footer" style="padding:1rem 1.4rem 1.2rem;flex-shrink:0;">
+        <button class="btn-save" onclick="saveInduCard()">Save Parameters</button>
+        <button class="btn-cancel" onclick="closeInduCard()">Cancel</button>
+      </div>
+    </div>
+
+    <!-- RIGHT: Diagram Card -->
+    <div class="indu-diagram-card" id="induDiagramCard">
+      <div class="indu-diagram-header">
+        <div class="indu-diagram-tag">LIVE PREVIEW</div>
+        <div class="indu-diagram-title" id="induDiagramTitle">Induration Furnace</div>
+        <div class="indu-diagram-subtitle" id="induDiagramSubtitle">Straight Grate Technology</div>
+      </div>
+      <div class="indu-diagram-body" id="induDiagramBody">
+        <!-- SVG injected by JS -->
+      </div>
+      <div class="indu-diagram-footer">
+        <div class="indu-type-badge" id="induTypeBadge">⬡ STRAIGHT GRATE</div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
 <div class="modal-overlay" id="modalOverlay">
   <div class="modal-card">
     <div class="modal-header">
@@ -1812,6 +1917,16 @@ function onPlantChange() {
   const tech = PLANT_TECH[plant];
   if (tech === "straight_grate") { stageParams.indu.mode = "furnace"; if (induStage) induStage.label = "INDURATION\nFURNACE"; }
   else { stageParams.indu.mode = "grate"; if (induStage) induStage.label = "TRAVELING\nGRATE &\nKILN"; }
+  // If indu card is already open, refresh diagram
+  if(document.getElementById('induAnimOverlay').classList.contains('open')){
+    const isGrate=stageParams.indu.mode==='grate';
+    const d=document.getElementById('induDiagramBody');
+    if(d) d.innerHTML=isGrate?buildKilnSVG():buildFurnaceSVG();
+    const t=document.getElementById('induDiagramTitle');
+    if(t) t.textContent=isGrate?'Grate Kiln':'Induration Furnace';
+    const b=document.getElementById('induTypeBadge');
+    if(b) b.textContent=isGrate?'⬡ TRAVELING GRATE':'⬡ STRAIGHT GRATE';
+  }
   draw(simFrame, simStep);
 }
 
@@ -1879,6 +1994,7 @@ function sizeCanvas(){
 
 function draw(frame,activeStep){
   const{W,H}=sizeCanvas();
+  if(W<=0||H<=0)return;
   ctx.clearRect(0,0,W,H);
   ctx.fillStyle='#fff'; ctx.fillRect(0,0,W,H);
   ctx.strokeStyle='rgba(200,145,42,0.035)'; ctx.lineWidth=1;
@@ -1943,7 +2059,7 @@ function draw(frame,activeStep){
     if(lit){
       const t=(frame%60)/60;
       const px=x1+(x2-x1)*t;
-      const rg=ctx.createRadialGradient(px,midY,0,px,midY,7);
+      const rg=safeRadialGradient(ctx,px,midY,0,px,midY,7);
       rg.addColorStop(0,'rgba(232,184,75,0.95)'); rg.addColorStop(1,'rgba(200,145,42,0)');
       ctx.beginPath(); ctx.arc(px,midY,7,0,Math.PI*2); ctx.fillStyle=rg; ctx.fill();
     }
@@ -2100,7 +2216,7 @@ function drawBallingDiscEnhanced(cx,cy,mW,mH,frame,stage,isActive,isDone){
     const x = Math.cos(phase) * discRx * orbitBias;
     const y = Math.sin(phase) * discRy * (0.50 - angleT * 0.04) + discRy * (0.18 + angleT * 0.12);
     const size = 3 + (p % 3);
-    const g = ctx.createRadialGradient(x - size * 0.3, y - size * 0.3, 0, x, y, size);
+    const g = safeRadialGradient(ctx,x - size * 0.3, y - size * 0.3, 0, x, y, size);
     g.addColorStop(0, '#aebccc');
     g.addColorStop(1, '#354552');
     ctx.beginPath();
@@ -2120,7 +2236,7 @@ function drawBallingDiscEnhanced(cx,cy,mW,mH,frame,stage,isActive,isDone){
     const sx = discRx * 0.30 + t * discRx * 0.42;
     const sy = -discRy * 0.04 + t * discRy * 0.24 + Math.pow(t, 1.12) * discRy * 0.22;
     const sr = 2.1 + (p % 2) * 0.5;
-    const sg = ctx.createRadialGradient(sx - sr * 0.3, sy - sr * 0.3, 0, sx, sy, sr);
+    const sg = safeRadialGradient(ctx,sx - sr * 0.3, sy - sr * 0.3, 0, sx, sy, sr);
     sg.addColorStop(0, '#c6d0d8');
     sg.addColorStop(1, '#5b6873');
     ctx.beginPath();
@@ -2259,7 +2375,7 @@ function drawMachineShape(shape,cx,cy,mW,mH,col,strokeCol,strokeW,isActive,isDon
       ctx.moveTo(cx-brimW/2+3,hopTop); ctx.lineTo(cx+brimW/2-3,hopTop);
       ctx.lineTo(cx+neckW/2,neckTop); ctx.lineTo(cx-neckW/2,neckTop);
       ctx.closePath(); ctx.clip();
-      const oreG=ctx.createRadialGradient(cx,hopTop+funnelH*0.3,funnelH*0.05,cx,hopTop+funnelH*0.3,brimW*0.45);
+      const oreG=safeRadialGradient(ctx,cx,hopTop+funnelH*0.3,funnelH*0.05,cx,hopTop+funnelH*0.3,brimW*0.45);
       oreG.addColorStop(0,'rgba(110,70,38,0.85)'); oreG.addColorStop(0.7,'rgba(65,42,22,0.80)'); oreG.addColorStop(1,'rgba(35,22,10,0)');
       ctx.fillStyle=oreG;
       ctx.beginPath(); ctx.ellipse(cx,hopTop+funnelH*0.35,brimW*0.42,funnelH*0.55,0,0,Math.PI*2); ctx.fill();
@@ -2335,7 +2451,7 @@ function drawMachineShape(shape,cx,cy,mW,mH,col,strokeCol,strokeW,isActive,isDon
 
       // End caps with rotating bolts
       const drawMainEndCap = (ecx, ecRx2, ecRy2, rotOff) => {
-        const cg = ctx.createRadialGradient(ecx-ecRx2*0.15, cy-ecRy2*0.15, 0, ecx, cy, Math.max(ecRx2,ecRy2));
+        const cg = safeRadialGradient(ctx,ecx-ecRx2*0.15, cy-ecRy2*0.15, 0, ecx, cy, Math.max(ecRx2,ecRy2));
         cg.addColorStop(0,'#8a8e98'); cg.addColorStop(0.5,'#606470'); cg.addColorStop(1,'#3c3f48');
         ctx.save();
         ctx.fillStyle=cg; ctx.strokeStyle='rgba(20,22,28,0.70)'; ctx.lineWidth=1.2;
@@ -2748,7 +2864,8 @@ function drawMachineShape(shape,cx,cy,mW,mH,col,strokeCol,strokeW,isActive,isDon
       // END DRUMS (ellipses at each end)
       [[p0,p3],[p1,p2]].forEach(([bot,top2])=>{
         const mx=(bot.x+top2.x)/2, my=(bot.y+top2.y)/2, dr=thk/2;
-        const rg=ctx.createRadialGradient(mx-dr*0.2,my-dr*0.3,0,mx,my,dr);
+        if(dr<=0)return;
+        const rg=safeRadialGradient(ctx,mx-dr*0.2,my-dr*0.3,0,mx,my,dr);
         rg.addColorStop(0,'#7a8a9a'); rg.addColorStop(0.6,'#3a4a5a'); rg.addColorStop(1,'#1a2530');
         ctx.fillStyle=rg;
         ctx.beginPath(); ctx.ellipse(mx,my,dr*0.2,dr,0,0,Math.PI*2); ctx.fill();
@@ -2787,7 +2904,7 @@ function drawMachineShape(shape,cx,cy,mW,mH,col,strokeCol,strokeW,isActive,isDon
           const seed=col*13+row*7;
           const pr2=2.2+Math.sin(seed*3.7)*0.6;
           const shd=0.68+Math.sin(seed*5.1)*0.28;
-          const pg2=ctx.createRadialGradient(ptx-pr2*0.32,pty-pr2*0.35,0,ptx,pty,pr2);
+          const pg2=safeRadialGradient(ctx,ptx-pr2*0.32,pty-pr2*0.35,0,ptx,pty,pr2);
           pg2.addColorStop(0,`rgba(${Math.round(115*shd)},${Math.round(132*shd)},${Math.round(152*shd)},1)`);
           pg2.addColorStop(0.55,`rgba(${Math.round(44*shd)},${Math.round(57*shd)},${Math.round(74*shd)},1)`);
           pg2.addColorStop(1,`rgba(10,14,20,1)`);
@@ -2831,7 +2948,7 @@ function drawMachineShape(shape,cx,cy,mW,mH,col,strokeCol,strokeW,isActive,isDon
     case 'furnace':{
       const fw=mW*0.50,fh=mH*0.72; const top=cy-fh/2;
       ctx.beginPath(); ctx.roundRect(cx-fw/2,top,fw,fh,3); ctx.fill(); ctx.stroke();
-      const fg=ctx.createRadialGradient(cx,cy,0,cx,cy,fw*0.65);
+      const fg=safeRadialGradient(ctx,cx,cy,0,cx,cy,fw*0.65);
       fg.addColorStop(0,'rgba(255,150,30,0.5)'); fg.addColorStop(1,'rgba(200,60,0,0)');
       ctx.fillStyle=fg; ctx.beginPath(); ctx.ellipse(cx,cy,fw*0.52,fh*0.32,0,0,Math.PI*2); ctx.fill();
       if(isActive){
@@ -2852,7 +2969,7 @@ function drawMachineShape(shape,cx,cy,mW,mH,col,strokeCol,strokeW,isActive,isDon
       pelletDefs.forEach(pd=>{
         const px=cx+pd.ox*Math.cos(ang)-pd.oy*Math.sin(ang)*0.3;
         const py=cy+pd.ox*Math.sin(ang)*0.3+pd.oy*Math.cos(ang);
-        const pg=ctx.createRadialGradient(px-pd.rr*0.35,py-pd.rr*0.35,0,px,py,pd.rr);
+        const pg=safeRadialGradient(ctx,px-pd.rr*0.35,py-pd.rr*0.35,0,px,py,pd.rr);
         pg.addColorStop(0,'#9ab8cc'); pg.addColorStop(0.6,'#4a7a9a'); pg.addColorStop(1,'#1a3a5a');
         ctx.beginPath(); ctx.arc(px,py,pd.rr,0,Math.PI*2); ctx.fillStyle=pg; ctx.fill();
         ctx.strokeStyle='rgba(140,175,200,0.35)'; ctx.lineWidth=0.7; ctx.stroke();
@@ -2869,6 +2986,22 @@ function safeNum(v, fallback=null){
   const n = Number(v);
   return Number.isFinite(n) ? n : fallback;
 }
+
+function safeRadialGradient(ctx, x0, y0, r0, x1, y1, r1, fallback='#888'){
+  if(!Number.isFinite(x0)||!Number.isFinite(y0)||!Number.isFinite(r0)||
+     !Number.isFinite(x1)||!Number.isFinite(y1)||!Number.isFinite(r1)||
+     r0<0||r1<=0){
+    return ctx.createLinearGradient(0,0,1,0); // safe fallback
+  }
+  return ctx.createRadialGradient(x0,y0,r0,x1,y1,r1);
+}
+function safeLinearGradient(ctx, x0, y0, x1, y1){
+  if(!Number.isFinite(x0)||!Number.isFinite(y0)||!Number.isFinite(x1)||!Number.isFinite(y1)){
+    return ctx.createLinearGradient(0,0,1,0);
+  }
+  return ctx.createLinearGradient(x0,y0,x1,y1);
+}
+
 function hslTempColor(temp, variant='main'){
   const t = clamp((safeNum(temp, 0) - 120) / (950 - 120), 0, 1);
   const hue = 200 - t * 170; // cool blue -> hot red/orange
@@ -2900,6 +3033,7 @@ function tempZoneColors(temp){
 
 
 function drawCoolingKiln(cx, cy, mW, mH, stage, isActive, isDone, frame){
+  if(mW<=0||mH<=0) return{x:cx,y:cy,w:0,h:0};
   const temps = coolingTemps();
 
   // Temperature → heat color (hot pink/magenta → red → orange → yellow → pale)
@@ -3155,13 +3289,14 @@ function drawCoolingKiln(cx, cy, mW, mH, stage, isActive, isDone, frame){
 
 
 function drawPelletBurst(cx,cy,frame,r){
+  if(r<=0)return;
   const count=12;
   for(let p=0;p<count;p++){
     const ang=(frame*0.03)+p*Math.PI*2/count;
     const dist=r+16+Math.sin(frame*0.08+p)*7;
     const pr=5+p%3;
     const px=cx+Math.cos(ang)*dist,py=cy+Math.sin(ang)*dist*0.5;
-    const pg=ctx.createRadialGradient(px-pr*0.4,py-pr*0.4,0,px,py,pr);
+    const pg=safeRadialGradient(ctx,px-pr*0.4,py-pr*0.4,0,px,py,pr);
     pg.addColorStop(0,'#9ab8cc'); pg.addColorStop(1,'#1a3a5a');
     ctx.beginPath(); ctx.arc(px,py,pr,0,Math.PI*2); ctx.fillStyle=pg; ctx.fill();
     ctx.strokeStyle='rgba(140,175,200,0.4)'; ctx.lineWidth=0.6; ctx.stroke();
@@ -3946,6 +4081,20 @@ function switchInduMode(mode){
   document.getElementById('indu-params-area').innerHTML=getInduFields(mode);
   const s=STAGES.find(st=>st.id==='indu');
   if(s)s.label=mode==='furnace'?'INDURATION\nFURNACE':'GRATE\nKILN';
+  // Update diagram card live
+  const isGrate=mode==='grate';
+  const dTitle=document.getElementById('induDiagramTitle');
+  const dSub=document.getElementById('induDiagramSubtitle');
+  const dBadge=document.getElementById('induTypeBadge');
+  const dBody=document.getElementById('induDiagramBody');
+  const aTitle=document.getElementById('induAnimTitle');
+  const aSub=document.getElementById('induAnimSubtitle');
+  if(dTitle) dTitle.textContent=isGrate?'Grate Kiln':'Induration Furnace';
+  if(dSub) dSub.textContent=isGrate?'Traveling Grate Technology':'Straight Grate Technology';
+  if(dBadge) dBadge.textContent=isGrate?'⬡ TRAVELING GRATE':'⬡ STRAIGHT GRATE';
+  if(dBody) dBody.innerHTML=isGrate?buildKilnSVG():buildFurnaceSVG();
+  if(aTitle) aTitle.textContent=isGrate?'Grate Kiln':'Induration Furnace';
+  if(aSub) aSub.textContent=isGrate?'Configure traveling grate kiln parameters':'Configure induration furnace parameters';
 }
 
 function selectFeedZone(zone){
@@ -3981,6 +4130,7 @@ function openModal(stageId){
   if(stageId==='pellet'){openPelletCard();return;}
   if(stageId==='greenball'){openGbCard();return;}
   if(stageId==='cool'){openCoolCard();return;}
+  if(stageId==='indu'){openInduCard();return;}
   currentModalStage=stageId;
   const s=STAGES.find(st=>st.id===stageId);
   const cfg=MODAL_CONFIGS[stageId];
@@ -4206,7 +4356,7 @@ function drawFeedMini(frame, burst){
     const oreAlpha = Math.min(feedFillLevel * 1.1, 0.92);
     // The pile top rises as fill level increases (starts at bottom of funnel, rises up)
     const pileTopOffset = pileH * 0.85 * (1 - feedFillLevel);
-    const oreGrad=feedMiniCtx.createRadialGradient(cx,pileY+pileH*0.4+pileTopOffset,pileH*0.05,cx,pileY+pileH*0.4+pileTopOffset,brimW*0.44);
+    const oreGrad=safeRadialGradient(feedMiniCtx,cx,pileY+pileH*0.4+pileTopOffset,pileH*0.05,cx,pileY+pileH*0.4+pileTopOffset,brimW*0.44);
     oreGrad.addColorStop(0,`rgba(110,70,40,${oreAlpha})`);
     oreGrad.addColorStop(0.7,`rgba(70,45,25,${oreAlpha*0.95})`);
     oreGrad.addColorStop(1,`rgba(40,25,15,0)`);
@@ -4227,7 +4377,7 @@ function drawFeedMini(frame, burst){
       const wave=Math.sin(b*0.85+frame*0.008)*3;
       const by=pileY+pileTopOffset+pileH*0.18+Math.abs(Math.sin(b*1.4))*pileH*0.18+wave;
       const br=3+b%3*0.8;
-      const bg2=feedMiniCtx.createRadialGradient(bx-br*0.35,by-br*0.35,0,bx,by,br);
+      const bg2=safeRadialGradient(feedMiniCtx,bx-br*0.35,by-br*0.35,0,bx,by,br);
       bg2.addColorStop(0,`rgba(160,95,50,${ballAlpha})`);
       bg2.addColorStop(0.6,`rgba(105,60,28,${ballAlpha*0.9})`);
       bg2.addColorStop(1,`rgba(60,35,15,${ballAlpha*0.8})`);
@@ -4253,7 +4403,7 @@ function drawFeedMini(frame, burst){
       if(Math.abs(sx-cx)>maxX+4) continue;
       const alpha=(t<0.15?(t/0.15):(t>0.75?(1-(t-0.75)/0.25):1))*0.88*feedFillLevel;
       const r=1.6+p%4*0.55;
-      const bOre=feedMiniCtx.createRadialGradient(sx-r*0.3,fy-r*0.3,0,sx,fy,r);
+      const bOre=safeRadialGradient(feedMiniCtx,sx-r*0.3,fy-r*0.3,0,sx,fy,r);
       bOre.addColorStop(0,`rgba(180,105,45,${alpha.toFixed(2)})`);
       bOre.addColorStop(1,`rgba(100,55,20,${(alpha*0.5).toFixed(2)})`);
       feedMiniCtx.beginPath(); feedMiniCtx.arc(sx,fy,r,0,Math.PI*2);
@@ -4455,7 +4605,7 @@ function drawGrindMini(frame, burst) {
   // ── BOLTED MANHOLE COVER (rotating) — drawn as repeating bolts around the end-cap ──
   const drawEndCap = (ecx, ecRx, ecRy, rotOff) => {
     // Base end-cap disc
-    const capGrad = g.createRadialGradient(ecx - ecRx*0.2, cy - ecRy*0.2, 0, ecx, cy, Math.max(ecRx, ecRy));
+    const capGrad = safeRadialGradient(g,ecx - ecRx*0.2, cy - ecRy*0.2, 0, ecx, cy, Math.max(ecRx, ecRy));
     capGrad.addColorStop(0, '#7c8190');
     capGrad.addColorStop(0.5,'#5a5e68');
     capGrad.addColorStop(1, '#3a3d45');
@@ -5183,7 +5333,7 @@ function drawFilterMini(frame, burst) {
     g.rotate(rot);
 
     // Disc body — dark grey so it contrasts on white
-    const dg = g.createRadialGradient(0, 0, discRy*0.1, 0, 0, discRy);
+    const dg = safeRadialGradient(g,0, 0, discRy*0.1, 0, 0, discRy);
     dg.addColorStop(0, '#555'); dg.addColorStop(0.6, '#3a3a3a'); dg.addColorStop(1, '#222');
     g.fillStyle = dg; g.strokeStyle = 'rgba(80,80,80,0.5)'; g.lineWidth = 1;
     g.beginPath(); g.ellipse(0, 0, discRx, discRy, 0, 0, Math.PI*2); g.fill(); g.stroke();
@@ -5958,7 +6108,7 @@ function drawConveyorBelt(frame){
   [[bBL,bTL,'left'],[bBR,bTR,'right']].forEach(([bot,top,side])=>{
     const mx=(bot.x+top.x)/2, my=(bot.y+top.y)/2;
     const dr=BELT_THK/2;
-    const dg=gbCtx.createRadialGradient(mx-(side==='left'?dr*0.3:-dr*0.1),my-dr*0.25,0,mx,my,dr);
+    const dg=safeRadialGradient(gbCtx,mx-(side==='left'?dr*0.3:-dr*0.1),my-dr*0.25,0,mx,my,dr);
     dg.addColorStop(0,'#8a9aaa'); dg.addColorStop(0.5,'#4a5a6a'); dg.addColorStop(1,'#1e2c3c');
     gbCtx.fillStyle=dg;
     gbCtx.beginPath(); gbCtx.ellipse(mx,my,dr*0.18,dr,0,0,Math.PI*2); gbCtx.fill();
@@ -5980,7 +6130,7 @@ function drawConveyorBelt(frame){
     const rx=bBL.x+rt*beltDX, ry=bBL.y+rt*beltDY;
     const rcx=rx-nxU*BELT_THK*0.06, rcy=ry-nyU*BELT_THK*0.06;
     const rr=BELT_THK*0.055;
-    const rg=gbCtx.createRadialGradient(rcx-rr*0.15,rcy-rr*0.3,0,rcx,rcy,rr);
+    const rg=safeRadialGradient(gbCtx,rcx-rr*0.15,rcy-rr*0.3,0,rcx,rcy,rr);
     rg.addColorStop(0,'#6a7a8a'); rg.addColorStop(0.7,'#2e3e50'); rg.addColorStop(1,'#141e28');
     gbCtx.fillStyle=rg;
     gbCtx.beginPath(); gbCtx.ellipse(rcx,rcy,rr*0.28,rr,0,0,Math.PI*2); gbCtx.fill();
@@ -6054,7 +6204,7 @@ function drawConveyorBelt(frame){
 
     const r=p.r, s=p.shade;
     // Dark near-black with blue-grey sheen — like real iron ore pellets
-    const pg=gbCtx.createRadialGradient(wx-r*0.32,wy-r*0.35,0,wx,wy,r);
+    const pg=safeRadialGradient(gbCtx,wx-r*0.32,wy-r*0.35,0,wx,wy,r);
     pg.addColorStop(0,   `rgba(${Math.round(118*s)},${Math.round(132*s)},${Math.round(150*s)},1)`);
     pg.addColorStop(0.5, `rgba(${Math.round(48*s)}, ${Math.round(60*s)}, ${Math.round(75*s)},1)`);
     pg.addColorStop(1,   `rgba(10,15,22,1)`);
@@ -6352,7 +6502,7 @@ function drawPelletFall(frame){
     pelletFallCtx.beginPath(); pelletFallCtx.ellipse(px,floor-1,b.r*0.8,b.r*0.25,0,0,Math.PI*2); pelletFallCtx.fill();
     pelletFallCtx.restore();
     // Pellet body
-    const gr=pelletFallCtx.createRadialGradient(px-b.r*0.32,py-b.r*0.32,0,px,py,b.r);
+    const gr=safeRadialGradient(pelletFallCtx,px-b.r*0.32,py-b.r*0.32,0,px,py,b.r);
     gr.addColorStop(0,b.col.h1); gr.addColorStop(0.55,b.col.h2); gr.addColorStop(1,b.col.h3);
     pelletFallCtx.beginPath(); pelletFallCtx.arc(px,py,b.r,0,Math.PI*2);
     pelletFallCtx.fillStyle=gr; pelletFallCtx.fill();
@@ -6474,7 +6624,7 @@ function drawCoolKilnAnim(frame){
   coolCtx.clearRect(0,0,W,H);
 
   // Dark background with subtle grid
-  const bg=coolCtx.createLinearGradient(0,0,0,H);
+  const bg=safeLinearGradient(coolCtx,0,0,0,H);
   bg.addColorStop(0,'#0c1520'); bg.addColorStop(1,'#101e30');
   coolCtx.fillStyle=bg; coolCtx.fillRect(0,0,W,H);
   coolCtx.strokeStyle='rgba(80,130,200,0.04)'; coolCtx.lineWidth=0.6;
@@ -6536,7 +6686,7 @@ function drawCoolKilnAnim(frame){
     coolCtx.beginPath(); coolCtx.moveTo(x0,t0-2); coolCtx.lineTo(x1,t1-2);
     coolCtx.lineTo(x1,b1+2); coolCtx.lineTo(x0,b0+2); coolCtx.closePath(); coolCtx.fill();
     // Cylindrical shading
-    const shGr=coolCtx.createLinearGradient(x0,t0,x0,b0+2);
+    const shGr=safeLinearGradient(coolCtx,x0,t0,x0,b0+2);
     shGr.addColorStop(0,'rgba(255,255,255,0.18)'); shGr.addColorStop(0.35,'rgba(255,255,255,0.05)');
     shGr.addColorStop(0.60,'rgba(0,0,0,0)'); shGr.addColorStop(1,'rgba(0,0,0,0.38)');
     coolCtx.fillStyle=shGr;
@@ -6545,16 +6695,16 @@ function drawCoolKilnAnim(frame){
     // Seam blend
     if(z<3){
       const sx=left+(z+1)*sliceW;
-      const sGr=coolCtx.createLinearGradient(sx-7,0,sx+7,0);
+      const sGr=safeLinearGradient(coolCtx,sx-7,0,sx+7,0);
       sGr.addColorStop(0,'rgba(0,0,0,0)'); sGr.addColorStop(0.5,'rgba(0,0,0,0.22)'); sGr.addColorStop(1,'rgba(0,0,0,0)');
       coolCtx.fillStyle=sGr; coolCtx.fillRect(sx-7,topL-4,14,(botL-topL)+slopeY*2+8);
     }
     // Animated heat shimmer for hot zones (temp > 500)
-    if(temps[z]>500){
+    if(temps[z]>500 && sliceW>0){
       const shimAlpha=clamp((temps[z]-500)/450*0.22,0,0.22);
       const shimX=x0+sliceW*((frame*0.8+z*25)%100/100);
       coolCtx.save(); coolCtx.globalAlpha=shimAlpha;
-      const shimGr=coolCtx.createRadialGradient(shimX,cy,0,shimX,cy,sliceW*0.5);
+      const shimGr=safeRadialGradient(coolCtx,shimX,cy,0,shimX,cy,sliceW*0.5);
       shimGr.addColorStop(0,'rgba(255,255,255,0.9)'); shimGr.addColorStop(1,'rgba(255,255,255,0)');
       coolCtx.fillStyle=shimGr; coolCtx.fillRect(x0,t0-2,sliceW+1,b0-t0+4);
       coolCtx.restore();
@@ -6734,6 +6884,345 @@ function saveCoolCard(){
 }
 
 document.getElementById('coolAnimOverlay').addEventListener('click',function(e){if(e.target===this)closeCoolCard();});
+
+// ═══════════════════════════════════════════════════════════
+// INDURATION ANIMATION CARD
+// ═══════════════════════════════════════════════════════════
+
+function buildFurnaceSVG() {
+  return `<svg viewBox="0 0 360 360" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:340px;height:auto;overflow:visible;">
+    <defs>
+      <radialGradient id="fCoreGlow" cx="50%" cy="50%" r="50%">
+        <stop offset="0%" stop-color="#FFD54A"/>
+        <stop offset="40%" stop-color="#FF6B00"/>
+        <stop offset="100%" stop-color="#FF6B00" stop-opacity="0"/>
+      </radialGradient>
+      <radialGradient id="fChamberGlow" cx="50%" cy="50%" r="50%">
+        <stop offset="0%" stop-color="#FF6B00" stop-opacity="0.4"/>
+        <stop offset="100%" stop-color="#5E646B" stop-opacity="0"/>
+      </radialGradient>
+      <filter id="fGlow" x="-50%" y="-50%" width="200%" height="200%">
+        <feGaussianBlur stdDeviation="5" result="blur"/>
+        <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+      </filter>
+      <filter id="fShadow">
+        <feDropShadow dx="0" dy="5" stdDeviation="10" flood-color="rgba(26,48,87,0.15)"/>
+      </filter>
+    </defs>
+
+    <!-- Ground shadow -->
+    <ellipse cx="180" cy="340" rx="130" ry="12" fill="rgba(26,48,87,0.09)"/>
+
+    <!-- ROTATING PLATFORM -->
+    <g style="transform-origin:180px 180px;animation:furnaceRotate 40s linear infinite;">
+
+      <!-- Safety railing outer ring -->
+      <circle cx="180" cy="180" r="165" fill="none" stroke="#F2B233" stroke-width="3.5" stroke-dasharray="20,12" opacity="0.8"/>
+
+      <!-- Railing posts at 8 positions -->
+      <g stroke="#F2B233" stroke-width="2.2" opacity="0.75">
+        <line x1="180" y1="15" x2="180" y2="34"/>
+        <line x1="297" y1="52" x2="286" y2="68"/>
+        <line x1="345" y1="180" x2="326" y2="180"/>
+        <line x1="297" y1="308" x2="286" y2="292"/>
+        <line x1="180" y1="345" x2="180" y2="326"/>
+        <line x1="63" y1="308" x2="74" y2="292"/>
+        <line x1="15" y1="180" x2="34" y2="180"/>
+        <line x1="63" y1="52" x2="74" y2="68"/>
+      </g>
+
+      <!-- Outer ring body -->
+      <circle cx="180" cy="180" r="150" fill="#4A4F55" stroke="#3a3f44" stroke-width="2"/>
+      <!-- Outer ring top highlight -->
+      <path d="M 95 72 A 120 120 0 0 1 265 72" fill="none" stroke="rgba(255,255,255,0.15)" stroke-width="8"/>
+
+      <!-- PIPE RIGHT -->
+      <rect x="320" y="164" width="54" height="32" rx="16" fill="#C2C8CF" stroke="#adb3ba" stroke-width="1.2"/>
+      <rect x="320" y="168" width="54" height="8" fill="rgba(255,255,255,0.28)"/>
+      <ellipse cx="370" cy="180" rx="11" ry="16" fill="#B5BCC3" stroke="#9da3aa" stroke-width="1"/>
+      <!-- steam joint R -->
+      <circle cx="320" cy="170" r="2.5" fill="rgba(200,145,42,0.5)" style="animation:steamRise 3s ease-in-out infinite;"/>
+      <circle cx="316" cy="176" r="1.8" fill="rgba(200,145,42,0.35)" style="animation:steamRise 3s ease-in-out 0.8s infinite;"/>
+
+      <!-- PIPE LEFT -->
+      <rect x="-14" y="164" width="54" height="32" rx="16" fill="#C2C8CF" stroke="#adb3ba" stroke-width="1.2"/>
+      <rect x="-14" y="168" width="54" height="8" fill="rgba(255,255,255,0.28)"/>
+      <ellipse cx="-10" cy="180" rx="11" ry="16" fill="#B5BCC3" stroke="#9da3aa" stroke-width="1"/>
+      <!-- steam joint L -->
+      <circle cx="40" cy="170" r="2.5" fill="rgba(200,145,42,0.5)" style="animation:steamRise 3s ease-in-out 1.2s infinite;"/>
+      <circle cx="44" cy="177" r="1.8" fill="rgba(200,145,42,0.35)" style="animation:steamRise 3s ease-in-out 1.9s infinite;"/>
+
+      <!-- PIPE BOTTOM -->
+      <rect x="164" y="308" width="32" height="56" rx="16" fill="#C2C8CF" stroke="#adb3ba" stroke-width="1.2"/>
+      <rect x="168" y="308" width="8" height="56" fill="rgba(255,255,255,0.28)"/>
+      <ellipse cx="180" cy="360" rx="16" ry="10" fill="#B5BCC3" stroke="#9da3aa" stroke-width="1"/>
+      <!-- steam bottom -->
+      <circle cx="170" cy="310" r="2.5" fill="rgba(200,145,42,0.5)" style="animation:steamRise 3s ease-in-out 0.4s infinite;"/>
+
+      <!-- PIPE TOP -->
+      <rect x="164" y="-4" width="32" height="50" rx="16" fill="#C2C8CF" stroke="#adb3ba" stroke-width="1.2"/>
+      <rect x="168" y="-4" width="8" height="50" fill="rgba(255,255,255,0.28)"/>
+      <ellipse cx="180" cy="-4" rx="16" ry="10" fill="#B5BCC3" stroke="#9da3aa" stroke-width="1"/>
+      <!-- steam top -->
+      <circle cx="190" cy="46" r="2.5" fill="rgba(200,145,42,0.5)" style="animation:steamRise 3s ease-in-out 2s infinite;"/>
+
+      <!-- Support legs -->
+      <g fill="#6e747b">
+        <rect x="173" y="322" width="14" height="36" rx="3"/>
+        <rect x="173" y="-4" width="14" height="36" rx="3"/>
+        <rect x="320" y="173" width="14" height="36" rx="3" transform="rotate(90,327,191)"/>
+        <rect x="26" y="173" width="14" height="36" rx="3" transform="rotate(90,33,191)"/>
+      </g>
+
+      <!-- Main furnace body -->
+      <circle cx="180" cy="180" r="130" fill="#5E646B" stroke="#4a4f54" stroke-width="2" filter="url(#fShadow)"/>
+      <!-- Body top highlight -->
+      <path d="M 88 94 A 110 110 0 0 1 272 94" fill="none" stroke="rgba(255,255,255,0.16)" stroke-width="14"/>
+      <!-- Body concentric ring -->
+      <circle cx="180" cy="180" r="112" fill="none" stroke="rgba(60,68,76,0.6)" stroke-width="2"/>
+      <!-- Bolts on rim (12 bolts) -->
+      <g fill="#8a9098" opacity="0.8">
+        <circle cx="180" cy="52"/><circle cx="244" cy="75"/><circle cx="296" cy="124"/>
+        <circle cx="308" cy="180"/><circle cx="296" cy="236"/><circle cx="244" cy="285"/>
+        <circle cx="180" cy="308"/><circle cx="116" cy="285"/><circle cx="64" cy="236"/>
+        <circle cx="52" cy="180"/><circle cx="64" cy="124"/><circle cx="116" cy="75"/>
+      </g>
+
+      <!-- Inner heating chamber -->
+      <circle cx="180" cy="180" r="72" fill="#42474d" stroke="#363b40" stroke-width="2.5"/>
+      <circle cx="180" cy="180" r="66" fill="#363b40" stroke="rgba(255,107,0,0.3)" stroke-width="1.5"/>
+      <circle cx="180" cy="180" r="62" fill="url(#fChamberGlow)"/>
+      <!-- Chamber rings -->
+      <circle cx="180" cy="180" r="54" fill="none" stroke="rgba(255,107,0,0.2)" stroke-width="1.2"/>
+      <circle cx="180" cy="180" r="44" fill="none" stroke="rgba(255,107,0,0.3)" stroke-width="1"/>
+
+      <!-- Core heat glow (pulsing) -->
+      <g style="transform-origin:180px 180px;animation:heatPulse 2s ease-in-out infinite;">
+        <circle cx="180" cy="180" r="36" fill="url(#fCoreGlow)" opacity="0.9" filter="url(#fGlow)"/>
+        <circle cx="180" cy="180" r="24" fill="#FF6B00" opacity="0.95"/>
+        <circle cx="180" cy="180" r="16" fill="#FFD54A"/>
+        <circle cx="177" cy="177" r="8" fill="rgba(255,255,255,0.75)"/>
+      </g>
+    </g>
+
+    <!-- Static staircase -->
+    <g fill="none" stroke="#F2B233" stroke-width="1.8" opacity="0.7">
+      <line x1="150" y1="326" x2="136" y2="352"/>
+      <line x1="164" y1="334" x2="150" y2="360"/>
+      <line x1="136" y1="340" x2="164" y2="340"/>
+      <line x1="136" y1="352" x2="164" y2="352"/>
+      <rect x="132" y="350" width="4" height="16" fill="#F2B233"/>
+      <rect x="162" y="350" width="4" height="16" fill="#F2B233"/>
+    </g>
+
+    <!-- Label -->
+    <text x="180" y="26" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="8.5" font-weight="700" fill="rgba(200,145,42,0.85)" letter-spacing="2">INDURATION FURNACE</text>
+  </svg>`;
+}
+
+function buildKilnSVG() {
+  return `<svg viewBox="0 0 440 230" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:420px;height:auto;overflow:visible;">
+    <defs>
+      <linearGradient id="kBodyGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+        <stop offset="0%" stop-color="#d4d8de"/>
+        <stop offset="25%" stop-color="#A1A7AE"/>
+        <stop offset="65%" stop-color="#8c9299"/>
+        <stop offset="100%" stop-color="#6e7378"/>
+      </linearGradient>
+      <linearGradient id="kShineGrad" x1="0%" y1="0%" x2="100%" y2="20%">
+        <stop offset="0%" stop-color="rgba(255,255,255,0)"/>
+        <stop offset="45%" stop-color="rgba(255,255,255,0.38)"/>
+        <stop offset="55%" stop-color="rgba(255,255,255,0.22)"/>
+        <stop offset="100%" stop-color="rgba(255,255,255,0)"/>
+      </linearGradient>
+      <radialGradient id="kHeatGrad" cx="38%" cy="50%" r="62%">
+        <stop offset="0%" stop-color="#FFD54A"/>
+        <stop offset="28%" stop-color="#FF7A00"/>
+        <stop offset="65%" stop-color="#c04010"/>
+        <stop offset="100%" stop-color="#1e0400"/>
+      </radialGradient>
+      <radialGradient id="kRollerGrad" cx="33%" cy="30%" r="68%">
+        <stop offset="0%" stop-color="#a0a5aa"/>
+        <stop offset="100%" stop-color="#48505a"/>
+      </radialGradient>
+      <filter id="kShadow">
+        <feDropShadow dx="0" dy="6" stdDeviation="10" flood-color="rgba(26,48,87,0.18)"/>
+      </filter>
+      <clipPath id="kBodyClip">
+        <rect x="62" y="48" width="304" height="120" rx="2"/>
+      </clipPath>
+    </defs>
+
+    <!-- Ground shadow -->
+    <ellipse cx="215" cy="218" rx="185" ry="10" fill="rgba(26,48,87,0.09)"/>
+
+    <!-- BASE FRAME -->
+    <rect x="35" y="190" width="372" height="18" rx="3" fill="#444B52" stroke="#2e3338" stroke-width="1"/>
+    <rect x="35" y="190" width="372" height="4" fill="rgba(255,255,255,0.1)"/>
+    <!-- Frame vertical ribs -->
+    <g stroke="#3a4048" stroke-width="0.8" opacity="0.55">
+      <line x1="88" y1="190" x2="88" y2="208"/>
+      <line x1="150" y1="190" x2="150" y2="208"/>
+      <line x1="215" y1="190" x2="215" y2="208"/>
+      <line x1="280" y1="190" x2="280" y2="208"/>
+      <line x1="345" y1="190" x2="345" y2="208"/>
+    </g>
+
+    <!-- ROLLER PEDESTALS -->
+    <g fill="#3c4248" stroke="#2a3038" stroke-width="0.7">
+      <rect x="72" y="178" width="28" height="14" rx="2"/>
+      <rect x="122" y="178" width="28" height="14" rx="2"/>
+      <rect x="178" y="178" width="28" height="14" rx="2"/>
+      <rect x="228" y="178" width="28" height="14" rx="2"/>
+      <rect x="284" y="178" width="28" height="14" rx="2"/>
+      <rect x="334" y="178" width="28" height="14" rx="2"/>
+    </g>
+
+    <!-- ROLLERS (6) -->
+    <g>
+      <!-- R1 -->
+      <g style="transform-origin:86px 164px;animation:rollerSpin 4s linear infinite;">
+        <circle cx="86" cy="164" r="16" fill="url(#kRollerGrad)" stroke="#3a3f44" stroke-width="1"/>
+        <line x1="86" y1="150" x2="86" y2="178" stroke="rgba(255,255,255,0.18)" stroke-width="1.2"/>
+        <line x1="72" y1="164" x2="100" y2="164" stroke="rgba(255,255,255,0.18)" stroke-width="1.2"/>
+        <circle cx="86" cy="164" r="4" fill="#5a6068"/>
+      </g>
+      <!-- R2 -->
+      <g style="transform-origin:136px 164px;animation:rollerSpin 4s linear infinite;">
+        <circle cx="136" cy="164" r="16" fill="url(#kRollerGrad)" stroke="#3a3f44" stroke-width="1"/>
+        <line x1="136" y1="150" x2="136" y2="178" stroke="rgba(255,255,255,0.18)" stroke-width="1.2"/>
+        <line x1="122" y1="164" x2="150" y2="164" stroke="rgba(255,255,255,0.18)" stroke-width="1.2"/>
+        <circle cx="136" cy="164" r="4" fill="#5a6068"/>
+      </g>
+      <!-- R3 -->
+      <g style="transform-origin:192px 164px;animation:rollerSpin 4s linear infinite;">
+        <circle cx="192" cy="164" r="16" fill="url(#kRollerGrad)" stroke="#3a3f44" stroke-width="1"/>
+        <line x1="192" y1="150" x2="192" y2="178" stroke="rgba(255,255,255,0.18)" stroke-width="1.2"/>
+        <line x1="178" y1="164" x2="206" y2="164" stroke="rgba(255,255,255,0.18)" stroke-width="1.2"/>
+        <circle cx="192" cy="164" r="4" fill="#5a6068"/>
+      </g>
+      <!-- R4 -->
+      <g style="transform-origin:242px 164px;animation:rollerSpin 4s linear infinite;">
+        <circle cx="242" cy="164" r="16" fill="url(#kRollerGrad)" stroke="#3a3f44" stroke-width="1"/>
+        <line x1="242" y1="150" x2="242" y2="178" stroke="rgba(255,255,255,0.18)" stroke-width="1.2"/>
+        <line x1="228" y1="164" x2="256" y2="164" stroke="rgba(255,255,255,0.18)" stroke-width="1.2"/>
+        <circle cx="242" cy="164" r="4" fill="#5a6068"/>
+      </g>
+      <!-- R5 -->
+      <g style="transform-origin:298px 164px;animation:rollerSpin 4s linear infinite;">
+        <circle cx="298" cy="164" r="16" fill="url(#kRollerGrad)" stroke="#3a3f44" stroke-width="1"/>
+        <line x1="298" y1="150" x2="298" y2="178" stroke="rgba(255,255,255,0.18)" stroke-width="1.2"/>
+        <line x1="284" y1="164" x2="312" y2="164" stroke="rgba(255,255,255,0.18)" stroke-width="1.2"/>
+        <circle cx="298" cy="164" r="4" fill="#5a6068"/>
+      </g>
+      <!-- R6 -->
+      <g style="transform-origin:348px 164px;animation:rollerSpin 4s linear infinite;">
+        <circle cx="348" cy="164" r="16" fill="url(#kRollerGrad)" stroke="#3a3f44" stroke-width="1"/>
+        <line x1="348" y1="150" x2="348" y2="178" stroke="rgba(255,255,255,0.18)" stroke-width="1.2"/>
+        <line x1="334" y1="164" x2="362" y2="164" stroke="rgba(255,255,255,0.18)" stroke-width="1.2"/>
+        <circle cx="348" cy="164" r="4" fill="#5a6068"/>
+      </g>
+    </g>
+
+    <!-- KILN CYLINDER -->
+    <g filter="url(#kShadow)">
+      <rect x="62" y="48" width="304" height="120" fill="url(#kBodyGrad)"/>
+      <!-- Top highlight -->
+      <rect x="62" y="48" width="304" height="24" fill="rgba(255,255,255,0.18)"/>
+      <!-- Bottom shadow -->
+      <rect x="62" y="142" width="304" height="26" fill="rgba(0,0,0,0.15)"/>
+
+      <!-- Animated stripe lines (suggest rotation) -->
+      <g clip-path="url(#kBodyClip)">
+        <g style="animation:kilnRotate 20s linear infinite;transform-origin:214px 108px;">
+          <line x1="62" y1="48" x2="366" y2="48" stroke="rgba(255,255,255,0.07)" stroke-width="1"/>
+          <line x1="62" y1="72" x2="366" y2="72" stroke="rgba(255,255,255,0.05)" stroke-width="1"/>
+          <line x1="62" y1="96" x2="366" y2="96" stroke="rgba(0,0,0,0.06)" stroke-width="1"/>
+          <line x1="62" y1="120" x2="366" y2="120" stroke="rgba(0,0,0,0.1)" stroke-width="1"/>
+          <line x1="62" y1="144" x2="366" y2="144" stroke="rgba(0,0,0,0.08)" stroke-width="1"/>
+          <line x1="62" y1="166" x2="366" y2="166" stroke="rgba(0,0,0,0.06)" stroke-width="1"/>
+        </g>
+      </g>
+
+      <!-- Metallic shine sweep -->
+      <rect x="62" y="48" width="304" height="120" fill="url(#kShineGrad)" clip-path="url(#kBodyClip)" style="animation:shineSwipe 4s linear infinite;"/>
+
+      <!-- Support rings (3 rings, static) -->
+      <rect x="120" y="48" width="22" height="120" fill="#686E74" stroke="#565c62" stroke-width="1"/>
+      <rect x="120" y="48" width="22" height="7" fill="rgba(255,255,255,0.22)"/>
+      <rect x="220" y="48" width="22" height="120" fill="#686E74" stroke="#565c62" stroke-width="1"/>
+      <rect x="220" y="48" width="22" height="7" fill="rgba(255,255,255,0.22)"/>
+      <rect x="322" y="48" width="22" height="120" fill="#686E74" stroke="#565c62" stroke-width="1"/>
+      <rect x="322" y="48" width="22" height="7" fill="rgba(255,255,255,0.22)"/>
+
+      <!-- LEFT endcap heat zone -->
+      <ellipse cx="62" cy="108" rx="18" ry="60" fill="url(#kHeatGrad)" stroke="#2a0800" stroke-width="1.2" style="animation:heatGlow 2s ease-in-out infinite;"/>
+      <!-- Heat bloom -->
+      <ellipse cx="62" cy="108" rx="28" ry="68" fill="rgba(255,122,0,0.14)" style="animation:heatGlow 2s ease-in-out infinite;"/>
+
+      <!-- RIGHT endcap -->
+      <ellipse cx="366" cy="108" rx="15" ry="60" fill="#7e8490" stroke="#5a6068" stroke-width="1.2"/>
+      <ellipse cx="366" cy="108" rx="9" ry="44" fill="#6a7078"/>
+      <ellipse cx="366" cy="108" rx="5" ry="26" fill="#5a6068"/>
+      <!-- Exit bolts -->
+      <g fill="#9ea3a8" opacity="0.65">
+        <circle cx="366" cy="50" r="2.5"/>
+        <circle cx="378" cy="68" r="2.5"/>
+        <circle cx="380" cy="90" r="2.5"/>
+        <circle cx="380" cy="126" r="2.5"/>
+        <circle cx="378" cy="148" r="2.5"/>
+        <circle cx="366" cy="166" r="2.5"/>
+        <circle cx="354" cy="148" r="2.5"/>
+        <circle cx="352" cy="108" r="2.5"/>
+        <circle cx="354" cy="68" r="2.5"/>
+      </g>
+    </g>
+
+    <!-- Label -->
+    <text x="215" y="24" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="8.5" font-weight="700" fill="rgba(200,145,42,0.85)" letter-spacing="2">GRATE KILN</text>
+  </svg>`;
+}
+
+function openInduCard() {
+  const mode = stageParams.indu.mode || 'furnace';
+  const isGrate = mode === 'grate';
+
+  // Update header
+  document.getElementById('induAnimTag').textContent = 'STAGE 08 · INDURATION';
+  document.getElementById('induAnimTitle').textContent = isGrate ? 'Grate Kiln' : 'Induration Furnace';
+  document.getElementById('induAnimSubtitle').textContent = isGrate
+    ? 'Configure traveling grate kiln parameters'
+    : 'Configure induration furnace parameters';
+
+  // Update diagram card
+  document.getElementById('induDiagramTitle').textContent = isGrate ? 'Grate Kiln' : 'Induration Furnace';
+  document.getElementById('induDiagramSubtitle').textContent = isGrate ? 'Traveling Grate Technology' : 'Straight Grate Technology';
+  document.getElementById('induTypeBadge').textContent = isGrate ? '⬡ TRAVELING GRATE' : '⬡ STRAIGHT GRATE';
+  document.getElementById('induDiagramBody').innerHTML = isGrate ? buildKilnSVG() : buildFurnaceSVG();
+
+  // Build input fields
+  const cfg = MODAL_CONFIGS['indu'];
+  document.getElementById('induAnimBody').innerHTML = cfg.fields();
+
+  document.getElementById('induAnimOverlay').classList.add('open');
+}
+
+function closeInduCard() {
+  document.getElementById('induAnimOverlay').classList.remove('open');
+}
+
+function saveInduCard() {
+  const cfg = MODAL_CONFIGS['indu'];
+  cfg.save();
+  closeInduCard();
+  updateSummaryParams();
+}
+
+document.getElementById('induAnimOverlay').addEventListener('click', function(e) {
+  if (e.target === this) closeInduCard();
+});
+
+
 
 // Load state on page load
 loadStateFromStorage();
