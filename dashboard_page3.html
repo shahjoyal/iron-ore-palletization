@@ -784,10 +784,10 @@ input.finp{cursor:text;}
 .gb-anim-overlay.open .gb-anim-card{transform:translateY(0) scale(1);}
 .gb-anim-header{
   padding:1.4rem 1.6rem 1rem;border-bottom:1px solid var(--border);
-  background:linear-gradient(135deg,#1a3d20 0%,#2a5a30 100%);
+  background:linear-gradient(135deg,var(--navy2) 0%,var(--navy3) 100%);
   border-radius:10px 10px 0 0;position:relative;flex-shrink:0;
 }
-.gb-anim-tag{font-family:'JetBrains Mono';font-size:.52rem;letter-spacing:2.5px;color:rgba(120,210,100,.75);text-transform:uppercase;margin-bottom:5px;}
+.gb-anim-tag{font-family:'JetBrains Mono';font-size:.52rem;letter-spacing:2.5px;color:rgba(200,145,42,.7);text-transform:uppercase;margin-bottom:5px;}
 .gb-anim-title{font-family:'Cormorant Garamond',serif;font-size:1.5rem;font-weight:700;color:#fff;line-height:1.2;}
 .gb-anim-subtitle{font-size:.78rem;color:rgba(255,255,255,.4);margin-top:5px;}
 .gb-anim-close{
@@ -796,14 +796,14 @@ input.finp{cursor:text;}
   color:rgba(255,255,255,.6);width:30px;height:30px;border-radius:50%;
   font-size:.9rem;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s;
 }
-.gb-anim-close:hover{background:rgba(90,180,80,.35);color:#fff;}
+.gb-anim-close:hover{background:rgba(200,145,42,.3);color:#fff;}
 .gb-anim-body{padding:1.4rem 1.6rem;flex:1;}
 
 /* RIGHT card */
 .gb-diagram-card{
-  width:380px;flex-shrink:0;
-  background:linear-gradient(170deg,#f3f8f2 0%,#ffffff 40%,#edf5ec 100%);
-  border:1px solid rgba(60,140,60,0.25);border-radius:10px;
+  width:460px;flex-shrink:0;
+  background:linear-gradient(170deg,#f8f5f0 0%,#ffffff 40%,#f2efea 100%);
+  border:1px solid rgba(200,145,42,0.25);border-radius:10px;
   box-shadow:0 24px 80px rgba(26,48,87,.2);
   display:flex;flex-direction:column;align-self:stretch;overflow:hidden;
   transform:translateY(16px) scale(.97);
@@ -812,47 +812,41 @@ input.finp{cursor:text;}
 .gb-anim-overlay.open .gb-diagram-card{transform:translateY(0) scale(1);}
 .gb-diagram-header{
   padding:1rem 1.3rem .8rem;
-  background:linear-gradient(135deg,#1a3d20 0%,#2a5a30 100%);
-  border-bottom:1px solid rgba(60,140,60,0.2);flex-shrink:0;
+  background:linear-gradient(135deg,var(--navy2) 0%,var(--navy3) 100%);
+  border-bottom:1px solid rgba(200,145,42,0.18);flex-shrink:0;
 }
-.gb-diagram-tag{font-family:'JetBrains Mono';font-size:.52rem;letter-spacing:2.5px;color:rgba(120,210,100,.75);text-transform:uppercase;margin-bottom:4px;}
+.gb-diagram-tag{font-family:'JetBrains Mono';font-size:.52rem;letter-spacing:2.5px;color:rgba(200,145,42,.75);text-transform:uppercase;margin-bottom:4px;}
 .gb-diagram-title{font-family:'Cormorant Garamond',serif;font-size:1.25rem;font-weight:700;color:#fff;line-height:1.2;}
 .gb-diagram-subtitle{font-size:.72rem;color:rgba(255,255,255,.4);margin-top:3px;}
 .gb-diagram-body{flex:1;display:flex;flex-direction:column;padding:.9rem 1.1rem .8rem;gap:.7rem;overflow:hidden;}
 
 .gb-fall-container-wrap{
-  flex:1;position:relative;min-height:220px;
-  background:linear-gradient(180deg,#08131e 0%,#0b1a2c 100%);
-  border-radius:8px;border:1.5px solid rgba(60,180,60,0.22);
-  overflow:hidden;box-shadow:0 6px 24px rgba(26,48,87,.3),inset 0 -2px 0 rgba(60,180,60,0.08);
+  flex:1;position:relative;min-height:300px;
+  background:linear-gradient(180deg,#08111e 0%,#0e1e34 100%);
+  border-radius:8px;border:1.5px solid rgba(200,145,42,0.25);
+  overflow:hidden;box-shadow:0 6px 24px rgba(26,48,87,.3),inset 0 -2px 0 rgba(200,145,42,0.08);
 }
 #gbFallCanvas{position:absolute;inset:0;width:100%;height:100%;display:block;}
-.gb-fill-readout{
-  position:absolute;top:10px;right:12px;
-  font-family:'Cormorant Garamond',serif;font-size:1.7rem;font-weight:700;
-  color:rgba(80,200,80,0.9);line-height:1;
-  text-shadow:0 0 14px rgba(60,200,60,0.5);transition:color .4s;
-}
 .gb-hint-label{
   position:absolute;bottom:12px;left:50%;transform:translateX(-50%);
   font-family:'JetBrains Mono';font-size:.5rem;letter-spacing:1.5px;
-  color:rgba(100,200,100,0.5);text-transform:uppercase;white-space:nowrap;
+  color:rgba(200,145,42,0.45);text-transform:uppercase;white-space:nowrap;
   transition:opacity .6s;
 }
 .gb-hint-label.hidden{opacity:0;}
 
 .gb-fall-meter{flex-shrink:0;}
-.gb-meter-label{font-family:'JetBrains Mono';font-size:.48rem;letter-spacing:1.5px;color:rgba(40,90,40,.65);text-transform:uppercase;margin-bottom:4px;}
-.gb-meter-bg{height:5px;background:rgba(60,140,60,0.12);border-radius:3px;overflow:hidden;}
-.gb-meter-fill{height:100%;background:linear-gradient(90deg,#1a5a20,#3aaa4a,#5acc5a);border-radius:3px;transition:width .5s ease;}
+.gb-meter-label{font-family:'JetBrains Mono';font-size:.48rem;letter-spacing:1.5px;color:rgba(90,74,48,.65);text-transform:uppercase;margin-bottom:4px;}
+.gb-meter-bg{height:5px;background:rgba(200,145,42,0.12);border-radius:3px;overflow:hidden;}
+.gb-meter-fill{height:100%;background:linear-gradient(90deg,var(--navy),var(--blue),var(--gold));border-radius:3px;transition:width .5s ease;}
 
 .gb-stat-row{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;flex-shrink:0;}
-.gb-stat{background:rgba(42,90,48,0.06);border:1px solid rgba(60,140,60,0.18);border-radius:5px;padding:6px 4px;text-align:center;}
-.gb-stat-label{display:block;font-family:'JetBrains Mono';font-size:.44rem;letter-spacing:1px;color:rgba(40,100,40,.6);text-transform:uppercase;margin-bottom:3px;}
-.gb-stat-val{display:block;font-family:'Cormorant Garamond',serif;font-size:1rem;font-weight:700;color:#1a4020;line-height:1;}
+.gb-stat{background:rgba(200,145,42,0.05);border:1px solid var(--border);border-radius:5px;padding:6px 4px;text-align:center;}
+.gb-stat-label{display:block;font-family:'JetBrains Mono';font-size:.44rem;letter-spacing:1px;color:var(--text-dim);text-transform:uppercase;margin-bottom:3px;}
+.gb-stat-val{display:block;font-family:'Cormorant Garamond',serif;font-size:1rem;font-weight:700;color:var(--navy);line-height:1;}
 
-@media(max-width:960px){.gb-diagram-card{width:300px;}}
-@media(max-width:740px){.gb-diagram-card{display:none;}}
+@media(max-width:1060px){.gb-diagram-card{width:340px;}}
+@media(max-width:800px){.gb-diagram-card{display:none;}}
 @media(max-width:560px){.gb-anim-card{width:96vw;}}
 
 /* ── PELLET TWO-PANEL OVERLAY ── */
@@ -1173,16 +1167,16 @@ input.finp{cursor:text;}
   </div>
 </div>
 
-<!-- ══ GREEN BALL ANIMATION CARD ══ -->
+<!-- ══ GREEN BALL PROP + SCREENING MERGED CARD ══ -->
 <div class="gb-anim-overlay" id="gbAnimOverlay">
   <div class="gb-anim-panels">
 
-    <!-- LEFT: Parameters Card -->
+    <!-- LEFT: Merged Parameters Card -->
     <div class="gb-anim-card" id="gbAnimCard">
       <div class="gb-anim-header">
-        <div class="gb-anim-tag">STAGE 06B · GREEN BALL PROP</div>
-        <div class="gb-anim-title">Green Ball Properties</div>
-        <div class="gb-anim-subtitle">Enter measured green ball quality parameters</div>
+        <div class="gb-anim-tag">STAGE 06B + 07 · MERGED</div>
+        <div class="gb-anim-title">Green Ball Prop &amp; Screening</div>
+        <div class="gb-anim-subtitle">Green ball quality and size screening distribution</div>
         <button class="gb-anim-close" onclick="closeGbCard()">✕</button>
       </div>
       <div class="gb-anim-body" id="gbAnimBody"></div>
@@ -1192,28 +1186,27 @@ input.finp{cursor:text;}
       </div>
     </div>
 
-    <!-- RIGHT: Triangular container + falling balls -->
+    <!-- RIGHT: Conveyor Belt Diagram + Animation -->
     <div class="gb-diagram-card">
       <div class="gb-diagram-header">
-        <div class="gb-diagram-tag">LIVE PREVIEW</div>
-        <div class="gb-diagram-title">Green Ball Accumulation</div>
-        <div class="gb-diagram-subtitle">Balls fall as you enter values</div>
+        <div class="gb-diagram-tag">LIVE PREVIEW · SCREENING</div>
+        <div class="gb-diagram-title">Inclined Conveyor Belt</div>
+        <div class="gb-diagram-subtitle">Iron ore pellets in continuous screening operation</div>
       </div>
       <div class="gb-diagram-body">
         <div class="gb-fall-container-wrap">
           <canvas id="gbFallCanvas"></canvas>
-          <div class="gb-fill-readout" id="gbFillReadout">0%</div>
-          <div class="gb-hint-label" id="gbHintLabel">← Enter any value to begin</div>
+          <div class="gb-hint-label" id="gbHintLabel">← Enter any value to activate</div>
         </div>
         <div class="gb-fall-meter">
-          <div class="gb-meter-label">HOPPER FILL</div>
-          <div class="gb-meter-bg"><div class="gb-meter-fill" id="gbMeterFill" style="width:0%"></div></div>
+          <div class="gb-meter-label">BELT SPEED</div>
+          <div class="gb-meter-bg"><div class="gb-meter-fill" id="gbMeterFill" style="width:65%"></div></div>
         </div>
         <div class="gb-stat-row" id="gbStatRow">
           <div class="gb-stat"><span class="gb-stat-label">MOISTURE</span><span class="gb-stat-val" id="gbStatMoist">—</span></div>
           <div class="gb-stat"><span class="gb-stat-label">DROP NO.</span><span class="gb-stat-val" id="gbStatDrop">—</span></div>
           <div class="gb-stat"><span class="gb-stat-label">GCS</span><span class="gb-stat-val" id="gbStatGcs">—</span></div>
-          <div class="gb-stat"><span class="gb-stat-label">SIZE</span><span class="gb-stat-val" id="gbStatSize">—</span></div>
+          <div class="gb-stat"><span class="gb-stat-label">RECYCLE</span><span class="gb-stat-val" id="gbStatSize">—</span></div>
         </div>
       </div>
     </div>
@@ -1716,8 +1709,7 @@ let simRunning=false, simFrame=0, simStep=-1, animId=null, currentModalStage=nul
 
 // ═══════ STAGES ═══════
 const STAGES=[
-  {id:'greenball',label:'GREEN\nBALL PROP',    tag:'STAGE 06B',shape:'screen',  color:'#5a8a3a',step:5},
-  {id:'screen',   label:'SCREENING',           tag:'STAGE 07',shape:'screen',   color:'#6a5a2a',step:6},
+  {id:'greenball',label:'GREEN BALL\nPROP + SCREEN',tag:'STAGE 06B–07',shape:'screen',color:'#5a8a3a',step:5},
   {id:'indu',     label:'INDURATION\nFURNACE',tag:'STAGE 08',shape:'furnace',  color:'#c04010',step:7},
   {id:'cool',     label:'COOLING',             tag:'STAGE 09',shape:'trapezoid',color:'#2a7a4a',step:8},
   {id:'pellet',   label:'FINISHED\nPELLETS',  tag:'STAGE 10',shape:'pellets',  color:'#1a3057',step:9},
@@ -2592,16 +2584,76 @@ function drawMachineShape(shape,cx,cy,mW,mH,col,strokeCol,strokeW,isActive,isDon
       return drawBallingDiscEnhanced(cx,cy,mW,mH,frame,stage,isActive,isDone);
     }
     case 'screen':{
-      const sw=mW*0.58,sh=mH*0.46; const top=cy-sh/2;
-      const vib=isActive?Math.sin(frame*0.5)*2:0;
-      ctx.save(); ctx.translate(0,vib);
-      ctx.beginPath(); ctx.roundRect(cx-sw/2,top,sw,sh,3); ctx.fill(); ctx.stroke();
-      ctx.strokeStyle='rgba(255,255,255,0.22)'; ctx.lineWidth=0.8;
-      for(let g=1;g<5;g++){ctx.beginPath();ctx.moveTo(cx-sw/2,top+g*sh/5);ctx.lineTo(cx+sw/2,top+g*sh/5);ctx.stroke();}
-      for(let g=1;g<7;g++){ctx.beginPath();ctx.moveTo(cx-sw/2+g*sw/7,top);ctx.lineTo(cx-sw/2+g*sw/7,top+sh);ctx.stroke();}
+      // Mini inclined conveyor belt — matching the real image
+      const sw=mW*0.64, sh=mH*0.52;
+      const bx=cx-sw/2, by=cy+sh*0.08;
+      const tilt=0.22; // inclination
+      const thk=sh*0.42; // belt thickness (tall)
+      // Four corners: bottom-left lower-rail, then across, then up by thk
+      const p0={x:bx,        y:by};
+      const p1={x:bx+sw,     y:by - sw*Math.tan(tilt)};
+      const p2={x:p1.x,      y:p1.y - thk};
+      const p3={x:p0.x,      y:p0.y - thk};
+      const bLen=Math.sqrt((p1.x-p0.x)**2+(p1.y-p0.y)**2);
+      const nx=(p3.y-p0.y)/thk, ny=(p0.x-p3.x)/thk; // upward normal
+      // Belt rubber surface
+      ctx.save();
+      const bG=ctx.createLinearGradient(p3.x,p3.y,p0.x,p0.y);
+      bG.addColorStop(0,'#1a2028'); bG.addColorStop(0.5,'#141a20'); bG.addColorStop(1,'#0e1318');
+      ctx.fillStyle=bG;
+      ctx.beginPath();ctx.moveTo(p0.x,p0.y);ctx.lineTo(p1.x,p1.y);ctx.lineTo(p2.x,p2.y);ctx.lineTo(p3.x,p3.y);ctx.closePath();ctx.fill();
+      // Ribs scrolling with animation
+      ctx.strokeStyle='rgba(50,65,78,0.85)'; ctx.lineWidth=0.9;
+      const ribSp=10, ribOff=isActive?(frame*1.2%ribSp):0;
+      for(let r=-1;r<bLen/ribSp+1;r++){
+        const t=(r*ribSp+ribOff)/bLen;
+        const rx2=p0.x+t*(p1.x-p0.x), ry2=p0.y+t*(p1.y-p0.y);
+        ctx.beginPath();ctx.moveTo(rx2,ry2);ctx.lineTo(rx2+nx*thk,ry2+ny*thk);ctx.stroke();
+      }
+      // Dense small pellets
+      const pelletScroll=isActive?(frame*1.5%sw):0;
+      for(let pr=0;pr<55;pr++){
+        const rowI=pr%5, colI=Math.floor(pr/5);
+        const rawT=((colI/(10))*sw + pelletScroll)%sw;
+        const pt=rawT/sw;
+        const crossT=0.1+(rowI/4)*0.8;
+        const ptx=p0.x+pt*(p1.x-p0.x)+crossT*nx*thk;
+        const pty=p0.y+pt*(p1.y-p0.y)+crossT*ny*thk;
+        const pr2=2.0+Math.sin(pr*3.7)*0.4;
+        const shd=0.7+Math.sin(pr*5.1)*0.3;
+        const pg2=ctx.createRadialGradient(ptx-pr2*0.3,pty-pr2*0.3,0,ptx,pty,pr2);
+        pg2.addColorStop(0,`rgba(${Math.round(110*shd)},${Math.round(128*shd)},${Math.round(148*shd)},1)`);
+        pg2.addColorStop(0.55,`rgba(${Math.round(45*shd)},${Math.round(58*shd)},${Math.round(75*shd)},1)`);
+        pg2.addColorStop(1,`rgba(12,18,28,1)`);
+        ctx.beginPath();ctx.arc(ptx,pty,pr2,0,Math.PI*2);ctx.fillStyle=pg2;ctx.fill();
+      }
       ctx.restore();
-      if(isActive){for(let p=0;p<3;p++){const py2=cy+sh/2+1+(frame*2+p*18)%(sh*0.5);const pg=ctx.createRadialGradient(cx+(p-1)*12,py2,0,cx+(p-1)*12,py2,3.5);pg.addColorStop(0,'#8ba3b5');pg.addColorStop(1,'#2a4a5a');ctx.beginPath();ctx.arc(cx+(p-1)*12,py2,3.5,0,Math.PI*2);ctx.fillStyle=pg;ctx.fill();}}
-      return{x:cx-sw/2,y:top,w:sw,h:sh};
+      // Rollers at each end (ellipses)
+      [[p0,p3],[p1,p2]].forEach(([bot,top2])=>{
+        const mx=(bot.x+top2.x)/2, my=(bot.y+top2.y)/2, rr=thk/2;
+        const rg=ctx.createRadialGradient(mx-rr*0.2,my-rr*0.3,0,mx,my,rr);
+        rg.addColorStop(0,'#6a7a8a'); rg.addColorStop(1,'#1e2a38');
+        ctx.fillStyle=rg;
+        ctx.beginPath();ctx.ellipse(mx,my,rr*0.22,rr,0,0,Math.PI*2);ctx.fill();
+        ctx.strokeStyle='rgba(140,165,185,0.4)';ctx.lineWidth=0.8;ctx.stroke();
+      });
+      // Mid rollers (3 visible beneath)
+      ctx.fillStyle='rgba(55,70,85,0.9)';
+      for(let ri=1;ri<4;ri++){
+        const rt=ri/4;
+        const rx2=p0.x+rt*(p1.x-p0.x), ry2=p0.y+rt*(p1.y-p0.y);
+        const mx2=rx2+nx*thk*0.5, my2=ry2+ny*thk*0.5;
+        ctx.beginPath();ctx.ellipse(mx2,my2,thk*0.5*0.2,thk*0.5,0,0,Math.PI*2);ctx.fill();
+        ctx.strokeStyle='rgba(120,145,165,0.35)';ctx.lineWidth=0.7;ctx.stroke();
+      }
+      // Frame rails
+      ctx.strokeStyle='rgba(85,100,118,0.92)'; ctx.lineWidth=2;
+      ctx.beginPath();ctx.moveTo(p0.x,p0.y);ctx.lineTo(p1.x,p1.y);ctx.stroke();
+      ctx.beginPath();ctx.moveTo(p3.x,p3.y);ctx.lineTo(p2.x,p2.y);ctx.stroke();
+      // Side edge accent
+      ctx.strokeStyle='rgba(200,145,42,0.2)'; ctx.lineWidth=1;
+      ctx.beginPath();ctx.moveTo(p0.x,p0.y);ctx.lineTo(p1.x,p1.y);ctx.stroke();
+      return{x:bx,y:p2.y,w:sw,h:p0.y-p2.y};
     }
     case 'furnace':{
       const fw=mW*0.50,fh=mH*0.72; const top=cy-fh/2;
@@ -3743,7 +3795,7 @@ function isStageConfigured(id){
   if(id==='thickner')  return !!stageParams.thickner.underflowDensity;
   if(id==='filter')    return !!stageParams.filter.cakeMoisture;
   if(id==='mix')       return !!stageParams.mix.binder;
-  if(id==='greenball') return !!stageParams.greenball.moisture;
+  if(id==='greenball') return !!stageParams.greenball.moisture || !!stageParams.screen.s8_10;
   return false;
 }
 
@@ -5648,29 +5700,20 @@ const _origResetAll = resetAll;
 window.resetAll = function() { _origResetAll(); localStorage.removeItem(STATE_KEY); };
 
 
-
 // ═══════════════════════════════════════════════════════════
-// GREEN BALL ANIMATION CARD
+// GREEN BALL PROP + SCREENING — CONVEYOR BELT ANIMATION
 // ═══════════════════════════════════════════════════════════
 let gbFrame=0, gbAnimId=null, gbActive=false;
-let gbFillLevel=0;
-let gbBalls=[];
-let gbBurstMode=false, gbBurstFrames=0;
+let gbBeltOffset=0;
+const GB_BELT_SPEED=1.8; // px per frame
 
 const gbCanvas=document.getElementById('gbFallCanvas');
 const gbCtx=gbCanvas.getContext('2d');
 
-const GB_COLORS=[
-  {h1:'#a8e0a0',h2:'#4a8a42',h3:'#1a4a18'},
-  {h1:'#90d888',h2:'#3a7a32',h3:'#153a14'},
-  {h1:'#b8e8b0',h2:'#5a9a50',h3:'#224820'},
-  {h1:'#80cc78',h2:'#2a6a24',h3:'#103010'},
-];
-
 function sizeGbCanvas(){
   const wrap=gbCanvas.parentElement;
-  const W=Math.max(wrap.clientWidth||340,10);
-  const H=Math.max(wrap.clientHeight||220,10);
+  const W=Math.max(wrap.clientWidth||440,10);
+  const H=Math.max(wrap.clientHeight||300,10);
   const ratio=window.devicePixelRatio||1;
   const wPx=Math.round(W*ratio), hPx=Math.round(H*ratio);
   if(gbCanvas.width!==wPx||gbCanvas.height!==hPx){
@@ -5680,277 +5723,315 @@ function sizeGbCanvas(){
   return{W,H};
 }
 
-function spawnGbBall(W, cx, triTopY){
-  const r=5+Math.random()*4.5;
-  const col=GB_COLORS[Math.floor(Math.random()*GB_COLORS.length)];
-  // Spawn near the top opening of the triangle
-  const spawnW=W*0.22;
-  return{
-    x: cx + (Math.random()-0.5)*spawnW,
-    y: triTopY - r - Math.random()*30,
-    vx:(Math.random()-0.5)*1.2,
-    vy:0.5+Math.random()*1.0,
-    r, col, settled:false,
-    spin:Math.random()*Math.PI*2,
-    spinV:(Math.random()-0.5)*0.04
-  };
+// Pre-generate pellet positions on the belt (static layout, belt scrolls underneath)
+let GB_PELLETS=null;
+function buildPellets(beltW, beltH, count){
+  const pels=[];
+  const TILE=beltH*2.6; // vertical repeat tile
+  for(let i=0;i<count;i++){
+    pels.push({
+      lx: (Math.random()-0.15)*beltW,           // local x across belt width
+      ly: Math.random()*TILE,                    // local y in tile
+      r:  3.2+Math.random()*3.8,                 // radius
+      jx: (Math.random()-0.5)*1.2,               // jitter x
+      jy: (Math.random()-0.5)*0.6,               // jitter y
+      shade: 0.78+Math.random()*0.22,            // brightness 0..1
+    });
+  }
+  return{pels, TILE};
 }
 
-function drawGbAnim(frame){
+function drawConveyorBelt(frame){
   const{W,H}=sizeGbCanvas();
   gbCtx.clearRect(0,0,W,H);
 
-  // Background
-  const bg=gbCtx.createLinearGradient(0,0,0,H);
-  bg.addColorStop(0,'#06100e'); bg.addColorStop(1,'#0a1a18');
+  // ── Industrial factory background ──
+  const bg=gbCtx.createLinearGradient(0,0,W,H);
+  bg.addColorStop(0,'#0c1318'); bg.addColorStop(1,'#121c24');
   gbCtx.fillStyle=bg; gbCtx.fillRect(0,0,W,H);
 
-  // Subtle grid
-  gbCtx.strokeStyle='rgba(60,160,60,0.04)'; gbCtx.lineWidth=0.6;
-  for(let x=0;x<W;x+=22){gbCtx.beginPath();gbCtx.moveTo(x,0);gbCtx.lineTo(x,H);gbCtx.stroke();}
-  for(let y=0;y<H;y+=22){gbCtx.beginPath();gbCtx.moveTo(0,y);gbCtx.lineTo(W,y);gbCtx.stroke();}
-
-  // ── TRIANGLE (hopper) geometry ──
-  const cx=W/2;
-  const triTopY=H*0.08;          // top opening y
-  const triHalfTopW=W*0.40;      // half-width of opening
-  const triTipY=H*0.90;          // tip y
-  const wallThick=4;
-
-  const tl={x:cx-triHalfTopW, y:triTopY};
-  const tr={x:cx+triHalfTopW, y:triTopY};
-  const tip={x:cx, y:triTipY};
-
-  // Outer wall glow
-  gbCtx.save();
-  gbCtx.shadowColor='rgba(60,200,60,0.18)';
-  gbCtx.shadowBlur=14;
-  gbCtx.strokeStyle='rgba(60,180,60,0.45)';
-  gbCtx.lineWidth=wallThick+2;
-  gbCtx.beginPath();
-  gbCtx.moveTo(tl.x-2,tl.y); gbCtx.lineTo(tip.x,tip.y+2); gbCtx.lineTo(tr.x+2,tr.y);
-  gbCtx.stroke();
-  gbCtx.restore();
-
-  // Steel wall lines
-  const wallGradL=gbCtx.createLinearGradient(tl.x,triTopY,tl.x+20,triTopY);
-  wallGradL.addColorStop(0,'rgba(80,160,80,0.55)'); wallGradL.addColorStop(1,'rgba(40,100,40,0)');
-  gbCtx.strokeStyle=wallGradL; gbCtx.lineWidth=wallThick;
-  gbCtx.beginPath(); gbCtx.moveTo(tl.x,tl.y); gbCtx.lineTo(tip.x,tip.y); gbCtx.stroke();
-
-  const wallGradR=gbCtx.createLinearGradient(tr.x,triTopY,tr.x-20,triTopY);
-  wallGradR.addColorStop(0,'rgba(80,160,80,0.55)'); wallGradR.addColorStop(1,'rgba(40,100,40,0)');
-  gbCtx.strokeStyle=wallGradR; gbCtx.lineWidth=wallThick;
-  gbCtx.beginPath(); gbCtx.moveTo(tr.x,tr.y); gbCtx.lineTo(tip.x,tip.y); gbCtx.stroke();
-
-  // Top rim
-  gbCtx.strokeStyle='rgba(90,200,80,0.55)'; gbCtx.lineWidth=2;
-  gbCtx.beginPath(); gbCtx.moveTo(tl.x,tl.y); gbCtx.lineTo(tr.x,tr.y); gbCtx.stroke();
-
-  // Corner bolts
-  [[tl.x,tl.y],[tr.x,tr.y],[tip.x,tip.y]].forEach(([bx,by])=>{
-    gbCtx.fillStyle='rgba(60,160,60,0.7)';
-    gbCtx.beginPath(); gbCtx.arc(bx,by,3,0,Math.PI*2); gbCtx.fill();
+  // Structural steel columns in background (like the real image)
+  gbCtx.strokeStyle='rgba(65,80,95,0.35)'; gbCtx.lineWidth=3;
+  const colX=[W*0.05,W*0.22,W*0.5,W*0.78,W*0.95];
+  colX.forEach(cx2=>{
+    gbCtx.beginPath(); gbCtx.moveTo(cx2,0); gbCtx.lineTo(cx2,H); gbCtx.stroke();
+  });
+  // Horizontal crossbeams
+  gbCtx.strokeStyle='rgba(65,80,95,0.22)'; gbCtx.lineWidth=1.5;
+  [H*0.15,H*0.35,H*0.55,H*0.75].forEach(hy=>{
+    gbCtx.beginPath(); gbCtx.moveTo(0,hy); gbCtx.lineTo(W,hy); gbCtx.stroke();
   });
 
-  // Clip region for balls (inside triangle)
+  // ── Belt geometry ──
+  // Near-horizontal but slightly inclined (like real image viewed from above-side)
+  // Belt is very wide and thick, occupying most of the canvas
+  const TILT = 0.16;  // slight incline angle (radians)
+  const x1=W*0.01,  y1=H*0.82;   // bottom-left of lower rail
+  const x2=W*0.99,  y2=H*0.82 - (W*0.98)*Math.tan(TILT); // top-right of lower rail
+  const beltDX=x2-x1, beltDY=y2-y1;
+  const beltLen=Math.sqrt(beltDX*beltDX+beltDY*beltDY);
+
+  // Belt is THICK — 38% of H  
+  const BELT_THK = H*0.44;
+  // Perpendicular (upward normal from belt surface)
+  const nxU=-beltDY/beltLen, nyU=beltDX/beltLen; // points "up" from lower rail
+
+  // Four belt corners
+  const bBL={x:x1,              y:y1};
+  const bBR={x:x2,              y:y2};
+  const bTR={x:x2+nxU*BELT_THK, y:y2+nyU*BELT_THK};
+  const bTL={x:x1+nxU*BELT_THK, y:y1+nyU*BELT_THK};
+
+  // ── END DRUMS first (behind belt) ──
+  [[bBL,bTL,'left'],[bBR,bTR,'right']].forEach(([bot,top,side])=>{
+    const mx=(bot.x+top.x)/2, my=(bot.y+top.y)/2;
+    const dr=BELT_THK/2;
+    const dg=gbCtx.createRadialGradient(mx-(side==='left'?dr*0.3:-dr*0.1),my-dr*0.25,0,mx,my,dr);
+    dg.addColorStop(0,'#6a7a8a'); dg.addColorStop(0.5,'#3a4a58'); dg.addColorStop(1,'#1a2430');
+    gbCtx.fillStyle=dg;
+    gbCtx.beginPath(); gbCtx.ellipse(mx,my,dr*0.18,dr,0,0,Math.PI*2); gbCtx.fill();
+    gbCtx.strokeStyle='rgba(100,125,148,0.5)'; gbCtx.lineWidth=2;
+    gbCtx.stroke();
+    // Drum bolts
+    for(let b=0;b<6;b++){
+      const ba=b*Math.PI/3;
+      const bx2=mx+Math.cos(ba)*dr*0.55*0.18, by2=my+Math.sin(ba)*dr*0.55;
+      gbCtx.fillStyle='rgba(90,110,130,0.8)';
+      gbCtx.beginPath(); gbCtx.arc(bx2,by2,1.5,0,Math.PI*2); gbCtx.fill();
+    }
+  });
+
+  // ── UNDERSIDE ROLLERS (cylindrical, showing beneath belt) ──
+  const rollerCount=10;
+  for(let ri=1;ri<rollerCount;ri++){
+    const rt=ri/rollerCount;
+    const rx=bBL.x+rt*beltDX, ry=bBL.y+rt*beltDY;
+    // Roller centre is just below the lower rail
+    const rcx=rx-nxU*BELT_THK*0.06, rcy=ry-nyU*BELT_THK*0.06;
+    const rr=BELT_THK*0.055;
+    const rg=gbCtx.createRadialGradient(rcx-rr*0.15,rcy-rr*0.3,0,rcx,rcy,rr);
+    rg.addColorStop(0,'#5a6a7a'); rg.addColorStop(0.7,'#2a3a4a'); rg.addColorStop(1,'#141e28');
+    gbCtx.fillStyle=rg;
+    gbCtx.beginPath(); gbCtx.ellipse(rcx,rcy,rr*0.28,rr,0,0,Math.PI*2); gbCtx.fill();
+    gbCtx.strokeStyle='rgba(90,115,138,0.45)'; gbCtx.lineWidth=0.8; gbCtx.stroke();
+  }
+
+  // ── BELT SURFACE + PELLETS (clipped to parallelogram) ──
   gbCtx.save();
   gbCtx.beginPath();
-  gbCtx.moveTo(tl.x+wallThick, tl.y);
-  gbCtx.lineTo(tip.x, tip.y-wallThick);
-  gbCtx.lineTo(tr.x-wallThick, tr.y);
+  gbCtx.moveTo(bBL.x,bBL.y); gbCtx.lineTo(bBR.x,bBR.y);
+  gbCtx.lineTo(bTR.x,bTR.y); gbCtx.lineTo(bTL.x,bTL.y);
   gbCtx.closePath();
   gbCtx.clip();
 
-  // Fill level shading inside triangle
-  if(gbFillLevel>0.01){
-    // Compute fill line (interpolate from tip upward)
-    const fillT=1-gbFillLevel; // 0=full, 1=empty from top perspective
-    const fillY=tip.y - (tip.y-triTopY)*(gbFillLevel);
-    const fillHalfW=triHalfTopW*(1-(fillY-triTopY)/(tip.y-triTopY));
-    const fillGr=gbCtx.createLinearGradient(0,fillY,0,tip.y);
-    fillGr.addColorStop(0,'rgba(20,80,20,0.0)');
-    fillGr.addColorStop(1,'rgba(30,80,25,0.18)');
-    gbCtx.fillStyle=fillGr;
+  // Belt rubber base
+  const bGr=gbCtx.createLinearGradient(bTL.x,bTL.y,bBL.x,bBL.y);
+  bGr.addColorStop(0,'#1a2128'); bGr.addColorStop(0.45,'#12181e'); bGr.addColorStop(1,'#0c1218');
+  gbCtx.fillStyle=bGr; gbCtx.fillRect(-10,-10,W+20,H+20);
+
+  // Transverse ribs moving with belt
+  const ribSpacing=14;
+  const ribOff=gbActive?(gbBeltOffset*GB_BELT_SPEED)%ribSpacing:0;
+  gbCtx.strokeStyle='rgba(38,52,62,0.9)'; gbCtx.lineWidth=1.1;
+  for(let r=-2;r<beltLen/ribSpacing+2;r++){
+    const t=(r*ribSpacing+ribOff)/beltLen;
+    const rx=bBL.x+t*beltDX, ry=bBL.y+t*beltDY;
     gbCtx.beginPath();
-    gbCtx.moveTo(cx-fillHalfW,fillY); gbCtx.lineTo(tip.x,tip.y); gbCtx.lineTo(cx+fillHalfW,fillY);
-    gbCtx.closePath(); gbCtx.fill();
+    gbCtx.moveTo(rx,ry);
+    gbCtx.lineTo(rx+nxU*BELT_THK, ry+nyU*BELT_THK);
+    gbCtx.stroke();
   }
 
-  // Spawn balls when active
-  if((gbActive||gbBurstMode) && gbBalls.filter(b=>!b.settled).length<3 && gbBalls.length<90){
-    if(frame%10===0) gbBalls.push(spawnGbBall(W,cx,triTopY));
-  }
-
-  // Triangle wall normals (for collision)
-  // Left wall: from tl to tip
-  const leftDx=tip.x-tl.x, leftDy=tip.y-tl.y;
-  const leftLen=Math.sqrt(leftDx*leftDx+leftDy*leftDy);
-  const leftNx=leftDy/leftLen, leftNy=-leftDx/leftLen; // inward normal
-  // Right wall: from tr to tip
-  const rightDx=tip.x-tr.x, rightDy=tip.y-tr.y;
-  const rightLen=Math.sqrt(rightDx*rightDx+rightDy*rightDy);
-  const rightNx=-rightDy/rightLen, rightNy=rightDx/rightLen; // inward normal
-
-  const GRAVITY=0.22, FRICTION=0.60, BOUNCE=0.22;
-
-  function distToSegment(px,py,ax,ay,bx,by){
-    const dx=bx-ax,dy=by-ay;
-    const t=Math.max(0,Math.min(1,((px-ax)*dx+(py-ay)*dy)/(dx*dx+dy*dy)));
-    return{dist:Math.sqrt((px-(ax+t*dx))**2+(py-(ay+t*dy))**2),nx:0,ny:0,t};
-  }
-
-  for(const b of gbBalls){
-    if(b.settled) continue;
-    b.vy+=GRAVITY; b.x+=b.vx; b.y+=b.vy;
-    b.spin+=b.spinV;
-
-    // Left wall collision
-    {
-      const{dist}=distToSegment(b.x,b.y,tl.x,tl.y,tip.x,tip.y);
-      if(dist<b.r){
-        const push=b.r-dist;
-        b.x+=leftNx*push; b.y+=leftNy*push;
-        const dot=b.vx*leftNx+b.vy*leftNy;
-        if(dot<0){b.vx-=(1+BOUNCE)*dot*leftNx; b.vy-=(1+BOUNCE)*dot*leftNy; b.vx*=FRICTION; b.vy*=FRICTION;}
+  // ── DENSE PELLETS ──
+  if(!GB_PELLETS){
+    // Build pellet grid: small, packed tightly
+    const ROWS=28, COLS=80;
+    const pels=[];
+    for(let row=0;row<ROWS;row++){
+      for(let col=0;col<COLS;col++){
+        const offset=(row%2)*0.5; // hex offset
+        pels.push({
+          col: col+offset,
+          row,
+          COLS,
+          ROWS,
+          r: 2.4 + Math.random()*1.2,  // small: 2.4–3.6px
+          jx:(Math.random()-0.5)*2.0,
+          jy:(Math.random()-0.5)*1.5,
+          shade: 0.65+Math.random()*0.35,
+          phase: Math.random()*Math.PI*2,
+        });
       }
     }
-    // Right wall collision
-    {
-      const{dist}=distToSegment(b.x,b.y,tr.x,tr.y,tip.x,tip.y);
-      if(dist<b.r){
-        const push=b.r-dist;
-        b.x+=rightNx*push; b.y+=rightNy*push;
-        const dot=b.vx*rightNx+b.vy*rightNy;
-        if(dot<0){b.vx-=(1+BOUNCE)*dot*rightNx; b.vy-=(1+BOUNCE)*dot*rightNy; b.vx*=FRICTION; b.vy*=FRICTION;}
-      }
+    GB_PELLETS={pels,ROWS,COLS};
+  }
+
+  const{pels,ROWS,COLS}=GB_PELLETS;
+  const scrollAlong=gbActive?gbBeltOffset*GB_BELT_SPEED:0;
+  const TOTAL_SCROLL_LEN=beltLen; // wrap over full length
+
+  for(const p of pels){
+    // Cross-belt position (0..1)
+    const crossT = (p.row+0.5)/ROWS;
+    // Along-belt position scrolling
+    const rawAlong = ((p.col/COLS)*beltLen - scrollAlong + p.jx + beltLen*2) % beltLen;
+    const alongT = rawAlong / beltLen;
+
+    // World coordinates
+    const wx = bBL.x + alongT*beltDX + crossT*nxU*BELT_THK + p.jx*0.3;
+    const wy = bBL.y + alongT*beltDY + crossT*nyU*BELT_THK + p.jy*0.3;
+
+    const r=p.r, s=p.shade;
+    // Dark near-black with blue-grey sheen — like real iron ore pellets
+    const pg=gbCtx.createRadialGradient(wx-r*0.32,wy-r*0.35,0,wx,wy,r);
+    pg.addColorStop(0,   `rgba(${Math.round(118*s)},${Math.round(132*s)},${Math.round(150*s)},1)`);
+    pg.addColorStop(0.5, `rgba(${Math.round(48*s)}, ${Math.round(60*s)}, ${Math.round(75*s)},1)`);
+    pg.addColorStop(1,   `rgba(10,15,22,1)`);
+    gbCtx.beginPath(); gbCtx.arc(wx,wy,r,0,Math.PI*2);
+    gbCtx.fillStyle=pg; gbCtx.fill();
+
+    // Tiny specular
+    if(s>0.8){
+      gbCtx.save(); gbCtx.globalAlpha=0.18;
+      gbCtx.fillStyle='rgba(200,220,240,0.9)';
+      gbCtx.beginPath(); gbCtx.ellipse(wx-r*0.28,wy-r*0.3,r*0.26,r*0.16,-0.4,0,Math.PI*2); gbCtx.fill();
+      gbCtx.restore();
     }
-    // Near-tip floor (prevent escaping tip)
-    if(b.y>tip.y-b.r*1.5){b.y=tip.y-b.r*1.5; b.vy*=-BOUNCE; b.vx*=FRICTION;}
+  }
 
-    // Ball-ball
-    for(const b2 of gbBalls){
-      if(b2===b) continue;
-      const dx=b2.x-b.x,dy=b2.y-b.y,dist=Math.sqrt(dx*dx+dy*dy),mn=b.r+b2.r;
-      if(dist<mn&&dist>0.01){
-        const nx=dx/dist,ny=dy/dist,ov=(mn-dist)*0.5;
-        b.x-=nx*ov; b.y-=ny*ov; b2.x+=nx*ov; b2.y+=ny*ov;
-        const dv=b.vx*nx+b.vy*ny-b2.vx*nx-b2.vy*ny;
-        if(dv>0){b.vx-=dv*nx*0.5;b.vy-=dv*ny*0.5;b2.vx+=dv*nx*0.5;b2.vy+=dv*ny*0.5;}
-        if(b2.settled&&Math.abs(b.vy)<0.5&&Math.abs(b.vx)<0.5){b.settled=true;}
-      }
+  // Subtle depth-of-field vignette on top surface
+  const vig=gbCtx.createLinearGradient(bTL.x,bTL.y,bBL.x,bBL.y);
+  vig.addColorStop(0,'rgba(0,0,0,0.35)'); vig.addColorStop(0.15,'rgba(0,0,0,0)');
+  vig.addColorStop(0.85,'rgba(0,0,0,0)'); vig.addColorStop(1,'rgba(0,0,0,0.25)');
+  gbCtx.fillStyle=vig; gbCtx.fillRect(-10,-10,W+20,H+20);
+
+  // Dust/mist rising from pellet layer
+  if(gbActive){
+    for(let d=0;d<12;d++){
+      const dt=((d/12 + frame*0.003)%1);
+      const dBx=bBL.x+dt*beltDX + nxU*BELT_THK*0.7;
+      const dBy=bBL.y+dt*beltDY + nyU*BELT_THK*0.7;
+      const rise=(frame*0.4+d*22)%35;
+      const alpha=Math.max(0,0.08*(1-rise/35));
+      gbCtx.beginPath(); gbCtx.arc(dBx,dBy-rise,5+rise*0.3,0,Math.PI*2);
+      gbCtx.fillStyle=`rgba(170,185,195,${alpha})`; gbCtx.fill();
     }
-    if(Math.abs(b.vy)<0.15&&Math.abs(b.vx)<0.15) b.settled=true;
   }
 
-  // Draw balls
-  const sorted=[...gbBalls].sort((a,bb2)=>bb2.y-a.y);
-  for(const b of sorted){
-    const gr=gbCtx.createRadialGradient(b.x-b.r*0.32,b.y-b.r*0.32,0,b.x,b.y,b.r);
-    gr.addColorStop(0,b.col.h1); gr.addColorStop(0.55,b.col.h2); gr.addColorStop(1,b.col.h3);
-    gbCtx.beginPath(); gbCtx.arc(b.x,b.y,b.r,0,Math.PI*2);
-    gbCtx.fillStyle=gr; gbCtx.fill();
-    gbCtx.save(); gbCtx.globalAlpha=0.3;
-    gbCtx.fillStyle='rgba(255,255,255,0.9)';
-    gbCtx.beginPath(); gbCtx.ellipse(b.x-b.r*0.3,b.y-b.r*0.3,b.r*0.32,b.r*0.2,-0.5,0,Math.PI*2); gbCtx.fill();
-    gbCtx.restore();
-    gbCtx.strokeStyle='rgba(120,220,80,0.15)'; gbCtx.lineWidth=0.5;
-    gbCtx.beginPath(); gbCtx.arc(b.x,b.y,b.r,0,Math.PI*2); gbCtx.stroke();
-  }
+  gbCtx.restore(); // end belt clip
 
-  gbCtx.restore(); // end clip
+  // ── STEEL FRAME (drawn on top) ──
+  // Yellow guard rail (like real image — safety yellow)
+  const railY='rgba(185,145,30,0.75)';
+  gbCtx.strokeStyle=railY; gbCtx.lineWidth=3;
+  // Top guard rail (along upper edge of belt)
+  gbCtx.beginPath(); gbCtx.moveTo(bTL.x,bTL.y); gbCtx.lineTo(bTR.x,bTR.y); gbCtx.stroke();
+  // Bottom frame rail
+  gbCtx.strokeStyle='rgba(70,88,105,0.9)'; gbCtx.lineWidth=3.5;
+  gbCtx.beginPath(); gbCtx.moveTo(bBL.x,bBL.y); gbCtx.lineTo(bBR.x,bBR.y); gbCtx.stroke();
 
-  // Redraw walls on top (crisp)
-  gbCtx.strokeStyle='rgba(60,180,60,0.3)'; gbCtx.lineWidth=1.5;
-  gbCtx.beginPath(); gbCtx.moveTo(tl.x,tl.y); gbCtx.lineTo(tip.x,tip.y); gbCtx.lineTo(tr.x,tr.y); gbCtx.stroke();
+  // Vertical support posts (yellow, like image)
+  gbCtx.strokeStyle=railY; gbCtx.lineWidth=2.5;
+  const postTs=[0.0,0.15,0.32,0.5,0.68,0.85,1.0];
+  postTs.forEach(t=>{
+    const px2=bTL.x+t*(bTR.x-bTL.x), py2=bTL.y+t*(bTR.y-bTL.y);
+    const pb2x=bBL.x+t*(bBR.x-bBL.x), pb2y=bBL.y+t*(bBR.y-bBL.y);
+    gbCtx.beginPath(); gbCtx.moveTo(px2,py2); gbCtx.lineTo(pb2x,pb2y); gbCtx.stroke();
+    // Post bolt
+    gbCtx.fillStyle='rgba(180,145,30,0.9)';
+    gbCtx.beginPath(); gbCtx.arc(px2,py2,2.5,0,Math.PI*2); gbCtx.fill();
+    gbCtx.beginPath(); gbCtx.arc(pb2x,pb2y,2.5,0,Math.PI*2); gbCtx.fill();
+  });
 
-  // Update fill level
-  const settled=gbBalls.filter(b=>b.settled).length;
-  const target=Math.min(1,settled/60);
-  gbFillLevel+=(target-gbFillLevel)*0.025;
+  // Outer side plates (dark steel panel beneath belt)
+  const panelGr=gbCtx.createLinearGradient(bBL.x,bBL.y,bBL.x,bBL.y+H*0.18);
+  panelGr.addColorStop(0,'rgba(45,58,70,0.9)'); panelGr.addColorStop(1,'rgba(18,25,32,0.0)');
+  gbCtx.fillStyle=panelGr;
+  gbCtx.beginPath(); gbCtx.moveTo(bBL.x,bBL.y); gbCtx.lineTo(bBR.x,bBR.y); gbCtx.lineTo(bBR.x,bBR.y+H*0.16); gbCtx.lineTo(bBL.x,bBL.y+H*0.16); gbCtx.closePath(); gbCtx.fill();
 
-  const pct=Math.round(gbFillLevel*100);
-  const ro=document.getElementById('gbFillReadout');
-  if(ro){ro.textContent=pct+'%'; ro.style.color=pct>70?'#7ae870':pct>35?'#4ab840':'rgba(80,200,80,0.9)';}
-  const mf=document.getElementById('gbMeterFill');
-  if(mf) mf.style.width=pct+'%';
+  // Belt edge glow (subtle gold)
+  gbCtx.save(); gbCtx.shadowColor='rgba(185,140,28,0.2)'; gbCtx.shadowBlur=8;
+  gbCtx.strokeStyle='rgba(185,140,28,0.3)'; gbCtx.lineWidth=1.5;
+  gbCtx.beginPath(); gbCtx.moveTo(bTL.x,bTL.y); gbCtx.lineTo(bTR.x,bTR.y); gbCtx.stroke();
+  gbCtx.restore();
 
-  if(gbBurstMode){
-    gbBurstFrames--;
-    if(gbBurstFrames<=0) gbBurstMode=false;
-  }
+  // Status label
+  gbCtx.font='500 8px JetBrains Mono'; gbCtx.fillStyle='rgba(185,145,30,0.5)';
+  gbCtx.textAlign='right'; gbCtx.fillText('SCREENING CONVEYOR · LIVE',W-8,H-8); gbCtx.textAlign='left';
+
+  // Advance belt
+  if(gbActive) gbBeltOffset++;
 }
 
 function gbLoop(){
-  drawGbAnim(gbFrame);
+  drawConveyorBelt(gbFrame);
   gbFrame++;
   gbAnimId=requestAnimationFrame(gbLoop);
 }
 
 function gbTriggerBurst(){
-  // Called whenever user types a value — spawn a burst of balls
-  gbBurstMode=true;
-  gbBurstFrames=80; // about 1.3 seconds of spawning
+  gbActive=true;
   const hint=document.getElementById('gbHintLabel');
   if(hint) hint.classList.add('hidden');
-  // Update stat readouts
+  // Update stat tiles
   const moist=document.getElementById('m-gbp-moist');
   const drop=document.getElementById('m-gbp-drop');
   const gcs=document.getElementById('m-gbp-gcs');
-  const size=document.getElementById('m-gbp-size');
+  const recycled=document.getElementById('m-recycled');
   if(document.getElementById('gbStatMoist')) document.getElementById('gbStatMoist').textContent=moist&&moist.value?moist.value+'%':'—';
-  if(document.getElementById('gbStatDrop')) document.getElementById('gbStatDrop').textContent=drop&&drop.value?drop.value:'—';
-  if(document.getElementById('gbStatGcs')) document.getElementById('gbStatGcs').textContent=gcs&&gcs.value?gcs.value+' kg':'—';
-  if(document.getElementById('gbStatSize')) document.getElementById('gbStatSize').textContent=size&&size.value?size.value+' mm':'—';
+  if(document.getElementById('gbStatDrop'))  document.getElementById('gbStatDrop').textContent=drop&&drop.value?drop.value:'—';
+  if(document.getElementById('gbStatGcs'))   document.getElementById('gbStatGcs').textContent=gcs&&gcs.value?gcs.value+' kg':'—';
+  if(document.getElementById('gbStatSize'))  document.getElementById('gbStatSize').textContent=recycled&&recycled.value?recycled.value+'%':'—';
 }
 
 function attachGbInputListeners(){
-  const ids=['m-gbp-moist','m-gbp-drop','m-gbp-gcs','m-gbp-size','m-gbp-por'];
-  ids.forEach(id=>{
+  ['m-gbp-moist','m-gbp-drop','m-gbp-gcs','m-gbp-size','m-gbp-por',
+   'm-s8','m-s10','m-s12','m-s14','m-recycled','m-recycled-unit'].forEach(id=>{
     const el=document.getElementById(id);
-    if(el){
-      el.addEventListener('input',gbTriggerBurst);
-      el.addEventListener('change',gbTriggerBurst);
-    }
+    if(el){ el.addEventListener('input',gbTriggerBurst); el.addEventListener('change',gbTriggerBurst); }
   });
 }
 
 function openGbCard(){
-  const cfg=MODAL_CONFIGS['greenball'];
-  if(!cfg) return;
-  document.getElementById('gbAnimBody').innerHTML=cfg.fields();
-  document.getElementById('gbAnimOverlay').classList.add('open');
-  // Reset animation state
-  gbBalls=[]; gbFillLevel=0; gbFrame=0; gbBurstMode=false; gbBurstFrames=0;
+  // Render BOTH greenball and screen fields merged
+  const gbCfg=MODAL_CONFIGS['greenball'];
+  const sCfg=MODAL_CONFIGS['screen'];
+  if(!gbCfg||!sCfg) return;
+  document.getElementById('gbAnimBody').innerHTML=`
+    <div style="margin-bottom:.4rem;padding:6px 10px;background:rgba(26,48,87,0.06);border-left:3px solid var(--gold);border-radius:0 4px 4px 0;font-family:'JetBrains Mono';font-size:.5rem;letter-spacing:2px;color:var(--gold);text-transform:uppercase;">Green Ball Properties</div>
+    ${gbCfg.fields()}
+    <div style="margin:1rem 0 .4rem;padding:6px 10px;background:rgba(26,48,87,0.06);border-left:3px solid var(--gold);border-radius:0 4px 4px 0;font-family:'JetBrains Mono';font-size:.5rem;letter-spacing:2px;color:var(--gold);text-transform:uppercase;">Screening</div>
+    ${sCfg.fields()}
+  `;
+  GB_PELLETS=null; // rebuild pellet layout
+  gbActive=false;
+  gbBeltOffset=0;
+  gbFrame=0;
   const hint=document.getElementById('gbHintLabel');
   if(hint) hint.classList.remove('hidden');
-  const ro=document.getElementById('gbFillReadout');
-  if(ro) ro.textContent='0%';
-  const mf=document.getElementById('gbMeterFill');
-  if(mf) mf.style.width='0%';
-  // Restore stat vals if already filled
-  ['gbStatMoist','gbStatDrop','gbStatGcs','gbStatSize'].forEach(id=>{
-    const el=document.getElementById(id); if(el) el.textContent='—';
-  });
+  ['gbStatMoist','gbStatDrop','gbStatGcs','gbStatSize'].forEach(id=>{const el=document.getElementById(id);if(el)el.textContent='—';});
+  document.getElementById('gbAnimOverlay').classList.add('open');
   if(gbAnimId) cancelAnimationFrame(gbAnimId);
   gbLoop();
-  setTimeout(attachGbInputListeners, 50); // after DOM renders
+  setTimeout(attachGbInputListeners,50);
 }
 
 function closeGbCard(){
   document.getElementById('gbAnimOverlay').classList.remove('open');
   if(gbAnimId){cancelAnimationFrame(gbAnimId); gbAnimId=null;}
+  gbActive=false;
 }
 
 function saveGbCard(){
-  const cfg=MODAL_CONFIGS['greenball'];
-  if(cfg) cfg.save();
+  const gbCfg=MODAL_CONFIGS['greenball'];
+  const sCfg=MODAL_CONFIGS['screen'];
+  if(gbCfg) gbCfg.save();
+  if(sCfg) sCfg.save();
   closeGbCard();
   updateSummaryParams();
 }
 
 document.getElementById('gbAnimOverlay').addEventListener('click',function(e){if(e.target===this)closeGbCard();});
-
 // ═══════════════════════════════════════════════════════════
 // PELLET ANIMATION CARD
 // ═══════════════════════════════════════════════════════════
