@@ -822,15 +822,15 @@ input.finp{cursor:text;}
 
 .gb-fall-container-wrap{
   flex:1;position:relative;min-height:300px;
-  background:linear-gradient(180deg,#08111e 0%,#0e1e34 100%);
-  border-radius:8px;border:1.5px solid rgba(200,145,42,0.25);
-  overflow:hidden;box-shadow:0 6px 24px rgba(26,48,87,.3),inset 0 -2px 0 rgba(200,145,42,0.08);
+  background:linear-gradient(180deg,#fdf8f0 0%,#f5ede0 100%);
+  border-radius:8px;border:1.5px solid rgba(200,145,42,0.35);
+  overflow:hidden;box-shadow:0 6px 24px rgba(26,48,87,.12),inset 0 -2px 0 rgba(200,145,42,0.12);
 }
 #gbFallCanvas{position:absolute;inset:0;width:100%;height:100%;display:block;}
 .gb-hint-label{
   position:absolute;bottom:12px;left:50%;transform:translateX(-50%);
   font-family:'JetBrains Mono';font-size:.5rem;letter-spacing:1.5px;
-  color:rgba(200,145,42,0.45);text-transform:uppercase;white-space:nowrap;
+  color:rgba(130,100,30,0.65);text-transform:uppercase;white-space:nowrap;
   transition:opacity .6s;
 }
 .gb-hint-label.hidden{opacity:0;}
@@ -2584,76 +2584,102 @@ function drawMachineShape(shape,cx,cy,mW,mH,col,strokeCol,strokeW,isActive,isDon
       return drawBallingDiscEnhanced(cx,cy,mW,mH,frame,stage,isActive,isDone);
     }
     case 'screen':{
-      // Mini inclined conveyor belt — matching the real image
-      const sw=mW*0.64, sh=mH*0.52;
-      const bx=cx-sw/2, by=cy+sh*0.08;
-      const tilt=0.22; // inclination
-      const thk=sh*0.42; // belt thickness (tall)
-      // Four corners: bottom-left lower-rail, then across, then up by thk
+      // Main dashboard: thick inclined conveyor belt with dense visible pellet balls
+      const sw=mW*0.72, sh=mH*0.58;
+      const bx=cx-sw/2, by=cy+sh*0.05;
+      const tilt=0.20; // inclination
+      const thk=sh*0.50; // belt thickness — THICK
+      // Four corners of belt parallelogram
       const p0={x:bx,        y:by};
       const p1={x:bx+sw,     y:by - sw*Math.tan(tilt)};
-      const p2={x:p1.x,      y:p1.y - thk};
-      const p3={x:p0.x,      y:p0.y - thk};
-      const bLen=Math.sqrt((p1.x-p0.x)**2+(p1.y-p0.y)**2);
-      const nx=(p3.y-p0.y)/thk, ny=(p0.x-p3.x)/thk; // upward normal
-      // Belt rubber surface
-      ctx.save();
-      const bG=ctx.createLinearGradient(p3.x,p3.y,p0.x,p0.y);
-      bG.addColorStop(0,'#1a2028'); bG.addColorStop(0.5,'#141a20'); bG.addColorStop(1,'#0e1318');
-      ctx.fillStyle=bG;
-      ctx.beginPath();ctx.moveTo(p0.x,p0.y);ctx.lineTo(p1.x,p1.y);ctx.lineTo(p2.x,p2.y);ctx.lineTo(p3.x,p3.y);ctx.closePath();ctx.fill();
-      // Ribs scrolling with animation
-      ctx.strokeStyle='rgba(50,65,78,0.85)'; ctx.lineWidth=0.9;
-      const ribSp=10, ribOff=isActive?(frame*1.2%ribSp):0;
-      for(let r=-1;r<bLen/ribSp+1;r++){
-        const t=(r*ribSp+ribOff)/bLen;
-        const rx2=p0.x+t*(p1.x-p0.x), ry2=p0.y+t*(p1.y-p0.y);
-        ctx.beginPath();ctx.moveTo(rx2,ry2);ctx.lineTo(rx2+nx*thk,ry2+ny*thk);ctx.stroke();
-      }
-      // Dense small pellets
-      const pelletScroll=isActive?(frame*1.5%sw):0;
-      for(let pr=0;pr<55;pr++){
-        const rowI=pr%5, colI=Math.floor(pr/5);
-        const rawT=((colI/(10))*sw + pelletScroll)%sw;
-        const pt=rawT/sw;
-        const crossT=0.1+(rowI/4)*0.8;
-        const ptx=p0.x+pt*(p1.x-p0.x)+crossT*nx*thk;
-        const pty=p0.y+pt*(p1.y-p0.y)+crossT*ny*thk;
-        const pr2=2.0+Math.sin(pr*3.7)*0.4;
-        const shd=0.7+Math.sin(pr*5.1)*0.3;
-        const pg2=ctx.createRadialGradient(ptx-pr2*0.3,pty-pr2*0.3,0,ptx,pty,pr2);
-        pg2.addColorStop(0,`rgba(${Math.round(110*shd)},${Math.round(128*shd)},${Math.round(148*shd)},1)`);
-        pg2.addColorStop(0.55,`rgba(${Math.round(45*shd)},${Math.round(58*shd)},${Math.round(75*shd)},1)`);
-        pg2.addColorStop(1,`rgba(12,18,28,1)`);
-        ctx.beginPath();ctx.arc(ptx,pty,pr2,0,Math.PI*2);ctx.fillStyle=pg2;ctx.fill();
-      }
-      ctx.restore();
-      // Rollers at each end (ellipses)
+      // Perpendicular normal (upward from belt surface — negative y in canvas)
+      const bLenS=Math.sqrt((p1.x-p0.x)**2+(p1.y-p0.y)**2);
+      const nxS=(p1.y-p0.y)/bLenS, nyS=-(p1.x-p0.x)/bLenS;  // points UP (negative y)
+      const p2={x:p1.x+nxS*thk, y:p1.y+nyS*thk};
+      const p3={x:p0.x+nxS*thk, y:p0.y+nyS*thk};
+
+      // END DRUMS (ellipses at each end)
       [[p0,p3],[p1,p2]].forEach(([bot,top2])=>{
-        const mx=(bot.x+top2.x)/2, my=(bot.y+top2.y)/2, rr=thk/2;
-        const rg=ctx.createRadialGradient(mx-rr*0.2,my-rr*0.3,0,mx,my,rr);
-        rg.addColorStop(0,'#6a7a8a'); rg.addColorStop(1,'#1e2a38');
+        const mx=(bot.x+top2.x)/2, my=(bot.y+top2.y)/2, dr=thk/2;
+        const rg=ctx.createRadialGradient(mx-dr*0.2,my-dr*0.3,0,mx,my,dr);
+        rg.addColorStop(0,'#7a8a9a'); rg.addColorStop(0.6,'#3a4a5a'); rg.addColorStop(1,'#1a2530');
         ctx.fillStyle=rg;
-        ctx.beginPath();ctx.ellipse(mx,my,rr*0.22,rr,0,0,Math.PI*2);ctx.fill();
-        ctx.strokeStyle='rgba(140,165,185,0.4)';ctx.lineWidth=0.8;ctx.stroke();
+        ctx.beginPath(); ctx.ellipse(mx,my,dr*0.2,dr,0,0,Math.PI*2); ctx.fill();
+        ctx.strokeStyle='rgba(60,85,110,0.85)'; ctx.lineWidth=1.2; ctx.stroke();
       });
-      // Mid rollers (3 visible beneath)
-      ctx.fillStyle='rgba(55,70,85,0.9)';
-      for(let ri=1;ri<4;ri++){
-        const rt=ri/4;
-        const rx2=p0.x+rt*(p1.x-p0.x), ry2=p0.y+rt*(p1.y-p0.y);
-        const mx2=rx2+nx*thk*0.5, my2=ry2+ny*thk*0.5;
-        ctx.beginPath();ctx.ellipse(mx2,my2,thk*0.5*0.2,thk*0.5,0,0,Math.PI*2);ctx.fill();
-        ctx.strokeStyle='rgba(120,145,165,0.35)';ctx.lineWidth=0.7;ctx.stroke();
+
+      // Belt surface (clip to parallelogram)
+      ctx.save();
+      ctx.beginPath(); ctx.moveTo(p0.x,p0.y); ctx.lineTo(p1.x,p1.y); ctx.lineTo(p2.x,p2.y); ctx.lineTo(p3.x,p3.y); ctx.closePath(); ctx.clip();
+
+      // Belt rubber — dark charcoal
+      const bG=ctx.createLinearGradient(p3.x,p3.y,p0.x,p0.y);
+      bG.addColorStop(0,'#1c2430'); bG.addColorStop(0.5,'#141c26'); bG.addColorStop(1,'#0e141e');
+      ctx.fillStyle=bG; ctx.fillRect(bx-4,Math.min(p2.y,p3.y)-4,sw+8,Math.abs(p0.y-Math.min(p2.y,p3.y))+thk+8);
+
+      // Transverse ribs
+      ctx.strokeStyle='rgba(50,68,82,0.9)'; ctx.lineWidth=0.8;
+      const ribSp=9, ribOff=isActive?(frame*1.4%ribSp):0;
+      for(let r=-1;r<bLenS/ribSp+1;r++){
+        const t=(r*ribSp+ribOff)/bLenS;
+        const rx2=p0.x+t*(p1.x-p0.x), ry2=p0.y+t*(p1.y-p0.y);
+        ctx.beginPath(); ctx.moveTo(rx2,ry2); ctx.lineTo(rx2+nxS*thk,ry2+nyS*thk); ctx.stroke();
       }
-      // Frame rails
-      ctx.strokeStyle='rgba(85,100,118,0.92)'; ctx.lineWidth=2;
-      ctx.beginPath();ctx.moveTo(p0.x,p0.y);ctx.lineTo(p1.x,p1.y);ctx.stroke();
-      ctx.beginPath();ctx.moveTo(p3.x,p3.y);ctx.lineTo(p2.x,p2.y);ctx.stroke();
-      // Side edge accent
-      ctx.strokeStyle='rgba(200,145,42,0.2)'; ctx.lineWidth=1;
-      ctx.beginPath();ctx.moveTo(p0.x,p0.y);ctx.lineTo(p1.x,p1.y);ctx.stroke();
-      return{x:bx,y:p2.y,w:sw,h:p0.y-p2.y};
+
+      // DENSE PELLET BALLS — many rows, with BORDERS
+      const pelletScroll=isActive?(frame*1.8%sw):0;
+      const ROWS2=8, COLS2=22;
+      for(let row=0;row<ROWS2;row++){
+        const hexOff=(row%2)*0.5;
+        for(let col=0;col<COLS2;col++){
+          const rawT=((col+hexOff)/COLS2*sw + pelletScroll)%sw;
+          const pt=rawT/sw;
+          const crossT=0.06+(row/Math.max(ROWS2-1,1))*0.88;
+          const ptx=p0.x+pt*(p1.x-p0.x)+crossT*nxS*thk;
+          const pty=p0.y+pt*(p1.y-p0.y)+crossT*nyS*thk;
+          const seed=col*13+row*7;
+          const pr2=2.2+Math.sin(seed*3.7)*0.6;
+          const shd=0.68+Math.sin(seed*5.1)*0.28;
+          const pg2=ctx.createRadialGradient(ptx-pr2*0.32,pty-pr2*0.35,0,ptx,pty,pr2);
+          pg2.addColorStop(0,`rgba(${Math.round(115*shd)},${Math.round(132*shd)},${Math.round(152*shd)},1)`);
+          pg2.addColorStop(0.55,`rgba(${Math.round(44*shd)},${Math.round(57*shd)},${Math.round(74*shd)},1)`);
+          pg2.addColorStop(1,`rgba(10,14,20,1)`);
+          ctx.beginPath(); ctx.arc(ptx,pty,pr2,0,Math.PI*2);
+          ctx.fillStyle=pg2; ctx.fill();
+          // VISIBLE BORDER on every ball
+          ctx.strokeStyle=`rgba(${Math.round(155*shd)},${Math.round(178*shd)},${Math.round(205*shd)},0.8)`;
+          ctx.lineWidth=0.55; ctx.stroke();
+          // Specular highlight
+          if(shd>0.82){
+            ctx.save(); ctx.globalAlpha=0.22;
+            ctx.fillStyle='rgba(210,230,255,0.9)';
+            ctx.beginPath(); ctx.ellipse(ptx-pr2*0.27,pty-pr2*0.3,pr2*0.28,pr2*0.17,-0.4,0,Math.PI*2); ctx.fill();
+            ctx.restore();
+          }
+        }
+      }
+      ctx.restore(); // end clip
+
+      // FRAME RAILS — gold top, steel bottom
+      ctx.strokeStyle='rgba(185,130,18,0.9)'; ctx.lineWidth=2;
+      ctx.beginPath(); ctx.moveTo(p3.x,p3.y); ctx.lineTo(p2.x,p2.y); ctx.stroke();
+      ctx.strokeStyle='rgba(55,72,90,0.95)'; ctx.lineWidth=2.2;
+      ctx.beginPath(); ctx.moveTo(p0.x,p0.y); ctx.lineTo(p1.x,p1.y); ctx.stroke();
+      // Vertical support posts (gold)
+      ctx.strokeStyle='rgba(185,130,18,0.8)'; ctx.lineWidth=1.4;
+      [0,0.25,0.5,0.75,1.0].forEach(t=>{
+        const px2=p3.x+t*(p2.x-p3.x), py2=p3.y+t*(p2.y-p3.y);
+        const pb2x=p0.x+t*(p1.x-p0.x), pb2y=p0.y+t*(p1.y-p0.y);
+        ctx.beginPath(); ctx.moveTo(px2,py2); ctx.lineTo(pb2x,pb2y); ctx.stroke();
+        ctx.fillStyle='rgba(175,125,18,0.9)';
+        ctx.beginPath(); ctx.arc(px2,py2,1.8,0,Math.PI*2); ctx.fill();
+      });
+      // Underside shadow
+      const panGr=ctx.createLinearGradient(p0.x,p0.y,p0.x,p0.y+sh*0.14);
+      panGr.addColorStop(0,'rgba(35,45,58,0.7)'); panGr.addColorStop(1,'rgba(18,25,32,0)');
+      ctx.fillStyle=panGr;
+      ctx.beginPath(); ctx.moveTo(p0.x,p0.y); ctx.lineTo(p1.x,p1.y); ctx.lineTo(p1.x,p1.y+sh*0.12); ctx.lineTo(p0.x,p0.y+sh*0.12); ctx.closePath(); ctx.fill();
+      return{x:bx, y:Math.min(p2.y,p3.y), w:sw, h:Math.abs(p0.y - Math.min(p2.y,p3.y))+thk*0.1};
     }
     case 'furnace':{
       const fw=mW*0.50,fh=mH*0.72; const top=cy-fh/2;
@@ -5745,34 +5771,32 @@ function drawConveyorBelt(frame){
   const{W,H}=sizeGbCanvas();
   gbCtx.clearRect(0,0,W,H);
 
-  // ── Industrial factory background ──
+  // ── Light cream background ──
   const bg=gbCtx.createLinearGradient(0,0,W,H);
-  bg.addColorStop(0,'#0c1318'); bg.addColorStop(1,'#121c24');
+  bg.addColorStop(0,'#fdf8f0'); bg.addColorStop(1,'#f5ede0');
   gbCtx.fillStyle=bg; gbCtx.fillRect(0,0,W,H);
 
-  // Structural steel columns in background (like the real image)
-  gbCtx.strokeStyle='rgba(65,80,95,0.35)'; gbCtx.lineWidth=3;
-  const colX=[W*0.05,W*0.22,W*0.5,W*0.78,W*0.95];
-  colX.forEach(cx2=>{
-    gbCtx.beginPath(); gbCtx.moveTo(cx2,0); gbCtx.lineTo(cx2,H); gbCtx.stroke();
-  });
-  // Horizontal crossbeams
-  gbCtx.strokeStyle='rgba(65,80,95,0.22)'; gbCtx.lineWidth=1.5;
-  [H*0.15,H*0.35,H*0.55,H*0.75].forEach(hy=>{
-    gbCtx.beginPath(); gbCtx.moveTo(0,hy); gbCtx.lineTo(W,hy); gbCtx.stroke();
-  });
+  // Subtle grid lines on cream background
+  gbCtx.strokeStyle='rgba(200,145,42,0.08)'; gbCtx.lineWidth=1;
+  for(let gx=0;gx<W;gx+=40){gbCtx.beginPath();gbCtx.moveTo(gx,0);gbCtx.lineTo(gx,H);gbCtx.stroke();}
+  for(let gy=0;gy<H;gy+=40){gbCtx.beginPath();gbCtx.moveTo(0,gy);gbCtx.lineTo(W,gy);gbCtx.stroke();}
 
-  // ── Belt geometry ──
-  // Near-horizontal but slightly inclined (like real image viewed from above-side)
-  // Belt is very wide and thick, occupying most of the canvas
-  const TILT = 0.16;  // slight incline angle (radians)
-  const x1=W*0.01,  y1=H*0.82;   // bottom-left of lower rail
-  const x2=W*0.99,  y2=H*0.82 - (W*0.98)*Math.tan(TILT); // top-right of lower rail
+  // ── Belt geometry — CENTRED and slanted ──
+  // Belt occupies 80% of width, centred horizontally, vertically centred
+  const TILT = 0.18;  // incline angle (radians) — clearly slanted
+  const beltW = W * 0.82;
+  const startX = (W - beltW) / 2;
+  const centreY = H * 0.52; // vertical centre
+  const x1 = startX;
+  const x2 = startX + beltW;
+  const tiltRise = beltW * Math.tan(TILT);
+  const y1 = centreY + tiltRise * 0.5;   // bottom-left lower rail
+  const y2 = centreY - tiltRise * 0.5;   // bottom-right lower rail (higher)
   const beltDX=x2-x1, beltDY=y2-y1;
   const beltLen=Math.sqrt(beltDX*beltDX+beltDY*beltDY);
 
   // Belt is THICK — 38% of H  
-  const BELT_THK = H*0.44;
+  const BELT_THK = H*0.42;
   // Perpendicular (upward normal from belt surface)
   const nxU=-beltDY/beltLen, nyU=beltDX/beltLen; // points "up" from lower rail
 
@@ -5787,16 +5811,16 @@ function drawConveyorBelt(frame){
     const mx=(bot.x+top.x)/2, my=(bot.y+top.y)/2;
     const dr=BELT_THK/2;
     const dg=gbCtx.createRadialGradient(mx-(side==='left'?dr*0.3:-dr*0.1),my-dr*0.25,0,mx,my,dr);
-    dg.addColorStop(0,'#6a7a8a'); dg.addColorStop(0.5,'#3a4a58'); dg.addColorStop(1,'#1a2430');
+    dg.addColorStop(0,'#8a9aaa'); dg.addColorStop(0.5,'#4a5a6a'); dg.addColorStop(1,'#1e2c3c');
     gbCtx.fillStyle=dg;
     gbCtx.beginPath(); gbCtx.ellipse(mx,my,dr*0.18,dr,0,0,Math.PI*2); gbCtx.fill();
-    gbCtx.strokeStyle='rgba(100,125,148,0.5)'; gbCtx.lineWidth=2;
+    gbCtx.strokeStyle='rgba(60,80,100,0.8)'; gbCtx.lineWidth=2.5;
     gbCtx.stroke();
     // Drum bolts
     for(let b=0;b<6;b++){
       const ba=b*Math.PI/3;
       const bx2=mx+Math.cos(ba)*dr*0.55*0.18, by2=my+Math.sin(ba)*dr*0.55;
-      gbCtx.fillStyle='rgba(90,110,130,0.8)';
+      gbCtx.fillStyle='rgba(70,90,110,0.9)';
       gbCtx.beginPath(); gbCtx.arc(bx2,by2,1.5,0,Math.PI*2); gbCtx.fill();
     }
   });
@@ -5806,14 +5830,13 @@ function drawConveyorBelt(frame){
   for(let ri=1;ri<rollerCount;ri++){
     const rt=ri/rollerCount;
     const rx=bBL.x+rt*beltDX, ry=bBL.y+rt*beltDY;
-    // Roller centre is just below the lower rail
     const rcx=rx-nxU*BELT_THK*0.06, rcy=ry-nyU*BELT_THK*0.06;
     const rr=BELT_THK*0.055;
     const rg=gbCtx.createRadialGradient(rcx-rr*0.15,rcy-rr*0.3,0,rcx,rcy,rr);
-    rg.addColorStop(0,'#5a6a7a'); rg.addColorStop(0.7,'#2a3a4a'); rg.addColorStop(1,'#141e28');
+    rg.addColorStop(0,'#6a7a8a'); rg.addColorStop(0.7,'#2e3e50'); rg.addColorStop(1,'#141e28');
     gbCtx.fillStyle=rg;
     gbCtx.beginPath(); gbCtx.ellipse(rcx,rcy,rr*0.28,rr,0,0,Math.PI*2); gbCtx.fill();
-    gbCtx.strokeStyle='rgba(90,115,138,0.45)'; gbCtx.lineWidth=0.8; gbCtx.stroke();
+    gbCtx.strokeStyle='rgba(70,100,130,0.6)'; gbCtx.lineWidth=1; gbCtx.stroke();
   }
 
   // ── BELT SURFACE + PELLETS (clipped to parallelogram) ──
@@ -5824,9 +5847,9 @@ function drawConveyorBelt(frame){
   gbCtx.closePath();
   gbCtx.clip();
 
-  // Belt rubber base
+  // Belt rubber base — darker for contrast against cream
   const bGr=gbCtx.createLinearGradient(bTL.x,bTL.y,bBL.x,bBL.y);
-  bGr.addColorStop(0,'#1a2128'); bGr.addColorStop(0.45,'#12181e'); bGr.addColorStop(1,'#0c1218');
+  bGr.addColorStop(0,'#1e2830'); bGr.addColorStop(0.45,'#151c24'); bGr.addColorStop(1,'#0e1520');
   gbCtx.fillStyle=bGr; gbCtx.fillRect(-10,-10,W+20,H+20);
 
   // Transverse ribs moving with belt
@@ -5889,12 +5912,16 @@ function drawConveyorBelt(frame){
     pg.addColorStop(1,   `rgba(10,15,22,1)`);
     gbCtx.beginPath(); gbCtx.arc(wx,wy,r,0,Math.PI*2);
     gbCtx.fillStyle=pg; gbCtx.fill();
+    // VISIBLE BORDER on every ball for contrast against cream background
+    gbCtx.strokeStyle=`rgba(${Math.round(160*s)},${Math.round(185*s)},${Math.round(210*s)},0.75)`;
+    gbCtx.lineWidth=0.7;
+    gbCtx.stroke();
 
     // Tiny specular
     if(s>0.8){
-      gbCtx.save(); gbCtx.globalAlpha=0.18;
-      gbCtx.fillStyle='rgba(200,220,240,0.9)';
-      gbCtx.beginPath(); gbCtx.ellipse(wx-r*0.28,wy-r*0.3,r*0.26,r*0.16,-0.4,0,Math.PI*2); gbCtx.fill();
+      gbCtx.save(); gbCtx.globalAlpha=0.3;
+      gbCtx.fillStyle='rgba(210,230,250,0.9)';
+      gbCtx.beginPath(); gbCtx.ellipse(wx-r*0.28,wy-r*0.3,r*0.3,r*0.18,-0.4,0,Math.PI*2); gbCtx.fill();
       gbCtx.restore();
     }
   }
@@ -5922,12 +5949,12 @@ function drawConveyorBelt(frame){
 
   // ── STEEL FRAME (drawn on top) ──
   // Yellow guard rail (like real image — safety yellow)
-  const railY='rgba(185,145,30,0.75)';
-  gbCtx.strokeStyle=railY; gbCtx.lineWidth=3;
+  const railY='rgba(185,130,15,0.9)';
+  gbCtx.strokeStyle=railY; gbCtx.lineWidth=3.5;
   // Top guard rail (along upper edge of belt)
   gbCtx.beginPath(); gbCtx.moveTo(bTL.x,bTL.y); gbCtx.lineTo(bTR.x,bTR.y); gbCtx.stroke();
   // Bottom frame rail
-  gbCtx.strokeStyle='rgba(70,88,105,0.9)'; gbCtx.lineWidth=3.5;
+  gbCtx.strokeStyle='rgba(55,72,90,0.95)'; gbCtx.lineWidth=4;
   gbCtx.beginPath(); gbCtx.moveTo(bBL.x,bBL.y); gbCtx.lineTo(bBR.x,bBR.y); gbCtx.stroke();
 
   // Vertical support posts (yellow, like image)
@@ -5938,25 +5965,25 @@ function drawConveyorBelt(frame){
     const pb2x=bBL.x+t*(bBR.x-bBL.x), pb2y=bBL.y+t*(bBR.y-bBL.y);
     gbCtx.beginPath(); gbCtx.moveTo(px2,py2); gbCtx.lineTo(pb2x,pb2y); gbCtx.stroke();
     // Post bolt
-    gbCtx.fillStyle='rgba(180,145,30,0.9)';
-    gbCtx.beginPath(); gbCtx.arc(px2,py2,2.5,0,Math.PI*2); gbCtx.fill();
-    gbCtx.beginPath(); gbCtx.arc(pb2x,pb2y,2.5,0,Math.PI*2); gbCtx.fill();
+    gbCtx.fillStyle='rgba(175,130,20,0.95)';
+    gbCtx.beginPath(); gbCtx.arc(px2,py2,3,0,Math.PI*2); gbCtx.fill();
+    gbCtx.beginPath(); gbCtx.arc(pb2x,pb2y,3,0,Math.PI*2); gbCtx.fill();
   });
 
   // Outer side plates (dark steel panel beneath belt)
   const panelGr=gbCtx.createLinearGradient(bBL.x,bBL.y,bBL.x,bBL.y+H*0.18);
-  panelGr.addColorStop(0,'rgba(45,58,70,0.9)'); panelGr.addColorStop(1,'rgba(18,25,32,0.0)');
+  panelGr.addColorStop(0,'rgba(38,50,65,0.88)'); panelGr.addColorStop(1,'rgba(18,25,32,0.0)');
   gbCtx.fillStyle=panelGr;
   gbCtx.beginPath(); gbCtx.moveTo(bBL.x,bBL.y); gbCtx.lineTo(bBR.x,bBR.y); gbCtx.lineTo(bBR.x,bBR.y+H*0.16); gbCtx.lineTo(bBL.x,bBL.y+H*0.16); gbCtx.closePath(); gbCtx.fill();
 
-  // Belt edge glow (subtle gold)
-  gbCtx.save(); gbCtx.shadowColor='rgba(185,140,28,0.2)'; gbCtx.shadowBlur=8;
-  gbCtx.strokeStyle='rgba(185,140,28,0.3)'; gbCtx.lineWidth=1.5;
+  // Belt edge glow (gold)
+  gbCtx.save(); gbCtx.shadowColor='rgba(185,130,20,0.35)'; gbCtx.shadowBlur=10;
+  gbCtx.strokeStyle='rgba(185,130,20,0.5)'; gbCtx.lineWidth=2;
   gbCtx.beginPath(); gbCtx.moveTo(bTL.x,bTL.y); gbCtx.lineTo(bTR.x,bTR.y); gbCtx.stroke();
   gbCtx.restore();
 
-  // Status label
-  gbCtx.font='500 8px JetBrains Mono'; gbCtx.fillStyle='rgba(185,145,30,0.5)';
+  // Status label — dark text visible on cream
+  gbCtx.font='500 8px JetBrains Mono'; gbCtx.fillStyle='rgba(130,100,30,0.75)';
   gbCtx.textAlign='right'; gbCtx.fillText('SCREENING CONVEYOR · LIVE',W-8,H-8); gbCtx.textAlign='left';
 
   // Advance belt
