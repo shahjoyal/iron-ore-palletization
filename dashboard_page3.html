@@ -6349,104 +6349,104 @@ function drawConveyorBelt(frame){
   for(let gx=0;gx<W;gx+=40){gbCtx.beginPath();gbCtx.moveTo(gx,0);gbCtx.lineTo(gx,H);gbCtx.stroke();}
   for(let gy=0;gy<H;gy+=40){gbCtx.beginPath();gbCtx.moveTo(0,gy);gbCtx.lineTo(W,gy);gbCtx.stroke();}
 
-  // ── Belt geometry — CENTRED and slanted ──
-  // Belt occupies 80% of width, centred horizontally, vertically centred
-  const TILT = 0.18;  // incline angle (radians) — clearly slanted
-  const beltW = W * 0.82;
-  const startX = (W - beltW) / 2;
-  const centreY = H * 0.52; // vertical centre
-  const x1 = startX;
-  const x2 = startX + beltW;
-  const tiltRise = beltW * Math.tan(TILT);
-  const y1 = centreY + tiltRise * 0.5;   // bottom-left lower rail
-  const y2 = centreY - tiltRise * 0.5;   // bottom-right lower rail (higher)
-  const beltDX=x2-x1, beltDY=y2-y1;
-  const beltLen=Math.sqrt(beltDX*beltDX+beltDY*beltDY);
+  // ── Belt geometry — VERTICAL: runs TOP → BOTTOM, slight lean ──
+  // Belt axis goes from top-centre to bottom-centre with a tiny horizontal offset (lean)
+  const TILT = 0.10;               // slight lean angle (radians) — nearly vertical
+  const beltH_span = H * 0.88;    // belt runs most of the canvas height
+  const centreX = W * 0.50;
+  const y1 = H * 0.06;            // top end
+  const y2 = y1 + beltH_span;     // bottom end
+  const tiltShift = beltH_span * Math.tan(TILT);
+  const x1 = centreX - tiltShift * 0.5;   // top-left (feed end)
+  const x2 = centreX + tiltShift * 0.5;   // bottom-right (discharge end)
 
-  // Belt is THICK — 38% of H  
-  const BELT_THK = H*0.42;
-  // Perpendicular (upward normal from belt surface)
-  const nxU=-beltDY/beltLen, nyU=beltDX/beltLen; // points "up" from lower rail
+  const beltDX = x2 - x1;
+  const beltDY = y2 - y1;
+  const beltLen = Math.sqrt(beltDX*beltDX + beltDY*beltDY);
 
-  // Four belt corners
-  const bBL={x:x1,              y:y1};
-  const bBR={x:x2,              y:y2};
-  const bTR={x:x2+nxU*BELT_THK, y:y2+nyU*BELT_THK};
-  const bTL={x:x1+nxU*BELT_THK, y:y1+nyU*BELT_THK};
+  // Belt thickness — same as before (fraction of W now, since belt is vertical)
+  const BELT_THK = W * 0.52;
 
-  // ── END DRUMS first (behind belt) ──
-  [[bBL,bTL,'left'],[bBR,bTR,'right']].forEach(([bot,top,side])=>{
-    const mx=(bot.x+top.x)/2, my=(bot.y+top.y)/2;
+  // Perpendicular normal pointing LEFT from the belt axis (belt face toward viewer)
+  const nxU =  beltDY / beltLen;   // points horizontally outward
+  const nyU = -beltDX / beltLen;
+
+  // Four belt corners:
+  // "BL" = bottom of top drum (left face), "BR" = bottom of bottom drum (right face)
+  // We use L/R to mean the two side edges of the vertical belt
+  const bL1 = {x: x1 - nxU*BELT_THK*0.5, y: y1 - nyU*BELT_THK*0.5}; // top-left corner
+  const bR1 = {x: x1 + nxU*BELT_THK*0.5, y: y1 + nyU*BELT_THK*0.5}; // top-right corner
+  const bR2 = {x: x2 + nxU*BELT_THK*0.5, y: y2 + nyU*BELT_THK*0.5}; // bottom-right corner
+  const bL2 = {x: x2 - nxU*BELT_THK*0.5, y: y2 - nyU*BELT_THK*0.5}; // bottom-left corner
+
+  // ── END DRUMS (top and bottom) ──
+  [[bL1,bR1,'top'],[bL2,bR2,'bottom']].forEach(([lpt,rpt,side])=>{
+    const mx=(lpt.x+rpt.x)/2, my=(lpt.y+rpt.y)/2;
     const dr=BELT_THK/2;
-    const dg=safeRadialGradient(gbCtx,mx-(side==='left'?dr*0.3:-dr*0.1),my-dr*0.25,0,mx,my,dr);
+    const dg=safeRadialGradient(gbCtx,mx-dr*0.2,my-dr*0.25,0,mx,my,dr);
     dg.addColorStop(0,'#8a9aaa'); dg.addColorStop(0.5,'#4a5a6a'); dg.addColorStop(1,'#1e2c3c');
     gbCtx.fillStyle=dg;
-    gbCtx.beginPath(); gbCtx.ellipse(mx,my,dr*0.18,dr,0,0,Math.PI*2); gbCtx.fill();
-    gbCtx.strokeStyle='rgba(60,80,100,0.8)'; gbCtx.lineWidth=2.5;
-    gbCtx.stroke();
-    // Drum bolts
+    gbCtx.beginPath(); gbCtx.ellipse(mx,my,dr,dr*0.18,0,0,Math.PI*2); gbCtx.fill();
+    gbCtx.strokeStyle='rgba(60,80,100,0.8)'; gbCtx.lineWidth=2.5; gbCtx.stroke();
     for(let b=0;b<6;b++){
       const ba=b*Math.PI/3;
-      const bx2=mx+Math.cos(ba)*dr*0.55*0.18, by2=my+Math.sin(ba)*dr*0.55;
+      const bx2=mx+Math.cos(ba)*dr*0.55, by2=my+Math.sin(ba)*dr*0.55*0.18;
       gbCtx.fillStyle='rgba(70,90,110,0.9)';
       gbCtx.beginPath(); gbCtx.arc(bx2,by2,1.5,0,Math.PI*2); gbCtx.fill();
     }
   });
 
-  // ── UNDERSIDE ROLLERS (cylindrical, showing beneath belt) ──
+  // ── UNDERSIDE ROLLERS along the belt length ──
   const rollerCount=10;
   for(let ri=1;ri<rollerCount;ri++){
     const rt=ri/rollerCount;
-    const rx=bBL.x+rt*beltDX, ry=bBL.y+rt*beltDY;
-    const rcx=rx-nxU*BELT_THK*0.06, rcy=ry-nyU*BELT_THK*0.06;
+    const rx=x1+rt*beltDX, ry=y1+rt*beltDY;
+    const rcx=rx - nxU*BELT_THK*0.54, rcy=ry - nyU*BELT_THK*0.54;
     const rr=BELT_THK*0.055;
-    const rg=safeRadialGradient(gbCtx,rcx-rr*0.15,rcy-rr*0.3,0,rcx,rcy,rr);
+    const rg=safeRadialGradient(gbCtx,rcx-rr*0.3,rcy-rr*0.15,0,rcx,rcy,rr);
     rg.addColorStop(0,'#6a7a8a'); rg.addColorStop(0.7,'#2e3e50'); rg.addColorStop(1,'#141e28');
     gbCtx.fillStyle=rg;
-    gbCtx.beginPath(); gbCtx.ellipse(rcx,rcy,rr*0.28,rr,0,0,Math.PI*2); gbCtx.fill();
+    gbCtx.beginPath(); gbCtx.ellipse(rcx,rcy,rr,rr*0.28,0,0,Math.PI*2); gbCtx.fill();
     gbCtx.strokeStyle='rgba(70,100,130,0.6)'; gbCtx.lineWidth=1; gbCtx.stroke();
   }
 
   // ── BELT SURFACE + PELLETS (clipped to parallelogram) ──
   gbCtx.save();
   gbCtx.beginPath();
-  gbCtx.moveTo(bBL.x,bBL.y); gbCtx.lineTo(bBR.x,bBR.y);
-  gbCtx.lineTo(bTR.x,bTR.y); gbCtx.lineTo(bTL.x,bTL.y);
+  gbCtx.moveTo(bL1.x,bL1.y); gbCtx.lineTo(bR1.x,bR1.y);
+  gbCtx.lineTo(bR2.x,bR2.y); gbCtx.lineTo(bL2.x,bL2.y);
   gbCtx.closePath();
   gbCtx.clip();
 
-  // Belt rubber base — darker for contrast against cream
-  const bGr=gbCtx.createLinearGradient(bTL.x,bTL.y,bBL.x,bBL.y);
+  // Belt rubber base
+  const bGr=gbCtx.createLinearGradient(bL1.x,bL1.y,bR1.x,bR1.y);
   bGr.addColorStop(0,'#1e2830'); bGr.addColorStop(0.45,'#151c24'); bGr.addColorStop(1,'#0e1520');
   gbCtx.fillStyle=bGr; gbCtx.fillRect(-10,-10,W+20,H+20);
 
-  // Transverse ribs moving with belt
+  // Transverse ribs moving with belt (now horizontal bands scrolling downward)
   const ribSpacing=14;
   const ribOff=gbActive?(gbBeltOffset*GB_BELT_SPEED)%ribSpacing:0;
   gbCtx.strokeStyle='rgba(38,52,62,0.9)'; gbCtx.lineWidth=1.1;
   for(let r=-2;r<beltLen/ribSpacing+2;r++){
     const t=(r*ribSpacing+ribOff)/beltLen;
-    const rx=bBL.x+t*beltDX, ry=bBL.y+t*beltDY;
+    const rx2=x1+t*beltDX, ry2=y1+t*beltDY;
     gbCtx.beginPath();
-    gbCtx.moveTo(rx,ry);
-    gbCtx.lineTo(rx+nxU*BELT_THK, ry+nyU*BELT_THK);
+    gbCtx.moveTo(rx2 - nxU*BELT_THK*0.5, ry2 - nyU*BELT_THK*0.5);
+    gbCtx.lineTo(rx2 + nxU*BELT_THK*0.5, ry2 + nyU*BELT_THK*0.5);
     gbCtx.stroke();
   }
 
-  // ── DENSE PELLETS ──
+  // ── DENSE PELLETS scrolling TOP → BOTTOM ──
   if(!GB_PELLETS){
-    // Build pellet grid: small, packed tightly
-    const ROWS=28, COLS=80;
+    const ROWS=80, COLS=28;
     const pels=[];
     for(let row=0;row<ROWS;row++){
       for(let col=0;col<COLS;col++){
-        const offset=(row%2)*0.5; // hex offset
+        const offset=(col%2)*0.5;
         pels.push({
-          col: col+offset,
-          row,
-          COLS,
-          ROWS,
-          r: 2.4 + Math.random()*1.2,  // small: 2.4–3.6px
+          col, row: row+offset,
+          COLS, ROWS,
+          r: 2.4 + Math.random()*1.2,
           jx:(Math.random()-0.5)*2.0,
           jy:(Math.random()-0.5)*1.5,
           shade: 0.65+Math.random()*0.35,
@@ -6459,33 +6459,28 @@ function drawConveyorBelt(frame){
 
   const{pels,ROWS,COLS}=GB_PELLETS;
   const scrollAlong=gbActive?gbBeltOffset*GB_BELT_SPEED:0;
-  const TOTAL_SCROLL_LEN=beltLen; // wrap over full length
 
   for(const p of pels){
-    // Cross-belt position (0..1)
-    const crossT = (p.row+0.5)/ROWS;
-    // Along-belt position scrolling
-    const rawAlong = ((p.col/COLS)*beltLen - scrollAlong + p.jx + beltLen*2) % beltLen;
+    // Cross-belt position (0..1) — across the width
+    const crossT = (p.col+0.5)/COLS;
+    // Along-belt position scrolling downward (top→bottom)
+    const rawAlong = ((p.row/ROWS)*beltLen + scrollAlong + p.jy + beltLen*2) % beltLen;
     const alongT = rawAlong / beltLen;
 
-    // World coordinates
-    const wx = bBL.x + alongT*beltDX + crossT*nxU*BELT_THK + p.jx*0.3;
-    const wy = bBL.y + alongT*beltDY + crossT*nyU*BELT_THK + p.jy*0.3;
+    // World coords: move along belt axis, spread across belt width
+    const wx = x1 + alongT*beltDX + (crossT-0.5)*nxU*BELT_THK*0.90 + p.jx*0.3;
+    const wy = y1 + alongT*beltDY + (crossT-0.5)*nyU*BELT_THK*0.90 + p.jy*0.3;
 
     const r=p.r, s=p.shade;
-    // Dark near-black with blue-grey sheen — like real iron ore pellets
     const pg=safeRadialGradient(gbCtx,wx-r*0.32,wy-r*0.35,0,wx,wy,r);
     pg.addColorStop(0,   `rgba(${Math.round(118*s)},${Math.round(132*s)},${Math.round(150*s)},1)`);
     pg.addColorStop(0.5, `rgba(${Math.round(48*s)}, ${Math.round(60*s)}, ${Math.round(75*s)},1)`);
     pg.addColorStop(1,   `rgba(10,15,22,1)`);
     gbCtx.beginPath(); gbCtx.arc(wx,wy,r,0,Math.PI*2);
     gbCtx.fillStyle=pg; gbCtx.fill();
-    // VISIBLE BORDER on every ball for contrast against cream background
     gbCtx.strokeStyle=`rgba(${Math.round(160*s)},${Math.round(185*s)},${Math.round(210*s)},0.75)`;
-    gbCtx.lineWidth=0.7;
-    gbCtx.stroke();
+    gbCtx.lineWidth=0.7; gbCtx.stroke();
 
-    // Tiny specular
     if(s>0.8){
       gbCtx.save(); gbCtx.globalAlpha=0.3;
       gbCtx.fillStyle='rgba(210,230,250,0.9)';
@@ -6494,20 +6489,20 @@ function drawConveyorBelt(frame){
     }
   }
 
-  // Subtle depth-of-field vignette on top surface
-  const vig=gbCtx.createLinearGradient(bTL.x,bTL.y,bBL.x,bBL.y);
-  vig.addColorStop(0,'rgba(0,0,0,0.35)'); vig.addColorStop(0.15,'rgba(0,0,0,0)');
-  vig.addColorStop(0.85,'rgba(0,0,0,0)'); vig.addColorStop(1,'rgba(0,0,0,0.25)');
+  // Depth vignette — dark at top and bottom edges
+  const vig=gbCtx.createLinearGradient(0,y1,0,y2);
+  vig.addColorStop(0,'rgba(0,0,0,0.35)'); vig.addColorStop(0.12,'rgba(0,0,0,0)');
+  vig.addColorStop(0.88,'rgba(0,0,0,0)'); vig.addColorStop(1,'rgba(0,0,0,0.28)');
   gbCtx.fillStyle=vig; gbCtx.fillRect(-10,-10,W+20,H+20);
 
-  // Dust/mist rising from pellet layer
+  // Dust rising from pellet layer at bottom
   if(gbActive){
-    for(let d=0;d<12;d++){
-      const dt=((d/12 + frame*0.003)%1);
-      const dBx=bBL.x+dt*beltDX + nxU*BELT_THK*0.7;
-      const dBy=bBL.y+dt*beltDY + nyU*BELT_THK*0.7;
+    for(let d=0;d<10;d++){
+      const dt=((d/10 + frame*0.003)%1);
+      const dBx = x1 + dt*beltDX + (Math.random()-0.5)*BELT_THK*0.4;
+      const dBy = y1 + dt*beltDY;
       const rise=(frame*0.4+d*22)%35;
-      const alpha=Math.max(0,0.08*(1-rise/35));
+      const alpha=Math.max(0,0.07*(1-rise/35));
       gbCtx.beginPath(); gbCtx.arc(dBx,dBy-rise,5+rise*0.3,0,Math.PI*2);
       gbCtx.fillStyle=`rgba(170,185,195,${alpha})`; gbCtx.fill();
     }
@@ -6516,41 +6511,39 @@ function drawConveyorBelt(frame){
   gbCtx.restore(); // end belt clip
 
   // ── STEEL FRAME (drawn on top) ──
-  // Yellow guard rail (like real image — safety yellow)
   const railY='rgba(185,130,15,0.9)';
+  // Left guard rail (along left edge of vertical belt)
   gbCtx.strokeStyle=railY; gbCtx.lineWidth=3.5;
-  // Top guard rail (along upper edge of belt)
-  gbCtx.beginPath(); gbCtx.moveTo(bTL.x,bTL.y); gbCtx.lineTo(bTR.x,bTR.y); gbCtx.stroke();
-  // Bottom frame rail
-  gbCtx.strokeStyle='rgba(55,72,90,0.95)'; gbCtx.lineWidth=4;
-  gbCtx.beginPath(); gbCtx.moveTo(bBL.x,bBL.y); gbCtx.lineTo(bBR.x,bBR.y); gbCtx.stroke();
+  gbCtx.beginPath(); gbCtx.moveTo(bL1.x,bL1.y); gbCtx.lineTo(bL2.x,bL2.y); gbCtx.stroke();
+  // Right guard rail
+  gbCtx.beginPath(); gbCtx.moveTo(bR1.x,bR1.y); gbCtx.lineTo(bR2.x,bR2.y); gbCtx.stroke();
 
-  // Vertical support posts (yellow, like image)
+  // Horizontal cross-braces (support posts now run left-right across the belt)
   gbCtx.strokeStyle=railY; gbCtx.lineWidth=2.5;
-  const postTs=[0.0,0.15,0.32,0.5,0.68,0.85,1.0];
+  const postTs=[0.0,0.18,0.36,0.54,0.72,0.90,1.0];
   postTs.forEach(t=>{
-    const px2=bTL.x+t*(bTR.x-bTL.x), py2=bTL.y+t*(bTR.y-bTL.y);
-    const pb2x=bBL.x+t*(bBR.x-bBL.x), pb2y=bBL.y+t*(bBR.y-bBL.y);
-    gbCtx.beginPath(); gbCtx.moveTo(px2,py2); gbCtx.lineTo(pb2x,pb2y); gbCtx.stroke();
-    // Post bolt
+    const lx=bL1.x+t*(bL2.x-bL1.x), ly=bL1.y+t*(bL2.y-bL1.y);
+    const rx=bR1.x+t*(bR2.x-bR1.x), ry=bR1.y+t*(bR2.y-bR1.y);
+    gbCtx.beginPath(); gbCtx.moveTo(lx,ly); gbCtx.lineTo(rx,ry); gbCtx.stroke();
     gbCtx.fillStyle='rgba(175,130,20,0.95)';
-    gbCtx.beginPath(); gbCtx.arc(px2,py2,3,0,Math.PI*2); gbCtx.fill();
-    gbCtx.beginPath(); gbCtx.arc(pb2x,pb2y,3,0,Math.PI*2); gbCtx.fill();
+    gbCtx.beginPath(); gbCtx.arc(lx,ly,3,0,Math.PI*2); gbCtx.fill();
+    gbCtx.beginPath(); gbCtx.arc(rx,ry,3,0,Math.PI*2); gbCtx.fill();
   });
 
-  // Outer side plates (dark steel panel beneath belt)
-  const panelGr=gbCtx.createLinearGradient(bBL.x,bBL.y,bBL.x,bBL.y+H*0.18);
+  // Outer side panel beneath belt (bottom discharge)
+  const panelGr=gbCtx.createLinearGradient(bL2.x,bL2.y,bL2.x+W*0.08,bL2.y);
   panelGr.addColorStop(0,'rgba(38,50,65,0.88)'); panelGr.addColorStop(1,'rgba(18,25,32,0.0)');
   gbCtx.fillStyle=panelGr;
-  gbCtx.beginPath(); gbCtx.moveTo(bBL.x,bBL.y); gbCtx.lineTo(bBR.x,bBR.y); gbCtx.lineTo(bBR.x,bBR.y+H*0.16); gbCtx.lineTo(bBL.x,bBL.y+H*0.16); gbCtx.closePath(); gbCtx.fill();
+  gbCtx.beginPath(); gbCtx.moveTo(bL2.x,bL2.y); gbCtx.lineTo(bR2.x,bR2.y); gbCtx.lineTo(bR2.x+W*0.06,bR2.y); gbCtx.lineTo(bL2.x-W*0.06,bL2.y); gbCtx.closePath(); gbCtx.fill();
 
-  // Belt edge glow (gold)
+  // Belt edge glow
   gbCtx.save(); gbCtx.shadowColor='rgba(185,130,20,0.35)'; gbCtx.shadowBlur=10;
   gbCtx.strokeStyle='rgba(185,130,20,0.5)'; gbCtx.lineWidth=2;
-  gbCtx.beginPath(); gbCtx.moveTo(bTL.x,bTL.y); gbCtx.lineTo(bTR.x,bTR.y); gbCtx.stroke();
+  gbCtx.beginPath(); gbCtx.moveTo(bL1.x,bL1.y); gbCtx.lineTo(bL2.x,bL2.y); gbCtx.stroke();
+  gbCtx.beginPath(); gbCtx.moveTo(bR1.x,bR1.y); gbCtx.lineTo(bR2.x,bR2.y); gbCtx.stroke();
   gbCtx.restore();
 
-  // Status label — dark text visible on cream
+  // Status label
   gbCtx.font='500 8px JetBrains Mono'; gbCtx.fillStyle='rgba(130,100,30,0.75)';
   gbCtx.textAlign='right'; gbCtx.fillText('SCREENING CONVEYOR · LIVE',W-8,H-8); gbCtx.textAlign='left';
 
