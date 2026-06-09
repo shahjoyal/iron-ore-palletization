@@ -5034,26 +5034,25 @@ function drawMixMini(frame, burst) {
   const bgGrad = g.createLinearGradient(0, 0, 0, H);
   bgGrad.addColorStop(0, '#f0eff8'); bgGrad.addColorStop(1, '#e8e6f4');
   g.fillStyle = bgGrad; g.fillRect(0, 0, W, H);
-  // subtle grid
   g.strokeStyle = 'rgba(200,145,42,0.04)'; g.lineWidth = 1;
-  for (let x = 0; x < W; x += 28) { g.beginPath(); g.moveTo(x, 0); g.lineTo(x, H); g.stroke(); }
-  for (let y = 0; y < H; y += 28) { g.beginPath(); g.moveTo(0, y); g.lineTo(W, y); g.stroke(); }
+  for (let x = 0; x < W; x += 28) { g.beginPath(); g.moveTo(x,0); g.lineTo(x,H); g.stroke(); }
+  for (let y = 0; y < H; y += 28) { g.beginPath(); g.moveTo(0,y); g.lineTo(W,y); g.stroke(); }
 
   // ════════════════════════════════════════════════
-  // LAYOUT — mirrors the reference image exactly:
-  //  • 4 inverted-trapezoid hoppers across the top
-  //  • Long horizontal cylindrical drum mixer below them
-  //  • Big motor on the far left of the drum
-  //  • Binder tank (cylindrical, glass-topped) top-right
-  //  • Pipe from binder tank down into drum right-end
-  //  • Discharge conveyor belt exiting bottom-right of drum
+  // NEW FLOW LAYOUT:
+  //  Row 1 (top):   4 hoppers spread across top
+  //  Row 2 (mid):   pipes from each hopper converge → 1 collection funnel/container (center)
+  //  Row 3:         collection container → horizontal conveyor belt → right
+  //  Row 4 (bot):   conveyor feeds into big drum mixer (bottom-right)
+  //  Big motor on left of drum as before
+  //  Binder tank top-right feeds pipe into drum
   // ════════════════════════════════════════════════
 
-  // ── DRUM MIXER geometry (wide, fills middle band) ──
-  const drumL   = W * 0.13;   // left edge
-  const drumR   = W * 0.86;   // right edge
-  const drumTop = H * 0.42;
-  const drumBot = H * 0.72;
+  // ── DRUM MIXER geometry (bottom band, slightly right-heavy) ──
+  const drumL   = W * 0.32;
+  const drumR   = W * 0.92;
+  const drumTop = H * 0.60;
+  const drumBot = H * 0.82;
   const drumCX  = (drumL + drumR) / 2;
   const drumCY  = (drumTop + drumBot) / 2;
   const drumW   = drumR - drumL;
@@ -5061,33 +5060,93 @@ function drawMixMini(frame, burst) {
   const drumRX  = drumW / 2;
   const drumRY  = drumH / 2;
 
-  // ── 4 HOPPERS geometry ──
-  const hopperData = [
-    { matColor: '#7a3520', rimColor: '#5a2510', label: 'IRON ORE',   matTop: 'rgba(110,48,22,0.9)',  matBot: 'rgba(80,32,12,0.8)'  },
-    { matColor: '#d8d0c4', rimColor: '#b0a898', label: 'BENTONITE',  matTop: 'rgba(220,212,200,0.9)',matBot: 'rgba(190,182,170,0.8)'},
-    { matColor: '#1e1e1e', rimColor: '#2e2e2e', label: 'ORE FINES',  matTop: 'rgba(40,40,40,0.9)',  matBot: 'rgba(20,20,20,0.8)'  },
-    { matColor: '#d2c488', rimColor: '#b0a468', label: 'OB BINDER',  matTop: 'rgba(210,196,130,0.9)',matBot: 'rgba(175,158,95,0.8)' },
-  ];
-  const hCount    = 4;
-  const hW        = W * 0.115;   // hopper top width
-  const hH        = H * 0.26;    // hopper height
-  const hNeckW    = hW * 0.26;
-  const hNeckH    = hH * 0.14;
-  const hY        = H * 0.035;   // hopper top y
-  // spread hoppers evenly over drum width (slightly inset)
-  const hSpacing  = (drumW * 0.88) / (hCount - 1);
-  const hStartX   = drumL + drumW * 0.06;
+  // ── COLLECTION CONTAINER geometry (center, mid-row) ──
+  const colW  = W * 0.18;
+  const colH  = H * 0.14;
+  const colCX = W * 0.36;
+  const colTop = H * 0.36;
+  const colBot = colTop + colH;
+  const colL  = colCX - colW/2;
+  const colR  = colCX + colW/2;
+  const colNeckW = colW * 0.28;
 
-  // ══════════════════════════
-  // DRAW HOPPERS
-  // ══════════════════════════
+  // ── 4 HOPPERS geometry (top row) ──
+  const hopperData = [
+    { matColor: '#7a3520', rimColor: '#5a2510', label: 'IRON ORE',  matTop: 'rgba(110,48,22,0.9)',  matBot: 'rgba(80,32,12,0.8)'   },
+    { matColor: '#d8d0c4', rimColor: '#b0a898', label: 'BENTONITE', matTop: 'rgba(220,212,200,0.9)', matBot: 'rgba(190,182,170,0.8)' },
+    { matColor: '#1e1e1e', rimColor: '#2e2e2e', label: 'ORE FINES', matTop: 'rgba(40,40,40,0.9)',   matBot: 'rgba(20,20,20,0.8)'   },
+    { matColor: '#d2c488', rimColor: '#b0a468', label: 'OB BINDER', matTop: 'rgba(210,196,130,0.9)', matBot: 'rgba(175,158,95,0.8)' },
+  ];
+  const hCount   = 4;
+  const hW       = W * 0.10;
+  const hH       = H * 0.20;
+  const hNeckW   = hW * 0.28;
+  const hNeckH   = hH * 0.14;
+  const hY       = H * 0.02;
+  const hSpacing = (W * 0.82) / (hCount - 1);
+  const hStartX  = W * 0.10;
+
+  // ══════════════════
+  // DRAW PIPES from each hopper neck → collection container top
+  // ══════════════════
   hopperData.forEach((hd, hi) => {
     const hcx   = hStartX + hi * hSpacing;
-    const htop  = hY;
     const hbot  = hY + hH;
     const nY    = hbot - hNeckH;
+    const neckBotY = hbot + 12;
 
-    // ── Hopper shell (inverted trapezoid) ──
+    // Bezier pipe from neck → collection container top center
+    const pipeEndX = colCX + (hi - 1.5) * colNeckW * 0.45;
+    const pipeEndY = colTop - 1;
+
+    // Pipe tube (thick, dark steel)
+    g.strokeStyle = 'rgba(65,85,105,0.70)';
+    g.lineWidth = hNeckW * 0.72;
+    g.lineCap = 'round';
+    g.beginPath();
+    g.moveTo(hcx, neckBotY + 12);
+    g.bezierCurveTo(hcx, neckBotY + (pipeEndY - neckBotY) * 0.55, pipeEndX, neckBotY + (pipeEndY - neckBotY) * 0.45, pipeEndX, pipeEndY);
+    g.stroke();
+
+    // Highlight on pipe (lighter center line)
+    g.strokeStyle = 'rgba(130,160,185,0.28)';
+    g.lineWidth = hNeckW * 0.22;
+    g.beginPath();
+    g.moveTo(hcx, neckBotY + 12);
+    g.bezierCurveTo(hcx, neckBotY + (pipeEndY - neckBotY) * 0.55, pipeEndX, neckBotY + (pipeEndY - neckBotY) * 0.45, pipeEndX, pipeEndY);
+    g.stroke();
+    g.lineCap = 'butt';
+
+    // Animated material flow particles along pipe
+    const fSpeed = 0.030 + hi * 0.005;
+    for (let fk = 0; fk < 6; fk++) {
+      const ft = ((frame * fSpeed + fk * 0.167) % 1);
+      if (ft < 0.03) continue;
+      // Sample point along bezier
+      const t3 = ft;
+      const t2 = 1 - t3;
+      const cp1x = hcx, cp1y = neckBotY + (pipeEndY - neckBotY) * 0.55;
+      const cp2x = pipeEndX, cp2y = neckBotY + (pipeEndY - neckBotY) * 0.45;
+      const bx = t2*t2*t2*hcx + 3*t2*t2*t3*cp1x + 3*t2*t3*t3*cp2x + t3*t3*t3*pipeEndX;
+      const by = t2*t2*t2*(neckBotY+12) + 3*t2*t2*t3*cp1y + 3*t2*t3*t3*cp2y + t3*t3*t3*pipeEndY;
+      const fa = Math.min(1, ft * 8) * (1 - ft * 0.3) * 0.95;
+      g.globalAlpha = fa;
+      g.fillStyle = hd.matColor;
+      g.beginPath(); g.arc(bx, by, 2.6, 0, Math.PI * 2); g.fill();
+    }
+    g.globalAlpha = 1;
+  });
+
+  // ══════════════════
+  // DRAW 4 HOPPERS (on top of pipes)
+  // ══════════════════
+  hopperData.forEach((hd, hi) => {
+    const hcx  = hStartX + hi * hSpacing;
+    const htop = hY;
+    const hbot = hY + hH;
+    const nY   = hbot - hNeckH;
+
+    // Hopper shell (inverted trapezoid)
     const hShell = g.createLinearGradient(hcx - hW/2, 0, hcx + hW/2, 0);
     hShell.addColorStop(0,   '#4a5a6a');
     hShell.addColorStop(0.25,'#7a8e9e');
@@ -5096,15 +5155,15 @@ function drawMixMini(frame, burst) {
     hShell.addColorStop(1,   '#4a5a6a');
     g.fillStyle = hShell; g.strokeStyle = 'rgba(90,110,130,0.65)'; g.lineWidth = 1.2;
     g.beginPath();
-    g.moveTo(hcx - hW/2,      htop);
-    g.lineTo(hcx + hW/2,      htop);
-    g.lineTo(hcx + hNeckW/2,  nY);
-    g.lineTo(hcx + hNeckW/2,  hbot);
-    g.lineTo(hcx - hNeckW/2,  hbot);
-    g.lineTo(hcx - hNeckW/2,  nY);
+    g.moveTo(hcx - hW/2,     htop);
+    g.lineTo(hcx + hW/2,     htop);
+    g.lineTo(hcx + hNeckW/2, nY);
+    g.lineTo(hcx + hNeckW/2, hbot);
+    g.lineTo(hcx - hNeckW/2, hbot);
+    g.lineTo(hcx - hNeckW/2, nY);
     g.closePath(); g.fill(); g.stroke();
 
-    // ── Material heap inside hopper ──
+    // Material heap inside hopper
     g.save();
     g.beginPath();
     g.moveTo(hcx - hW/2 + 2, htop + 3);
@@ -5112,149 +5171,268 @@ function drawMixMini(frame, burst) {
     g.lineTo(hcx + hNeckW/2 - 1, nY - 2);
     g.lineTo(hcx - hNeckW/2 + 1, nY - 2);
     g.closePath(); g.clip();
-    // fill body
     const mFill = g.createLinearGradient(0, htop + 3, 0, nY - 2);
     mFill.addColorStop(0, hd.matTop); mFill.addColorStop(1, hd.matBot);
     g.fillStyle = mFill; g.fillRect(hcx - hW/2 + 2, htop + 3, hW - 4, hH);
-    // rounded heap surface (dome)
     const heapY = htop + hH * 0.18 + 2 * Math.sin(frame * 0.03 + hi);
     g.fillStyle = hd.matTop;
-    g.beginPath();
-    g.ellipse(hcx, heapY + hH * 0.06, hW * 0.42, hH * 0.12, 0, 0, Math.PI * 2);
-    g.fill();
-    // specular sheen
+    g.beginPath(); g.ellipse(hcx, heapY + hH * 0.06, hW * 0.42, hH * 0.12, 0, 0, Math.PI * 2); g.fill();
     g.fillStyle = 'rgba(255,255,255,0.07)';
     g.fillRect(hcx - hW/2 + 2, htop + 3, hW - 4, hH * 0.15);
     g.restore();
 
-    // ── Top rim (thick steel lip) ──
+    // Top rim
     const rimG = g.createLinearGradient(hcx - hW/2 - 4, 0, hcx + hW/2 + 4, 0);
     rimG.addColorStop(0, '#5a6a7a'); rimG.addColorStop(0.5, '#9ab0c0'); rimG.addColorStop(1, '#5a6a7a');
     g.fillStyle = rimG; g.strokeStyle = 'rgba(120,145,165,0.6)'; g.lineWidth = 0.8;
     g.beginPath(); g.roundRect(hcx - hW/2 - 3, htop - 5, hW + 6, 8, 2); g.fill(); g.stroke();
 
-    // ── Neck pipe (short vertical stub) ──
+    // Neck pipe
     const nkG = g.createLinearGradient(hcx - hNeckW/2, 0, hcx + hNeckW/2, 0);
     nkG.addColorStop(0, '#3a4a58'); nkG.addColorStop(0.5, '#6a7e8e'); nkG.addColorStop(1, '#3a4a58');
     g.fillStyle = nkG; g.strokeStyle = 'rgba(80,100,120,0.6)'; g.lineWidth = 1;
     g.beginPath(); g.roundRect(hcx - hNeckW/2 - 1, hbot - 2, hNeckW + 2, 10, 1); g.fill(); g.stroke();
 
-    // ── Gate/valve flange ──
+    // Gate/valve flange
     g.fillStyle = '#2a3a4a'; g.strokeStyle = 'rgba(60,80,100,0.5)'; g.lineWidth = 0.8;
     g.beginPath(); g.roundRect(hcx - hNeckW/2 - 3, hbot + 7, hNeckW + 6, 5, 1); g.fill(); g.stroke();
 
-    // ── LABEL tag ──
+    // Label tag
     g.fillStyle = 'rgba(26,48,87,0.08)'; g.strokeStyle = 'rgba(200,145,42,0.28)'; g.lineWidth = 0.7;
     g.beginPath(); g.roundRect(hcx - hW*0.52, htop - 18, hW * 1.04, 12, 2); g.fill(); g.stroke();
     g.fillStyle = '#7a6a50'; g.font = '600 5.5px JetBrains Mono'; g.textAlign = 'center';
     g.fillText(hd.label, hcx, htop - 9);
-
-    // ── Animated material stream falling from neck into drum ──
-    const neckBotY = hbot + 12;
-    const streamEndY = drumTop + 3;
-    const fSpeed = 0.032 + hi * 0.005;
-    for (let fk = 0; fk < 5; fk++) {
-      const ft = ((frame * fSpeed + fk * 0.20) % 1);
-      if (ft < 0.04) continue;
-      const fy = neckBotY + ft * (streamEndY - neckBotY);
-      const fxo = (fk % 3 - 1) * 2.2;
-      const fa = Math.min(1, ft * 10) * (1 - ft * 0.45) * 0.92;
-      g.globalAlpha = fa;
-      g.fillStyle = hd.matColor;
-      g.beginPath(); g.arc(hcx + fxo, fy, 2.3, 0, Math.PI * 2); g.fill();
-    }
-    g.globalAlpha = 1;
-
-    // ── Inlet port on drum top (directly below neck) ──
-    g.fillStyle = '#5a6a7a'; g.strokeStyle = 'rgba(90,110,130,0.55)'; g.lineWidth = 0.8;
-    g.beginPath(); g.roundRect(hcx - hNeckW/2 + 1, drumTop - 6, hNeckW - 2, 8, 1.5); g.fill(); g.stroke();
   });
 
-  // ══════════════════════════
+  // ══════════════════
+  // COLLECTION CONTAINER (mixture funnel in center)
+  // ══════════════════
+  // Mixed color fill that pulses
+  const mixRatio = (Math.sin(frame * 0.025) + 1) * 0.5;
+  const colFill = g.createLinearGradient(colL, colTop, colR, colBot);
+  colFill.addColorStop(0,   '#3a4a5a');
+  colFill.addColorStop(0.3, '#5a6e7e');
+  colFill.addColorStop(0.6, '#7a8e9e');
+  colFill.addColorStop(1,   '#3a4a5a');
+  g.fillStyle = colFill; g.strokeStyle = 'rgba(90,120,145,0.75)'; g.lineWidth = 1.8;
+  g.beginPath();
+  g.moveTo(colL, colTop);
+  g.lineTo(colR, colTop);
+  g.lineTo(colCX + colNeckW/2, colBot - colH*0.12);
+  g.lineTo(colCX + colNeckW/2, colBot);
+  g.lineTo(colCX - colNeckW/2, colBot);
+  g.lineTo(colCX - colNeckW/2, colBot - colH*0.12);
+  g.closePath(); g.fill(); g.stroke();
+
+  // Mixed material inside collection container (swirling colored layers)
+  g.save();
+  g.beginPath();
+  g.moveTo(colL + 2, colTop + 3);
+  g.lineTo(colR - 2, colTop + 3);
+  g.lineTo(colCX + colNeckW/2 - 1, colBot - colH*0.12);
+  g.lineTo(colCX - colNeckW/2 + 1, colBot - colH*0.12);
+  g.closePath(); g.clip();
+  // Brown iron-ore dominant mix
+  const mixInFill = g.createLinearGradient(0, colTop + 3, 0, colBot - 3);
+  mixInFill.addColorStop(0, 'rgba(120,55,25,0.92)');
+  mixInFill.addColorStop(0.4, 'rgba(90,40,15,0.85)');
+  mixInFill.addColorStop(0.7, 'rgba(65,30,10,0.90)');
+  mixInFill.addColorStop(1, 'rgba(45,20,5,0.95)');
+  g.fillStyle = mixInFill; g.fillRect(colL, colTop, colW, colH);
+  // Swirling streaks of bentonite (lighter)
+  for (let s = 0; s < 3; s++) {
+    const sw = frame * 0.02 + s * 2.1;
+    const sy = colTop + colH * (0.22 + s * 0.22) + Math.sin(sw) * colH * 0.06;
+    g.strokeStyle = 'rgba(210,200,180,0.22)'; g.lineWidth = 1.5;
+    g.beginPath();
+    g.moveTo(colL + 4, sy);
+    g.bezierCurveTo(colL + colW*0.3, sy - colH*0.04*Math.cos(sw), colL + colW*0.7, sy + colH*0.04*Math.sin(sw), colR - 4, sy);
+    g.stroke();
+  }
+  // Surface ripple
+  const ripY = colTop + colH * 0.12 + Math.sin(frame * 0.04) * 2;
+  g.strokeStyle = 'rgba(180,140,90,0.30)'; g.lineWidth = 1;
+  g.beginPath(); g.ellipse(colCX, ripY, colW * 0.35, colH * 0.07, 0, 0, Math.PI * 2); g.stroke();
+  g.restore();
+
+  // Top rim of collection container
+  const colRimG = g.createLinearGradient(colL - 4, 0, colR + 4, 0);
+  colRimG.addColorStop(0, '#5a6a7a'); colRimG.addColorStop(0.5, '#9ab0c0'); colRimG.addColorStop(1, '#5a6a7a');
+  g.fillStyle = colRimG; g.strokeStyle = 'rgba(120,145,165,0.65)'; g.lineWidth = 0.9;
+  g.beginPath(); g.roundRect(colL - 4, colTop - 5, colW + 8, 8, 2); g.fill(); g.stroke();
+
+  // Label
+  g.fillStyle = 'rgba(26,48,87,0.09)'; g.strokeStyle = 'rgba(200,145,42,0.38)'; g.lineWidth = 0.8;
+  g.beginPath(); g.roundRect(colCX - 38, colBot + 4, 76, 12, 2); g.fill(); g.stroke();
+  g.fillStyle = '#7a5a30'; g.font = '600 5.5px JetBrains Mono'; g.textAlign = 'center';
+  g.fillText('COLLECTION', colCX, colBot + 12);
+
+  // ══════════════════
+  // CONVEYOR BELT from collection container → drum inlet (left side of drum)
+  // ══════════════════
+  const cvSX = colCX;           // belt starts below collection neck
+  const cvSY = colBot + 14;
+  const cvEX = drumL + drumRY + 2;   // belt ends at drum left inlet
+  const cvEY = drumTop + drumH * 0.38;
+  const cvLen = Math.hypot(cvEX - cvSX, cvEY - cvSY);
+  const cvAng = Math.atan2(cvEY - cvSY, cvEX - cvSX);
+  const cvH   = 12;
+
+  g.save();
+  g.translate(cvSX, cvSY); g.rotate(cvAng);
+
+  // Belt frame/housing
+  g.fillStyle = '#1a2a38'; g.strokeStyle = 'rgba(45,75,105,0.60)'; g.lineWidth = 1;
+  g.beginPath(); g.roundRect(-4, cvH/2 + 1, cvLen + 8, 5, 1); g.fill(); g.stroke();
+  // Side rails
+  g.strokeStyle = 'rgba(55,85,115,0.55)'; g.lineWidth = 0.9;
+  g.beginPath(); g.moveTo(0, -cvH/2 - 2); g.lineTo(cvLen, -cvH/2 - 2); g.stroke();
+  g.beginPath(); g.moveTo(0,  cvH/2 + 2); g.lineTo(cvLen,  cvH/2 + 2); g.stroke();
+
+  // Belt surface
+  const cvBG = g.createLinearGradient(0, -cvH/2, 0, cvH/2);
+  cvBG.addColorStop(0, '#18262e'); cvBG.addColorStop(0.5, '#243440'); cvBG.addColorStop(1, '#18262e');
+  g.fillStyle = cvBG; g.strokeStyle = 'rgba(40,70,95,0.55)'; g.lineWidth = 1;
+  g.beginPath(); g.roundRect(0, -cvH/2, cvLen, cvH, 2); g.fill(); g.stroke();
+
+  // Animated belt stripes
+  g.strokeStyle = 'rgba(70,105,135,0.52)'; g.lineWidth = 1;
+  const cvOff = (frame * 1.5) % 18;
+  for (let bl = 0; bl < cvLen + 18; bl += 18) {
+    g.beginPath(); g.moveTo(bl - cvOff, -cvH/2+1); g.lineTo(bl - cvOff, cvH/2-1); g.stroke();
+  }
+
+  // Mixed material lumps on conveyor belt
+  const cvMatColors = ['#6a2e14','#4a2208','#9a8860','#2e2e2e','#8a7a40'];
+  for (let mp = 0; mp < 8; mp++) {
+    const mt = ((mp/8) + (frame * 0.007)) % 1;
+    const mx = mt * cvLen;
+    g.fillStyle = cvMatColors[mp % cvMatColors.length];
+    g.strokeStyle = 'rgba(255,255,255,0.05)'; g.lineWidth = 0.5;
+    g.beginPath(); g.ellipse(mx, (mp%2===0)?-1.5:1.5, 6, 3.5, 0, 0, Math.PI*2); g.fill(); g.stroke();
+  }
+
+  // Belt rollers
+  const cvRollerPos = [0, 0.2, 0.4, 0.6, 0.8, 1.0];
+  cvRollerPos.forEach(rp => {
+    const rx = rp * cvLen;
+    g.fillStyle = '#3a5068'; g.strokeStyle = 'rgba(65,95,125,0.5)'; g.lineWidth = 0.8;
+    g.beginPath(); g.arc(rx, 0, 6, 0, Math.PI*2); g.fill(); g.stroke();
+    g.save(); g.translate(rx, 0); g.rotate(frame * 0.10);
+    g.strokeStyle = 'rgba(140,175,200,0.42)'; g.lineWidth = 0.7;
+    g.beginPath(); g.moveTo(-5,0); g.lineTo(5,0); g.stroke();
+    g.beginPath(); g.moveTo(0,-5); g.lineTo(0,5); g.stroke();
+    g.restore();
+  });
+  g.restore(); // end conveyor transform
+
+  // Belt label
+  const midCvX = (cvSX + cvEX) / 2;
+  const midCvY = (cvSY + cvEY) / 2 + 14;
+  g.fillStyle = 'rgba(26,48,87,0.09)'; g.strokeStyle = 'rgba(200,145,42,0.28)'; g.lineWidth = 0.7;
+  g.beginPath(); g.roundRect(midCvX - 50, midCvY - 8, 100, 12, 2); g.fill(); g.stroke();
+  g.fillStyle = '#7a6a50'; g.font = '500 5px JetBrains Mono'; g.textAlign = 'center';
+  g.fillText('FEED CONVEYOR →', midCvX, midCvY);
+
+  // Discharge chute from collection neck → conveyor start
+  const chuteTopY = colBot;
+  const chuteBotY = cvSY - 1;
+  g.fillStyle = '#2a3a4a'; g.strokeStyle = 'rgba(55,80,105,0.55)'; g.lineWidth = 1;
+  g.beginPath();
+  g.moveTo(colCX - colNeckW/2, chuteTopY);
+  g.lineTo(colCX + colNeckW/2, chuteTopY);
+  g.lineTo(cvSX + 7, chuteBotY);
+  g.lineTo(cvSX - 7, chuteBotY);
+  g.closePath(); g.fill(); g.stroke();
+
+  // Animated particles falling from collection neck → conveyor
+  for (let ds = 0; ds < 5; ds++) {
+    const dt = ((frame * 0.030 + ds * 0.2) % 1);
+    if (dt < 0.04) continue;
+    const dsx = colCX + (ds%3-1)*2.5;
+    const dsy = chuteTopY + dt * (chuteBotY - chuteTopY + 4);
+    g.globalAlpha = Math.min(1, dt*10) * (1-dt*0.5) * 0.88;
+    g.fillStyle = '#6a2e14';
+    g.beginPath(); g.arc(dsx, dsy, 2.4, 0, Math.PI*2); g.fill();
+  }
+  g.globalAlpha = 1;
+
+  // ══════════════════
   // BINDER TANK (top-right, cylindrical with glass dome)
-  // ══════════════════════════
+  // ══════════════════
   const tkX  = W * 0.875;
-  const tkY  = H * 0.03;
-  const tkW  = W * 0.095;
-  const tkH  = H * 0.30;
+  const tkY  = H * 0.02;
+  const tkW  = W * 0.09;
+  const tkH  = H * 0.28;
   const tkCX = tkX + tkW / 2;
-  // Cylinder body
   const tkShell = g.createLinearGradient(tkX, 0, tkX + tkW, 0);
-  tkShell.addColorStop(0,   '#7090a8'); tkShell.addColorStop(0.3,'#b8d0e0');
+  tkShell.addColorStop(0,  '#7090a8'); tkShell.addColorStop(0.3,'#b8d0e0');
   tkShell.addColorStop(0.7,'#b8d0e0'); tkShell.addColorStop(1,  '#7090a8');
   g.fillStyle = tkShell; g.strokeStyle = 'rgba(100,130,155,0.7)'; g.lineWidth = 1.3;
-  g.beginPath(); g.roundRect(tkX, tkY + tkH * 0.08, tkW, tkH * 0.84, 5); g.fill(); g.stroke();
-  // Glass dome (top cap) — clear cylinder head
-  const domeG = g.createLinearGradient(tkX, tkY, tkX + tkW, tkY);
-  domeG.addColorStop(0,'#a8c8d8'); domeG.addColorStop(0.5,'#daeef8'); domeG.addColorStop(1,'#a8c8d8');
-  g.fillStyle = domeG; g.strokeStyle = 'rgba(120,160,180,0.6)'; g.lineWidth = 1;
+  g.beginPath(); g.roundRect(tkX, tkY + tkH*0.08, tkW, tkH*0.84, 5); g.fill(); g.stroke();
+  const domeG2 = g.createLinearGradient(tkX, tkY, tkX + tkW, tkY);
+  domeG2.addColorStop(0,'#a8c8d8'); domeG2.addColorStop(0.5,'#daeef8'); domeG2.addColorStop(1,'#a8c8d8');
+  g.fillStyle = domeG2; g.strokeStyle = 'rgba(120,160,180,0.6)'; g.lineWidth = 1;
   g.beginPath(); g.roundRect(tkX + tkW*0.05, tkY, tkW*0.90, tkH*0.14, 4); g.fill(); g.stroke();
-  // liquid level
   const liqLvl  = 0.60 + 0.035 * Math.sin(frame * 0.035);
-  const liqTopY = tkY + tkH * (0.1 + (1 - liqLvl) * 0.72);
-  const liqGrad = g.createLinearGradient(0, liqTopY, 0, tkY + tkH * 0.90);
-  liqGrad.addColorStop(0,'rgba(80,160,230,0.5)'); liqGrad.addColorStop(1,'rgba(40,110,190,0.72)');
-  g.fillStyle = liqGrad;
+  const liqTopY2 = tkY + tkH * (0.10 + (1 - liqLvl) * 0.72);
+  const liqGrad2 = g.createLinearGradient(0, liqTopY2, 0, tkY + tkH*0.90);
+  liqGrad2.addColorStop(0,'rgba(80,160,230,0.5)'); liqGrad2.addColorStop(1,'rgba(40,110,190,0.72)');
+  g.fillStyle = liqGrad2;
   g.save();
   g.beginPath(); g.roundRect(tkX + 2, tkY + tkH*0.09, tkW - 4, tkH*0.82, 4); g.clip();
-  g.fillRect(tkX + 2, liqTopY, tkW - 4, tkY + tkH*0.90 - liqTopY);
-  // surface ripple
+  g.fillRect(tkX + 2, liqTopY2, tkW - 4, tkY + tkH*0.90 - liqTopY2);
   g.strokeStyle = 'rgba(160,210,255,0.55)'; g.lineWidth = 0.9;
-  const ripple = frame * 0.055;
-  g.beginPath(); g.ellipse(tkCX, liqTopY + 3, tkW*0.28 + 1.5*Math.sin(ripple), 2.5, 0, 0, Math.PI*2); g.stroke();
+  const ripple2 = frame * 0.055;
+  g.beginPath(); g.ellipse(tkCX, liqTopY2 + 3, tkW*0.28 + 1.5*Math.sin(ripple2), 2.5, 0, 0, Math.PI*2); g.stroke();
   g.restore();
-  // Agitator shaft
   g.save(); g.translate(tkCX, tkY + tkH*0.07);
   g.strokeStyle = '#7a90a4'; g.lineWidth = 1.8;
   g.beginPath(); g.moveTo(0, 0); g.lineTo(0, tkH*0.78); g.stroke();
-  // blades
   g.save(); g.translate(0, tkH*0.56); g.rotate(frame * 0.045);
   g.strokeStyle = '#90a8bc'; g.lineWidth = 1.4;
   [-1,1].forEach(d => { g.beginPath(); g.moveTo(0,0); g.lineTo(d * tkW*0.38, tkH*0.065); g.stroke(); });
   g.save(); g.rotate(Math.PI/2);
   [-1,1].forEach(d => { g.beginPath(); g.moveTo(0,0); g.lineTo(d * tkW*0.25, tkH*0.05); g.stroke(); });
   g.restore(); g.restore(); g.restore();
-  // Pipe from binder tank bottom → to drum top-right
-  const pipeX = tkCX;
-  const pipeY1 = tkY + tkH * 0.92;
-  const pipeY2 = drumTop - 5;
-  const pipeX2 = drumL + drumW * 0.83;
+  // Pipe from binder tank bottom → drum top-right
+  const pipeX3  = tkCX;
+  const pipeY1b = tkY + tkH * 0.92;
+  const pipeY2b = drumTop - 5;
+  const pipeX2b = drumL + drumW * 0.83;
   g.strokeStyle = 'rgba(100,125,148,0.65)'; g.lineWidth = 3.5;
   g.lineCap = 'round'; g.lineJoin = 'round';
-  g.beginPath(); g.moveTo(pipeX, pipeY1); g.lineTo(pipeX, pipeY1 + (pipeY2-pipeY1)*0.4);
-  g.arcTo(pipeX, pipeY2, pipeX2, pipeY2, 8);
-  g.lineTo(pipeX2, pipeY2); g.stroke();
+  g.beginPath(); g.moveTo(pipeX3, pipeY1b); g.lineTo(pipeX3, pipeY1b + (pipeY2b-pipeY1b)*0.4);
+  g.arcTo(pipeX3, pipeY2b, pipeX2b, pipeY2b, 8);
+  g.lineTo(pipeX2b, pipeY2b); g.stroke();
   g.lineCap = 'butt';
-  // animated binder drop
-  const bdT = ((frame * 0.020) % 1);
+  const bdT2 = ((frame * 0.020) % 1);
   g.fillStyle = 'rgba(80,155,225,0.88)';
-  g.beginPath(); g.arc(pipeX, pipeY1 + bdT * 14, 2.4, 0, Math.PI*2); g.fill();
-  // Binder inlet port on drum
+  g.beginPath(); g.arc(pipeX3, pipeY1b + bdT2 * 14, 2.4, 0, Math.PI*2); g.fill();
   g.fillStyle = '#5a6a7a'; g.strokeStyle = 'rgba(90,110,130,0.5)'; g.lineWidth = 0.9;
-  g.beginPath(); g.roundRect(pipeX2 - 6, drumTop - 6, 12, 7, 1.5); g.fill(); g.stroke();
-  // Label
+  g.beginPath(); g.roundRect(pipeX2b - 6, drumTop - 6, 12, 7, 1.5); g.fill(); g.stroke();
+  // Binder tank label
   g.fillStyle = 'rgba(26,48,87,0.08)'; g.strokeStyle = 'rgba(200,145,42,0.28)'; g.lineWidth = 0.7;
   g.beginPath(); g.roundRect(tkX - 2, tkY + tkH + 2, tkW + 4, 12, 2); g.fill(); g.stroke();
   g.fillStyle = '#7a6a50'; g.font = '600 5.5px JetBrains Mono'; g.textAlign = 'center';
   g.fillText('BINDER TANK', tkCX, tkY + tkH + 10);
 
-  // ══════════════════════════
+  // ══════════════════
   // DRUM MIXER BODY
-  // ══════════════════════════
-  // 4 steel support legs
+  // ══════════════════
+  // Support legs
   const legXs = [0.14, 0.33, 0.62, 0.81];
   legXs.forEach(lx => {
     const lgx = drumL + drumW * lx;
     const lgGrad = g.createLinearGradient(lgx - 4, 0, lgx + 4, 0);
     lgGrad.addColorStop(0,'#1a3057'); lgGrad.addColorStop(0.5,'#3060a0'); lgGrad.addColorStop(1,'#1a3057');
     g.fillStyle = lgGrad; g.strokeStyle = 'rgba(26,60,120,0.45)'; g.lineWidth = 0.9;
-    g.beginPath(); g.roundRect(lgx - 4, drumBot, 8, H*0.10, 1); g.fill(); g.stroke();
-    // foot plate
+    g.beginPath(); g.roundRect(lgx - 4, drumBot, 8, H*0.08, 1); g.fill(); g.stroke();
     g.fillStyle = '#0e1e38'; g.strokeStyle = 'rgba(26,60,90,0.4)'; g.lineWidth = 0.7;
-    g.beginPath(); g.roundRect(lgx - 9, drumBot + H*0.10 - 2, 18, 5, 1); g.fill(); g.stroke();
+    g.beginPath(); g.roundRect(lgx - 9, drumBot + H*0.08 - 2, 18, 5, 1); g.fill(); g.stroke();
   });
 
-  // Outer drum shell (large horizontal cylinder)
+  // Drum shell
   g.save();
   g.shadowColor = 'rgba(26,48,87,0.22)'; g.shadowBlur = 14; g.shadowOffsetY = 6;
   const drumOuter = g.createLinearGradient(drumCX, drumTop - 6, drumCX, drumBot + 6);
@@ -5265,7 +5443,6 @@ function drawMixMini(frame, burst) {
   drumOuter.addColorStop(0.88,'#8a9eae');
   drumOuter.addColorStop(1,   '#404e58');
   g.fillStyle = drumOuter; g.strokeStyle = 'rgba(80,105,125,0.65)'; g.lineWidth = 2;
-  // Draw drum as rounded rect (cylinder side view)
   g.beginPath();
   g.moveTo(drumL + drumRY, drumTop);
   g.lineTo(drumR - drumRY, drumTop);
@@ -5275,27 +5452,26 @@ function drawMixMini(frame, burst) {
   g.closePath(); g.fill(); g.stroke();
   g.shadowBlur = 0; g.restore();
 
-  // End caps (ellipses at left & right drum ends)
+  // End caps
   [drumL + drumRY, drumR - drumRY].forEach((cx2, ei) => {
-    const capG = g.createRadialGradient(cx2, drumCY, 0, cx2, drumCY, drumRY);
-    capG.addColorStop(0,  ei===0 ? '#a0b2c0' : '#8090a0');
-    capG.addColorStop(0.6,'#6a7a88');
-    capG.addColorStop(1,  '#404e58');
-    g.fillStyle = capG; g.strokeStyle = 'rgba(80,100,120,0.5)'; g.lineWidth = 1.2;
-    g.beginPath(); g.ellipse(cx2, drumCY, drumRY * 0.18, drumRY, 0, 0, Math.PI*2); g.fill(); g.stroke();
-    // bolt ring
+    const capG2 = g.createRadialGradient(cx2, drumCY, 0, cx2, drumCY, drumRY);
+    capG2.addColorStop(0,  ei===0 ? '#a0b2c0' : '#8090a0');
+    capG2.addColorStop(0.6,'#6a7a88');
+    capG2.addColorStop(1,  '#404e58');
+    g.fillStyle = capG2; g.strokeStyle = 'rgba(80,100,120,0.5)'; g.lineWidth = 1.2;
+    g.beginPath(); g.ellipse(cx2, drumCY, drumRY*0.18, drumRY, 0, 0, Math.PI*2); g.fill(); g.stroke();
     g.strokeStyle = 'rgba(120,140,160,0.4)'; g.lineWidth = 0.7;
-    g.beginPath(); g.ellipse(cx2, drumCY, drumRY * 0.15, drumRY * 0.92, 0, 0, Math.PI*2); g.stroke();
+    g.beginPath(); g.ellipse(cx2, drumCY, drumRY*0.15, drumRY*0.92, 0, 0, Math.PI*2); g.stroke();
     for (let b = 0; b < 8; b++) {
       const ba = b * Math.PI/4;
-      const bx = cx2 + Math.cos(ba) * drumRY * 0.15 * 0.7;
-      const by = drumCY + Math.sin(ba) * drumRY * 0.92 * 0.85;
+      const bx2 = cx2 + Math.cos(ba) * drumRY*0.15*0.7;
+      const by2 = drumCY + Math.sin(ba) * drumRY*0.92*0.85;
       g.fillStyle = 'rgba(140,160,180,0.5)';
-      g.beginPath(); g.arc(bx, by, 1.2, 0, Math.PI*2); g.fill();
+      g.beginPath(); g.arc(bx2, by2, 1.2, 0, Math.PI*2); g.fill();
     }
   });
 
-  // ── Cutaway window — show internals ──
+  // Drum interior cutaway
   g.save();
   g.beginPath();
   g.moveTo(drumL + drumRY + 8, drumTop);
@@ -5305,25 +5481,24 @@ function drawMixMini(frame, burst) {
   g.arc(drumL + drumRY + 8, drumCY, drumRY, Math.PI/2, -Math.PI/2);
   g.closePath(); g.clip();
 
-  // ── Interior material bed (dark moist ore mix) ──
+  // Interior material bed
   const matBed = g.createLinearGradient(drumCX, drumCY, drumCX, drumBot);
   matBed.addColorStop(0, '#5a2e14'); matBed.addColorStop(0.5, '#4a2410'); matBed.addColorStop(1, '#321808');
   g.fillStyle = matBed;
   g.beginPath(); g.ellipse(drumCX, drumCY + drumRY*0.18, drumRX*0.78, drumRY*0.70, 0, 0, Math.PI*2); g.fill();
-  // surface texture lines
   g.strokeStyle = 'rgba(90,45,15,0.28)'; g.lineWidth = 0.7;
   for (let rr = 0; rr < 4; rr++) {
-    const sy = drumCY + drumRY*(0.10 - rr*0.16);
-    g.beginPath(); g.ellipse(drumCX, sy, drumRX*(0.74 - rr*0.05), drumRY*0.08, 0, 0, Math.PI*2); g.stroke();
+    const sy2 = drumCY + drumRY*(0.10 - rr*0.16);
+    g.beginPath(); g.ellipse(drumCX, sy2, drumRX*(0.74 - rr*0.05), drumRY*0.08, 0, 0, Math.PI*2); g.stroke();
   }
 
-  // ── Central shaft ──
-  const shG = g.createLinearGradient(drumCX, drumCY - drumRY*0.09, drumCX, drumCY + drumRY*0.09);
-  shG.addColorStop(0,'#b0c4d0'); shG.addColorStop(0.5,'#dceaf4'); shG.addColorStop(1,'#8898a8');
-  g.fillStyle = shG; g.strokeStyle = 'rgba(110,130,150,0.65)'; g.lineWidth = 0.9;
+  // Central shaft
+  const shG2 = g.createLinearGradient(drumCX, drumCY - drumRY*0.09, drumCX, drumCY + drumRY*0.09);
+  shG2.addColorStop(0,'#b0c4d0'); shG2.addColorStop(0.5,'#dceaf4'); shG2.addColorStop(1,'#8898a8');
+  g.fillStyle = shG2; g.strokeStyle = 'rgba(110,130,150,0.65)'; g.lineWidth = 0.9;
   g.beginPath(); g.roundRect(drumL + drumRY + 6, drumCY - drumRY*0.09, drumW - 2*drumRY - 12, drumRY*0.18, 2); g.fill(); g.stroke();
 
-  // ── Rotating paddle/screw blades (angled like the image) ──
+  // Rotating paddle blades
   const padRot  = frame * 0.038;
   const numPads = 12;
   const padXStep = (drumW - 2*drumRY - 12) / (numPads - 1);
@@ -5331,32 +5506,29 @@ function drawMixMini(frame, burst) {
     const px3 = drumL + drumRY + 8 + p * padXStep;
     const angOffset = p * (Math.PI * 2 / numPads);
     const rot3 = padRot + angOffset;
-    const py3 = drumCY;
-    g.save(); g.translate(px3, py3); g.rotate(rot3);
-    // paddle blade
+    g.save(); g.translate(px3, drumCY); g.rotate(rot3);
     const blGrad = g.createLinearGradient(-5, 0, 5, 0);
     blGrad.addColorStop(0,'#6a7e8e'); blGrad.addColorStop(0.5,'#b0c8d8'); blGrad.addColorStop(1,'#566878');
     g.fillStyle = blGrad; g.strokeStyle = 'rgba(130,155,175,0.55)'; g.lineWidth = 0.7;
     g.beginPath(); g.roundRect(-4, -drumRY*0.50, 8, drumRY*1.00, 1.5); g.fill(); g.stroke();
-    // circular flow arrow hint (blue arcs like in the image)
     if (p % 2 === 0) {
       g.strokeStyle = 'rgba(50,130,210,0.35)'; g.lineWidth = 1.5;
       g.beginPath(); g.arc(0, 0, drumRY*0.42, -Math.PI*0.6, Math.PI*0.6); g.stroke();
-      // arrow head
       const arrowAng = Math.PI*0.6;
-      const ax = Math.cos(arrowAng)*drumRY*0.42, ay = Math.sin(arrowAng)*drumRY*0.42;
-      g.save(); g.translate(ax, ay); g.rotate(arrowAng + Math.PI/2);
+      const ax2 = Math.cos(arrowAng)*drumRY*0.42, ay2 = Math.sin(arrowAng)*drumRY*0.42;
+      g.save(); g.translate(ax2, ay2); g.rotate(arrowAng + Math.PI/2);
       g.strokeStyle = 'rgba(50,130,210,0.45)'; g.lineWidth = 1.5;
-      g.beginPath(); g.moveTo(-3, -4); g.lineTo(0, 0); g.lineTo(3, -4); g.stroke();
+      g.beginPath(); g.moveTo(-3,-4); g.lineTo(0,0); g.lineTo(3,-4); g.stroke();
       g.restore();
     }
     g.restore();
   }
-  // Moving material flow particles inside drum
+
+  // Moving particles inside drum
   for (let fp = 0; fp < 10; fp++) {
-    const ft3 = ((frame * 0.0035 + fp / 10) % 1);
+    const ft3 = ((frame * 0.0035 + fp/10) % 1);
     const fx3 = drumL + drumRY + 10 + ft3 * (drumW - 2*drumRY - 20);
-    const fy3 = drumCY + drumRY*0.22 + (fp % 4 - 1.5) * drumRY*0.13;
+    const fy3 = drumCY + drumRY*0.22 + (fp%4 - 1.5) * drumRY*0.13;
     g.globalAlpha = 0.30;
     g.fillStyle = '#8a4020';
     g.beginPath(); g.arc(fx3, fy3, 2.8, 0, Math.PI*2); g.fill();
@@ -5364,142 +5536,126 @@ function drawMixMini(frame, burst) {
   g.globalAlpha = 1;
   g.restore(); // end cutaway clip
 
-  // ── Drum seam rings (visual cylinder bands) ──
+  // Drum seam rings
   g.strokeStyle = 'rgba(90,110,130,0.30)'; g.lineWidth = 1;
   [0.22, 0.44, 0.66].forEach(rx3 => {
-    const sx = drumL + drumRY + rx3 * (drumW - 2*drumRY);
-    g.beginPath(); g.moveTo(sx, drumTop + 2); g.lineTo(sx, drumBot - 2); g.stroke();
+    const sx2 = drumL + drumRY + rx3 * (drumW - 2*drumRY);
+    g.beginPath(); g.moveTo(sx2, drumTop + 2); g.lineTo(sx2, drumBot - 2); g.stroke();
   });
 
-  // ══════════════════════════
-  // BIG MOTOR (far left, with base plate)
-  // ══════════════════════════
-  const motW = W * 0.075, motH = H * 0.22;
-  const motX = W * 0.01, motY = drumCY - motH*0.5;
-  // motor housing
-  const motGrad = g.createLinearGradient(motX, 0, motX + motW, 0);
-  motGrad.addColorStop(0,'#1a2e4a'); motGrad.addColorStop(0.4,'#2a4878'); motGrad.addColorStop(0.6,'#2a4878'); motGrad.addColorStop(1,'#1a2e4a');
-  g.fillStyle = motGrad; g.strokeStyle = 'rgba(30,60,110,0.6)'; g.lineWidth = 1.3;
+  // ══════════════════
+  // BIG MOTOR (far left of drum)
+  // ══════════════════
+  const motW = W * 0.055, motH = H * 0.18;
+  const motX = drumL - motW - 6, motY = drumCY - motH*0.5;
+  const motGrad2 = g.createLinearGradient(motX, 0, motX + motW, 0);
+  motGrad2.addColorStop(0,'#1a2e4a'); motGrad2.addColorStop(0.4,'#2a4878'); motGrad2.addColorStop(0.6,'#2a4878'); motGrad2.addColorStop(1,'#1a2e4a');
+  g.fillStyle = motGrad2; g.strokeStyle = 'rgba(30,60,110,0.6)'; g.lineWidth = 1.3;
   g.beginPath(); g.roundRect(motX, motY, motW, motH, 4); g.fill(); g.stroke();
-  // cooling fins
   g.strokeStyle = 'rgba(50,80,130,0.45)'; g.lineWidth = 0.8;
-  for (let f = 0; f < 7; f++) {
-    const fy2 = motY + motH*0.12 + f * motH*0.11;
+  for (let f = 0; f < 6; f++) {
+    const fy2 = motY + motH*0.12 + f * motH*0.13;
     g.beginPath(); g.moveTo(motX+2, fy2); g.lineTo(motX+motW-2, fy2); g.stroke();
   }
-  // motor shaft → drum coupling
+  // shaft coupling
   g.fillStyle = '#2d4870'; g.strokeStyle = 'rgba(50,80,130,0.55)'; g.lineWidth = 0.8;
-  g.beginPath(); g.roundRect(motX+motW, drumCY-drumRY*0.10, drumL-motX-motW + drumRY, drumRY*0.20, 1); g.fill(); g.stroke();
-  // coupling collar
+  g.beginPath(); g.roundRect(motX+motW, drumCY-drumRY*0.10, 6 + drumRY, drumRY*0.20, 1); g.fill(); g.stroke();
   g.fillStyle = '#3a5880'; g.strokeStyle = 'rgba(60,90,140,0.5)'; g.lineWidth = 0.8;
   g.beginPath(); g.roundRect(drumL + drumRY - 5, drumCY - drumRY*0.14, 10, drumRY*0.28, 2); g.fill(); g.stroke();
-  // base plate
   g.fillStyle = '#111e30'; g.strokeStyle = 'rgba(20,45,80,0.45)'; g.lineWidth = 0.8;
-  g.beginPath(); g.roundRect(motX - 4, motY + motH, motW + 8, H*0.055, 2); g.fill(); g.stroke();
-  // MOTOR label
+  g.beginPath(); g.roundRect(motX - 4, motY + motH, motW + 8, H*0.04, 2); g.fill(); g.stroke();
   g.fillStyle = 'rgba(26,48,87,0.09)'; g.strokeStyle = 'rgba(200,145,42,0.28)'; g.lineWidth = 0.7;
   g.beginPath(); g.roundRect(motX - 2, motY - 14, motW + 4, 12, 2); g.fill(); g.stroke();
   g.fillStyle = '#7a6a50'; g.font = '600 5.5px JetBrains Mono'; g.textAlign = 'center';
   g.fillText('MOTOR', motX + motW/2, motY - 5);
 
-  // ══════════════════════════
-  // DISCHARGE CONVEYOR (bottom-right, angled down-right)
-  // ══════════════════════════
-  // Exits drum at bottom-right, slopes down to bottom-right corner
-  const dcSX = drumL + drumW*0.78;     // start x (right portion of drum base)
-  const dcSY = drumBot + H*0.005;      // start y (just below drum)
-  const dcEX = W * 0.97;               // end x
-  const dcEY = H * 0.88;              // end y
-  const dcLen = Math.hypot(dcEX - dcSX, dcEY - dcSY);
-  const dcAng = Math.atan2(dcEY - dcSY, dcEX - dcSX);
-  const dcH   = 11;
+  // ══════════════════
+  // DISCHARGE BELT (from drum bottom-right → bottom-right corner)
+  // ══════════════════
+  const dcSX2 = drumL + drumW*0.78;
+  const dcSY2 = drumBot + H*0.005;
+  const dcEX2 = W * 0.97;
+  const dcEY2 = H * 0.95;
+  const dcLen2 = Math.hypot(dcEX2 - dcSX2, dcEY2 - dcSY2);
+  const dcAng2 = Math.atan2(dcEY2 - dcSY2, dcEX2 - dcSX2);
+  const dcH2   = 11;
 
   g.save();
-  g.translate(dcSX, dcSY); g.rotate(dcAng);
-
-  // Belt frame / housing
+  g.translate(dcSX2, dcSY2); g.rotate(dcAng2);
   g.fillStyle = '#1a2a38'; g.strokeStyle = 'rgba(45,75,105,0.55)'; g.lineWidth = 1;
-  g.beginPath(); g.roundRect(-4, dcH/2 + 1, dcLen + 8, 5, 1); g.fill(); g.stroke();
-  // side rails
+  g.beginPath(); g.roundRect(-4, dcH2/2 + 1, dcLen2 + 8, 5, 1); g.fill(); g.stroke();
   g.strokeStyle = 'rgba(50,80,110,0.50)'; g.lineWidth = 0.9;
-  g.beginPath(); g.moveTo(0,-dcH/2-2); g.lineTo(dcLen,-dcH/2-2); g.stroke();
-  g.beginPath(); g.moveTo(0, dcH/2+2); g.lineTo(dcLen, dcH/2+2); g.stroke();
-
-  // Belt surface
-  const dcBG = g.createLinearGradient(0, -dcH/2, 0, dcH/2);
-  dcBG.addColorStop(0,'#18262e'); dcBG.addColorStop(0.5,'#243440'); dcBG.addColorStop(1,'#18262e');
-  g.fillStyle = dcBG; g.strokeStyle = 'rgba(40,70,95,0.55)'; g.lineWidth = 1;
-  g.beginPath(); g.roundRect(0, -dcH/2, dcLen, dcH, 2); g.fill(); g.stroke();
-
-  // Animated belt stripes (moving right / downward)
+  g.beginPath(); g.moveTo(0,-dcH2/2-2); g.lineTo(dcLen2,-dcH2/2-2); g.stroke();
+  g.beginPath(); g.moveTo(0, dcH2/2+2); g.lineTo(dcLen2, dcH2/2+2); g.stroke();
+  const dcBG2 = g.createLinearGradient(0, -dcH2/2, 0, dcH2/2);
+  dcBG2.addColorStop(0,'#18262e'); dcBG2.addColorStop(0.5,'#243440'); dcBG2.addColorStop(1,'#18262e');
+  g.fillStyle = dcBG2; g.strokeStyle = 'rgba(40,70,95,0.55)'; g.lineWidth = 1;
+  g.beginPath(); g.roundRect(0, -dcH2/2, dcLen2, dcH2, 2); g.fill(); g.stroke();
   g.strokeStyle = 'rgba(70,105,135,0.5)'; g.lineWidth = 1;
-  const dcOff = (frame * 1.6) % 18;
-  for (let bl = 0; bl < dcLen + 18; bl += 18) {
-    g.beginPath(); g.moveTo(bl - dcOff, -dcH/2+1); g.lineTo(bl - dcOff, dcH/2-1); g.stroke();
+  const dcOff2 = (frame * 1.6) % 18;
+  for (let bl = 0; bl < dcLen2 + 18; bl += 18) {
+    g.beginPath(); g.moveTo(bl - dcOff2, -dcH2/2+1); g.lineTo(bl - dcOff2, dcH2/2-1); g.stroke();
   }
-  // Material lumps on belt
-  const dcMatColors = ['#6a2e14','#4a2208','#7a3820','#5a2a10'];
+  const dcMatColors2 = ['#6a2e14','#4a2208','#7a3820','#5a2a10'];
   for (let mp = 0; mp < 7; mp++) {
     const mt = ((mp/7) + (frame * 0.0065)) % 1;
-    const mx4 = mt * dcLen;
-    g.fillStyle = dcMatColors[mp % dcMatColors.length];
+    const mx4 = mt * dcLen2;
+    g.fillStyle = dcMatColors2[mp % dcMatColors2.length];
     g.strokeStyle = 'rgba(255,255,255,0.06)'; g.lineWidth = 0.5;
     g.beginPath(); g.ellipse(mx4, (mp%2===0)?-1.5:1.5, 7, 4, 0, 0, Math.PI*2); g.fill(); g.stroke();
   }
-  // Rollers
-  const dcRollerPos = [0, 0.18, 0.38, 0.58, 0.78, 1.0];
-  dcRollerPos.forEach(rp => {
-    const rx4 = rp * dcLen;
+  const dcRollerPos2 = [0, 0.18, 0.38, 0.58, 0.78, 1.0];
+  dcRollerPos2.forEach(rp => {
+    const rx4 = rp * dcLen2;
     g.fillStyle = '#3a5068'; g.strokeStyle = 'rgba(65,95,125,0.5)'; g.lineWidth = 0.8;
     g.beginPath(); g.arc(rx4, 0, 6, 0, Math.PI*2); g.fill(); g.stroke();
     g.save(); g.translate(rx4, 0); g.rotate(frame * 0.10);
     g.strokeStyle = 'rgba(140,175,200,0.42)'; g.lineWidth = 0.7;
-    g.beginPath(); g.moveTo(-5, 0); g.lineTo(5, 0); g.stroke();
-    g.beginPath(); g.moveTo(0,-5); g.lineTo(0, 5); g.stroke();
+    g.beginPath(); g.moveTo(-5,0); g.lineTo(5,0); g.stroke();
+    g.beginPath(); g.moveTo(0,-5); g.lineTo(0,5); g.stroke();
     g.restore();
   });
-  g.restore(); // end conveyor transform
+  g.restore();
 
-  // Discharge chute (connects drum base to conveyor start)
+  // Discharge chute (drum → discharge belt)
   g.fillStyle = '#2a3a4a'; g.strokeStyle = 'rgba(55,80,105,0.55)'; g.lineWidth = 1;
   g.beginPath();
-  g.moveTo(dcSX - 10, drumBot);
-  g.lineTo(dcSX + 10, drumBot);
-  g.lineTo(dcSX + 7, dcSY);
-  g.lineTo(dcSX - 7, dcSY);
+  g.moveTo(dcSX2 - 10, drumBot);
+  g.lineTo(dcSX2 + 10, drumBot);
+  g.lineTo(dcSX2 + 7, dcSY2);
+  g.lineTo(dcSX2 - 7, dcSY2);
   g.closePath(); g.fill(); g.stroke();
-  // animated discharge particles through chute
   for (let ds = 0; ds < 5; ds++) {
     const dt3 = ((frame * 0.028 + ds*0.2) % 1);
     if (dt3 < 0.04) continue;
-    const dsx3 = dcSX + (ds%3-1)*2.5;
-    const dsy3 = drumBot + dt3 * (dcSY - drumBot + 4);
+    const dsx3 = dcSX2 + (ds%3-1)*2.5;
+    const dsy3 = drumBot + dt3 * (dcSY2 - drumBot + 4);
     g.globalAlpha = Math.min(1, dt3*10) * (1-dt3*0.5) * 0.88;
     g.fillStyle = '#6a2e14';
     g.beginPath(); g.arc(dsx3, dsy3, 2.4, 0, Math.PI*2); g.fill();
   }
   g.globalAlpha = 1;
 
-  // ── Conveyor LABEL ──
-  const midDcX = (dcSX + dcEX) / 2 - 5;
-  const midDcY = (dcSY + dcEY) / 2 + 14;
+  // Discharge belt label
+  const midDcX2 = (dcSX2 + dcEX2) / 2 - 5;
+  const midDcY2 = (dcSY2 + dcEY2) / 2 + 14;
   g.fillStyle = 'rgba(26,48,87,0.09)'; g.strokeStyle = 'rgba(200,145,42,0.28)'; g.lineWidth = 0.7;
-  g.beginPath(); g.roundRect(midDcX - 44, midDcY - 8, 88, 12, 2); g.fill(); g.stroke();
+  g.beginPath(); g.roundRect(midDcX2 - 46, midDcY2 - 8, 92, 12, 2); g.fill(); g.stroke();
   g.fillStyle = '#7a6a50'; g.font = '500 5px JetBrains Mono'; g.textAlign = 'center';
-  g.fillText('DISCHARGE BELT →', midDcX, midDcY);
+  g.fillText('DISCHARGE BELT →', midDcX2, midDcY2);
 
-  // ══════════════════════════
-  // LIVE DATA CHIPS (below drum)
-  // ══════════════════════════
-  const binder   = stageParams.mix.binder   || '—';
-  const moisture = stageParams.mix.mixMoisture || '—';
-  const chips = [
-    { label:'BINDER',   val: binder.length>10 ? binder.substring(0,9)+'…' : binder,
-      x: drumCX - drumRX*0.32, y: drumBot + H*0.13, bg:'#f5ede0', border:'#c8912a', txt:'#7a4a10' },
-    { label:'MOISTURE', val: moisture!=='—' ? moisture+'%' : '—',
-      x: drumCX + drumRX*0.25, y: drumBot + H*0.13, bg:'#e8f4ff', border:'#2d9fda', txt:'#1a5a80' },
+  // ══════════════════
+  // LIVE DATA CHIPS
+  // ══════════════════
+  const binder2   = stageParams.mix.binder   || '—';
+  const moisture2 = stageParams.mix.mixMoisture || '—';
+  const chips2 = [
+    { label:'BINDER',   val: binder2.length>10 ? binder2.substring(0,9)+'…' : binder2,
+      x: drumCX - drumRX*0.32, y: drumBot + H*0.10, bg:'#f5ede0', border:'#c8912a', txt:'#7a4a10' },
+    { label:'MOISTURE', val: moisture2!=='—' ? moisture2+'%' : '—',
+      x: drumCX + drumRX*0.25, y: drumBot + H*0.10, bg:'#e8f4ff', border:'#2d9fda', txt:'#1a5a80' },
   ];
-  chips.forEach(c => {
+  chips2.forEach(c => {
     const cw=82, ch=26;
     g.fillStyle=c.bg; g.strokeStyle=c.border; g.lineWidth=1;
     g.beginPath(); g.roundRect(c.x-cw/2, c.y-ch/2, cw, ch, 4); g.fill(); g.stroke();
@@ -5509,11 +5665,11 @@ function drawMixMini(frame, burst) {
     g.fillText(c.val, c.x, c.y + 7);
   });
 
-  // ── Shaft rotation bar ──
-  const shaftFill = document.getElementById('mixShaftFill');
-  if (shaftFill) shaftFill.style.width = (40 + 30*Math.sin(frame*0.035)) + '%';
+  // Shaft rotation bar
+  const shaftFill2 = document.getElementById('mixShaftFill');
+  if (shaftFill2) shaftFill2.style.width = (40 + 30*Math.sin(frame*0.035)) + '%';
 
-  // ── SAVE BURST ──
+  // SAVE BURST
   if (burst > 0) {
     const bAlpha = Math.min(1, burst / 18);
     g.save(); g.globalAlpha = bAlpha * 0.95;
@@ -5523,6 +5679,7 @@ function drawMixMini(frame, burst) {
     g.restore();
   }
 }
+
 
 function mixMiniLoop() {
   if (mixMiniSaveBurst > 0) mixMiniSaveBurst -= 0.5;
