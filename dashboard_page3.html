@@ -6349,16 +6349,15 @@ function drawConveyorBelt(frame){
   for(let gx=0;gx<W;gx+=40){gbCtx.beginPath();gbCtx.moveTo(gx,0);gbCtx.lineTo(gx,H);gbCtx.stroke();}
   for(let gy=0;gy<H;gy+=40){gbCtx.beginPath();gbCtx.moveTo(0,gy);gbCtx.lineTo(W,gy);gbCtx.stroke();}
 
-  // ── Belt geometry — VERTICAL: runs TOP → BOTTOM, slight lean ──
-  // Belt axis goes from top-centre to bottom-centre with a tiny horizontal offset (lean)
-  const TILT = 0.10;               // slight lean angle (radians) — nearly vertical
-  const beltH_span = H * 0.88;    // belt runs most of the canvas height
+  // ── Belt geometry — INCLINED straight screen, top-left → bottom-right ──
+  const TILT = 0.0;               // zero tilt — belt face is perfectly flat/straight
+  const beltH_span = H * 0.96;   // longer — nearly full canvas height
   const centreX = W * 0.50;
-  const y1 = H * 0.06;            // top end
-  const y2 = y1 + beltH_span;     // bottom end
-  const tiltShift = beltH_span * Math.tan(TILT);
-  const x1 = centreX - tiltShift * 0.5;   // top-left (feed end)
-  const x2 = centreX + tiltShift * 0.5;   // bottom-right (discharge end)
+  const y1 = H * 0.02;            // top end (nearly at very top)
+  const y2 = y1 + beltH_span;    // bottom end (nearly at very bottom)
+  const incline = beltH_span * 0.28;  // how much the axis shifts right from top to bottom (incline)
+  const x1 = centreX + incline * 0.5;   // top end — shifted right
+  const x2 = centreX - incline * 0.5;   // bottom end — shifted left
 
   const beltDX = x2 - x1;
   const beltDY = y2 - y1;
