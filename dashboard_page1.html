@@ -915,6 +915,29 @@ input.finp{cursor:text;}
   box-shadow: 0 1px 4px rgba(0,0,0,.2);
   z-index: 3;
 }
+
+/* ── HOVER VIDEO OVERLAY ── */
+.stage-hover-video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: 5;
+  opacity: 0;
+  transition: opacity .3s ease;
+  pointer-events: none;
+  border-radius: 6px;
+}
+.stage-img-slot:hover .stage-hover-video {
+  opacity: 1;
+}
+.stage-img-slot:hover .stage-img {
+  opacity: 0;
+}
+.stage-img {
+  transition: opacity .3s ease, transform .35s cubic-bezier(.22,1,.36,1);
+}
 </style>
 </head>
 <body>
@@ -1179,9 +1202,10 @@ input.finp{cursor:text;}
       <!-- Grid overlay drawn on top -->
       <canvas id="overlayCanvas" style="position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:2;"></canvas>
       <!-- Stage 1: Iron Ore Feed -->
-      <div class="stage-img-slot" id="stage-feed" onclick="if(!simRunning)openModal('feed')" title="Iron Ore Feed — Click to configure">
+      <div class="stage-img-slot" id="stage-feed" onclick="if(!simRunning)openModal('feed')" title="Iron Ore Feed — Click to configure" onmouseenter="playStageVideo(this)" onmouseleave="pauseStageVideo(this)">
         <div class="stage-img-inner" style="position:relative;">
           <img src="img1.jpeg" alt="Iron Ore Feed" class="stage-img">
+          <video class="stage-hover-video" src="feed.mp4" muted playsinline loop preload="none"></video>
           <canvas id="stageFeedRainCanvas" style="position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:10;border-radius:6px;"></canvas>
         </div>
         <div class="stage-img-label" id="label-feed">IRON ORE<br>FEED</div>
@@ -1190,9 +1214,10 @@ input.finp{cursor:text;}
       <!-- Arrow 1→2 -->
       <div class="stage-arrow" id="arrow-01"></div>
       <!-- Stage 2: Grinding -->
-      <div class="stage-img-slot" id="stage-grind" onclick="if(!simRunning)openModal('grind')" title="Ball Mill Grinding — Click to configure">
+      <div class="stage-img-slot" id="stage-grind" onclick="if(!simRunning)openModal('grind')" title="Ball Mill Grinding — Click to configure" onmouseenter="playStageVideo(this)" onmouseleave="pauseStageVideo(this)">
         <div class="stage-img-inner">
           <img src="img2.jpeg" alt="Grinding" class="stage-img">
+          <video class="stage-hover-video" src="grinding.mp4" muted playsinline loop preload="none"></video>
         </div>
         <div class="stage-img-label" id="label-grind">GRINDING</div>
         <div class="stage-img-badge" id="badge-grind">⊕ configure</div>
@@ -1200,9 +1225,10 @@ input.finp{cursor:text;}
       <!-- Arrow 2→3 -->
       <div class="stage-arrow" id="arrow-02"></div>
       <!-- Stage 3: Thickener -->
-      <div class="stage-img-slot" id="stage-thickner" onclick="if(!simRunning)openModal('thickner')" title="Thickener — Click to configure">
+      <div class="stage-img-slot" id="stage-thickner" onclick="if(!simRunning)openModal('thickner')" title="Thickener — Click to configure" onmouseenter="playStageVideo(this)" onmouseleave="pauseStageVideo(this)">
         <div class="stage-img-inner">
           <img src="img3.jpeg" alt="Thickener" class="stage-img">
+          <video class="stage-hover-video" src="thickner.mp4" muted playsinline loop preload="none"></video>
         </div>
         <div class="stage-img-label" id="label-thickner">THICKENER</div>
         <div class="stage-img-badge" id="badge-thickner">⊕ configure</div>
@@ -5583,5 +5609,19 @@ window.resetAll = function() { _origResetAll(); localStorage.removeItem(STATE_KE
 loadStateFromStorage();
 updateSummaryParams();
 
+
+// ── HOVER VIDEO PLAY / PAUSE ──────────────────────────────
+function playStageVideo(slot) {
+  const video = slot.querySelector('.stage-hover-video');
+  if (!video) return;
+  video.currentTime = 0;
+  video.play().catch(() => {});
+}
+function pauseStageVideo(slot) {
+  const video = slot.querySelector('.stage-hover-video');
+  if (!video) return;
+  video.pause();
+  video.currentTime = 0;
+}
 </script>
 </html>
