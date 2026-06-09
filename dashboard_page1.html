@@ -2092,48 +2092,70 @@ function drawMachineShape(shape,cx,cy,mW,mH,col,strokeCol,strokeW,isActive,isDon
       shaftGrad.addColorStop(0,'#aaaaaa'); shaftGrad.addColorStop(0.5,'#eeeeee'); shaftGrad.addColorStop(1,'#888888');
       ctx.fillStyle=shaftGrad;
       ctx.fillRect(cx-shaftW/2,top-10,shaftW,coneBot-top+10);
-      // ── Rake arms rotating (horizontal mixer blade view — top-down elliptical perspective) ──
+      // ── Rake arms rotating — thick plate/paddle blades ──
       ctx.save();
       ctx.translate(cx, cylBot - th * 0.1);
       const rakeAng = isActive ? -frame * 0.018 : -0.3;
-      // Draw two long blades (cross) with elliptical foreshortening so they look horizontal
       const bladeCount = 2;
+      const len = rr * 0.88;
+      const yScale = 0.22;        // elliptical foreshortening
+      const plateH = rr * 0.13;  // plate thickness (tall dimension of each paddle)
+
       for (let b = 0; b < bladeCount; b++) {
         const a0 = rakeAng + b * Math.PI / bladeCount;
-        const a1 = a0 + Math.PI; // opposite end
-        const len = rr * 0.88;
-        const yScale = 0.22; // strong foreshortening = looks horizontal/flat
-        // Main blade line
-        ctx.strokeStyle = 'rgba(40,180,80,0.85)';
-        ctx.lineWidth = 2.2;
-        ctx.beginPath();
-        ctx.moveTo(Math.cos(a0) * len, Math.sin(a0) * len * yScale);
-        ctx.lineTo(Math.cos(a1) * len, Math.sin(a1) * len * yScale);
-        ctx.stroke();
-        // Rake teeth along each blade
-        for (let t = 1; t <= 4; t++) {
-          const frac = t / 4.5;
-          // Positive side
-          const tx1 = Math.cos(a0) * len * frac;
-          const ty1 = Math.sin(a0) * len * frac * yScale;
-          // Tooth points downward in the foreshortened plane
-          const toothLen = 5;
-          const perpA = a0 + Math.PI / 2;
-          ctx.strokeStyle = 'rgba(40,180,80,0.55)';
-          ctx.lineWidth = 1;
+        // Draw each half-arm as a separate filled trapezoid plate
+        for (let side = 0; side < 2; side++) {
+          const ang = side === 0 ? a0 : a0 + Math.PI;
+          const innerFrac = 0.10; // starts near hub
+          const x0 = Math.cos(ang) * len * innerFrac;
+          const y0 = Math.sin(ang) * len * innerFrac * yScale;
+          const x1 = Math.cos(ang) * len;
+          const y1 = Math.sin(ang) * len * yScale;
+
+          // Perpendicular direction for plate thickness
+          const perpAng = ang + Math.PI / 2;
+          const pw0 = plateH * 0.55; // wider at hub end
+          const pw1 = plateH * 0.32; // narrower at tip
+
+          const px0 = Math.cos(perpAng);
+          const py0 = Math.sin(perpAng) * yScale;
+
+          // Four corners of the plate
+          const c0x = x0 + px0 * pw0,  c0y = y0 + py0 * pw0;
+          const c1x = x0 - px0 * pw0,  c1y = y0 - py0 * pw0;
+          const c2x = x1 - px0 * pw1,  c2y = y1 - py0 * pw1;
+          const c3x = x1 + px0 * pw1,  c3y = y1 + py0 * pw1;
+
+          // Gradient fill — lighter face, darker edge for 3-D look
+          const grad = ctx.createLinearGradient(c1x, c1y, c0x, c0y);
+          grad.addColorStop(0, 'rgba(20,140,60,0.72)');
+          grad.addColorStop(0.45, 'rgba(55,210,100,0.88)');
+          grad.addColorStop(1, 'rgba(20,100,45,0.65)');
+
           ctx.beginPath();
-          ctx.moveTo(tx1, ty1);
-          ctx.lineTo(tx1 + Math.cos(perpA) * toothLen * 0.4, ty1 + toothLen * yScale * 1.8);
+          ctx.moveTo(c0x, c0y);
+          ctx.lineTo(c1x, c1y);
+          ctx.lineTo(c2x, c2y);
+          ctx.lineTo(c3x, c3y);
+          ctx.closePath();
+          ctx.fillStyle = grad;
+          ctx.fill();
+
+          // Thin rim stroke for definition
+          ctx.strokeStyle = 'rgba(40,200,80,0.55)';
+          ctx.lineWidth = 0.8;
           ctx.stroke();
-          // Negative side
-          const tx2 = Math.cos(a1) * len * frac;
-          const ty2 = Math.sin(a1) * len * frac * yScale;
+
+          // Leading-edge highlight line
           ctx.beginPath();
-          ctx.moveTo(tx2, ty2);
-          ctx.lineTo(tx2 + Math.cos(perpA + Math.PI) * toothLen * 0.4, ty2 + toothLen * yScale * 1.8);
+          ctx.moveTo(c0x, c0y);
+          ctx.lineTo(c3x, c3y);
+          ctx.strokeStyle = 'rgba(160,255,160,0.45)';
+          ctx.lineWidth = 0.7;
           ctx.stroke();
         }
       }
+
       // Center hub circle
       ctx.beginPath();
       ctx.arc(0, 0, rr * 0.055, 0, Math.PI * 2);
@@ -4626,39 +4648,71 @@ function drawThickMini(frame, burst) {
   g.beginPath(); g.roundRect(cx - shaftW/2, tankTop - 14, shaftW, coneBot - tankTop + 14, 2); g.fill();
   g.strokeStyle = 'rgba(30,35,45,0.7)'; g.lineWidth = 0.8; g.stroke();
 
-  // ── RAKE ARMS (rotating — horizontal mixer blade view, top-down elliptical perspective) ──
+  // ── RAKE ARMS (rotating — thick plate/paddle blades, top-down elliptical perspective) ──
   const rakeAngle = frame * 0.022;
   const rakeY = cylBot - cylH * 0.15;
   g.save();
   g.translate(cx, rakeY);
   const yScale = 0.22; // foreshortening factor — makes blades look horizontal/flat
-  // Two long blades forming a cross
+  const bLen = tankR * 0.88;
+  const plateH = tankR * 0.18; // thickness of each paddle plate
+
   for (let b = 0; b < 2; b++) {
     const a0 = -rakeAngle + b * Math.PI / 2;
-    const a1 = a0 + Math.PI;
-    const bLen = tankR * 0.88;
-    g.strokeStyle = 'rgba(40,185,80,0.88)'; g.lineWidth = 3; g.lineCap = 'round';
-    g.beginPath();
-    g.moveTo(Math.cos(a0) * bLen, Math.sin(a0) * bLen * yScale);
-    g.lineTo(Math.cos(a1) * bLen, Math.sin(a1) * bLen * yScale);
-    g.stroke();
-    // Rake teeth along blade
-    const teethCount = 5;
-    for (let t = 1; t <= teethCount; t++) {
-      const frac = t / (teethCount + 1);
-      for (let side = 0; side < 2; side++) {
-        const ang = side === 0 ? a0 : a1;
-        const tx = Math.cos(ang) * bLen * frac;
-        const ty = Math.sin(ang) * bLen * frac * yScale;
-        const perpA = ang + Math.PI / 2;
-        g.strokeStyle = 'rgba(40,185,80,0.55)'; g.lineWidth = 1.5;
-        g.beginPath();
-        g.moveTo(tx, ty);
-        g.lineTo(tx + Math.cos(perpA) * 3, ty + 6 * yScale * 3.5);
-        g.stroke();
-      }
+    // Draw each arm as two half-paddles from hub outward
+    for (let side = 0; side < 2; side++) {
+      const ang = side === 0 ? a0 : a0 + Math.PI;
+      const innerFrac = 0.10; // start just past hub
+
+      const x0 = Math.cos(ang) * bLen * innerFrac;
+      const y0 = Math.sin(ang) * bLen * innerFrac * yScale;
+      const x1 = Math.cos(ang) * bLen;
+      const y1 = Math.sin(ang) * bLen * yScale;
+
+      // Perpendicular direction for plate width
+      const perpAng = ang + Math.PI / 2;
+      const pw0 = plateH * 0.60; // wider near hub
+      const pw1 = plateH * 0.35; // narrower at tip
+
+      const px = Math.cos(perpAng);
+      const py = Math.sin(perpAng) * yScale;
+
+      // Four corners of the trapezoid plate
+      const c0x = x0 + px * pw0,  c0y = y0 + py * pw0;
+      const c1x = x0 - px * pw0,  c1y = y0 - py * pw0;
+      const c2x = x1 - px * pw1,  c2y = y1 - py * pw1;
+      const c3x = x1 + px * pw1,  c3y = y1 + py * pw1;
+
+      // Gradient for 3-D look — bright face, darker edges
+      const grad = g.createLinearGradient(c1x, c1y, c0x, c0y);
+      grad.addColorStop(0,    'rgba(18,130,55,0.75)');
+      grad.addColorStop(0.45, 'rgba(60,215,105,0.92)');
+      grad.addColorStop(1,    'rgba(18,100,42,0.68)');
+
+      g.beginPath();
+      g.moveTo(c0x, c0y);
+      g.lineTo(c1x, c1y);
+      g.lineTo(c2x, c2y);
+      g.lineTo(c3x, c3y);
+      g.closePath();
+      g.fillStyle = grad;
+      g.fill();
+
+      // Rim stroke for edge definition
+      g.strokeStyle = 'rgba(40,200,80,0.50)';
+      g.lineWidth = 0.9;
+      g.stroke();
+
+      // Leading-edge highlight
+      g.beginPath();
+      g.moveTo(c0x, c0y);
+      g.lineTo(c3x, c3y);
+      g.strokeStyle = 'rgba(170,255,170,0.50)';
+      g.lineWidth = 0.8;
+      g.stroke();
     }
   }
+
   // Hub
   g.fillStyle = '#4a5060'; g.strokeStyle = '#888'; g.lineWidth = 1;
   g.beginPath(); g.arc(0, 0, 6, 0, Math.PI*2); g.fill(); g.stroke();
