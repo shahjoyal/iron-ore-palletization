@@ -76,7 +76,7 @@ nav{
 .plant-name-select:focus{border-color:var(--gold);background-color:#fff;}
 
 .canvas-wrap{width:100%;max-width:1200px;flex:1;min-height:0;background:#fff;border:1px solid var(--border);border-radius:8px;box-shadow:var(--shadow-navy),inset 0 1px 0 rgba(255,255,255,.8);overflow:hidden;position:relative;display:flex;flex-direction:column;}
-/* #processCanvas removed — replaced by image nodes */
+#processCanvas{display:block;width:100%;flex:1;min-height:0;cursor:default;}
 
 .step-bar{display:flex;align-items:center;gap:5px;justify-content:center;padding:.35rem .8rem;border-top:1px solid var(--border);background:rgba(253,248,240,.7);flex-wrap:wrap;flex-shrink:0;}
 .step-pill{padding:3px 10px;font-family:'JetBrains Mono';font-size:.52rem;letter-spacing:1px;border:1px solid var(--border);border-radius:20px;color:var(--text-dim);transition:all .35s;white-space:nowrap;cursor:pointer;user-select:none;}
@@ -860,87 +860,6 @@ input.finp{cursor:text;}
 }
 .page-dot.active{background:var(--gold);border-color:var(--gold);}
 .page-dot:hover:not(.active){border-color:var(--gold);}
-
-/* ── IMAGE STAGE NODES ── */
-.canvas-wrap{position:relative;}
-#stageNodesWrap{overflow:hidden;}
-
-.img-stage-node{
-  display:flex;flex-direction:column;align-items:center;gap:6px;
-  cursor:pointer;padding:12px 10px;border-radius:10px;
-  transition:transform .22s, box-shadow .22s, background .22s;
-  position:relative;flex:1;min-width:0;max-width:280px;
-  background:#fff;
-}
-.img-stage-node:hover{
-  transform:translateY(-4px);
-  box-shadow:0 10px 32px rgba(200,145,42,0.18);
-  background:rgba(253,248,240,0.85);
-}
-.img-stage-node.active-node{
-  box-shadow:0 0 0 2.5px var(--gold), 0 10px 32px rgba(200,145,42,0.22);
-  background:rgba(253,248,240,0.85);
-}
-.img-stage-node.done-node{
-  box-shadow:0 0 0 2px var(--green);
-  background:rgba(42,122,74,0.04);
-}
-.img-stage-node.dim-node{opacity:0.35;pointer-events:none;}
-
-.img-stage-tag{
-  font-family:'JetBrains Mono';font-size:.5rem;letter-spacing:2px;
-  color:var(--text-dim);text-transform:uppercase;white-space:nowrap;
-}
-
-.img-stage-img-wrap{
-  position:relative;width:100%;padding-top:75%;border-radius:8px;overflow:hidden;
-  border:1.5px solid var(--border);background:#f8f8f8;
-  box-shadow:0 4px 14px rgba(26,48,87,0.10);
-  transition:border-color .22s;
-}
-.img-stage-node:hover .img-stage-img-wrap,
-.img-stage-node.active-node .img-stage-img-wrap{border-color:var(--gold);}
-.img-stage-node.done-node .img-stage-img-wrap{border-color:var(--green);}
-
-.img-stage-img{
-  position:absolute;inset:0;width:100%;height:100%;
-  object-fit:cover;display:block;
-  transition:transform .3s ease;
-}
-.img-stage-node:hover .img-stage-img{transform:scale(1.04);}
-
-.img-stage-status-dot{
-  position:absolute;top:8px;right:8px;width:9px;height:9px;border-radius:50%;
-  background:transparent;border:1.5px solid var(--border);
-  transition:all .25s;
-}
-.img-stage-node.configured .img-stage-status-dot{background:#3aaa6a;border-color:#3aaa6a;}
-.img-stage-node.active-node .img-stage-status-dot{background:var(--gold);border-color:var(--gold);}
-
-.img-stage-label{
-  font-family:'JetBrains Mono';font-size:.58rem;letter-spacing:1px;font-weight:600;
-  color:var(--text-dim);text-align:center;line-height:1.5;text-transform:uppercase;
-  transition:color .22s;
-}
-.img-stage-node.configured .img-stage-label{color:var(--gold);}
-.img-stage-node.active-node .img-stage-label{color:var(--gold);}
-.img-stage-node.done-node .img-stage-label{color:var(--green);}
-
-.img-stage-hint{
-  font-family:'DM Sans';font-size:.64rem;color:rgba(200,145,42,0.45);
-  transition:color .22s;
-}
-.img-stage-node.configured .img-stage-hint{color:rgba(58,170,106,0.65);}
-.img-stage-node.configured .img-stage-hint::before{content:'✓ ';}
-
-.stage-arrow{
-  display:flex;align-items:center;justify-content:center;
-  flex-shrink:0;width:60px;
-}
-
-@keyframes arrowDot{
-  0%{cx:2px;} 100%{cx:48px;}
-}
 </style>
 </head>
 <body>
@@ -1233,69 +1152,8 @@ input.finp{cursor:text;}
     <div class="page-hint">Click any process stage to configure its parameters</div>
   </div>
 
-  <div class="canvas-wrap" id="canvasWrap">
-    <!-- Info overlay (top-left summary, shown during simulation) -->
-    <div id="stageInfoOverlay" style="display:none;position:absolute;top:14px;left:14px;z-index:10;background:rgba(253,248,240,0.95);border:1px solid rgba(200,145,42,0.22);border-radius:4px;padding:8px 12px;font-family:'JetBrains Mono';font-size:9px;min-width:200px;pointer-events:none;"></div>
-
-    <!-- Image-based stage nodes -->
-    <div id="stageNodesWrap" style="display:flex;align-items:center;justify-content:center;width:100%;flex:1;min-height:0;padding:18px 24px;gap:0;background:#fff;position:relative;">
-
-      <!-- OB Dosing label above mix node (shown when step>=4) -->
-      <div id="obDosingLabel" style="display:none;position:absolute;top:12px;left:50%;transform:translateX(-50%);background:rgba(200,145,42,0.1);border:1px solid rgba(200,145,42,0.45);border-radius:3px;padding:4px 10px;font-family:'JetBrains Mono';font-size:8px;font-weight:600;color:#c8912a;letter-spacing:1px;white-space:nowrap;pointer-events:none;">OB DOSING</div>
-
-      <!-- STAGE 04 — Filter Cake -->
-      <div class="img-stage-node" id="node-filter" onclick="openStageCard('filter')" title="Filter Cake — click to configure">
-        <div class="img-stage-tag">STAGE 04</div>
-        <div class="img-stage-img-wrap">
-          <img src="img4.jpeg" alt="Filter Cake" class="img-stage-img" id="img-filter">
-          <div class="img-stage-status-dot" id="dot-filter"></div>
-        </div>
-        <div class="img-stage-label" id="label-filter">FILTER<br>CAKE</div>
-        <div class="img-stage-hint" id="hint-filter">⊕ configure</div>
-      </div>
-
-      <!-- Arrow 1 -->
-      <div class="stage-arrow" id="arrow-0">
-        <svg viewBox="0 0 60 20" xmlns="http://www.w3.org/2000/svg" style="width:60px;height:20px;">
-          <line x1="2" y1="10" x2="48" y2="10" stroke="rgba(200,145,42,0.22)" stroke-width="1.5" stroke-dasharray="5,5" id="arrow-line-0"/>
-          <polygon points="48,5 58,10 48,15" fill="rgba(200,145,42,0.22)" id="arrow-head-0"/>
-          <circle id="arrow-dot-0" cx="2" cy="10" r="4" fill="rgba(232,184,75,0)" />
-        </svg>
-      </div>
-
-      <!-- STAGE 05 — Mixing + Binder -->
-      <div class="img-stage-node" id="node-mix" onclick="openStageCard('mix')" title="Mixing + Binder — click to configure">
-        <div class="img-stage-tag">STAGE 05</div>
-        <div class="img-stage-img-wrap">
-          <img src="img5.jpeg" alt="Mixing + Binder" class="img-stage-img" id="img-mix">
-          <div class="img-stage-status-dot" id="dot-mix"></div>
-        </div>
-        <div class="img-stage-label" id="label-mix">MIXING<br>+ BINDER</div>
-        <div class="img-stage-hint" id="hint-mix">⊕ configure</div>
-      </div>
-
-      <!-- Arrow 2 -->
-      <div class="stage-arrow" id="arrow-1">
-        <svg viewBox="0 0 60 20" xmlns="http://www.w3.org/2000/svg" style="width:60px;height:20px;">
-          <line x1="2" y1="10" x2="48" y2="10" stroke="rgba(200,145,42,0.22)" stroke-width="1.5" stroke-dasharray="5,5" id="arrow-line-1"/>
-          <polygon points="48,5 58,10 48,15" fill="rgba(200,145,42,0.22)" id="arrow-head-1"/>
-          <circle id="arrow-dot-1" cx="2" cy="10" r="4" fill="rgba(232,184,75,0)" />
-        </svg>
-      </div>
-
-      <!-- STAGE 06 — Balling Disc -->
-      <div class="img-stage-node" id="node-ball" onclick="openStageCard('ball')" title="Balling Disc — click to configure">
-        <div class="img-stage-tag">STAGE 06</div>
-        <div class="img-stage-img-wrap">
-          <img src="img6.jpeg" alt="Balling Disc" class="img-stage-img" id="img-ball">
-          <div class="img-stage-status-dot" id="dot-ball"></div>
-        </div>
-        <div class="img-stage-label" id="label-ball">BALLING<br>DISC</div>
-        <div class="img-stage-hint" id="hint-ball">⊕ configure</div>
-      </div>
-
-    </div>
-
+  <div class="canvas-wrap">
+    <canvas id="processCanvas"></canvas>
     <div class="step-bar">
       <div class="step-pill" data-step="3">Filter Cake</div>
       <div class="step-pill" data-step="4">Mixing</div>
@@ -1586,77 +1444,132 @@ const STAGES=[
   {id:'ball',     label:'BALLING\nDISC',       tag:'STAGE 06',shape:'circle',   color:'#3a7abf',step:5},
 ];
 
-// ═══════ IMAGE NODES ═══════
+// ═══════ CANVAS ═══════
+const canvas=document.getElementById('processCanvas');
+const ctx=canvas.getContext('2d');
 let hitZones=[];
 
-function draw(frame,activeStep){
-  updateImageNodes(frame, activeStep);
+function sizeCanvas(){
+  const W=canvas.parentElement.clientWidth;
+  const ratio=window.devicePixelRatio||1;
+  const H=Math.max(300,canvas.parentElement.clientHeight||canvas.offsetHeight||400);
+  canvas.width=W*ratio; canvas.height=H*ratio;
+  canvas.style.width=W+'px'; canvas.style.height=H+'px';
+  ctx.scale(ratio,ratio);
+  return{W,H};
 }
 
-function updateImageNodes(frame, activeStep){
-  const stageIds = ['filter','mix','ball'];
-  const stageSteps = {filter:3, mix:4, ball:5};
-  const stageColors = {filter:'#5a3d8a', mix:'#c8912a', ball:'#3a7abf'};
+function draw(frame,activeStep){
+  const{W,H}=sizeCanvas();
+  ctx.clearRect(0,0,W,H);
+  ctx.fillStyle='#fff'; ctx.fillRect(0,0,W,H);
+  ctx.strokeStyle='rgba(200,145,42,0.035)'; ctx.lineWidth=1;
+  for(let x=0;x<W;x+=36){ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x,H);ctx.stroke();}
+  for(let y=0;y<H;y+=36){ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(W,y);ctx.stroke();}
 
-  stageIds.forEach((id, i) => {
-    const node = document.getElementById('node-'+id);
-    const hint = document.getElementById('hint-'+id);
-    const label = document.getElementById('label-'+id);
-    if(!node) return;
-    const step = stageSteps[id];
-    const isConfig = isStageConfigured(id);
-    const isActive = step === activeStep;
-    const isDone = step < activeStep;
-    const lit = isActive || isDone;
+  hitZones=[];
+  const n=STAGES.length;
+  const padX=W*0.022;
+  const slotW=(W-padX*2)/n;
+  const midY=H*0.43;
+  const mH=H*0.50;
+  const mW=slotW*0.68;
+  const labelY=midY+mH*0.55+18;
 
-    // Update classes
-    node.className = 'img-stage-node';
-    if(isActive) node.classList.add('active-node');
-    else if(isDone) node.classList.add('done-node');
-    else if(activeStep >= 0 && !lit) node.classList.add('dim-node');
-    if(isConfig && activeStep < 0) node.classList.add('configured');
+  if(activeStep>=0){
+    const info=[
+      {k:'Ore:',      v:stageParams.feed.ore?stageParams.feed.ore.substring(0,22):'—'},
+      {k:'Binder:',   v:stageParams.mix.binder?stageParams.mix.binder.substring(0,22):'—'},
+      {k:'Moisture:', v:stageParams.filter.cakeMoisture?stageParams.filter.cakeMoisture+'%':'—'},
+      {k:'Blain:',    v:stageParams.grind.blain?stageParams.grind.blain+' cm²/g':'—'},
+    ];
+    const bw=210,bh=info.length*17+18;
+    ctx.fillStyle='rgba(253,248,240,0.95)'; ctx.strokeStyle='rgba(200,145,42,0.22)'; ctx.lineWidth=1;
+    ctx.beginPath(); ctx.roundRect(14,14,bw,bh,4); ctx.fill(); ctx.stroke();
+    info.forEach((item,i)=>{
+      ctx.fillStyle='#9a8a70'; ctx.font='400 9px JetBrains Mono'; ctx.textAlign='left'; ctx.fillText(item.k,24,28+i*17);
+      ctx.fillStyle='#1a3057'; ctx.font='500 9px JetBrains Mono'; ctx.fillText(item.v,78,28+i*17);
+    });
+  }
 
-    // Update hint text
-    if(hint) hint.textContent = isConfig ? '✓ configured' : '⊕ configure';
-
-    // Disable click during simulation
-    node.style.pointerEvents = simRunning ? 'none' : '';
-
-    // Arrow lighting
-    if(i < 2) {
-      const arrowLine = document.getElementById('arrow-line-'+i);
-      const arrowHead = document.getElementById('arrow-head-'+i);
-      if(arrowLine && arrowHead) {
-        const prevStage = STAGES[i];
-        const litArrow = prevStage.step < activeStep || prevStage.step === activeStep;
-        const arrowColor = litArrow ? stageColors[id] : 'rgba(200,145,42,0.18)';
-        arrowLine.setAttribute('stroke', arrowColor);
-        arrowLine.setAttribute('stroke-dasharray', litArrow ? 'none' : '5,5');
-        arrowLine.setAttribute('stroke-width', litArrow ? '2.5' : '1.5');
-        arrowHead.setAttribute('fill', arrowColor);
-      }
+  if(activeStep>=4||activeStep<0){
+    const mcx=padX+4*slotW+slotW/2;
+    ctx.save(); ctx.globalAlpha=activeStep<0?0.3:0.88;
+    ctx.fillStyle='rgba(200,145,42,0.1)'; ctx.strokeStyle='rgba(200,145,42,0.45)'; ctx.lineWidth=1;
+    ctx.beginPath(); ctx.roundRect(mcx-40,midY-mH*0.52-46,80,26,3); ctx.fill(); ctx.stroke();
+    ctx.fillStyle='#c8912a'; ctx.font='600 8px JetBrains Mono'; ctx.textAlign='center';
+    ctx.fillText('OB DOSING',mcx,midY-mH*0.52-30);
+    if(activeStep>=4){
+      const dy=midY-mH*0.52-22+(frame%32)*0.72;
+      ctx.strokeStyle='rgba(200,145,42,0.3)'; ctx.lineWidth=0.8; ctx.setLineDash([2,3]);
+      ctx.beginPath(); ctx.moveTo(mcx,midY-mH*0.52-23); ctx.lineTo(mcx,midY-mH*0.52); ctx.stroke(); ctx.setLineDash([]);
+      ctx.beginPath(); ctx.arc(mcx,dy,2.5,0,Math.PI*2); ctx.fillStyle='rgba(200,145,42,0.75)'; ctx.fill();
     }
-  });
+    ctx.restore();
+  }
 
-  // Info overlay
-  const overlay = document.getElementById('stageInfoOverlay');
-  if(overlay) {
-    if(activeStep >= 0) {
-      overlay.style.display = 'block';
-      overlay.innerHTML = [
-        {k:'Ore:', v:stageParams.feed.ore?stageParams.feed.ore.substring(0,22):'—'},
-        {k:'Binder:', v:stageParams.mix.binder?stageParams.mix.binder.substring(0,22):'—'},
-        {k:'Moisture:', v:stageParams.filter.cakeMoisture?stageParams.filter.cakeMoisture+'%':'—'},
-        {k:'Blain:', v:stageParams.grind.blain?stageParams.grind.blain+' cm²/g':'—'},
-      ].map(r=>`<div style="margin-bottom:3px"><span style="color:#9a8a70;margin-right:6px">${r.k}</span><span style="color:#1a3057">${r.v}</span></div>`).join('');
-    } else {
-      overlay.style.display = 'none';
+  for(let i=0;i<n-1;i++){
+    const s=STAGES[i];
+    const cx1=padX+i*slotW+slotW/2;
+    const cx2=padX+(i+1)*slotW+slotW/2;
+    const lit=s.step<activeStep||s.step===activeStep;
+    const x1=cx1+mW*0.46, x2=cx2-mW*0.46;
+    ctx.save();
+    ctx.strokeStyle=lit?s.color:'rgba(200,145,42,0.15)';
+    ctx.lineWidth=lit?2.5:1.5; ctx.globalAlpha=lit?0.8:0.38;
+    ctx.setLineDash(lit?[]:[5,5]);
+    ctx.beginPath(); ctx.moveTo(x1,midY); ctx.lineTo(x2,midY); ctx.stroke(); ctx.setLineDash([]);
+    ctx.fillStyle=lit?s.color:'rgba(200,145,42,0.22)'; ctx.globalAlpha=lit?0.9:0.65;
+    ctx.beginPath(); ctx.moveTo(x2,midY-5); ctx.lineTo(x2+9,midY); ctx.lineTo(x2,midY+5); ctx.fill();
+    ctx.restore();
+    if(lit){
+      const t=(frame%60)/60;
+      const px=x1+(x2-x1)*t;
+      const rg=ctx.createRadialGradient(px,midY,0,px,midY,7);
+      rg.addColorStop(0,'rgba(232,184,75,0.95)'); rg.addColorStop(1,'rgba(200,145,42,0)');
+      ctx.beginPath(); ctx.arc(px,midY,7,0,Math.PI*2); ctx.fillStyle=rg; ctx.fill();
     }
   }
 
-  // OB Dosing label
-  const obLabel = document.getElementById('obDosingLabel');
-  if(obLabel) obLabel.style.display = (activeStep >= 4 || activeStep < 0) ? 'block' : 'none';
+  STAGES.forEach((s,i)=>{
+    const cx=padX+i*slotW+slotW/2;
+    const isActive=s.step===activeStep;
+    const isDone=s.step<activeStep;
+    const isConfig=isStageConfigured(s.id);
+    const lit=isActive||isDone;
+    const alpha=activeStep>=0?(lit?1:0.33):1;
+    ctx.save(); ctx.globalAlpha=alpha;
+    if(isActive){ctx.shadowColor=s.color; ctx.shadowBlur=22;}
+    const col=lit?s.color:(isConfig?s.color:'#c0ae90');
+    const strokeCol=isActive?s.color:(isDone?s.color:(isConfig?'rgba(200,145,42,0.55)':'rgba(200,145,42,0.22)'));
+    const strokeW=isActive?2.5:(isConfig?1.8:1.2);
+    const bounds=drawMachineShape(s.shape,cx,midY,mW,mH,col,strokeCol,strokeW,isActive,isDone,frame,s);
+    ctx.shadowBlur=0;
+    hitZones.push({id:s.id,...bounds});
+    const lines=s.label.split('\n');
+    const fs=slotW<100?7:8;
+    ctx.font=`600 ${fs}px JetBrains Mono`; ctx.textAlign='center';
+    ctx.fillStyle=lit?s.color:(isConfig?s.color:'#8a7a60');
+    lines.forEach((line,li)=>ctx.fillText(line,cx,labelY+li*(fs+3)));
+    if(s.id==='pellet'&&activeStep===9){
+      ctx.fillStyle='#2a7a4a'; ctx.font='700 8px JetBrains Mono';
+      ctx.fillText('✓ PELLETS READY',cx,labelY+lines.length*(fs+3)+12);
+    }
+    if(isConfig&&activeStep<0){
+      ctx.fillStyle='#3aaa6a'; ctx.beginPath(); ctx.arc(bounds.x+bounds.w-6,bounds.y+6,4.5,0,Math.PI*2); ctx.fill();
+    }
+    if(activeStep<0){
+      ctx.fillStyle=isConfig?'rgba(58,170,106,0.6)':'rgba(200,145,42,0.42)';
+      ctx.font='400 6.5px DM Sans'; ctx.textAlign='center';
+      ctx.fillText(isConfig?'✓ configured':'⊕ configure',cx,bounds.y+bounds.h+13);
+    }
+    ctx.restore();
+  });
+
+  if(activeStep===9){
+    const pi=STAGES.findIndex(s=>s.id==='pellet');
+    drawPelletBurst(padX+pi*slotW+slotW/2,midY,frame,mW*0.48);
+  }
 }
 
 
@@ -2751,11 +2664,18 @@ function drawPelletBurst(cx,cy,frame,r){
   }
 }
 
-// Image node click handler — delegates to openModal
-function openStageCard(id){
-  if(simRunning) return;
-  openModal(id);
-}
+canvas.addEventListener('click',function(e){
+  if(simRunning)return;
+  const rect=canvas.getBoundingClientRect();
+  const mx=e.clientX-rect.left,my=e.clientY-rect.top;
+  for(const z of hitZones){if(mx>=z.x&&mx<=z.x+z.w&&my>=z.y&&my<=z.y+z.h){openModal(z.id);return;}}
+});
+canvas.addEventListener('mousemove',function(e){
+  if(simRunning){canvas.style.cursor='default';return;}
+  const rect=canvas.getBoundingClientRect();
+  const mx=e.clientX-rect.left,my=e.clientY-rect.top;
+  canvas.style.cursor=hitZones.some(z=>mx>=z.x&&mx<=z.x+z.w&&my>=z.y&&my<=z.y+z.h)?'pointer':'default';
+});
 
 function numField(id,label,val,mn,mx,unit,step){
   step=step||'any';
@@ -3628,10 +3548,9 @@ function resetAll(){
     document.getElementById(id).className='param-box-val';
   });
   document.getElementById('runBtn').disabled=false;
-  updateImageNodes(0, -1);
 }
 
-(function loop(){updateImageNodes(simFrame, simStep);simFrame++;animId=requestAnimationFrame(loop);})();
+(function loop(){draw(simFrame,simStep);simFrame++;animId=requestAnimationFrame(loop);})();
 
 // ═══════════════════════════════════════════════════════════
 // FEED ANIMATION CARD
@@ -6001,7 +5920,6 @@ window.resetAll = function() { _origResetAll(); localStorage.removeItem(STATE_KE
 // Load state on page load
 loadStateFromStorage();
 updateSummaryParams();
-updateImageNodes(0, simStep);
 
 </script>
 </html>

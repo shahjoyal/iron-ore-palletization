@@ -399,6 +399,14 @@ input.finp{cursor:text;}
   display:block;
 }
 
+#feedParticleRainCanvas{
+  position:absolute;inset:0;
+  width:100%;height:100%;
+  display:block;
+  pointer-events:none;
+  z-index:10;
+}
+
 .feed-diagram-footer{
   padding:.7rem 1.1rem .9rem;
   border-top:1px solid rgba(200,145,42,0.12);
@@ -938,6 +946,7 @@ input.finp{cursor:text;}
       </div>
       <div class="feed-diagram-canvas-wrap">
         <canvas id="feedMiniCanvas"></canvas>
+        <canvas id="feedParticleRainCanvas"></canvas>
         <div class="ore-save-indicator" id="oreSaveIndicator">✓ Parameters Saved</div>
       </div>
       <div class="feed-diagram-footer">
@@ -1171,8 +1180,9 @@ input.finp{cursor:text;}
       <canvas id="overlayCanvas" style="position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:2;"></canvas>
       <!-- Stage 1: Iron Ore Feed -->
       <div class="stage-img-slot" id="stage-feed" onclick="if(!simRunning)openModal('feed')" title="Iron Ore Feed — Click to configure">
-        <div class="stage-img-inner">
+        <div class="stage-img-inner" style="position:relative;">
           <img src="img1.jpeg" alt="Iron Ore Feed" class="stage-img">
+          <canvas id="stageFeedRainCanvas" style="position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:10;border-radius:6px;"></canvas>
         </div>
         <div class="stage-img-label" id="label-feed">IRON ORE<br>FEED</div>
         <div class="stage-img-badge" id="badge-feed">⊕ configure</div>
@@ -3981,21 +3991,27 @@ function drawGrindMini(frame, burst) {
       g.beginPath(); g.ellipse(ecx, cy, ecRx * frac, ecRy * frac, 0, 0, Math.PI*2); g.stroke();
     });
 
-    // Bolts rotating with the drum
+    // Bolts: end-cap is viewed nearly edge-on (ecRx << ecRy).
+    // To make both ends look like they spin the SAME direction, drive Y only from
+    // sin(rotOff + phase) and X only from cos(rotOff + phase) * ecRx.
+    // This way the angular offset is the same formula on both caps → same visual motion.
     const bCount = 10;
     for (let b = 0; b < bCount; b++) {
-      const bAng = (b / bCount) * Math.PI * 2 + rotOff;
+      const bAng = rotOff + (b / bCount) * Math.PI * 2;
       const bx = ecx + Math.cos(bAng) * ecRx * 0.82;
       const by = cy  + Math.sin(bAng) * ecRy * 0.82;
+      // Depth cue: bolts on the "near" half of rotation are brighter
+      const depthAlpha = 0.40 + 0.60 * (0.5 + 0.5 * Math.sin(bAng + Math.PI * 0.5));
       const br = Math.min(ecRx, ecRy) * 0.085;
+      g.globalAlpha = depthAlpha;
       g.beginPath(); g.arc(bx, by, br, 0, Math.PI*2);
       g.fillStyle = '#c0c4cc'; g.fill();
       g.strokeStyle = '#3a3d48'; g.lineWidth = 0.7; g.stroke();
-      // bolt head cross
       g.strokeStyle = '#8a8e96'; g.lineWidth = 0.6;
       g.beginPath(); g.moveTo(bx - br*0.55, by); g.lineTo(bx + br*0.55, by); g.stroke();
       g.beginPath(); g.moveTo(bx, by - br*0.55); g.lineTo(bx, by + br*0.55); g.stroke();
     }
+    g.globalAlpha = 1;
     // Center hub
     g.beginPath(); g.arc(ecx, cy, Math.min(ecRx,ecRy)*0.22, 0, Math.PI*2);
     g.fillStyle = '#5a5e68'; g.fill();
@@ -4009,8 +4025,8 @@ function drawGrindMini(frame, burst) {
 
   // Far (right) end-cap
   drawEndCap(right, endCapRx, endCapRy, rot);
-  // Near (left) end-cap
-  drawEndCap(left, endCapRx, endCapRy, rot + Math.PI * 0.3);
+  // Near (left) end-cap — same rot so bolts/balls spin in the same direction
+  drawEndCap(left, endCapRx, endCapRy, rot);
 
   // ── RIDING RINGS (over the drum) ──
   ringPositions.forEach(rpx => {
@@ -4229,20 +4245,190 @@ function openFeedCard(){
 function closeFeedCard(){
   document.getElementById('feedAnimOverlay').classList.remove('open');
   if(feedMiniAnimId){cancelAnimationFrame(feedMiniAnimId);feedMiniAnimId=null;}
+  if(oreRainAnimId){cancelAnimationFrame(oreRainAnimId);oreRainAnimId=null;}
+  const rc=document.getElementById('feedParticleRainCanvas');
+  if(rc){const ctx=rc.getContext('2d');ctx.clearRect(0,0,rc.width,rc.height);}
+  // Note: stage card rain keeps playing — it's visible on the main dashboard
+}
+
+// ═══════════════════════════════════════════════════════════
+// IRON ORE PARTICLE RAIN ANIMATION
+// ═══════════════════════════════════════════════════════════
+let oreRainParticles = [];
+let oreRainAnimId = null;
+let oreRainActive = false;
+
+// Stage-card rain (main dashboard)
+let stageRainParticles = [];
+let stageRainAnimId = null;
+
+const ORE_COLOURS = [
+  [160, 90, 38],  // warm rust brown
+  [130, 70, 28],  // dark ore brown
+  [105, 55, 22],  // deep sienna
+  [185, 110, 50], // light orange-brown
+  [90, 48, 18],   // dark chocolate
+  [145, 80, 35],  // medium rust
+  [170, 100, 42], // golden brown
+  [80, 42, 16],   // very dark ore
+];
+
+function buildRainParticles(W, H, count){
+  const particles = [];
+  for(let i = 0; i < count; i++){
+    const col = ORE_COLOURS[Math.floor(Math.random() * ORE_COLOURS.length)];
+    // x skewed left-to-centre (0 to ~58% width), heavier on the left
+    const xFrac = Math.pow(Math.random(), 0.65);
+    const x = xFrac * W * 0.58;
+    const r = 1.4 + Math.random() * 3.2;
+    const speed = 2.8 + Math.random() * 5.5 + r * 0.6;
+    const wobbleAmp = 0.5 + Math.random() * 1.8;
+    const wobbleFreq = 0.04 + Math.random() * 0.06;
+    const wobblePhase = Math.random() * Math.PI * 2;
+    const delay = i * 0.9;
+    const startY = -r - Math.random() * H * 0.6;
+    const alpha = 0.65 + Math.random() * 0.35;
+    const spin = (Math.random() - 0.5) * 0.18;
+    const shape = Math.random() < 0.55 ? 'circle' : 'nugget';
+    particles.push({
+      x, y: startY - delay * speed * 0.5,
+      r, speed, wobbleAmp, wobbleFreq, wobblePhase,
+      col, alpha, spin, angle: Math.random() * Math.PI * 2, shape,
+      landY: H * 0.18 + Math.random() * H * 0.08,
+      landed: false, landAlpha: 1, done: false,
+    });
+  }
+  return particles;
+}
+
+function drawRainOnCanvas(canvas, particles){
+  const W = canvas.width, H = canvas.height;
+  const ctx = canvas.getContext('2d');
+  ctx.clearRect(0, 0, W, H);
+  let allDone = true;
+  for(let p of particles){
+    if(p.done) continue;
+    allDone = false;
+    p.y += p.speed * 0.6;
+    p.angle += p.spin;
+    const wx = p.x + Math.sin(p.y * p.wobbleFreq + p.wobblePhase) * p.wobbleAmp;
+    if(p.y < 0) continue;
+    if(p.y >= p.landY){
+      p.landed = true;
+      p.landAlpha -= 0.035;
+      if(p.landAlpha <= 0){ p.done = true; continue; }
+    }
+    if(p.y - p.r > H){ p.done = true; continue; }
+    const a = p.landed ? p.alpha * p.landAlpha : p.alpha;
+    const [r, g, b] = p.col;
+    ctx.save();
+    ctx.globalAlpha = a;
+    ctx.translate(wx, p.y);
+    ctx.rotate(p.angle);
+    if(p.shape === 'circle'){
+      const grad = ctx.createRadialGradient(-p.r*0.3, -p.r*0.35, 0, 0, 0, p.r);
+      grad.addColorStop(0, `rgba(${Math.min(r+55,255)},${Math.min(g+35,255)},${Math.min(b+20,255)},1)`);
+      grad.addColorStop(0.55, `rgba(${r},${g},${b},1)`);
+      grad.addColorStop(1, `rgba(${Math.max(r-40,0)},${Math.max(g-25,0)},${Math.max(b-15,0)},0.7)`);
+      ctx.beginPath(); ctx.arc(0, 0, p.r, 0, Math.PI*2);
+      ctx.fillStyle = grad; ctx.fill();
+    } else {
+      const nr = p.r;
+      ctx.beginPath();
+      const sides = 5 + Math.floor(p.r);
+      for(let s = 0; s <= sides; s++){
+        const ang = (s / sides) * Math.PI * 2;
+        const jitter = 0.72 + (((s * 7 + p.wobblePhase * 3) % 5) / 5) * 0.52;
+        const ex = Math.cos(ang) * nr * jitter * (s % 2 === 0 ? 1.25 : 0.9);
+        const ey = Math.sin(ang) * nr * jitter * 0.85;
+        s === 0 ? ctx.moveTo(ex, ey) : ctx.lineTo(ex, ey);
+      }
+      ctx.closePath();
+      const nGrad = ctx.createRadialGradient(-nr*0.25, -nr*0.25, 0, 0, 0, nr*1.2);
+      nGrad.addColorStop(0, `rgba(${Math.min(r+45,255)},${Math.min(g+28,255)},${Math.min(b+15,255)},1)`);
+      nGrad.addColorStop(0.6, `rgba(${r},${g},${b},1)`);
+      nGrad.addColorStop(1, `rgba(${Math.max(r-35,0)},${Math.max(g-20,0)},${Math.max(b-12,0)},0.6)`);
+      ctx.fillStyle = nGrad; ctx.fill();
+    }
+    ctx.restore();
+  }
+  return allDone;
+}
+
+function spawnOreRainParticles(){
+  const canvas = document.getElementById('feedParticleRainCanvas');
+  if(!canvas) return;
+  const W = canvas.parentElement.clientWidth || 300;
+  const H = canvas.parentElement.clientHeight || 280;
+  canvas.width = W; canvas.height = H;
+  oreRainParticles = buildRainParticles(W, H, 1200);
+}
+
+function drawOreRainFrame(){
+  const canvas = document.getElementById('feedParticleRainCanvas');
+  if(!canvas) return;
+  const done = drawRainOnCanvas(canvas, oreRainParticles);
+  if(done){
+    canvas.getContext('2d').clearRect(0,0,canvas.width,canvas.height);
+    oreRainActive = false; oreRainAnimId = null; return;
+  }
+  oreRainAnimId = requestAnimationFrame(drawOreRainFrame);
+}
+
+function spawnStageRainParticles(){
+  const canvas = document.getElementById('stageFeedRainCanvas');
+  if(!canvas) return;
+  const wrap = canvas.parentElement;
+  const W = wrap.clientWidth || 200;
+  const H = wrap.clientHeight || 160;
+  canvas.width = W; canvas.height = H;
+  // For the small stage card, scale particles down a bit — 700 particles
+  stageRainParticles = buildRainParticles(W, H, 700).map(p => ({
+    ...p,
+    r: p.r * 0.72,            // smaller particles for smaller card
+    speed: p.speed * 0.85,
+    landY: H * 0.12 + Math.random() * H * 0.1,
+  }));
+}
+
+function drawStageRainFrame(){
+  const canvas = document.getElementById('stageFeedRainCanvas');
+  if(!canvas) return;
+  const done = drawRainOnCanvas(canvas, stageRainParticles);
+  if(done){
+    canvas.getContext('2d').clearRect(0,0,canvas.width,canvas.height);
+    stageRainAnimId = null; return;
+  }
+  stageRainAnimId = requestAnimationFrame(drawStageRainFrame);
+}
+
+function startOreParticleRain(){
+  // ── Diagram card rain ──
+  if(oreRainAnimId){ cancelAnimationFrame(oreRainAnimId); oreRainAnimId = null; }
+  oreRainActive = true;
+  spawnOreRainParticles();
+  drawOreRainFrame();
+
+  // ── Main stage card rain ──
+  if(stageRainAnimId){ cancelAnimationFrame(stageRainAnimId); stageRainAnimId = null; }
+  spawnStageRainParticles();
+  drawStageRainFrame();
 }
 
 function saveFeedCard(){
   const cfg=MODAL_CONFIGS['feed'];
   cfg.save();
-  // Trigger save burst animation
+  // Trigger save burst animation on hopper canvas
   feedMiniSaveBurst=20;
   feedMiniActive=true;
   const ind=document.getElementById('oreSaveIndicator');
   ind.classList.remove('show');
   void ind.offsetWidth;
   ind.classList.add('show');
+  // ── PARTICLE RAIN: thousands of brown ore particles fall from above ──
+  startOreParticleRain();
   setTimeout(()=>{feedMiniActive=false;},2200);
-  setTimeout(()=>{closeFeedCard();updateSummaryParams();},1800);
+  setTimeout(()=>{closeFeedCard();updateSummaryParams();},3200);
 }
 // ═══════════════════════════════════════════════════════════
 // THICKENER ANIMATION CARD
