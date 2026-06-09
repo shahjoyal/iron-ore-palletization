@@ -941,6 +941,29 @@ input.finp{cursor:text;}
 @keyframes arrowDot{
   0%{cx:2px;} 100%{cx:48px;}
 }
+
+/* ── HOVER VIDEO OVERLAY ── */
+.img-stage-hover-video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: 5;
+  opacity: 0;
+  transition: opacity .3s ease;
+  pointer-events: none;
+  border-radius: 6px;
+}
+.img-stage-node:hover .img-stage-hover-video {
+  opacity: 1;
+}
+.img-stage-node:hover .img-stage-img {
+  opacity: 0;
+}
+.img-stage-img {
+  transition: opacity .3s ease, transform .3s ease;
+}
 </style>
 </head>
 <body>
@@ -1244,10 +1267,11 @@ input.finp{cursor:text;}
       <div id="obDosingLabel" style="display:none;position:absolute;top:12px;left:50%;transform:translateX(-50%);background:rgba(200,145,42,0.1);border:1px solid rgba(200,145,42,0.45);border-radius:3px;padding:4px 10px;font-family:'JetBrains Mono';font-size:8px;font-weight:600;color:#c8912a;letter-spacing:1px;white-space:nowrap;pointer-events:none;">OB DOSING</div>
 
       <!-- STAGE 04 — Filter Cake -->
-      <div class="img-stage-node" id="node-filter" onclick="openStageCard('filter')" title="Filter Cake — click to configure">
+      <div class="img-stage-node" id="node-filter" onclick="openStageCard('filter')" title="Filter Cake — click to configure" onmouseenter="playStageVideo2(this)" onmouseleave="pauseStageVideo2(this)">
         <div class="img-stage-tag">STAGE 04</div>
         <div class="img-stage-img-wrap">
           <img src="img4.jpeg" alt="Filter Cake" class="img-stage-img" id="img-filter">
+          <video class="img-stage-hover-video" src="filter.mp4" muted playsinline loop preload="none"></video>
           <div class="img-stage-status-dot" id="dot-filter"></div>
         </div>
         <div class="img-stage-label" id="label-filter">FILTER<br>CAKE</div>
@@ -1264,10 +1288,11 @@ input.finp{cursor:text;}
       </div>
 
       <!-- STAGE 05 — Mixing + Binder -->
-      <div class="img-stage-node" id="node-mix" onclick="openStageCard('mix')" title="Mixing + Binder — click to configure">
+      <div class="img-stage-node" id="node-mix" onclick="openStageCard('mix')" title="Mixing + Binder — click to configure" onmouseenter="playStageVideo2(this)" onmouseleave="pauseStageVideo2(this)">
         <div class="img-stage-tag">STAGE 05</div>
         <div class="img-stage-img-wrap">
           <img src="img5.jpeg" alt="Mixing + Binder" class="img-stage-img" id="img-mix">
+          <video class="img-stage-hover-video" src="mixing.mp4" muted playsinline loop preload="none"></video>
           <div class="img-stage-status-dot" id="dot-mix"></div>
         </div>
         <div class="img-stage-label" id="label-mix">MIXING<br>+ BINDER</div>
@@ -1284,10 +1309,11 @@ input.finp{cursor:text;}
       </div>
 
       <!-- STAGE 06 — Balling Disc -->
-      <div class="img-stage-node" id="node-ball" onclick="openStageCard('ball')" title="Balling Disc — click to configure">
+      <div class="img-stage-node" id="node-ball" onclick="openStageCard('ball')" title="Balling Disc — click to configure" onmouseenter="playStageVideo2(this)" onmouseleave="pauseStageVideo2(this)">
         <div class="img-stage-tag">STAGE 06</div>
         <div class="img-stage-img-wrap">
           <img src="img6.jpeg" alt="Balling Disc" class="img-stage-img" id="img-ball">
+          <video class="img-stage-hover-video" src="balling.mp4" muted playsinline loop preload="none"></video>
           <div class="img-stage-status-dot" id="dot-ball"></div>
         </div>
         <div class="img-stage-label" id="label-ball">BALLING<br>DISC</div>
@@ -6355,5 +6381,19 @@ loadStateFromStorage();
 updateSummaryParams();
 updateImageNodes(0, simStep);
 
+
+// ── HOVER VIDEO PLAY / PAUSE (page 2) ──────────────────────────────
+function playStageVideo2(node) {
+  const video = node.querySelector('.img-stage-hover-video');
+  if (!video) return;
+  video.currentTime = 0;
+  video.play().catch(() => {});
+}
+function pauseStageVideo2(node) {
+  const video = node.querySelector('.img-stage-hover-video');
+  if (!video) return;
+  video.pause();
+  video.currentTime = 0;
+}
 </script>
 </html>
