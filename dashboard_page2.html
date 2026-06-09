@@ -5039,20 +5039,19 @@ function drawMixMini(frame, burst) {
   for (let y = 0; y < H; y += 28) { g.beginPath(); g.moveTo(0,y); g.lineTo(W,y); g.stroke(); }
 
   // ════════════════════════════════════════════════
-  // NEW FLOW LAYOUT:
-  //  Row 1 (top):   4 hoppers spread across top
-  //  Row 2 (mid):   pipes from each hopper converge → 1 collection funnel/container (center)
-  //  Row 3:         collection container → horizontal conveyor belt → right
-  //  Row 4 (bot):   conveyor feeds into big drum mixer (bottom-right)
-  //  Big motor on left of drum as before
-  //  Binder tank top-right feeds pipe into drum
+  // LAYOUT:
+  //  Row 1 (top-left zone):  4 hoppers clustered above collection container
+  //  Row 2 (mid-left):       Collection container "Abhitech's O" with all 4 pipes merging
+  //  Row 3 (mid):            Horizontal conveyor belt from collection → drum left inlet
+  //  Row 4 (right):          Big drum mixer (right half of canvas)
+  //  Top-right:              Binder tank → pipe into drum
   // ════════════════════════════════════════════════
 
-  // ── DRUM MIXER geometry (bottom band, slightly right-heavy) ──
-  const drumL   = W * 0.32;
-  const drumR   = W * 0.92;
-  const drumTop = H * 0.60;
-  const drumBot = H * 0.82;
+  // ── DRUM MIXER geometry (right portion, bottom half) ──
+  const drumL   = W * 0.46;
+  const drumR   = W * 0.93;
+  const drumTop = H * 0.52;
+  const drumBot = H * 0.78;
   const drumCX  = (drumL + drumR) / 2;
   const drumCY  = (drumTop + drumBot) / 2;
   const drumW   = drumR - drumL;
@@ -5060,85 +5059,85 @@ function drawMixMini(frame, burst) {
   const drumRX  = drumW / 2;
   const drumRY  = drumH / 2;
 
-  // ── COLLECTION CONTAINER geometry (center, mid-row) ──
-  const colW  = W * 0.18;
-  const colH  = H * 0.14;
-  const colCX = W * 0.36;
-  const colTop = H * 0.36;
-  const colBot = colTop + colH;
-  const colL  = colCX - colW/2;
-  const colR  = colCX + colW/2;
-  const colNeckW = colW * 0.28;
+  // ── COLLECTION CONTAINER geometry (left-center, mid canvas) ──
+  const colW    = W * 0.20;
+  const colH    = H * 0.16;
+  const colCX   = W * 0.22;   // left-center zone
+  const colTop  = H * 0.38;
+  const colBot  = colTop + colH;
+  const colL    = colCX - colW/2;
+  const colR    = colCX + colW/2;
+  const colNeckW = colW * 0.30;
 
-  // ── 4 HOPPERS geometry (top row) ──
+  // ── 4 HOPPERS: clustered above collection container ──
   const hopperData = [
-    { matColor: '#7a3520', rimColor: '#5a2510', label: 'IRON ORE',  matTop: 'rgba(110,48,22,0.9)',  matBot: 'rgba(80,32,12,0.8)'   },
-    { matColor: '#d8d0c4', rimColor: '#b0a898', label: 'BENTONITE', matTop: 'rgba(220,212,200,0.9)', matBot: 'rgba(190,182,170,0.8)' },
-    { matColor: '#1e1e1e', rimColor: '#2e2e2e', label: 'ORE FINES', matTop: 'rgba(40,40,40,0.9)',   matBot: 'rgba(20,20,20,0.8)'   },
-    { matColor: '#d2c488', rimColor: '#b0a468', label: 'OB BINDER', matTop: 'rgba(210,196,130,0.9)', matBot: 'rgba(175,158,95,0.8)' },
+    { matColor: '#7a3520', label: 'IRON ORE',  matTop: 'rgba(110,48,22,0.9)',  matBot: 'rgba(80,32,12,0.8)'   },
+    { matColor: '#d8d0c4', label: 'BENTONITE', matTop: 'rgba(220,212,200,0.9)', matBot: 'rgba(190,182,170,0.8)' },
+    { matColor: '#1e1e1e', label: 'ORE FINES', matTop: 'rgba(40,40,40,0.9)',   matBot: 'rgba(20,20,20,0.8)'   },
+    { matColor: '#d2c488', label: 'OB BINDER', matTop: 'rgba(210,196,130,0.9)', matBot: 'rgba(175,158,95,0.8)' },
   ];
-  const hCount   = 4;
-  const hW       = W * 0.10;
-  const hH       = H * 0.20;
-  const hNeckW   = hW * 0.28;
-  const hNeckH   = hH * 0.14;
-  const hY       = H * 0.02;
-  const hSpacing = (W * 0.82) / (hCount - 1);
-  const hStartX  = W * 0.10;
+  const hW      = W * 0.085;
+  const hH      = H * 0.19;
+  const hNeckW  = hW * 0.30;
+  const hNeckH  = hH * 0.13;
+  const hY      = H * 0.02;
+  // Hoppers centered over collection container, spread evenly
+  const hSpan   = colW * 2.6;    // total spread width
+  const hStartX = colCX - hSpan * 0.5 + hW * 0.5;
+  const hSpacing = hSpan / 3;
 
   // ══════════════════
-  // DRAW PIPES from each hopper neck → collection container top
+  // 1) PIPES from hopper necks → collection container top  (drawn FIRST, behind hoppers)
   // ══════════════════
   hopperData.forEach((hd, hi) => {
-    const hcx   = hStartX + hi * hSpacing;
-    const hbot  = hY + hH;
-    const nY    = hbot - hNeckH;
-    const neckBotY = hbot + 12;
+    const hcx       = hStartX + hi * hSpacing;
+    const hbot      = hY + hH;
+    const neckBotY  = hbot + 14;
+    // All pipes converge to the top-center of the collection container
+    const pipeEndX  = colCX + (hi - 1.5) * colNeckW * 0.55;
+    const pipeEndY  = colTop - 2;
 
-    // Bezier pipe from neck → collection container top center
-    const pipeEndX = colCX + (hi - 1.5) * colNeckW * 0.45;
-    const pipeEndY = colTop - 1;
+    // Control points: drop straight down from hopper, curve to collection
+    const cp1x = hcx;
+    const cp1y = neckBotY + (pipeEndY - neckBotY) * 0.50;
+    const cp2x = pipeEndX;
+    const cp2y = neckBotY + (pipeEndY - neckBotY) * 0.60;
 
-    // Pipe tube (thick, dark steel)
-    g.strokeStyle = 'rgba(65,85,105,0.70)';
-    g.lineWidth = hNeckW * 0.72;
+    // Outer pipe (steel tube)
+    g.strokeStyle = 'rgba(58,75,95,0.78)';
+    g.lineWidth = hNeckW * 0.85;
     g.lineCap = 'round';
     g.beginPath();
-    g.moveTo(hcx, neckBotY + 12);
-    g.bezierCurveTo(hcx, neckBotY + (pipeEndY - neckBotY) * 0.55, pipeEndX, neckBotY + (pipeEndY - neckBotY) * 0.45, pipeEndX, pipeEndY);
+    g.moveTo(hcx, neckBotY);
+    g.bezierCurveTo(cp1x, cp1y, cp2x, cp2y, pipeEndX, pipeEndY);
     g.stroke();
 
-    // Highlight on pipe (lighter center line)
-    g.strokeStyle = 'rgba(130,160,185,0.28)';
-    g.lineWidth = hNeckW * 0.22;
+    // Inner highlight
+    g.strokeStyle = 'rgba(140,170,195,0.30)';
+    g.lineWidth = hNeckW * 0.28;
     g.beginPath();
-    g.moveTo(hcx, neckBotY + 12);
-    g.bezierCurveTo(hcx, neckBotY + (pipeEndY - neckBotY) * 0.55, pipeEndX, neckBotY + (pipeEndY - neckBotY) * 0.45, pipeEndX, pipeEndY);
+    g.moveTo(hcx, neckBotY);
+    g.bezierCurveTo(cp1x, cp1y, cp2x, cp2y, pipeEndX, pipeEndY);
     g.stroke();
     g.lineCap = 'butt';
 
-    // Animated material flow particles along pipe
-    const fSpeed = 0.030 + hi * 0.005;
-    for (let fk = 0; fk < 6; fk++) {
-      const ft = ((frame * fSpeed + fk * 0.167) % 1);
-      if (ft < 0.03) continue;
-      // Sample point along bezier
-      const t3 = ft;
-      const t2 = 1 - t3;
-      const cp1x = hcx, cp1y = neckBotY + (pipeEndY - neckBotY) * 0.55;
-      const cp2x = pipeEndX, cp2y = neckBotY + (pipeEndY - neckBotY) * 0.45;
+    // Animated material particles flowing down pipe
+    const fSpeed = 0.028 + hi * 0.004;
+    for (let fk = 0; fk < 7; fk++) {
+      const ft = ((frame * fSpeed + fk * 0.143) % 1);
+      if (ft < 0.02) continue;
+      const t3 = ft, t2 = 1 - t3;
       const bx = t2*t2*t2*hcx + 3*t2*t2*t3*cp1x + 3*t2*t3*t3*cp2x + t3*t3*t3*pipeEndX;
-      const by = t2*t2*t2*(neckBotY+12) + 3*t2*t2*t3*cp1y + 3*t2*t3*t3*cp2y + t3*t3*t3*pipeEndY;
-      const fa = Math.min(1, ft * 8) * (1 - ft * 0.3) * 0.95;
-      g.globalAlpha = fa;
+      const by = t2*t2*t2*neckBotY + 3*t2*t2*t3*cp1y + 3*t2*t3*t3*cp2y + t3*t3*t3*pipeEndY;
+      g.globalAlpha = Math.min(1, ft * 9) * (1 - ft * 0.28) * 0.92;
       g.fillStyle = hd.matColor;
-      g.beginPath(); g.arc(bx, by, 2.6, 0, Math.PI * 2); g.fill();
+      g.beginPath(); g.arc(bx, by, 2.5, 0, Math.PI * 2); g.fill();
     }
     g.globalAlpha = 1;
   });
 
   // ══════════════════
-  // DRAW 4 HOPPERS (on top of pipes)
+  // 2) DRAW 4 HOPPERS (drawn ON TOP of pipes)
   // ══════════════════
   hopperData.forEach((hd, hi) => {
     const hcx  = hStartX + hi * hSpacing;
@@ -5176,7 +5175,7 @@ function drawMixMini(frame, burst) {
     g.fillStyle = mFill; g.fillRect(hcx - hW/2 + 2, htop + 3, hW - 4, hH);
     const heapY = htop + hH * 0.18 + 2 * Math.sin(frame * 0.03 + hi);
     g.fillStyle = hd.matTop;
-    g.beginPath(); g.ellipse(hcx, heapY + hH * 0.06, hW * 0.42, hH * 0.12, 0, 0, Math.PI * 2); g.fill();
+    g.beginPath(); g.ellipse(hcx, heapY + hH * 0.06, hW * 0.40, hH * 0.11, 0, 0, Math.PI * 2); g.fill();
     g.fillStyle = 'rgba(255,255,255,0.07)';
     g.fillRect(hcx - hW/2 + 2, htop + 3, hW - 4, hH * 0.15);
     g.restore();
@@ -5191,58 +5190,56 @@ function drawMixMini(frame, burst) {
     const nkG = g.createLinearGradient(hcx - hNeckW/2, 0, hcx + hNeckW/2, 0);
     nkG.addColorStop(0, '#3a4a58'); nkG.addColorStop(0.5, '#6a7e8e'); nkG.addColorStop(1, '#3a4a58');
     g.fillStyle = nkG; g.strokeStyle = 'rgba(80,100,120,0.6)'; g.lineWidth = 1;
-    g.beginPath(); g.roundRect(hcx - hNeckW/2 - 1, hbot - 2, hNeckW + 2, 10, 1); g.fill(); g.stroke();
+    g.beginPath(); g.roundRect(hcx - hNeckW/2 - 1, hbot - 2, hNeckW + 2, 12, 1); g.fill(); g.stroke();
 
-    // Gate/valve flange
+    // Gate flange
     g.fillStyle = '#2a3a4a'; g.strokeStyle = 'rgba(60,80,100,0.5)'; g.lineWidth = 0.8;
-    g.beginPath(); g.roundRect(hcx - hNeckW/2 - 3, hbot + 7, hNeckW + 6, 5, 1); g.fill(); g.stroke();
+    g.beginPath(); g.roundRect(hcx - hNeckW/2 - 3, hbot + 9, hNeckW + 6, 5, 1); g.fill(); g.stroke();
 
     // Label tag
     g.fillStyle = 'rgba(26,48,87,0.08)'; g.strokeStyle = 'rgba(200,145,42,0.28)'; g.lineWidth = 0.7;
-    g.beginPath(); g.roundRect(hcx - hW*0.52, htop - 18, hW * 1.04, 12, 2); g.fill(); g.stroke();
+    g.beginPath(); g.roundRect(hcx - hW*0.52, htop - 19, hW * 1.04, 13, 2); g.fill(); g.stroke();
     g.fillStyle = '#7a6a50'; g.font = '600 5.5px JetBrains Mono'; g.textAlign = 'center';
     g.fillText(hd.label, hcx, htop - 9);
   });
 
   // ══════════════════
-  // COLLECTION CONTAINER (mixture funnel in center)
+  // 3) COLLECTION CONTAINER — "Abhitech's O" label
   // ══════════════════
-  // Mixed color fill that pulses
-  const mixRatio = (Math.sin(frame * 0.025) + 1) * 0.5;
-  const colFill = g.createLinearGradient(colL, colTop, colR, colBot);
-  colFill.addColorStop(0,   '#3a4a5a');
-  colFill.addColorStop(0.3, '#5a6e7e');
-  colFill.addColorStop(0.6, '#7a8e9e');
-  colFill.addColorStop(1,   '#3a4a5a');
-  g.fillStyle = colFill; g.strokeStyle = 'rgba(90,120,145,0.75)'; g.lineWidth = 1.8;
+  // Shell (inverted trapezoid funnel)
+  const colShell = g.createLinearGradient(colL, 0, colR, 0);
+  colShell.addColorStop(0,   '#3a4a5a');
+  colShell.addColorStop(0.3, '#5a6e7e');
+  colShell.addColorStop(0.7, '#6a8090');
+  colShell.addColorStop(1,   '#3a4a5a');
+  g.fillStyle = colShell; g.strokeStyle = 'rgba(80,110,135,0.80)'; g.lineWidth = 2;
   g.beginPath();
   g.moveTo(colL, colTop);
   g.lineTo(colR, colTop);
-  g.lineTo(colCX + colNeckW/2, colBot - colH*0.12);
+  g.lineTo(colCX + colNeckW/2, colBot - colH*0.10);
   g.lineTo(colCX + colNeckW/2, colBot);
   g.lineTo(colCX - colNeckW/2, colBot);
-  g.lineTo(colCX - colNeckW/2, colBot - colH*0.12);
+  g.lineTo(colCX - colNeckW/2, colBot - colH*0.10);
   g.closePath(); g.fill(); g.stroke();
 
-  // Mixed material inside collection container (swirling colored layers)
+  // Mixed material inside
   g.save();
   g.beginPath();
   g.moveTo(colL + 2, colTop + 3);
   g.lineTo(colR - 2, colTop + 3);
-  g.lineTo(colCX + colNeckW/2 - 1, colBot - colH*0.12);
-  g.lineTo(colCX - colNeckW/2 + 1, colBot - colH*0.12);
+  g.lineTo(colCX + colNeckW/2 - 1, colBot - colH*0.11);
+  g.lineTo(colCX - colNeckW/2 + 1, colBot - colH*0.11);
   g.closePath(); g.clip();
-  // Brown iron-ore dominant mix
   const mixInFill = g.createLinearGradient(0, colTop + 3, 0, colBot - 3);
-  mixInFill.addColorStop(0, 'rgba(120,55,25,0.92)');
+  mixInFill.addColorStop(0,   'rgba(120,55,25,0.92)');
   mixInFill.addColorStop(0.4, 'rgba(90,40,15,0.85)');
   mixInFill.addColorStop(0.7, 'rgba(65,30,10,0.90)');
-  mixInFill.addColorStop(1, 'rgba(45,20,5,0.95)');
+  mixInFill.addColorStop(1,   'rgba(45,20,5,0.95)');
   g.fillStyle = mixInFill; g.fillRect(colL, colTop, colW, colH);
-  // Swirling streaks of bentonite (lighter)
+  // Swirling bentonite streaks
   for (let s = 0; s < 3; s++) {
-    const sw = frame * 0.02 + s * 2.1;
-    const sy = colTop + colH * (0.22 + s * 0.22) + Math.sin(sw) * colH * 0.06;
+    const sw = frame * 0.022 + s * 2.1;
+    const sy = colTop + colH * (0.20 + s * 0.22) + Math.sin(sw) * colH * 0.06;
     g.strokeStyle = 'rgba(210,200,180,0.22)'; g.lineWidth = 1.5;
     g.beginPath();
     g.moveTo(colL + 4, sy);
@@ -5250,117 +5247,145 @@ function drawMixMini(frame, burst) {
     g.stroke();
   }
   // Surface ripple
-  const ripY = colTop + colH * 0.12 + Math.sin(frame * 0.04) * 2;
-  g.strokeStyle = 'rgba(180,140,90,0.30)'; g.lineWidth = 1;
-  g.beginPath(); g.ellipse(colCX, ripY, colW * 0.35, colH * 0.07, 0, 0, Math.PI * 2); g.stroke();
+  const ripY = colTop + colH * 0.11 + Math.sin(frame * 0.04) * 1.5;
+  g.strokeStyle = 'rgba(180,140,90,0.32)'; g.lineWidth = 1;
+  g.beginPath(); g.ellipse(colCX, ripY, colW * 0.32, colH * 0.065, 0, 0, Math.PI * 2); g.stroke();
   g.restore();
 
-  // Top rim of collection container
+  // Top rim
   const colRimG = g.createLinearGradient(colL - 4, 0, colR + 4, 0);
   colRimG.addColorStop(0, '#5a6a7a'); colRimG.addColorStop(0.5, '#9ab0c0'); colRimG.addColorStop(1, '#5a6a7a');
-  g.fillStyle = colRimG; g.strokeStyle = 'rgba(120,145,165,0.65)'; g.lineWidth = 0.9;
-  g.beginPath(); g.roundRect(colL - 4, colTop - 5, colW + 8, 8, 2); g.fill(); g.stroke();
+  g.fillStyle = colRimG; g.strokeStyle = 'rgba(120,145,165,0.65)'; g.lineWidth = 1;
+  g.beginPath(); g.roundRect(colL - 5, colTop - 6, colW + 10, 9, 2); g.fill(); g.stroke();
 
-  // Label
-  g.fillStyle = 'rgba(26,48,87,0.09)'; g.strokeStyle = 'rgba(200,145,42,0.38)'; g.lineWidth = 0.8;
-  g.beginPath(); g.roundRect(colCX - 38, colBot + 4, 76, 12, 2); g.fill(); g.stroke();
+  // ── "Abhitech's O" label badge on collection container ──
+  const badgeW = colW + 10;
+  const badgeH = 22;
+  const badgeX = colCX - badgeW/2;
+  const badgeY = colTop + colH * 0.28;
+  // badge background
+  g.fillStyle = 'rgba(255,248,230,0.92)';
+  g.strokeStyle = 'rgba(200,145,42,0.75)';
+  g.lineWidth = 1.2;
+  g.beginPath(); g.roundRect(badgeX, badgeY, badgeW, badgeH, 3); g.fill(); g.stroke();
+  // gold accent strip on top of badge
+  g.fillStyle = 'rgba(200,145,42,0.85)';
+  g.beginPath(); g.roundRect(badgeX, badgeY, badgeW, 4, [3,3,0,0]); g.fill();
+  // text
+  g.fillStyle = '#c8912a';
+  g.font = 'bold 6.5px JetBrains Mono';
+  g.textAlign = 'center';
+  g.fillText("ABHITECH'S OB", colCX, badgeY + 15);
+
+  // Outer label below container
+  g.fillStyle = 'rgba(26,48,87,0.09)'; g.strokeStyle = 'rgba(200,145,42,0.45)'; g.lineWidth = 0.9;
+  g.beginPath(); g.roundRect(colCX - 42, colBot + 4, 84, 13, 2); g.fill(); g.stroke();
   g.fillStyle = '#7a5a30'; g.font = '600 5.5px JetBrains Mono'; g.textAlign = 'center';
-  g.fillText('COLLECTION', colCX, colBot + 12);
+  g.fillText('COLLECTION', colCX, colBot + 13);
 
   // ══════════════════
-  // CONVEYOR BELT from collection container → drum inlet (left side of drum)
+  // 4) HORIZONTAL CONVEYOR BELT: collection container neck → drum left inlet
+  //    Belt runs horizontally from just below collection → drum left side
   // ══════════════════
-  const cvSX = colCX;           // belt starts below collection neck
-  const cvSY = colBot + 14;
-  const cvEX = drumL + drumRY + 2;   // belt ends at drum left inlet
-  const cvEY = drumTop + drumH * 0.38;
-  const cvLen = Math.hypot(cvEX - cvSX, cvEY - cvSY);
-  const cvAng = Math.atan2(cvEY - cvSY, cvEX - cvSX);
-  const cvH   = 12;
+  // Chute stub from collection neck down to belt level
+  const beltY   = colBot + 36;           // belt top surface Y
+  const beltSX  = colCX - colW * 0.1;   // belt left start
+  const beltEX  = drumL + drumRY - 2;   // belt right end at drum inlet
+  const beltH   = 14;
 
-  g.save();
-  g.translate(cvSX, cvSY); g.rotate(cvAng);
+  // Discharge chute: collection neck → belt start
+  const chuteTopY  = colBot;
+  const chuteBotY  = beltY + beltH/2;
+  g.fillStyle = '#2a3a4a'; g.strokeStyle = 'rgba(55,80,105,0.60)'; g.lineWidth = 1.2;
+  g.beginPath();
+  g.moveTo(colCX - colNeckW/2, chuteTopY);
+  g.lineTo(colCX + colNeckW/2, chuteTopY);
+  g.lineTo(beltSX + beltH*0.5, chuteBotY);
+  g.lineTo(beltSX - beltH*0.5, chuteBotY);
+  g.closePath(); g.fill(); g.stroke();
 
-  // Belt frame/housing
+  // Particles in chute
+  for (let ds = 0; ds < 5; ds++) {
+    const dt = ((frame * 0.032 + ds * 0.2) % 1);
+    if (dt < 0.04) continue;
+    const dsx = colCX + (ds%3-1)*2;
+    const dsy = chuteTopY + dt * (chuteBotY - chuteTopY);
+    g.globalAlpha = Math.min(1, dt*9) * (1-dt*0.45) * 0.88;
+    g.fillStyle = '#6a2e14';
+    g.beginPath(); g.arc(dsx, dsy, 2.3, 0, Math.PI*2); g.fill();
+  }
+  g.globalAlpha = 1;
+
+  // Belt frame undercarriage
   g.fillStyle = '#1a2a38'; g.strokeStyle = 'rgba(45,75,105,0.60)'; g.lineWidth = 1;
-  g.beginPath(); g.roundRect(-4, cvH/2 + 1, cvLen + 8, 5, 1); g.fill(); g.stroke();
+  g.beginPath(); g.roundRect(beltSX - 3, beltY + beltH + 1, beltEX - beltSX + 6, 5, 1); g.fill(); g.stroke();
+
   // Side rails
-  g.strokeStyle = 'rgba(55,85,115,0.55)'; g.lineWidth = 0.9;
-  g.beginPath(); g.moveTo(0, -cvH/2 - 2); g.lineTo(cvLen, -cvH/2 - 2); g.stroke();
-  g.beginPath(); g.moveTo(0,  cvH/2 + 2); g.lineTo(cvLen,  cvH/2 + 2); g.stroke();
+  g.strokeStyle = 'rgba(55,85,115,0.55)'; g.lineWidth = 1;
+  g.beginPath(); g.moveTo(beltSX, beltY - 2);       g.lineTo(beltEX, beltY - 2);       g.stroke();
+  g.beginPath(); g.moveTo(beltSX, beltY + beltH + 2); g.lineTo(beltEX, beltY + beltH + 2); g.stroke();
 
   // Belt surface
-  const cvBG = g.createLinearGradient(0, -cvH/2, 0, cvH/2);
-  cvBG.addColorStop(0, '#18262e'); cvBG.addColorStop(0.5, '#243440'); cvBG.addColorStop(1, '#18262e');
+  const cvBG = g.createLinearGradient(0, beltY, 0, beltY + beltH);
+  cvBG.addColorStop(0, '#18262e'); cvBG.addColorStop(0.5, '#263848'); cvBG.addColorStop(1, '#18262e');
   g.fillStyle = cvBG; g.strokeStyle = 'rgba(40,70,95,0.55)'; g.lineWidth = 1;
-  g.beginPath(); g.roundRect(0, -cvH/2, cvLen, cvH, 2); g.fill(); g.stroke();
+  g.beginPath(); g.roundRect(beltSX, beltY, beltEX - beltSX, beltH, 2); g.fill(); g.stroke();
 
   // Animated belt stripes
   g.strokeStyle = 'rgba(70,105,135,0.52)'; g.lineWidth = 1;
-  const cvOff = (frame * 1.5) % 18;
-  for (let bl = 0; bl < cvLen + 18; bl += 18) {
-    g.beginPath(); g.moveTo(bl - cvOff, -cvH/2+1); g.lineTo(bl - cvOff, cvH/2-1); g.stroke();
+  const cvOff = (frame * 1.6) % 20;
+  for (let bl = 0; bl < beltEX - beltSX + 20; bl += 20) {
+    const bx = beltSX + bl - cvOff;
+    if (bx < beltSX || bx > beltEX) continue;
+    g.beginPath(); g.moveTo(bx, beltY + 1); g.lineTo(bx, beltY + beltH - 1); g.stroke();
   }
 
-  // Mixed material lumps on conveyor belt
-  const cvMatColors = ['#6a2e14','#4a2208','#9a8860','#2e2e2e','#8a7a40'];
-  for (let mp = 0; mp < 8; mp++) {
-    const mt = ((mp/8) + (frame * 0.007)) % 1;
-    const mx = mt * cvLen;
+  // Mixed material lumps on belt
+  const cvMatColors = ['#6a2e14','#4a2208','#9a8860','#2e2e2e','#8a7a40','#7a3520'];
+  const beltLen = beltEX - beltSX;
+  for (let mp = 0; mp < 9; mp++) {
+    const mt = ((mp/9) + (frame * 0.007)) % 1;
+    const mx = beltSX + mt * beltLen;
+    const my = beltY + beltH/2 + (mp%2===0 ? -2 : 2);
     g.fillStyle = cvMatColors[mp % cvMatColors.length];
     g.strokeStyle = 'rgba(255,255,255,0.05)'; g.lineWidth = 0.5;
-    g.beginPath(); g.ellipse(mx, (mp%2===0)?-1.5:1.5, 6, 3.5, 0, 0, Math.PI*2); g.fill(); g.stroke();
+    g.beginPath(); g.ellipse(mx, my, 6.5, 3.8, 0, 0, Math.PI*2); g.fill(); g.stroke();
   }
 
   // Belt rollers
-  const cvRollerPos = [0, 0.2, 0.4, 0.6, 0.8, 1.0];
-  cvRollerPos.forEach(rp => {
-    const rx = rp * cvLen;
+  const rollerXs = [beltSX, beltSX + beltLen*0.2, beltSX + beltLen*0.4, beltSX + beltLen*0.6, beltSX + beltLen*0.8, beltEX];
+  rollerXs.forEach(rx => {
+    const ry = beltY + beltH/2;
     g.fillStyle = '#3a5068'; g.strokeStyle = 'rgba(65,95,125,0.5)'; g.lineWidth = 0.8;
-    g.beginPath(); g.arc(rx, 0, 6, 0, Math.PI*2); g.fill(); g.stroke();
-    g.save(); g.translate(rx, 0); g.rotate(frame * 0.10);
-    g.strokeStyle = 'rgba(140,175,200,0.42)'; g.lineWidth = 0.7;
+    g.beginPath(); g.arc(rx, ry, 7, 0, Math.PI*2); g.fill(); g.stroke();
+    g.save(); g.translate(rx, ry); g.rotate(frame * 0.11);
+    g.strokeStyle = 'rgba(140,175,200,0.42)'; g.lineWidth = 0.8;
     g.beginPath(); g.moveTo(-5,0); g.lineTo(5,0); g.stroke();
     g.beginPath(); g.moveTo(0,-5); g.lineTo(0,5); g.stroke();
     g.restore();
   });
-  g.restore(); // end conveyor transform
 
   // Belt label
-  const midCvX = (cvSX + cvEX) / 2;
-  const midCvY = (cvSY + cvEY) / 2 + 14;
+  const midBX = beltSX + beltLen * 0.5;
+  const midBY = beltY + beltH + 18;
   g.fillStyle = 'rgba(26,48,87,0.09)'; g.strokeStyle = 'rgba(200,145,42,0.28)'; g.lineWidth = 0.7;
-  g.beginPath(); g.roundRect(midCvX - 50, midCvY - 8, 100, 12, 2); g.fill(); g.stroke();
+  g.beginPath(); g.roundRect(midBX - 50, midBY - 8, 100, 12, 2); g.fill(); g.stroke();
   g.fillStyle = '#7a6a50'; g.font = '500 5px JetBrains Mono'; g.textAlign = 'center';
-  g.fillText('FEED CONVEYOR →', midCvX, midCvY);
+  g.fillText('FEED CONVEYOR →', midBX, midBY);
 
-  // Discharge chute from collection neck → conveyor start
-  const chuteTopY = colBot;
-  const chuteBotY = cvSY - 1;
+  // Connection stub from belt end into drum
   g.fillStyle = '#2a3a4a'; g.strokeStyle = 'rgba(55,80,105,0.55)'; g.lineWidth = 1;
   g.beginPath();
-  g.moveTo(colCX - colNeckW/2, chuteTopY);
-  g.lineTo(colCX + colNeckW/2, chuteTopY);
-  g.lineTo(cvSX + 7, chuteBotY);
-  g.lineTo(cvSX - 7, chuteBotY);
+  g.moveTo(beltEX - 2, beltY - 1);
+  g.lineTo(beltEX + 8, beltY - 1);
+  g.lineTo(beltEX + 8, drumTop + 4);
+  g.lineTo(beltEX - 2, drumTop + 4);
   g.closePath(); g.fill(); g.stroke();
 
-  // Animated particles falling from collection neck → conveyor
-  for (let ds = 0; ds < 5; ds++) {
-    const dt = ((frame * 0.030 + ds * 0.2) % 1);
-    if (dt < 0.04) continue;
-    const dsx = colCX + (ds%3-1)*2.5;
-    const dsy = chuteTopY + dt * (chuteBotY - chuteTopY + 4);
-    g.globalAlpha = Math.min(1, dt*10) * (1-dt*0.5) * 0.88;
-    g.fillStyle = '#6a2e14';
-    g.beginPath(); g.arc(dsx, dsy, 2.4, 0, Math.PI*2); g.fill();
-  }
-  g.globalAlpha = 1;
-
   // ══════════════════
-  // BINDER TANK (top-right, cylindrical with glass dome)
+  // BINDER TANK (top-right)
   // ══════════════════
-  const tkX  = W * 0.875;
+  const tkX  = W * 0.87;
   const tkY  = H * 0.02;
   const tkW  = W * 0.09;
   const tkH  = H * 0.28;
@@ -5395,23 +5420,25 @@ function drawMixMini(frame, burst) {
   g.save(); g.rotate(Math.PI/2);
   [-1,1].forEach(d => { g.beginPath(); g.moveTo(0,0); g.lineTo(d * tkW*0.25, tkH*0.05); g.stroke(); });
   g.restore(); g.restore(); g.restore();
-  // Pipe from binder tank bottom → drum top-right
+  // Pipe from binder tank → drum top-right
   const pipeX3  = tkCX;
   const pipeY1b = tkY + tkH * 0.92;
-  const pipeY2b = drumTop - 5;
+  const pipeY2b = drumTop - 4;
   const pipeX2b = drumL + drumW * 0.83;
   g.strokeStyle = 'rgba(100,125,148,0.65)'; g.lineWidth = 3.5;
   g.lineCap = 'round'; g.lineJoin = 'round';
-  g.beginPath(); g.moveTo(pipeX3, pipeY1b); g.lineTo(pipeX3, pipeY1b + (pipeY2b-pipeY1b)*0.4);
+  g.beginPath(); g.moveTo(pipeX3, pipeY1b);
+  g.lineTo(pipeX3, pipeY1b + (pipeY2b-pipeY1b)*0.4);
   g.arcTo(pipeX3, pipeY2b, pipeX2b, pipeY2b, 8);
   g.lineTo(pipeX2b, pipeY2b); g.stroke();
   g.lineCap = 'butt';
   const bdT2 = ((frame * 0.020) % 1);
   g.fillStyle = 'rgba(80,155,225,0.88)';
   g.beginPath(); g.arc(pipeX3, pipeY1b + bdT2 * 14, 2.4, 0, Math.PI*2); g.fill();
+  // Binder inlet port on drum
   g.fillStyle = '#5a6a7a'; g.strokeStyle = 'rgba(90,110,130,0.5)'; g.lineWidth = 0.9;
   g.beginPath(); g.roundRect(pipeX2b - 6, drumTop - 6, 12, 7, 1.5); g.fill(); g.stroke();
-  // Binder tank label
+  // Binder label
   g.fillStyle = 'rgba(26,48,87,0.08)'; g.strokeStyle = 'rgba(200,145,42,0.28)'; g.lineWidth = 0.7;
   g.beginPath(); g.roundRect(tkX - 2, tkY + tkH + 2, tkW + 4, 12, 2); g.fill(); g.stroke();
   g.fillStyle = '#7a6a50'; g.font = '600 5.5px JetBrains Mono'; g.textAlign = 'center';
@@ -5427,9 +5454,9 @@ function drawMixMini(frame, burst) {
     const lgGrad = g.createLinearGradient(lgx - 4, 0, lgx + 4, 0);
     lgGrad.addColorStop(0,'#1a3057'); lgGrad.addColorStop(0.5,'#3060a0'); lgGrad.addColorStop(1,'#1a3057');
     g.fillStyle = lgGrad; g.strokeStyle = 'rgba(26,60,120,0.45)'; g.lineWidth = 0.9;
-    g.beginPath(); g.roundRect(lgx - 4, drumBot, 8, H*0.08, 1); g.fill(); g.stroke();
+    g.beginPath(); g.roundRect(lgx - 4, drumBot, 8, H*0.07, 1); g.fill(); g.stroke();
     g.fillStyle = '#0e1e38'; g.strokeStyle = 'rgba(26,60,90,0.4)'; g.lineWidth = 0.7;
-    g.beginPath(); g.roundRect(lgx - 9, drumBot + H*0.08 - 2, 18, 5, 1); g.fill(); g.stroke();
+    g.beginPath(); g.roundRect(lgx - 9, drumBot + H*0.07 - 2, 18, 5, 1); g.fill(); g.stroke();
   });
 
   // Drum shell
@@ -5544,10 +5571,10 @@ function drawMixMini(frame, burst) {
   });
 
   // ══════════════════
-  // BIG MOTOR (far left of drum)
+  // MOTOR (left of drum)
   // ══════════════════
-  const motW = W * 0.055, motH = H * 0.18;
-  const motX = drumL - motW - 6, motY = drumCY - motH*0.5;
+  const motW = W * 0.052, motH = H * 0.17;
+  const motX = drumL - motW - 5, motY = drumCY - motH*0.5;
   const motGrad2 = g.createLinearGradient(motX, 0, motX + motW, 0);
   motGrad2.addColorStop(0,'#1a2e4a'); motGrad2.addColorStop(0.4,'#2a4878'); motGrad2.addColorStop(0.6,'#2a4878'); motGrad2.addColorStop(1,'#1a2e4a');
   g.fillStyle = motGrad2; g.strokeStyle = 'rgba(30,60,110,0.6)'; g.lineWidth = 1.3;
@@ -5557,9 +5584,8 @@ function drawMixMini(frame, burst) {
     const fy2 = motY + motH*0.12 + f * motH*0.13;
     g.beginPath(); g.moveTo(motX+2, fy2); g.lineTo(motX+motW-2, fy2); g.stroke();
   }
-  // shaft coupling
   g.fillStyle = '#2d4870'; g.strokeStyle = 'rgba(50,80,130,0.55)'; g.lineWidth = 0.8;
-  g.beginPath(); g.roundRect(motX+motW, drumCY-drumRY*0.10, 6 + drumRY, drumRY*0.20, 1); g.fill(); g.stroke();
+  g.beginPath(); g.roundRect(motX+motW, drumCY-drumRY*0.10, 5+drumRY, drumRY*0.20, 1); g.fill(); g.stroke();
   g.fillStyle = '#3a5880'; g.strokeStyle = 'rgba(60,90,140,0.5)'; g.lineWidth = 0.8;
   g.beginPath(); g.roundRect(drumL + drumRY - 5, drumCY - drumRY*0.14, 10, drumRY*0.28, 2); g.fill(); g.stroke();
   g.fillStyle = '#111e30'; g.strokeStyle = 'rgba(20,45,80,0.45)'; g.lineWidth = 0.8;
@@ -5570,84 +5596,76 @@ function drawMixMini(frame, burst) {
   g.fillText('MOTOR', motX + motW/2, motY - 5);
 
   // ══════════════════
-  // DISCHARGE BELT (from drum bottom-right → bottom-right corner)
+  // DISCHARGE BELT (from drum bottom-right → corner)
   // ══════════════════
   const dcSX2 = drumL + drumW*0.78;
-  const dcSY2 = drumBot + H*0.005;
+  const dcSY2 = drumBot + H*0.004;
   const dcEX2 = W * 0.97;
-  const dcEY2 = H * 0.95;
+  const dcEY2 = H * 0.96;
   const dcLen2 = Math.hypot(dcEX2 - dcSX2, dcEY2 - dcSY2);
   const dcAng2 = Math.atan2(dcEY2 - dcSY2, dcEX2 - dcSX2);
   const dcH2   = 11;
-
   g.save();
   g.translate(dcSX2, dcSY2); g.rotate(dcAng2);
   g.fillStyle = '#1a2a38'; g.strokeStyle = 'rgba(45,75,105,0.55)'; g.lineWidth = 1;
-  g.beginPath(); g.roundRect(-4, dcH2/2 + 1, dcLen2 + 8, 5, 1); g.fill(); g.stroke();
+  g.beginPath(); g.roundRect(-4, dcH2/2+1, dcLen2+8, 5, 1); g.fill(); g.stroke();
   g.strokeStyle = 'rgba(50,80,110,0.50)'; g.lineWidth = 0.9;
   g.beginPath(); g.moveTo(0,-dcH2/2-2); g.lineTo(dcLen2,-dcH2/2-2); g.stroke();
   g.beginPath(); g.moveTo(0, dcH2/2+2); g.lineTo(dcLen2, dcH2/2+2); g.stroke();
-  const dcBG2 = g.createLinearGradient(0, -dcH2/2, 0, dcH2/2);
+  const dcBG2 = g.createLinearGradient(0,-dcH2/2,0,dcH2/2);
   dcBG2.addColorStop(0,'#18262e'); dcBG2.addColorStop(0.5,'#243440'); dcBG2.addColorStop(1,'#18262e');
   g.fillStyle = dcBG2; g.strokeStyle = 'rgba(40,70,95,0.55)'; g.lineWidth = 1;
-  g.beginPath(); g.roundRect(0, -dcH2/2, dcLen2, dcH2, 2); g.fill(); g.stroke();
+  g.beginPath(); g.roundRect(0,-dcH2/2,dcLen2,dcH2,2); g.fill(); g.stroke();
   g.strokeStyle = 'rgba(70,105,135,0.5)'; g.lineWidth = 1;
   const dcOff2 = (frame * 1.6) % 18;
-  for (let bl = 0; bl < dcLen2 + 18; bl += 18) {
-    g.beginPath(); g.moveTo(bl - dcOff2, -dcH2/2+1); g.lineTo(bl - dcOff2, dcH2/2-1); g.stroke();
+  for (let bl = 0; bl < dcLen2+18; bl += 18) {
+    g.beginPath(); g.moveTo(bl-dcOff2,-dcH2/2+1); g.lineTo(bl-dcOff2,dcH2/2-1); g.stroke();
   }
   const dcMatColors2 = ['#6a2e14','#4a2208','#7a3820','#5a2a10'];
   for (let mp = 0; mp < 7; mp++) {
-    const mt = ((mp/7) + (frame * 0.0065)) % 1;
-    const mx4 = mt * dcLen2;
-    g.fillStyle = dcMatColors2[mp % dcMatColors2.length];
+    const mt = ((mp/7)+(frame*0.0065))%1;
+    g.fillStyle = dcMatColors2[mp%dcMatColors2.length];
     g.strokeStyle = 'rgba(255,255,255,0.06)'; g.lineWidth = 0.5;
-    g.beginPath(); g.ellipse(mx4, (mp%2===0)?-1.5:1.5, 7, 4, 0, 0, Math.PI*2); g.fill(); g.stroke();
+    g.beginPath(); g.ellipse(mt*dcLen2,(mp%2===0)?-1.5:1.5,7,4,0,0,Math.PI*2); g.fill(); g.stroke();
   }
-  const dcRollerPos2 = [0, 0.18, 0.38, 0.58, 0.78, 1.0];
-  dcRollerPos2.forEach(rp => {
-    const rx4 = rp * dcLen2;
-    g.fillStyle = '#3a5068'; g.strokeStyle = 'rgba(65,95,125,0.5)'; g.lineWidth = 0.8;
-    g.beginPath(); g.arc(rx4, 0, 6, 0, Math.PI*2); g.fill(); g.stroke();
-    g.save(); g.translate(rx4, 0); g.rotate(frame * 0.10);
-    g.strokeStyle = 'rgba(140,175,200,0.42)'; g.lineWidth = 0.7;
+  [0,0.18,0.38,0.58,0.78,1.0].forEach(rp => {
+    const rx4 = rp*dcLen2;
+    g.fillStyle='#3a5068'; g.strokeStyle='rgba(65,95,125,0.5)'; g.lineWidth=0.8;
+    g.beginPath(); g.arc(rx4,0,6,0,Math.PI*2); g.fill(); g.stroke();
+    g.save(); g.translate(rx4,0); g.rotate(frame*0.10);
+    g.strokeStyle='rgba(140,175,200,0.42)'; g.lineWidth=0.7;
     g.beginPath(); g.moveTo(-5,0); g.lineTo(5,0); g.stroke();
     g.beginPath(); g.moveTo(0,-5); g.lineTo(0,5); g.stroke();
     g.restore();
   });
   g.restore();
 
-  // Discharge chute (drum → discharge belt)
+  // Discharge chute stub (drum → discharge belt)
   g.fillStyle = '#2a3a4a'; g.strokeStyle = 'rgba(55,80,105,0.55)'; g.lineWidth = 1;
   g.beginPath();
-  g.moveTo(dcSX2 - 10, drumBot);
-  g.lineTo(dcSX2 + 10, drumBot);
-  g.lineTo(dcSX2 + 7, dcSY2);
-  g.lineTo(dcSX2 - 7, dcSY2);
+  g.moveTo(dcSX2-10, drumBot); g.lineTo(dcSX2+10, drumBot);
+  g.lineTo(dcSX2+7,  dcSY2);  g.lineTo(dcSX2-7,  dcSY2);
   g.closePath(); g.fill(); g.stroke();
-  for (let ds = 0; ds < 5; ds++) {
-    const dt3 = ((frame * 0.028 + ds*0.2) % 1);
-    if (dt3 < 0.04) continue;
-    const dsx3 = dcSX2 + (ds%3-1)*2.5;
-    const dsy3 = drumBot + dt3 * (dcSY2 - drumBot + 4);
-    g.globalAlpha = Math.min(1, dt3*10) * (1-dt3*0.5) * 0.88;
+  for (let ds=0; ds<5; ds++) {
+    const dt3 = ((frame*0.028+ds*0.2)%1);
+    if (dt3<0.04) continue;
+    g.globalAlpha = Math.min(1,dt3*10)*(1-dt3*0.5)*0.88;
     g.fillStyle = '#6a2e14';
-    g.beginPath(); g.arc(dsx3, dsy3, 2.4, 0, Math.PI*2); g.fill();
+    g.beginPath(); g.arc(dcSX2+(ds%3-1)*2.5, drumBot+dt3*(dcSY2-drumBot+4), 2.4, 0, Math.PI*2); g.fill();
   }
   g.globalAlpha = 1;
 
   // Discharge belt label
-  const midDcX2 = (dcSX2 + dcEX2) / 2 - 5;
-  const midDcY2 = (dcSY2 + dcEY2) / 2 + 14;
-  g.fillStyle = 'rgba(26,48,87,0.09)'; g.strokeStyle = 'rgba(200,145,42,0.28)'; g.lineWidth = 0.7;
-  g.beginPath(); g.roundRect(midDcX2 - 46, midDcY2 - 8, 92, 12, 2); g.fill(); g.stroke();
-  g.fillStyle = '#7a6a50'; g.font = '500 5px JetBrains Mono'; g.textAlign = 'center';
+  const midDcX2 = (dcSX2+dcEX2)/2-5, midDcY2 = (dcSY2+dcEY2)/2+14;
+  g.fillStyle='rgba(26,48,87,0.09)'; g.strokeStyle='rgba(200,145,42,0.28)'; g.lineWidth=0.7;
+  g.beginPath(); g.roundRect(midDcX2-46,midDcY2-8,92,12,2); g.fill(); g.stroke();
+  g.fillStyle='#7a6a50'; g.font='500 5px JetBrains Mono'; g.textAlign='center';
   g.fillText('DISCHARGE BELT →', midDcX2, midDcY2);
 
   // ══════════════════
   // LIVE DATA CHIPS
   // ══════════════════
-  const binder2   = stageParams.mix.binder   || '—';
+  const binder2   = stageParams.mix.binder || '—';
   const moisture2 = stageParams.mix.mixMoisture || '—';
   const chips2 = [
     { label:'BINDER',   val: binder2.length>10 ? binder2.substring(0,9)+'…' : binder2,
@@ -5658,11 +5676,11 @@ function drawMixMini(frame, burst) {
   chips2.forEach(c => {
     const cw=82, ch=26;
     g.fillStyle=c.bg; g.strokeStyle=c.border; g.lineWidth=1;
-    g.beginPath(); g.roundRect(c.x-cw/2, c.y-ch/2, cw, ch, 4); g.fill(); g.stroke();
+    g.beginPath(); g.roundRect(c.x-cw/2,c.y-ch/2,cw,ch,4); g.fill(); g.stroke();
     g.fillStyle=c.txt; g.font='500 6px JetBrains Mono'; g.textAlign='center';
-    g.fillText(c.label, c.x, c.y - 5);
+    g.fillText(c.label,c.x,c.y-5);
     g.font='700 8.5px JetBrains Mono';
-    g.fillText(c.val, c.x, c.y + 7);
+    g.fillText(c.val,c.x,c.y+7);
   });
 
   // Shaft rotation bar
@@ -5671,11 +5689,11 @@ function drawMixMini(frame, burst) {
 
   // SAVE BURST
   if (burst > 0) {
-    const bAlpha = Math.min(1, burst / 18);
-    g.save(); g.globalAlpha = bAlpha * 0.95;
-    g.shadowColor = '#3aaa6a'; g.shadowBlur = 16;
-    g.strokeStyle = '#3aaa6a'; g.lineWidth = 4; g.lineCap = 'round';
-    g.beginPath(); g.moveTo(W/2-14, H*0.88); g.lineTo(W/2-3, H*0.88+11); g.lineTo(W/2+16, H*0.88-11); g.stroke();
+    const bAlpha = Math.min(1, burst/18);
+    g.save(); g.globalAlpha = bAlpha*0.95;
+    g.shadowColor='#3aaa6a'; g.shadowBlur=16;
+    g.strokeStyle='#3aaa6a'; g.lineWidth=4; g.lineCap='round';
+    g.beginPath(); g.moveTo(W/2-14,H*0.88); g.lineTo(W/2-3,H*0.88+11); g.lineTo(W/2+16,H*0.88-11); g.stroke();
     g.restore();
   }
 }
