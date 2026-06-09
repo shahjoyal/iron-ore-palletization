@@ -5062,7 +5062,7 @@ function drawMixMini(frame, burst) {
   // ── COLLECTION CONTAINER geometry (left-center, mid canvas) ──
   const colW    = W * 0.20;
   const colH    = H * 0.16;
-  const colCX   = W * 0.22;   // left-center zone
+  const colCX   = W * 0.27;   // left-center zone (shifted right so hoppers aren't cut)
   const colTop  = H * 0.38;
   const colBot  = colTop + colH;
   const colL    = colCX - colW/2;
@@ -5275,7 +5275,7 @@ function drawMixMini(frame, burst) {
   g.fillStyle = '#c8912a';
   g.font = 'bold 6.5px JetBrains Mono';
   g.textAlign = 'center';
-  g.fillText("ABHITECH'S OB", colCX, badgeY + 15);
+  g.fillText("ABHITECH'S O", colCX, badgeY + 15);
 
   // Outer label below container
   g.fillStyle = 'rgba(26,48,87,0.09)'; g.strokeStyle = 'rgba(200,145,42,0.45)'; g.lineWidth = 0.9;
