@@ -1570,19 +1570,19 @@ input.finp{cursor:text;}
               <!-- Central large pellet -->
               <defs>
                 <radialGradient id="pg1" cx="35%" cy="30%">
-                  <stop offset="0%" stop-color="#a8c8e0"/>
-                  <stop offset="50%" stop-color="#4a7a9a"/>
-                  <stop offset="100%" stop-color="#1a3a5a"/>
+                  <stop offset="0%" stop-color="#d4a876"/>
+                  <stop offset="50%" stop-color="#8b5e3c"/>
+                  <stop offset="100%" stop-color="#4a2e14"/>
                 </radialGradient>
                 <radialGradient id="pg2" cx="35%" cy="30%">
-                  <stop offset="0%" stop-color="#9ab8cc"/>
-                  <stop offset="50%" stop-color="#3a6a8a"/>
-                  <stop offset="100%" stop-color="#152d4a"/>
+                  <stop offset="0%" stop-color="#c49a6c"/>
+                  <stop offset="50%" stop-color="#7a4e2c"/>
+                  <stop offset="100%" stop-color="#3a2010"/>
                 </radialGradient>
                 <radialGradient id="pg3" cx="38%" cy="28%">
-                  <stop offset="0%" stop-color="#b0c8d8"/>
-                  <stop offset="45%" stop-color="#5a8aaa"/>
-                  <stop offset="100%" stop-color="#1e3a55"/>
+                  <stop offset="0%" stop-color="#c8a06a"/>
+                  <stop offset="45%" stop-color="#7a5030"/>
+                  <stop offset="100%" stop-color="#3e2210"/>
                 </radialGradient>
                 <radialGradient id="pgCut" cx="45%" cy="40%">
                   <stop offset="0%" stop-color="#c8a870"/>
@@ -3312,14 +3312,17 @@ function hslTempColor(temp, variant='main'){
   return `hsl(${hue.toFixed(1)} ${sat.toFixed(1)}% ${light.toFixed(1)}%)`;
 }
 function coolingTemps(){
-  const defaults = [900, 700, 420, 180];
   const raw = [
     stageParams.cool.zone1,
     stageParams.cool.zone2,
     stageParams.cool.zone3,
     stageParams.cool.zone4
   ];
-  return raw.map((v, i) => safeNum(v, defaults[i]));
+  // Return 0 when no value saved — heatColor(0) renders silver/steel
+  return raw.map((v) => {
+    const n = safeNum(v, null);
+    return (n !== null && n > 0) ? n : 0;
+  });
 }
 function tempZoneColors(temp){
   return {
@@ -3334,34 +3337,34 @@ function drawCoolingKiln(cx, cy, mW, mH, stage, isActive, isDone, frame){
   if(mW<=0||mH<=0) return{x:cx,y:cy,w:0,h:0};
   const temps = coolingTemps();
 
-  // Temperature → heat color (hot pink/magenta → red → orange → yellow → pale)
+  // Temperature → colour: silver/steel (no temp) → orange (low) → yellow (mid) → light blue-green (high)
   function heatColor(temp){
-    const t = clamp((temp - 150) / (950 - 150), 0, 1);
-    if(t >= 0.85){ // ~870°C+ → deep magenta/crimson
-      const s = (t - 0.85) / 0.15;
-      return `rgb(${Math.round(180 + s*30)},${Math.round(20 - s*10)},${Math.round(60 + s*40)})`;
-    } else if(t >= 0.65){ // ~670–870°C → vivid red
-      const s = (t - 0.65) / 0.20;
-      return `rgb(${Math.round(215 + s*25)},${Math.round(20 + s*10)},${Math.round(10 + s*30)})`;
-    } else if(t >= 0.40){ // ~470–670°C → red-orange
-      const s = (t - 0.40) / 0.25;
-      return `rgb(${Math.round(230 + s*10)},${Math.round(80 + s*30)},${Math.round(10)})`;
-    } else if(t >= 0.20){ // ~310–470°C → orange
-      const s = (t - 0.20) / 0.20;
-      return `rgb(240,${Math.round(130 + s*50)},${Math.round(10 + s*20)})`;
-    } else { // <310°C → yellow/pale
-      const s = t / 0.20;
-      return `rgb(245,${Math.round(190 + s*40)},${Math.round(60 + s*60)})`;
+    if(!temp || temp <= 0) return `rgb(160,165,175)`; // silver/steel when no temp
+    const t = clamp((temp - 50) / (950 - 50), 0, 1);
+    if(t >= 0.75){ // ~720C+ → light blue-green
+      const s = (t - 0.75) / 0.25;
+      return `rgb(${Math.round(140 - s*40)},${Math.round(210 + s*20)},${Math.round(190 + s*40)})`;
+    } else if(t >= 0.45){ // ~475-720C → yellow-gold to light teal
+      const s = (t - 0.45) / 0.30;
+      return `rgb(${Math.round(250 - s*60)},${Math.round(220 - s*30)},${Math.round(80 + s*80)})`;
+    } else if(t >= 0.18){ // ~210-475C → orange to yellow
+      const s = (t - 0.18) / 0.27;
+      return `rgb(245,${Math.round(140 + s*70)},${Math.round(40 + s*40)})`;
+    } else if(t > 0){ // 50-210C → orange
+      const s = t / 0.18;
+      return `rgb(${Math.round(220 + s*20)},${Math.round(100 + s*40)},${Math.round(30 + s*10)})`;
+    } else {
+      return `rgb(160,165,175)`; // silver/steel
     }
   }
 
   function heatColorDark(temp){ // darker shade for shading
-    const t = clamp((temp - 150) / (950 - 150), 0, 1);
-    if(t >= 0.85) return `rgb(120,10,40)`;
-    if(t >= 0.65) return `rgb(160,15,8)`;
-    if(t >= 0.40) return `rgb(180,50,8)`;
-    if(t >= 0.20) return `rgb(190,90,10)`;
-    return `rgb(200,140,40)`;
+    if(!temp || temp <= 0) return `rgb(100,105,115)`;
+    const t = clamp((temp - 50) / (950 - 50), 0, 1);
+    if(t >= 0.75) return `rgb(60,140,130)`;
+    if(t >= 0.45) return `rgb(160,150,40)`;
+    if(t >= 0.18) return `rgb(190,100,20)`;
+    return `rgb(160,70,15)`;
   }
 
   const kilnW  = mW * 1.30;
@@ -6897,11 +6900,12 @@ const coolCtx=coolCanvas.getContext('2d');
 // Live temps read from the input fields inside the card (or fall back to stageParams)
 function getCoolLiveTemps(){
   const ids=['cool-z1','cool-z2','cool-z3','cool-z4'];
-  const defaults=[900,680,380,170];
   return ids.map((id,i)=>{
     const el=document.getElementById(id);
-    if(el&&el.value!=='') return Math.max(0,Number(el.value)||defaults[i]);
-    return safeNum(stageParams.cool['zone'+(i+1)], defaults[i]);
+    if(el&&el.value!=='') return Math.max(0,Number(el.value)||0);
+    // Check stageParams — if user has saved values, use them; otherwise 0 = silver/steel
+    const saved=stageParams.cool['zone'+(i+1)];
+    return (saved!==undefined&&saved!==''&&saved!==null)?Math.max(0,Number(saved)||0):0;
   });
 }
 
@@ -6941,20 +6945,21 @@ function drawCoolKilnAnim(frame){
   const shellTopL=topL-shellPad, shellTopR=topR-shellPad;
   const shellBotL=botL+shellPad, shellBotR=botR+shellPad;
 
-  // Heat colour helpers (same logic as main drawCoolingKiln)
+  // Heat colour helpers — silver/steel (no temp) → orange (low) → yellow (mid) → light blue-green (high)
   function heatCol(temp){
-    const t=clamp((temp-150)/(950-150),0,1);
-    if(t>=0.85) return `rgb(${Math.round(180+(t-0.85)/0.15*30)},${Math.round(20-(t-0.85)/0.15*10)},${Math.round(60+(t-0.85)/0.15*40)})`;
-    if(t>=0.65) return `rgb(${Math.round(215+(t-0.65)/0.20*25)},${Math.round(20+(t-0.65)/0.20*10)},${Math.round(10+(t-0.65)/0.20*30)})`;
-    if(t>=0.40) return `rgb(${Math.round(230+(t-0.40)/0.25*10)},${Math.round(80+(t-0.40)/0.25*30)},10)`;
-    if(t>=0.20) return `rgb(240,${Math.round(130+(t-0.20)/0.20*50)},${Math.round(10+(t-0.20)/0.20*20)})`;
-    const s=t/0.20; return `rgb(245,${Math.round(190+s*40)},${Math.round(60+s*60)})`;
+    if(!temp || temp<=0) return `rgb(160,165,175)`;
+    const t=clamp((temp-50)/(950-50),0,1);
+    if(t>=0.75){const s=(t-0.75)/0.25; return `rgb(${Math.round(140-s*40)},${Math.round(210+s*20)},${Math.round(190+s*40)})`;}
+    if(t>=0.45){const s=(t-0.45)/0.30; return `rgb(${Math.round(250-s*60)},${Math.round(220-s*30)},${Math.round(80+s*80)})`;}
+    if(t>=0.18){const s=(t-0.18)/0.27; return `rgb(245,${Math.round(140+s*70)},${Math.round(40+s*40)})`;}
+    if(t>0){const s=t/0.18; return `rgb(${Math.round(220+s*20)},${Math.round(100+s*40)},${Math.round(30+s*10)})`;}
+    return `rgb(160,165,175)`;
   }
   function heatDark(temp){
-    const t=clamp((temp-150)/(950-150),0,1);
-    if(t>=0.85) return 'rgb(120,10,40)'; if(t>=0.65) return 'rgb(160,15,8)';
-    if(t>=0.40) return 'rgb(180,50,8)';  if(t>=0.20) return 'rgb(190,90,10)';
-    return 'rgb(200,140,40)';
+    if(!temp||temp<=0) return 'rgb(100,105,115)';
+    const t=clamp((temp-50)/(950-50),0,1);
+    if(t>=0.75) return 'rgb(60,140,130)'; if(t>=0.45) return 'rgb(160,150,40)';
+    if(t>=0.18) return 'rgb(190,100,20)';  return 'rgb(160,70,15)';
   }
 
   // ── OUTER SHELL ──
@@ -7064,8 +7069,8 @@ function drawCoolKilnAnim(frame){
   for(let z=0;z<4;z++){
     const zx=left+(z+0.5)*sliceW;
     const zy=cy+kilnH*0.1;
-    const t=clamp((temps[z]-150)/(950-150),0,1);
-    coolCtx.fillStyle=t>0.5?'rgba(255,255,255,0.85)':'rgba(30,20,10,0.75)';
+    const t=clamp((temps[z]-50)/(950-50),0,1);
+    coolCtx.fillStyle=t>0.75?'rgba(20,60,60,0.85)':t>0.35?'rgba(30,20,10,0.80)':'rgba(255,255,255,0.85)';
     coolCtx.fillText(temps[z]+'°',zx,zy);
   }
   coolCtx.textAlign='left';
