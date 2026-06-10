@@ -3341,17 +3341,18 @@ function drawCoolingKiln(cx, cy, mW, mH, stage, isActive, isDone, frame){
   function heatColor(temp){
     if(!temp || temp <= 0) return `rgb(160,165,175)`; // silver/steel when no temp
     const t = clamp((temp - 50) / (950 - 50), 0, 1);
-    if(t >= 0.75){ // ~720C+ → light blue-green
-      const s = (t - 0.75) / 0.25;
+    const r = 1 - t;
+    if(r >= 0.75){ // low temp → light blue-green
+      const s = (r - 0.75) / 0.25;
       return `rgb(${Math.round(140 - s*40)},${Math.round(210 + s*20)},${Math.round(190 + s*40)})`;
-    } else if(t >= 0.45){ // ~475-720C → yellow-gold to light teal
-      const s = (t - 0.45) / 0.30;
+    } else if(r >= 0.45){ // mid-low → yellow-gold to light teal
+      const s = (r - 0.45) / 0.30;
       return `rgb(${Math.round(250 - s*60)},${Math.round(220 - s*30)},${Math.round(80 + s*80)})`;
-    } else if(t >= 0.18){ // ~210-475C → orange to yellow
-      const s = (t - 0.18) / 0.27;
+    } else if(r >= 0.18){ // mid-high → orange to yellow
+      const s = (r - 0.18) / 0.27;
       return `rgb(245,${Math.round(140 + s*70)},${Math.round(40 + s*40)})`;
-    } else if(t > 0){ // 50-210C → orange
-      const s = t / 0.18;
+    } else if(r > 0){ // high temp → orange/red
+      const s = r / 0.18;
       return `rgb(${Math.round(220 + s*20)},${Math.round(100 + s*40)},${Math.round(30 + s*10)})`;
     } else {
       return `rgb(160,165,175)`; // silver/steel
@@ -3361,9 +3362,10 @@ function drawCoolingKiln(cx, cy, mW, mH, stage, isActive, isDone, frame){
   function heatColorDark(temp){ // darker shade for shading
     if(!temp || temp <= 0) return `rgb(100,105,115)`;
     const t = clamp((temp - 50) / (950 - 50), 0, 1);
-    if(t >= 0.75) return `rgb(60,140,130)`;
-    if(t >= 0.45) return `rgb(160,150,40)`;
-    if(t >= 0.18) return `rgb(190,100,20)`;
+    const r = 1 - t;
+    if(r >= 0.75) return `rgb(60,140,130)`;
+    if(r >= 0.45) return `rgb(160,150,40)`;
+    if(r >= 0.18) return `rgb(190,100,20)`;
     return `rgb(160,70,15)`;
   }
 
@@ -6949,17 +6951,19 @@ function drawCoolKilnAnim(frame){
   function heatCol(temp){
     if(!temp || temp<=0) return `rgb(160,165,175)`;
     const t=clamp((temp-50)/(950-50),0,1);
-    if(t>=0.75){const s=(t-0.75)/0.25; return `rgb(${Math.round(140-s*40)},${Math.round(210+s*20)},${Math.round(190+s*40)})`;}
-    if(t>=0.45){const s=(t-0.45)/0.30; return `rgb(${Math.round(250-s*60)},${Math.round(220-s*30)},${Math.round(80+s*80)})`;}
-    if(t>=0.18){const s=(t-0.18)/0.27; return `rgb(245,${Math.round(140+s*70)},${Math.round(40+s*40)})`;}
-    if(t>0){const s=t/0.18; return `rgb(${Math.round(220+s*20)},${Math.round(100+s*40)},${Math.round(30+s*10)})`;}
+    const r=1-t;
+    if(r>=0.75){const s=(r-0.75)/0.25; return `rgb(${Math.round(140-s*40)},${Math.round(210+s*20)},${Math.round(190+s*40)})`;}
+    if(r>=0.45){const s=(r-0.45)/0.30; return `rgb(${Math.round(250-s*60)},${Math.round(220-s*30)},${Math.round(80+s*80)})`;}
+    if(r>=0.18){const s=(r-0.18)/0.27; return `rgb(245,${Math.round(140+s*70)},${Math.round(40+s*40)})`;}
+    if(r>0){const s=r/0.18; return `rgb(${Math.round(220+s*20)},${Math.round(100+s*40)},${Math.round(30+s*10)})`;}
     return `rgb(160,165,175)`;
   }
   function heatDark(temp){
     if(!temp||temp<=0) return 'rgb(100,105,115)';
     const t=clamp((temp-50)/(950-50),0,1);
-    if(t>=0.75) return 'rgb(60,140,130)'; if(t>=0.45) return 'rgb(160,150,40)';
-    if(t>=0.18) return 'rgb(190,100,20)';  return 'rgb(160,70,15)';
+    const r=1-t;
+    if(r>=0.75) return 'rgb(60,140,130)'; if(r>=0.45) return 'rgb(160,150,40)';
+    if(r>=0.18) return 'rgb(190,100,20)';  return 'rgb(160,70,15)';
   }
 
   // ── OUTER SHELL ──
