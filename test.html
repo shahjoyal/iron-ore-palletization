@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Dashboard – Stage 1–3 · Abhitech</title>
+<title>Dashboard – Stage 4–6 · Abhitech</title>
 <link rel="icon" type="image/x-icon" href="abhitech-logo.png">
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=DM+Sans:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
@@ -76,7 +76,7 @@ nav{
 .plant-name-select:focus{border-color:var(--gold);background-color:#fff;}
 
 .canvas-wrap{width:100%;max-width:1200px;flex:1;min-height:0;background:#fff;border:1px solid var(--border);border-radius:8px;box-shadow:var(--shadow-navy),inset 0 1px 0 rgba(255,255,255,.8);overflow:hidden;position:relative;display:flex;flex-direction:column;}
-#processCanvas{display:block;width:100%;flex:1;min-height:0;cursor:default;}
+/* #processCanvas removed — replaced by image nodes */
 
 .step-bar{display:flex;align-items:center;gap:5px;justify-content:center;padding:.35rem .8rem;border-top:1px solid var(--border);background:rgba(253,248,240,.7);flex-wrap:wrap;flex-shrink:0;}
 .step-pill{padding:3px 10px;font-family:'JetBrains Mono';font-size:.52rem;letter-spacing:1px;border:1px solid var(--border);border-radius:20px;color:var(--text-dim);transition:all .35s;white-space:nowrap;cursor:pointer;user-select:none;}
@@ -762,6 +762,77 @@ input.finp{cursor:text;}
 @media(max-width:1060px){.mix-diagram-card{display:none;}}
 @media(max-width:560px){.mix-anim-card{width:96vw;}}
 
+/* ── BALLING DISC TWO-PANEL OVERLAY ── */
+.ball-anim-overlay{
+  position:fixed;inset:0;z-index:250;
+  background:rgba(8,16,32,.68);
+  backdrop-filter:blur(7px) saturate(1.2);
+  display:flex;align-items:center;justify-content:center;
+  opacity:0;pointer-events:none;
+  transition:opacity .3s ease;
+}
+.ball-anim-overlay.open{opacity:1;pointer-events:all;}
+.ball-anim-panels{display:flex;align-items:flex-start;gap:12px;}
+.ball-anim-card{
+  background:#fff;border:1px solid var(--border-strong);border-radius:10px;
+  box-shadow:0 24px 80px rgba(26,48,87,.25);
+  width:min(520px,92vw);max-height:88vh;overflow-y:auto;
+  transform:translateY(16px) scale(.97);
+  transition:transform .35s cubic-bezier(.22,1,.36,1);
+  position:relative;display:flex;flex-direction:column;
+}
+.ball-anim-overlay.open .ball-anim-card{transform:translateY(0) scale(1);}
+.ball-anim-header{
+  padding:1.4rem 1.6rem 1rem;border-bottom:1px solid var(--border);
+  background:linear-gradient(135deg,#101a28 0%,#1c2e45 100%);
+  border-radius:10px 10px 0 0;position:relative;flex-shrink:0;
+}
+.ball-anim-tag{font-family:'JetBrains Mono';font-size:.52rem;letter-spacing:2.5px;color:rgba(200,145,42,.7);text-transform:uppercase;margin-bottom:5px;}
+.ball-anim-title{font-family:'Cormorant Garamond',serif;font-size:1.5rem;font-weight:700;color:#fff;line-height:1.2;}
+.ball-anim-subtitle{font-size:.78rem;color:rgba(255,255,255,.45);margin-top:5px;}
+.ball-anim-close{
+  position:absolute;top:1.1rem;right:1.2rem;
+  background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);
+  color:rgba(255,255,255,.6);width:30px;height:30px;border-radius:50%;
+  font-size:.9rem;cursor:pointer;display:flex;align-items:center;justify-content:center;
+  transition:all .2s;
+}
+.ball-anim-close:hover{background:rgba(200,145,42,.3);color:#fff;}
+.ball-anim-body{padding:1.4rem 1.6rem;flex:1;}
+
+/* RIGHT balling disc diagram card */
+.ball-diagram-card{
+  width:520px;flex-shrink:0;
+  background:linear-gradient(170deg,#e8e4dc 0%,#f5f2ec 40%,#ffffff 70%,#f0ece4 100%);
+  border:1px solid rgba(200,145,42,0.25);
+  border-radius:10px;box-shadow:0 24px 80px rgba(26,48,87,.20);
+  display:flex;flex-direction:column;align-self:stretch;overflow:hidden;
+  transform:translateY(16px) scale(.97);
+  transition:transform .35s cubic-bezier(.22,1,.36,1) .05s;
+}
+.ball-anim-overlay.open .ball-diagram-card{transform:translateY(0) scale(1);}
+.ball-diagram-header{padding:1rem 1.2rem .8rem;border-bottom:1px solid rgba(200,145,42,0.15);flex-shrink:0;}
+.ball-diagram-tag{font-family:'JetBrains Mono';font-size:.52rem;letter-spacing:2.5px;color:rgba(200,145,42,.75);text-transform:uppercase;margin-bottom:5px;}
+.ball-diagram-title{font-family:'Cormorant Garamond',serif;font-size:1.2rem;font-weight:700;color:#1a3057;line-height:1.2;}
+.ball-diagram-canvas-wrap{flex:1;position:relative;min-height:460px;}
+#ballDiscCanvas{position:absolute;inset:0;width:100%;height:100%;display:block;}
+.ball-diagram-footer{padding:.7rem 1.1rem .9rem;border-top:1px solid rgba(200,145,42,0.12);flex-shrink:0;}
+.ball-disc-label{font-family:'JetBrains Mono';font-size:.50rem;letter-spacing:1.5px;color:rgba(90,74,48,0.65);text-transform:uppercase;margin-bottom:5px;}
+.ball-disc-bar-bg{height:5px;background:rgba(200,145,42,0.12);border-radius:3px;overflow:hidden;}
+.ball-disc-bar-fill{height:100%;background:linear-gradient(90deg,#c8912a,#e8b84b);border-radius:3px;transition:width .6s ease;}
+.ball-save-indicator{
+  position:absolute;bottom:12px;left:50%;transform:translateX(-50%);
+  font-family:'JetBrains Mono';font-size:.55rem;letter-spacing:1.5px;
+  color:#3aaa6a;text-transform:uppercase;
+  background:rgba(12,50,30,0.90);border:1px solid rgba(42,170,90,0.50);
+  border-radius:20px;padding:4px 16px;white-space:nowrap;
+  opacity:0;pointer-events:none;
+}
+.ball-save-indicator.show{animation:oreSaveBurst 2s ease forwards;}
+@media(max-width:1120px){.ball-diagram-card{width:420px;}}
+@media(max-width:980px){.ball-diagram-card{display:none;}}
+@media(max-width:560px){.ball-anim-card{width:96vw;}}
+
 
 /* ── PAGE NAVIGATION ── */
 .page-nav{
@@ -790,56 +861,108 @@ input.finp{cursor:text;}
 .page-dot.active{background:var(--gold);border-color:var(--gold);}
 .page-dot:hover:not(.active){border-color:var(--gold);}
 
-/* ─── HOVER VIDEO PREVIEW CARD ───────────────────────────────────────── */
-#hoverVideoCard{
-  position:fixed;
-  z-index:9999;
-  width:180px;
-  background:#0d1b2e;
-  border:1px solid rgba(200,145,42,.45);
-  border-radius:14px;
-  box-shadow:0 8px 40px rgba(0,0,0,.55), 0 0 0 1px rgba(200,145,42,.12);
-  overflow:hidden;
-  pointer-events:none;
-  opacity:0;
-  transform:scale(.88) translateY(8px);
-  transition:opacity .2s ease, transform .2s cubic-bezier(.22,1,.36,1);
-  display:flex;
-  flex-direction:column;
+/* ── IMAGE STAGE NODES ── */
+.canvas-wrap{position:relative;}
+#stageNodesWrap{overflow:hidden;}
+
+.img-stage-node{
+  display:flex;flex-direction:column;align-items:center;gap:6px;
+  cursor:pointer;padding:12px 10px;border-radius:10px;
+  transition:transform .22s, box-shadow .22s, background .22s;
+  position:relative;flex:1;min-width:0;max-width:280px;
+  background:#fff;
 }
-#hoverVideoCard.visible{
-  opacity:1;
-  transform:scale(1) translateY(0);
+.img-stage-node:hover{
+  transform:translateY(-4px);
+  box-shadow:0 10px 32px rgba(200,145,42,0.18);
+  background:rgba(253,248,240,0.85);
 }
-.hvp-label{
-  font-family:'JetBrains Mono',monospace;
-  font-size:.5rem;
-  letter-spacing:2.5px;
-  color:rgba(200,145,42,.9);
-  text-transform:uppercase;
-  padding:9px 12px 6px;
-  border-bottom:1px solid rgba(200,145,42,.15);
+.img-stage-node.active-node{
+  box-shadow:0 0 0 2.5px var(--gold), 0 10px 32px rgba(200,145,42,0.22);
+  background:rgba(253,248,240,0.85);
 }
-.hvp-video-wrap{
-  width:100%;
-  aspect-ratio:9/16;
-  background:#000;
-  overflow:hidden;
-  position:relative;
+.img-stage-node.done-node{
+  box-shadow:0 0 0 2px var(--green);
+  background:rgba(42,122,74,0.04);
 }
-.hvp-video-wrap video{
-  width:100%;
-  height:100%;
-  object-fit:cover;
-  display:block;
+.img-stage-node.dim-node{opacity:0.35;pointer-events:none;}
+
+.img-stage-tag{
+  font-family:'JetBrains Mono';font-size:.5rem;letter-spacing:2px;
+  color:var(--text-dim);text-transform:uppercase;white-space:nowrap;
 }
-.hvp-hint{
-  font-family:'DM Sans',sans-serif;
-  font-size:.52rem;
-  color:rgba(255,255,255,.35);
-  text-align:center;
-  padding:6px 8px 8px;
-  letter-spacing:.3px;
+
+.img-stage-img-wrap{
+  position:relative;width:100%;padding-top:75%;border-radius:8px;overflow:hidden;
+  border:1.5px solid var(--border);background:#f8f8f8;
+  box-shadow:0 4px 14px rgba(26,48,87,0.10);
+  transition:border-color .22s;
+}
+.img-stage-node:hover .img-stage-img-wrap,
+.img-stage-node.active-node .img-stage-img-wrap{border-color:var(--gold);}
+.img-stage-node.done-node .img-stage-img-wrap{border-color:var(--green);}
+
+.img-stage-img{
+  position:absolute;inset:0;width:100%;height:100%;
+  object-fit:cover;display:block;
+  transition:transform .3s ease;
+}
+.img-stage-node:hover .img-stage-img{transform:scale(1.04);}
+
+.img-stage-status-dot{
+  position:absolute;top:8px;right:8px;width:9px;height:9px;border-radius:50%;
+  background:transparent;border:1.5px solid var(--border);
+  transition:all .25s;
+}
+.img-stage-node.configured .img-stage-status-dot{background:#3aaa6a;border-color:#3aaa6a;}
+.img-stage-node.active-node .img-stage-status-dot{background:var(--gold);border-color:var(--gold);}
+
+.img-stage-label{
+  font-family:'JetBrains Mono';font-size:.58rem;letter-spacing:1px;font-weight:600;
+  color:var(--text-dim);text-align:center;line-height:1.5;text-transform:uppercase;
+  transition:color .22s;
+}
+.img-stage-node.configured .img-stage-label{color:var(--gold);}
+.img-stage-node.active-node .img-stage-label{color:var(--gold);}
+.img-stage-node.done-node .img-stage-label{color:var(--green);}
+
+.img-stage-hint{
+  font-family:'DM Sans';font-size:.64rem;color:rgba(200,145,42,0.45);
+  transition:color .22s;
+}
+.img-stage-node.configured .img-stage-hint{color:rgba(58,170,106,0.65);}
+.img-stage-node.configured .img-stage-hint::before{content:'✓ ';}
+
+.stage-arrow{
+  display:flex;align-items:center;justify-content:center;
+  flex-shrink:0;width:60px;
+}
+
+@keyframes arrowDot{
+  0%{cx:2px;} 100%{cx:48px;}
+}
+
+/* ── HOVER VIDEO OVERLAY ── */
+.img-stage-hover-video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: 5;
+  opacity: 0;
+  transition: opacity .3s ease;
+  pointer-events: none;
+  border-radius: 6px;
+}
+.img-stage-node:hover .img-stage-hover-video {
+  opacity: 1;
+}
+.img-stage-node:hover .img-stage-img {
+  opacity: 0;
+}
+.img-stage-img {
+  transition: opacity .3s ease, transform .3s ease;
 }
 </style>
 </head>
@@ -991,6 +1114,41 @@ input.finp{cursor:text;}
   </div>
 </div>
 
+<!-- ══ BALLING DISC ANIMATION CARD ══ -->
+<div class="ball-anim-overlay" id="ballAnimOverlay">
+  <div class="ball-anim-panels">
+    <!-- LEFT: Parameters Card -->
+    <div class="ball-anim-card" id="ballAnimCard">
+      <div class="ball-anim-header">
+        <div class="ball-anim-tag">STAGE 06 · BALLING DISC</div>
+        <div class="ball-anim-title">Balling Disc</div>
+        <div class="ball-anim-subtitle">Configure disc angle, motor speed, disc speed, water spray and green ball moisture</div>
+        <button class="ball-anim-close" onclick="closeBallCard()">✕</button>
+      </div>
+      <div class="ball-anim-body" id="ballAnimBody"></div>
+      <div class="modal-footer" style="padding:1rem 1.4rem 1.2rem;flex-shrink:0;">
+        <button class="btn-save" onclick="saveBallCard()">Save Parameters</button>
+        <button class="btn-cancel" onclick="closeBallCard()">Cancel</button>
+      </div>
+    </div>
+    <!-- RIGHT: Balling Disc Diagram Card -->
+    <div class="ball-diagram-card">
+      <div class="ball-diagram-header">
+        <div class="ball-diagram-tag">LIVE PREVIEW</div>
+        <div class="ball-diagram-title">Rotating Disc & Conveyor Belt</div>
+      </div>
+      <div class="ball-diagram-canvas-wrap">
+        <canvas id="ballDiscCanvas"></canvas>
+        <div class="ball-save-indicator" id="ballSaveIndicator">✓ Parameters Saved</div>
+      </div>
+      <div class="ball-diagram-footer">
+        <div class="ball-disc-label">Disc Angle / Speed</div>
+        <div class="ball-disc-bar-bg"><div class="ball-disc-bar-fill" id="ballDiscBarFill" style="width:50%"></div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
 <!-- ══ MIXING + BINDER ANIMATION CARD ══ -->
 <div class="mix-anim-overlay" id="mixAnimOverlay">
   <div class="mix-anim-panels">
@@ -1049,8 +1207,9 @@ input.finp{cursor:text;}
   </a>
   <div class="nav-right">
     <a href="index.html" class="nav-btn">← Home</a>
+    <a href="dashboard_page1.html" class="nav-btn">← Prev</a>
     <a href="login.html" class="nav-btn">Sign Out</a>
-    <a href="dashboard_page2.html" class="nav-btn">Next →</a>
+    <a href="dashboard_page3.html" class="nav-btn">Next →</a>
   </div>
 </nav>
 
@@ -1097,12 +1256,76 @@ input.finp{cursor:text;}
     <div class="page-hint">Click any process stage to configure its parameters</div>
   </div>
 
-  <div class="canvas-wrap">
-    <canvas id="processCanvas"></canvas>
+  <div class="canvas-wrap" id="canvasWrap">
+    <!-- Info overlay (top-left summary, shown during simulation) -->
+    <div id="stageInfoOverlay" style="display:none;position:absolute;top:14px;left:14px;z-index:10;background:rgba(253,248,240,0.95);border:1px solid rgba(200,145,42,0.22);border-radius:4px;padding:8px 12px;font-family:'JetBrains Mono';font-size:9px;min-width:200px;pointer-events:none;"></div>
+
+    <!-- Image-based stage nodes -->
+    <div id="stageNodesWrap" style="display:flex;align-items:center;justify-content:center;width:100%;flex:1;min-height:0;padding:18px 24px;gap:0;background:#fff;position:relative;">
+
+      <!-- OB Dosing label above mix node (shown when step>=4) -->
+      <div id="obDosingLabel" style="display:none;position:absolute;top:12px;left:50%;transform:translateX(-50%);background:rgba(200,145,42,0.1);border:1px solid rgba(200,145,42,0.45);border-radius:3px;padding:4px 10px;font-family:'JetBrains Mono';font-size:8px;font-weight:600;color:#c8912a;letter-spacing:1px;white-space:nowrap;pointer-events:none;">OB DOSING</div>
+
+      <!-- STAGE 04 — Filter Cake -->
+      <div class="img-stage-node" id="node-filter" onclick="openStageCard('filter')" title="Filter Cake — click to configure" onmouseenter="playStageVideo2(this)" onmouseleave="pauseStageVideo2(this)">
+        <div class="img-stage-tag">STAGE 04</div>
+        <div class="img-stage-img-wrap">
+          <img src="img4.jpeg" alt="Filter Cake" class="img-stage-img" id="img-filter">
+          <video class="img-stage-hover-video" src="filter.mp4" muted playsinline loop preload="none"></video>
+          <div class="img-stage-status-dot" id="dot-filter"></div>
+        </div>
+        <div class="img-stage-label" id="label-filter">FILTER<br>CAKE</div>
+        <div class="img-stage-hint" id="hint-filter">⊕ configure</div>
+      </div>
+
+      <!-- Arrow 1 -->
+      <div class="stage-arrow" id="arrow-0">
+        <svg viewBox="0 0 60 20" xmlns="http://www.w3.org/2000/svg" style="width:60px;height:20px;">
+          <line x1="2" y1="10" x2="48" y2="10" stroke="rgba(200,145,42,0.22)" stroke-width="1.5" stroke-dasharray="5,5" id="arrow-line-0"/>
+          <polygon points="48,5 58,10 48,15" fill="rgba(200,145,42,0.22)" id="arrow-head-0"/>
+          <circle id="arrow-dot-0" cx="2" cy="10" r="4" fill="rgba(232,184,75,0)" />
+        </svg>
+      </div>
+
+      <!-- STAGE 05 — Mixinng + Bindeer -->
+      <div class="img-stage-node" id="node-mix" onclick="openStageCard('mix')" title="Mixing + Binder — click to configure" onmouseenter="playStageVideo2(this)" onmouseleave="pauseStageVideo2(this)">
+        <div class="img-stage-tag">STAGE 05</div>
+        <div class="img-stage-img-wrap">
+          <img src="img5.jpeg" alt="Mixing + Binder" class="img-stage-img" id="img-mix">
+          <video class="img-stage-hover-video" src="mixing.mp4" muted playsinline loop preload="none"></video>
+          <div class="img-stage-status-dot" id="dot-mix"></div>
+        </div>
+        <div class="img-stage-label" id="label-mix">MIXING<br>+ BINDER</div>
+        <div class="img-stage-hint" id="hint-mix">⊕ configure</div>
+      </div>
+
+      <!-- Arrow 2 -->
+      <div class="stage-arrow" id="arrow-1">
+        <svg viewBox="0 0 60 20" xmlns="http://www.w3.org/2000/svg" style="width:60px;height:20px;">
+          <line x1="2" y1="10" x2="48" y2="10" stroke="rgba(200,145,42,0.22)" stroke-width="1.5" stroke-dasharray="5,5" id="arrow-line-1"/>
+          <polygon points="48,5 58,10 48,15" fill="rgba(200,145,42,0.22)" id="arrow-head-1"/>
+          <circle id="arrow-dot-1" cx="2" cy="10" r="4" fill="rgba(232,184,75,0)" />
+        </svg>
+      </div>
+
+      <!-- STAGE 06 — Balling Disc -->
+      <div class="img-stage-node" id="node-ball" onclick="openStageCard('ball')" title="Balling Disc — click to configure" onmouseenter="playStageVideo2(this)" onmouseleave="pauseStageVideo2(this)">
+        <div class="img-stage-tag">STAGE 06</div>
+        <div class="img-stage-img-wrap">
+          <img src="img6.jpeg" alt="Balling Disc" class="img-stage-img" id="img-ball">
+          <video class="img-stage-hover-video" src="balling.mp4" muted playsinline loop preload="none"></video>
+          <div class="img-stage-status-dot" id="dot-ball"></div>
+        </div>
+        <div class="img-stage-label" id="label-ball">BALLING<br>DISC</div>
+        <div class="img-stage-hint" id="hint-ball">⊕ configure</div>
+      </div>
+
+    </div>
+
     <div class="step-bar">
-      <div class="step-pill" data-step="0">Feed</div>
-      <div class="step-pill" data-step="1">Grinding</div>
-      <div class="step-pill" data-step="2">Thickener</div>
+      <div class="step-pill" data-step="3">Filter Cake</div>
+      <div class="step-pill" data-step="4">Mixing</div>
+      <div class="step-pill" data-step="5">Balling</div>
     </div>
   </div>
 
@@ -1121,10 +1344,10 @@ input.finp{cursor:text;}
   </div>
 
   <div class="page-nav">
-    <span class="page-nav-btn disabled">← Previous</span>
-    <div class="page-dot-wrap"><a href="dashboard_page1.html" class="page-dot active"></a><a href="dashboard_page2.html" class="page-dot"></a><a href="dashboard_page3.html" class="page-dot"></a></div>
-    <span class="page-nav-label">Page 1 of 3 · Stages 01–03</span>
-    <a href="dashboard_page2.html" class="page-nav-btn">Next →</a>
+    <a href="dashboard_page1.html" class="page-nav-btn">← Previous</a>
+    <div class="page-dot-wrap"><a href="dashboard_page1.html" class="page-dot"></a><a href="dashboard_page2.html" class="page-dot active"></a><a href="dashboard_page3.html" class="page-dot"></a></div>
+    <span class="page-nav-label">Page 2 of 3 · Stages 04–06</span>
+    <a href="dashboard_page3.html" class="page-nav-btn">Next →</a>
   </div>
 </div>
 
@@ -1384,137 +1607,82 @@ let simRunning=false, simFrame=0, simStep=-1, animId=null, currentModalStage=nul
 
 // ═══════ STAGES ═══════
 const STAGES=[
-  {id:'feed',     label:'IRON ORE\nFEED',     tag:'STAGE 01',shape:'hopper',   color:'#8b4513',step:0},
-  {id:'grind',    label:'GRINDING',            tag:'STAGE 02',shape:'drum',     color:'#7a5a30',step:1},
-  {id:'thickner', label:'THICKENER',           tag:'STAGE 03',shape:'conetank', color:'#2d5fa6',step:2},
+  {id:'filter',   label:'FILTER\nCAKE',        tag:'STAGE 04',shape:'press',    color:'#5a3d8a',step:3},
+  {id:'mix',      label:'MIXING\n+ BINDER',    tag:'STAGE 05',shape:'ellipse',  color:'#c8912a',step:4},
+  {id:'ball',     label:'BALLING\nDISC',       tag:'STAGE 06',shape:'circle',   color:'#3a7abf',step:5},
 ];
 
-// ═══════ CANVAS ═══════
-const canvas=document.getElementById('processCanvas');
-const ctx=canvas.getContext('2d');
+// ═══════ IMAGE NODES ═══════
 let hitZones=[];
 
-function sizeCanvas(){
-  const W=canvas.parentElement.clientWidth;
-  const ratio=window.devicePixelRatio||1;
-  const H=Math.max(300,canvas.parentElement.clientHeight||canvas.offsetHeight||400);
-  canvas.width=W*ratio; canvas.height=H*ratio;
-  canvas.style.width=W+'px'; canvas.style.height=H+'px';
-  ctx.scale(ratio,ratio);
-  return{W,H};
+function draw(frame,activeStep){
+  updateImageNodes(frame, activeStep);
 }
 
-function draw(frame,activeStep){
-  const{W,H}=sizeCanvas();
-  ctx.clearRect(0,0,W,H);
-  ctx.fillStyle='#fff'; ctx.fillRect(0,0,W,H);
-  ctx.strokeStyle='rgba(200,145,42,0.035)'; ctx.lineWidth=1;
-  for(let x=0;x<W;x+=36){ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x,H);ctx.stroke();}
-  for(let y=0;y<H;y+=36){ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(W,y);ctx.stroke();}
+function updateImageNodes(frame, activeStep){
+  const stageIds = ['filter','mix','ball'];
+  const stageSteps = {filter:3, mix:4, ball:5};
+  const stageColors = {filter:'#5a3d8a', mix:'#c8912a', ball:'#3a7abf'};
 
-  hitZones=[];
-  const n=STAGES.length;
-  const padX=W*0.022;
-  const slotW=(W-padX*2)/n;
-  const midY=H*0.43;
-  const mH=H*0.50;
-  const mW=slotW*0.68;
-  const labelY=midY+mH*0.55+18;
+  stageIds.forEach((id, i) => {
+    const node = document.getElementById('node-'+id);
+    const hint = document.getElementById('hint-'+id);
+    const label = document.getElementById('label-'+id);
+    if(!node) return;
+    const step = stageSteps[id];
+    const isConfig = isStageConfigured(id);
+    const isActive = step === activeStep;
+    const isDone = step < activeStep;
+    const lit = isActive || isDone;
 
-  if(activeStep>=0){
-    const info=[
-      {k:'Ore:',      v:stageParams.feed.ore?stageParams.feed.ore.substring(0,22):'—'},
-      {k:'Binder:',   v:stageParams.mix.binder?stageParams.mix.binder.substring(0,22):'—'},
-      {k:'Moisture:', v:stageParams.filter.cakeMoisture?stageParams.filter.cakeMoisture+'%':'—'},
-      {k:'Blain:',    v:stageParams.grind.blain?stageParams.grind.blain+' cm²/g':'—'},
-    ];
-    const bw=210,bh=info.length*17+18;
-    ctx.fillStyle='rgba(253,248,240,0.95)'; ctx.strokeStyle='rgba(200,145,42,0.22)'; ctx.lineWidth=1;
-    ctx.beginPath(); ctx.roundRect(14,14,bw,bh,4); ctx.fill(); ctx.stroke();
-    info.forEach((item,i)=>{
-      ctx.fillStyle='#9a8a70'; ctx.font='400 9px JetBrains Mono'; ctx.textAlign='left'; ctx.fillText(item.k,24,28+i*17);
-      ctx.fillStyle='#1a3057'; ctx.font='500 9px JetBrains Mono'; ctx.fillText(item.v,78,28+i*17);
-    });
-  }
+    // Update classes
+    node.className = 'img-stage-node';
+    if(isActive) node.classList.add('active-node');
+    else if(isDone) node.classList.add('done-node');
+    else if(activeStep >= 0 && !lit) node.classList.add('dim-node');
+    if(isConfig && activeStep < 0) node.classList.add('configured');
 
-  if(activeStep>=4||activeStep<0){
-    const mcx=padX+4*slotW+slotW/2;
-    ctx.save(); ctx.globalAlpha=activeStep<0?0.3:0.88;
-    ctx.fillStyle='rgba(200,145,42,0.1)'; ctx.strokeStyle='rgba(200,145,42,0.45)'; ctx.lineWidth=1;
-    ctx.beginPath(); ctx.roundRect(mcx-40,midY-mH*0.52-46,80,26,3); ctx.fill(); ctx.stroke();
-    ctx.fillStyle='#c8912a'; ctx.font='600 8px JetBrains Mono'; ctx.textAlign='center';
-    ctx.fillText('OB DOSING',mcx,midY-mH*0.52-30);
-    if(activeStep>=4){
-      const dy=midY-mH*0.52-22+(frame%32)*0.72;
-      ctx.strokeStyle='rgba(200,145,42,0.3)'; ctx.lineWidth=0.8; ctx.setLineDash([2,3]);
-      ctx.beginPath(); ctx.moveTo(mcx,midY-mH*0.52-23); ctx.lineTo(mcx,midY-mH*0.52); ctx.stroke(); ctx.setLineDash([]);
-      ctx.beginPath(); ctx.arc(mcx,dy,2.5,0,Math.PI*2); ctx.fillStyle='rgba(200,145,42,0.75)'; ctx.fill();
-    }
-    ctx.restore();
-  }
+    // Update hint text
+    if(hint) hint.textContent = isConfig ? '✓ configured' : '⊕ configure';
 
-  for(let i=0;i<n-1;i++){
-    const s=STAGES[i];
-    const cx1=padX+i*slotW+slotW/2;
-    const cx2=padX+(i+1)*slotW+slotW/2;
-    const lit=s.step<activeStep||s.step===activeStep;
-    const x1=cx1+mW*0.46, x2=cx2-mW*0.46;
-    ctx.save();
-    ctx.strokeStyle=lit?s.color:'rgba(200,145,42,0.15)';
-    ctx.lineWidth=lit?2.5:1.5; ctx.globalAlpha=lit?0.8:0.38;
-    ctx.setLineDash(lit?[]:[5,5]);
-    ctx.beginPath(); ctx.moveTo(x1,midY); ctx.lineTo(x2,midY); ctx.stroke(); ctx.setLineDash([]);
-    ctx.fillStyle=lit?s.color:'rgba(200,145,42,0.22)'; ctx.globalAlpha=lit?0.9:0.65;
-    ctx.beginPath(); ctx.moveTo(x2,midY-5); ctx.lineTo(x2+9,midY); ctx.lineTo(x2,midY+5); ctx.fill();
-    ctx.restore();
-    if(lit){
-      const t=(frame%60)/60;
-      const px=x1+(x2-x1)*t;
-      const rg=ctx.createRadialGradient(px,midY,0,px,midY,7);
-      rg.addColorStop(0,'rgba(232,184,75,0.95)'); rg.addColorStop(1,'rgba(200,145,42,0)');
-      ctx.beginPath(); ctx.arc(px,midY,7,0,Math.PI*2); ctx.fillStyle=rg; ctx.fill();
-    }
-  }
+    // Disable click during simulation
+    node.style.pointerEvents = simRunning ? 'none' : '';
 
-  STAGES.forEach((s,i)=>{
-    const cx=padX+i*slotW+slotW/2;
-    const isActive=s.step===activeStep;
-    const isDone=s.step<activeStep;
-    const isConfig=isStageConfigured(s.id);
-    const lit=isActive||isDone;
-    const alpha=activeStep>=0?(lit?1:0.33):1;
-    ctx.save(); ctx.globalAlpha=alpha;
-    if(isActive){ctx.shadowColor=s.color; ctx.shadowBlur=22;}
-    const col=lit?s.color:(isConfig?s.color:'#c0ae90');
-    const strokeCol=isActive?s.color:(isDone?s.color:(isConfig?'rgba(200,145,42,0.55)':'rgba(200,145,42,0.22)'));
-    const strokeW=isActive?2.5:(isConfig?1.8:1.2);
-    const bounds=drawMachineShape(s.shape,cx,midY,mW,mH,col,strokeCol,strokeW,isActive,isDone,frame,s);
-    ctx.shadowBlur=0;
-    hitZones.push({id:s.id,...bounds});
-    const lines=s.label.split('\n');
-    const fs=slotW<100?7:8;
-    ctx.font=`600 ${fs}px JetBrains Mono`; ctx.textAlign='center';
-    ctx.fillStyle=lit?s.color:(isConfig?s.color:'#8a7a60');
-    lines.forEach((line,li)=>ctx.fillText(line,cx,labelY+li*(fs+3)));
-    if(s.id==='pellet'&&activeStep===9){
-      ctx.fillStyle='#2a7a4a'; ctx.font='700 8px JetBrains Mono';
-      ctx.fillText('✓ PELLETS READY',cx,labelY+lines.length*(fs+3)+12);
+    // Arrow lighting
+    if(i < 2) {
+      const arrowLine = document.getElementById('arrow-line-'+i);
+      const arrowHead = document.getElementById('arrow-head-'+i);
+      if(arrowLine && arrowHead) {
+        const prevStage = STAGES[i];
+        const litArrow = prevStage.step < activeStep || prevStage.step === activeStep;
+        const arrowColor = litArrow ? stageColors[id] : 'rgba(200,145,42,0.18)';
+        arrowLine.setAttribute('stroke', arrowColor);
+        arrowLine.setAttribute('stroke-dasharray', litArrow ? 'none' : '5,5');
+        arrowLine.setAttribute('stroke-width', litArrow ? '2.5' : '1.5');
+        arrowHead.setAttribute('fill', arrowColor);
+      }
     }
-    if(isConfig&&activeStep<0){
-      ctx.fillStyle='#3aaa6a'; ctx.beginPath(); ctx.arc(bounds.x+bounds.w-6,bounds.y+6,4.5,0,Math.PI*2); ctx.fill();
-    }
-    if(activeStep<0){
-      ctx.fillStyle=isConfig?'rgba(58,170,106,0.6)':'rgba(200,145,42,0.42)';
-      ctx.font='400 6.5px DM Sans'; ctx.textAlign='center';
-      ctx.fillText(isConfig?'✓ configured':'⊕ configure',cx,bounds.y+bounds.h+13);
-    }
-    ctx.restore();
   });
 
-  if(activeStep===9){
-    const pi=STAGES.findIndex(s=>s.id==='pellet');
-    drawPelletBurst(padX+pi*slotW+slotW/2,midY,frame,mW*0.48);
+  // Info overlay
+  const overlay = document.getElementById('stageInfoOverlay');
+  if(overlay) {
+    if(activeStep >= 0) {
+      overlay.style.display = 'block';
+      overlay.innerHTML = [
+        {k:'Ore:', v:stageParams.feed.ore?stageParams.feed.ore.substring(0,22):'—'},
+        {k:'Binder:', v:stageParams.mix.binder?stageParams.mix.binder.substring(0,22):'—'},
+        {k:'Moisture:', v:stageParams.filter.cakeMoisture?stageParams.filter.cakeMoisture+'%':'—'},
+        {k:'Blain:', v:stageParams.grind.blain?stageParams.grind.blain+' cm²/g':'—'},
+      ].map(r=>`<div style="margin-bottom:3px"><span style="color:#9a8a70;margin-right:6px">${r.k}</span><span style="color:#1a3057">${r.v}</span></div>`).join('');
+    } else {
+      overlay.style.display = 'none';
+    }
   }
+
+  // OB Dosing label
+  const obLabel = document.getElementById('obDosingLabel');
+  if(obLabel) obLabel.style.display = (activeStep >= 4 || activeStep < 0) ? 'block' : 'none';
 }
 
 
@@ -2609,100 +2777,10 @@ function drawPelletBurst(cx,cy,frame,r){
   }
 }
 
-canvas.addEventListener('click',function(e){
-  if(simRunning)return;
-  const rect=canvas.getBoundingClientRect();
-  const mx=e.clientX-rect.left,my=e.clientY-rect.top;
-  for(const z of hitZones){if(mx>=z.x&&mx<=z.x+z.w&&my>=z.y&&my<=z.y+z.h){openModal(z.id);return;}}
-});
-canvas.addEventListener('mousemove',function(e){
-  if(simRunning){canvas.style.cursor='default'; hideVideoPreview(); return;}
-  const rect=canvas.getBoundingClientRect();
-  const mx=e.clientX-rect.left,my=e.clientY-rect.top;
-  const hovered=hitZones.find(z=>mx>=z.x&&mx<=z.x+z.w&&my>=z.y&&my<=z.y+z.h);
-  canvas.style.cursor=hovered?'pointer':'default';
-  if(hovered && ['feed','grind','thickner'].includes(hovered.id)){
-    showVideoPreview(hovered.id, e.clientX, e.clientY);
-  } else {
-    hideVideoPreview();
-  }
-});
-canvas.addEventListener('mouseleave',function(){
-  hideVideoPreview();
-});
-
-// ─── HOVER VIDEO PREVIEW ───────────────────────────────────────────────
-const VIDEO_MAP = {
-  feed:     'feed.mp4',
-  grind:    'grinding.mp4',
-  thickner: 'thickner.mp4'
-};
-const LABEL_MAP = {
-  feed:     'RAW FEED',
-  grind:    'GRINDING',
-  thickner: 'THICKENER'
-};
-
-let _vpCard = null;
-let _vpActive = null;
-let _vpHideTimer = null;
-
-function getVPCard(){
-  if(_vpCard) return _vpCard;
-  const card = document.createElement('div');
-  card.id = 'hoverVideoCard';
-  card.innerHTML = `
-    <div class="hvp-label" id="hvpLabel"></div>
-    <div class="hvp-video-wrap">
-      <video id="hvpVideo" muted playsinline loop></video>
-    </div>
-    <div class="hvp-hint">Hover to preview · Click to configure</div>
-  `;
-  document.body.appendChild(card);
-  _vpCard = card;
-  return card;
-}
-
-function showVideoPreview(stageId, clientX, clientY){
-  clearTimeout(_vpHideTimer);
-  const card = getVPCard();
-  const video = document.getElementById('hvpVideo');
-  const label = document.getElementById('hvpLabel');
-
-  // Change source only if stage changed
-  if(_vpActive !== stageId){
-    _vpActive = stageId;
-    video.pause();
-    video.src = VIDEO_MAP[stageId];
-    video.load();
-    video.play().catch(()=>{});
-    label.textContent = LABEL_MAP[stageId];
-  }
-
-  // Position card near cursor, keep it in viewport
-  const cardW = 180, cardH = 340;
-  const vw = window.innerWidth, vh = window.innerHeight;
-  let left = clientX + 20;
-  let top  = clientY - cardH / 2;
-  if(left + cardW > vw - 10) left = clientX - cardW - 20;
-  if(top < 10) top = 10;
-  if(top + cardH > vh - 10) top = vh - cardH - 10;
-
-  card.style.left  = left  + 'px';
-  card.style.top   = top   + 'px';
-  card.classList.add('visible');
-}
-
-function hideVideoPreview(){
-  _vpHideTimer = setTimeout(()=>{
-    const card = document.getElementById('hoverVideoCard');
-    if(card){
-      card.classList.remove('visible');
-      const v = document.getElementById('hvpVideo');
-      if(v){ v.pause(); }
-      _vpActive = null;
-    }
-  }, 80);
+// Image node click handler — delegates to openModal
+function openStageCard(id){
+  if(simRunning) return;
+  openModal(id);
 }
 
 function numField(id,label,val,mn,mx,unit,step){
@@ -3502,6 +3580,7 @@ function openModal(stageId){
   if(stageId==='thickner'){openThickCard();return;}
   if(stageId==='filter'){openFilterCard();return;}
   if(stageId==='mix'){openMixCard();return;}
+  if(stageId==='ball'){openBallCard();return;}
   currentModalStage=stageId;
   const s=STAGES.find(st=>st.id===stageId);
   const cfg=MODAL_CONFIGS[stageId];
@@ -3575,9 +3654,10 @@ function resetAll(){
     document.getElementById(id).className='param-box-val';
   });
   document.getElementById('runBtn').disabled=false;
+  updateImageNodes(0, -1);
 }
 
-(function loop(){draw(simFrame,simStep);simFrame++;animId=requestAnimationFrame(loop);})();
+(function loop(){updateImageNodes(simFrame, simStep);simFrame++;animId=requestAnimationFrame(loop);})();
 
 // ═══════════════════════════════════════════════════════════
 // FEED ANIMATION CARD
@@ -4975,323 +5055,675 @@ function drawMixMini(frame, burst) {
   const g = canvas.getContext('2d');
   g.scale(ratio, ratio);
 
-  // Background
+  // ── BACKGROUND ──
   g.clearRect(0, 0, W, H);
   const bgGrad = g.createLinearGradient(0, 0, 0, H);
-  bgGrad.addColorStop(0, '#f7f3ec'); bgGrad.addColorStop(1, '#ffffff');
+  bgGrad.addColorStop(0, '#f0eff8'); bgGrad.addColorStop(1, '#e8e6f4');
   g.fillStyle = bgGrad; g.fillRect(0, 0, W, H);
+  g.strokeStyle = 'rgba(200,145,42,0.04)'; g.lineWidth = 1;
+  for (let x = 0; x < W; x += 28) { g.beginPath(); g.moveTo(x,0); g.lineTo(x,H); g.stroke(); }
+  for (let y = 0; y < H; y += 28) { g.beginPath(); g.moveTo(0,y); g.lineTo(W,y); g.stroke(); }
 
-  // Grid
-  g.strokeStyle = 'rgba(200,145,42,0.05)'; g.lineWidth = 1;
-  for (let x = 0; x < W; x += 28) { g.beginPath(); g.moveTo(x, 0); g.lineTo(x, H); g.stroke(); }
-  for (let y = 0; y < H; y += 28) { g.beginPath(); g.moveTo(0, y); g.lineTo(W, y); g.stroke(); }
+  // ════════════════════════════════════════════════
+  // LAYOUT:
+  //  Row 1 (top-left zone):  4 hoppers clustered above collection container
+  //  Row 2 (mid-left):       Collection container "Abhitech's O" with all 4 pipes merging
+  //  Row 3 (mid):            Horizontal conveyor belt from collection → drum left inlet
+  //  Row 4 (right):          Big drum mixer (right half of canvas)
+  //  Top-right:              Binder tank → pipe into drum
+  // ════════════════════════════════════════════════
 
-  // === LAYOUT ===
-  // 4 hoppers at top, binder tank top-right, mixer body center, conveyor right
-  const hopperY = H * 0.05;
-  const hopperH = H * 0.22;
-  const hopperW = W * 0.12;
-  const mixerTop = H * 0.35;
-  const mixerBot = H * 0.68;
-  const mixerLeft = W * 0.08;
-  const mixerRight = W * 0.82;
-  const mixerCX = (mixerLeft + mixerRight) / 2;
-  const mixerCY = (mixerTop + mixerBot) / 2;
-  const mixerRW = (mixerRight - mixerLeft) / 2;
-  const mixerRH = (mixerBot - mixerTop) / 2;
+  // ── DRUM MIXER geometry (right portion, bottom half) ──
+  const drumL   = W * 0.46;
+  const drumR   = W * 0.93;
+  const drumTop = H * 0.52;
+  const drumBot = H * 0.78;
+  const drumCX  = (drumL + drumR) / 2;
+  const drumCY  = (drumTop + drumBot) / 2;
+  const drumW   = drumR - drumL;
+  const drumH   = drumBot - drumTop;
+  const drumRX  = drumW / 2;
+  const drumRY  = drumH / 2;
 
-  // ── BINDER TANK (top right) ──
-  const tankX = W * 0.84;
-  const tankY = H * 0.04;
-  const tankW = W * 0.12;
-  const tankH = H * 0.26;
-  // tank body
-  const tGrad = g.createLinearGradient(tankX, 0, tankX + tankW, 0);
-  tGrad.addColorStop(0, '#a8b8c8'); tGrad.addColorStop(0.5, '#d8e4ec'); tGrad.addColorStop(1, '#8898a8');
-  g.fillStyle = tGrad; g.strokeStyle = 'rgba(120,140,160,0.7)'; g.lineWidth = 1.2;
-  g.beginPath(); g.roundRect(tankX, tankY + tankH * 0.08, tankW, tankH * 0.88, 4); g.fill(); g.stroke();
-  // tank top cap
-  g.fillStyle = '#b8c8d4'; g.strokeStyle = 'rgba(120,140,160,0.6)'; g.lineWidth = 1;
-  g.beginPath(); g.ellipse(tankX + tankW / 2, tankY + tankH * 0.08, tankW / 2, tankH * 0.05, 0, 0, Math.PI * 2); g.fill(); g.stroke();
-  // liquid fill (light blue semi-transparent)
-  const liquidLevel = 0.55 + 0.04 * Math.sin(frame * 0.04);
-  const liquidTop = tankY + tankH * (0.1 + (1 - liquidLevel) * 0.75);
-  const lGrad = g.createLinearGradient(0, liquidTop, 0, tankY + tankH * 0.94);
-  lGrad.addColorStop(0, 'rgba(100,180,240,0.55)'); lGrad.addColorStop(1, 'rgba(60,130,200,0.75)');
-  g.fillStyle = lGrad;
-  g.save();
-  g.beginPath(); g.roundRect(tankX + 2, tankY + tankH * 0.1, tankW - 4, tankH * 0.84, 3); g.clip();
-  g.fillRect(tankX + 2, liquidTop, tankW - 4, tankY + tankH * 0.94 - liquidTop);
-  // ripple on liquid surface
-  g.strokeStyle = 'rgba(180,220,255,0.6)'; g.lineWidth = 1;
-  const ripA = frame * 0.06;
-  g.beginPath(); g.ellipse(tankX + tankW * 0.5, liquidTop + 3, tankW * 0.30 + 2 * Math.sin(ripA), 3, 0, 0, Math.PI * 2); g.stroke();
-  g.restore();
-  // agitator shaft
-  const agRotSpeed = frame * 0.04;
-  g.save(); g.translate(tankX + tankW / 2, tankY + tankH * 0.08);
-  g.strokeStyle = '#8898a8'; g.lineWidth = 2;
-  g.beginPath(); g.moveTo(0, 0); g.lineTo(0, tankH * 0.75); g.stroke();
-  // agitator blades
-  g.save(); g.translate(0, tankH * 0.55); g.rotate(agRotSpeed);
-  g.strokeStyle = '#9aacbc'; g.lineWidth = 1.5;
-  [-1, 1].forEach(dir => {
-    g.beginPath(); g.moveTo(0, 0); g.lineTo(dir * tankW * 0.38, tankH * 0.06); g.stroke();
-  });
-  g.restore(); g.restore();
-  // pipe from tank to mixer
-  g.strokeStyle = 'rgba(120,140,160,0.6)'; g.lineWidth = 2;
-  g.beginPath(); g.moveTo(tankX + tankW / 2, tankY + tankH * 0.96);
-  g.lineTo(tankX + tankW / 2, mixerTop - 6);
-  g.lineTo(mixerRight - mixerRW * 0.20, mixerTop - 6);
-  g.stroke();
-  // animated liquid binder drop
-  const ldT = ((frame * 0.018) % 1);
-  g.fillStyle = 'rgba(100,180,240,0.85)';
-  g.beginPath(); g.arc(tankX + tankW / 2, tankY + tankH * 0.96 + ldT * 16, 2.5, 0, Math.PI * 2); g.fill();
+  // ── COLLECTION CONTAINER geometry (left-center, mid canvas) ──
+  const colW    = W * 0.20;
+  const colH    = H * 0.16;
+  const colCX   = W * 0.27;   // left-center zone (shifted right so hoppers aren't cut)
+  const colTop  = H * 0.38;
+  const colBot  = colTop + colH;
+  const colL    = colCX - colW/2;
+  const colR    = colCX + colW/2;
+  const colNeckW = colW * 0.30;
 
-  // ── 4 HOPPERS ──
-  const hopperColors = [
-    { fill: ['#5a2510', '#7a3a18', '#4a1e0c'], label: 'IRON ORE', matColor: '#6a2d12' },
-    { fill: ['#d4ccc0', '#f0ece4', '#bab4aa'], label: 'BENTONITE', matColor: '#e0d8cc' },
-    { fill: ['#1a1a1a', '#2e2e2e', '#111111'], label: 'ORE FINES', matColor: '#252525' },
-    { fill: ['#d4c89a', '#e8dbb0', '#c0b480'], label: 'OB BINDER', matColor: '#d0c090' }
+  // ── 4 HOPPERS: clustered above collection container ──
+  const hopperData = [
+    { matColor: '#7a3520', label: 'IRON ORE',  matTop: 'rgba(110,48,22,0.9)',  matBot: 'rgba(80,32,12,0.8)'   },
+    { matColor: '#d8d0c4', label: 'BENTONITE', matTop: 'rgba(220,212,200,0.9)', matBot: 'rgba(190,182,170,0.8)' },
+    { matColor: '#1e1e1e', label: 'ORE FINES', matTop: 'rgba(40,40,40,0.9)',   matBot: 'rgba(20,20,20,0.8)'   },
+    { matColor: '#d2c488', label: 'OB BINDER', matTop: 'rgba(210,196,130,0.9)', matBot: 'rgba(175,158,95,0.8)' },
   ];
-  const hopperSpacing = W * 0.195;
-  const hopperStartX = W * 0.04;
+  const hW      = W * 0.085;
+  const hH      = H * 0.19;
+  const hNeckW  = hW * 0.30;
+  const hNeckH  = hH * 0.13;
+  const hY      = H * 0.02;
+  // Hoppers centered over collection container, spread evenly
+  const hSpan   = colW * 2.6;    // total spread width
+  const hStartX = colCX - hSpan * 0.5 + hW * 0.5;
+  const hSpacing = hSpan / 3;
 
-  hopperColors.forEach((hc, hi) => {
-    const hcx = hopperStartX + hi * hopperSpacing + hopperW / 2;
-    const htop = hopperY;
-    const hbotY = hopperY + hopperH;
-    const neckW = hopperW * 0.22;
-    const neckH = hopperH * 0.12;
+  // ══════════════════
+  // 1) PIPES from hopper necks → collection container top  (drawn FIRST, behind hoppers)
+  // ══════════════════
+  hopperData.forEach((hd, hi) => {
+    const hcx       = hStartX + hi * hSpacing;
+    const hbot      = hY + hH;
+    const neckBotY  = hbot + 14;
+    // All pipes converge to the top-center of the collection container
+    const pipeEndX  = colCX + (hi - 1.5) * colNeckW * 0.55;
+    const pipeEndY  = colTop - 2;
 
-    // Hopper body (inverted trapezoid)
-    const hGrad = g.createLinearGradient(hcx - hopperW / 2, 0, hcx + hopperW / 2, 0);
-    hGrad.addColorStop(0, hc.fill[0]); hGrad.addColorStop(0.5, '#3a4855'); hGrad.addColorStop(1, hc.fill[0]);
-    g.fillStyle = hGrad; g.strokeStyle = 'rgba(80,100,120,0.55)'; g.lineWidth = 1;
+    // Control points: drop straight down from hopper, curve to collection
+    const cp1x = hcx;
+    const cp1y = neckBotY + (pipeEndY - neckBotY) * 0.50;
+    const cp2x = pipeEndX;
+    const cp2y = neckBotY + (pipeEndY - neckBotY) * 0.60;
+
+    // Outer pipe (steel tube)
+    g.strokeStyle = 'rgba(58,75,95,0.78)';
+    g.lineWidth = hNeckW * 0.85;
+    g.lineCap = 'round';
     g.beginPath();
-    g.moveTo(hcx - hopperW / 2, htop);
-    g.lineTo(hcx + hopperW / 2, htop);
-    g.lineTo(hcx + neckW / 2, hbotY - neckH);
-    g.lineTo(hcx + neckW / 2, hbotY);
-    g.lineTo(hcx - neckW / 2, hbotY);
-    g.lineTo(hcx - neckW / 2, hbotY - neckH);
-    g.closePath(); g.fill(); g.stroke();
+    g.moveTo(hcx, neckBotY);
+    g.bezierCurveTo(cp1x, cp1y, cp2x, cp2y, pipeEndX, pipeEndY);
+    g.stroke();
 
-    // Material fill inside hopper
-    const matGrad2 = g.createLinearGradient(0, htop + 4, 0, hbotY - neckH - 4);
-    matGrad2.addColorStop(0, hc.matColor + 'cc'); matGrad2.addColorStop(1, hc.matColor + '88');
-    g.fillStyle = matGrad2;
-    g.save();
+    // Inner highlight
+    g.strokeStyle = 'rgba(140,170,195,0.30)';
+    g.lineWidth = hNeckW * 0.28;
     g.beginPath();
-    g.moveTo(hcx - hopperW / 2 + 2, htop + 4);
-    g.lineTo(hcx + hopperW / 2 - 2, htop + 4);
-    g.lineTo(hcx + neckW / 2 + 2, hbotY - neckH - 4);
-    g.lineTo(hcx - neckW / 2 - 2, hbotY - neckH - 4);
-    g.closePath(); g.clip(); g.fillRect(hcx - hopperW / 2 + 2, htop + 4, hopperW - 4, hopperH - 8);
-    g.restore();
+    g.moveTo(hcx, neckBotY);
+    g.bezierCurveTo(cp1x, cp1y, cp2x, cp2y, pipeEndX, pipeEndY);
+    g.stroke();
+    g.lineCap = 'butt';
 
-    // Label tag below hopper
-    g.fillStyle = 'rgba(26,48,87,0.08)'; g.strokeStyle = 'rgba(200,145,42,0.3)'; g.lineWidth = 0.8;
-    g.beginPath(); g.roundRect(hcx - hopperW * 0.55, hbotY + 2, hopperW * 1.1, 12, 2); g.fill(); g.stroke();
-    g.fillStyle = '#8a7a60'; g.font = '500 5.5px JetBrains Mono'; g.textAlign = 'center';
-    g.fillText(hc.label, hcx, hbotY + 10);
-
-    // Animated material fall from neck
-    const fSpeed = 0.028 + hi * 0.007;
-    for (let fk = 0; fk < 4; fk++) {
-      const ft = ((frame * fSpeed + fk * 0.25) % 1);
-      if (ft < 0.05) continue;
-      const fy = hbotY + ft * (mixerTop - hbotY - 6);
-      const fAlpha = Math.min(1, ft * 8) * (1 - ft * 0.5);
-      g.globalAlpha = fAlpha * 0.85;
-      g.fillStyle = hc.matColor;
-      g.beginPath(); g.arc(hcx + (fk % 2 - 0.5) * 3, fy, 2.2, 0, Math.PI * 2); g.fill();
+    // Animated material particles flowing down pipe
+    const fSpeed = 0.028 + hi * 0.004;
+    for (let fk = 0; fk < 7; fk++) {
+      const ft = ((frame * fSpeed + fk * 0.143) % 1);
+      if (ft < 0.02) continue;
+      const t3 = ft, t2 = 1 - t3;
+      const bx = t2*t2*t2*hcx + 3*t2*t2*t3*cp1x + 3*t2*t3*t3*cp2x + t3*t3*t3*pipeEndX;
+      const by = t2*t2*t2*neckBotY + 3*t2*t2*t3*cp1y + 3*t2*t3*t3*cp2y + t3*t3*t3*pipeEndY;
+      g.globalAlpha = Math.min(1, ft * 9) * (1 - ft * 0.28) * 0.92;
+      g.fillStyle = hd.matColor;
+      g.beginPath(); g.arc(bx, by, 2.5, 0, Math.PI * 2); g.fill();
     }
     g.globalAlpha = 1;
   });
 
-  // ── MIXER BODY ──
-  // Support legs
-  g.fillStyle = '#2d5fa6'; g.strokeStyle = 'rgba(45,95,166,0.5)'; g.lineWidth = 0.8;
-  [-0.35, -0.05, 0.25, 0.55].forEach(lx => {
-    g.beginPath(); g.roundRect(mixerCX + mixerRW * lx - 3, mixerBot, 6, H * 0.07, 1); g.fill(); g.stroke();
+  // ══════════════════
+  // 2) DRAW 4 HOPPERS (drawn ON TOP of pipes)
+  // ══════════════════
+  hopperData.forEach((hd, hi) => {
+    const hcx  = hStartX + hi * hSpacing;
+    const htop = hY;
+    const hbot = hY + hH;
+    const nY   = hbot - hNeckH;
+
+    // Hopper shell (inverted trapezoid)
+    const hShell = g.createLinearGradient(hcx - hW/2, 0, hcx + hW/2, 0);
+    hShell.addColorStop(0,   '#4a5a6a');
+    hShell.addColorStop(0.25,'#7a8e9e');
+    hShell.addColorStop(0.5, '#9aaebc');
+    hShell.addColorStop(0.75,'#7a8e9e');
+    hShell.addColorStop(1,   '#4a5a6a');
+    g.fillStyle = hShell; g.strokeStyle = 'rgba(90,110,130,0.65)'; g.lineWidth = 1.2;
+    g.beginPath();
+    g.moveTo(hcx - hW/2,     htop);
+    g.lineTo(hcx + hW/2,     htop);
+    g.lineTo(hcx + hNeckW/2, nY);
+    g.lineTo(hcx + hNeckW/2, hbot);
+    g.lineTo(hcx - hNeckW/2, hbot);
+    g.lineTo(hcx - hNeckW/2, nY);
+    g.closePath(); g.fill(); g.stroke();
+
+    // Material heap inside hopper
+    g.save();
+    g.beginPath();
+    g.moveTo(hcx - hW/2 + 2, htop + 3);
+    g.lineTo(hcx + hW/2 - 2, htop + 3);
+    g.lineTo(hcx + hNeckW/2 - 1, nY - 2);
+    g.lineTo(hcx - hNeckW/2 + 1, nY - 2);
+    g.closePath(); g.clip();
+    const mFill = g.createLinearGradient(0, htop + 3, 0, nY - 2);
+    mFill.addColorStop(0, hd.matTop); mFill.addColorStop(1, hd.matBot);
+    g.fillStyle = mFill; g.fillRect(hcx - hW/2 + 2, htop + 3, hW - 4, hH);
+    const heapY = htop + hH * 0.18 + 2 * Math.sin(frame * 0.03 + hi);
+    g.fillStyle = hd.matTop;
+    g.beginPath(); g.ellipse(hcx, heapY + hH * 0.06, hW * 0.40, hH * 0.11, 0, 0, Math.PI * 2); g.fill();
+    g.fillStyle = 'rgba(255,255,255,0.07)';
+    g.fillRect(hcx - hW/2 + 2, htop + 3, hW - 4, hH * 0.15);
+    g.restore();
+
+    // Top rim
+    const rimG = g.createLinearGradient(hcx - hW/2 - 4, 0, hcx + hW/2 + 4, 0);
+    rimG.addColorStop(0, '#5a6a7a'); rimG.addColorStop(0.5, '#9ab0c0'); rimG.addColorStop(1, '#5a6a7a');
+    g.fillStyle = rimG; g.strokeStyle = 'rgba(120,145,165,0.6)'; g.lineWidth = 0.8;
+    g.beginPath(); g.roundRect(hcx - hW/2 - 3, htop - 5, hW + 6, 8, 2); g.fill(); g.stroke();
+
+    // Neck pipe
+    const nkG = g.createLinearGradient(hcx - hNeckW/2, 0, hcx + hNeckW/2, 0);
+    nkG.addColorStop(0, '#3a4a58'); nkG.addColorStop(0.5, '#6a7e8e'); nkG.addColorStop(1, '#3a4a58');
+    g.fillStyle = nkG; g.strokeStyle = 'rgba(80,100,120,0.6)'; g.lineWidth = 1;
+    g.beginPath(); g.roundRect(hcx - hNeckW/2 - 1, hbot - 2, hNeckW + 2, 12, 1); g.fill(); g.stroke();
+
+    // Gate flange
+    g.fillStyle = '#2a3a4a'; g.strokeStyle = 'rgba(60,80,100,0.5)'; g.lineWidth = 0.8;
+    g.beginPath(); g.roundRect(hcx - hNeckW/2 - 3, hbot + 9, hNeckW + 6, 5, 1); g.fill(); g.stroke();
+
+    // Label tag
+    g.fillStyle = 'rgba(26,48,87,0.08)'; g.strokeStyle = 'rgba(200,145,42,0.28)'; g.lineWidth = 0.7;
+    g.beginPath(); g.roundRect(hcx - hW*0.52, htop - 19, hW * 1.04, 13, 2); g.fill(); g.stroke();
+    g.fillStyle = '#7a6a50'; g.font = '600 5.5px JetBrains Mono'; g.textAlign = 'center';
+    g.fillText(hd.label, hcx, htop - 9);
   });
 
-  // Outer shell shadow + body
+  // ══════════════════
+  // 3) COLLECTION CONTAINER — "Abhitech's O" label
+  // ══════════════════
+  // Shell (inverted trapezoid funnel)
+  const colShell = g.createLinearGradient(colL, 0, colR, 0);
+  colShell.addColorStop(0,   '#3a4a5a');
+  colShell.addColorStop(0.3, '#5a6e7e');
+  colShell.addColorStop(0.7, '#6a8090');
+  colShell.addColorStop(1,   '#3a4a5a');
+  g.fillStyle = colShell; g.strokeStyle = 'rgba(80,110,135,0.80)'; g.lineWidth = 2;
+  g.beginPath();
+  g.moveTo(colL, colTop);
+  g.lineTo(colR, colTop);
+  g.lineTo(colCX + colNeckW/2, colBot - colH*0.10);
+  g.lineTo(colCX + colNeckW/2, colBot);
+  g.lineTo(colCX - colNeckW/2, colBot);
+  g.lineTo(colCX - colNeckW/2, colBot - colH*0.10);
+  g.closePath(); g.fill(); g.stroke();
+
+  // Mixed material inside
   g.save();
-  g.shadowColor = 'rgba(26,48,87,0.18)'; g.shadowBlur = 10; g.shadowOffsetY = 4;
-  const shellGrad = g.createLinearGradient(mixerCX, mixerTop - 4, mixerCX, mixerBot + 4);
-  shellGrad.addColorStop(0, '#6a7a8a'); shellGrad.addColorStop(0.15, '#a8bac8');
-  shellGrad.addColorStop(0.5, '#ccd8e0'); shellGrad.addColorStop(0.85, '#8a9aaa'); shellGrad.addColorStop(1, '#506070');
-  g.fillStyle = shellGrad; g.strokeStyle = 'rgba(80,100,120,0.6)'; g.lineWidth = 1.8;
-  g.beginPath(); g.ellipse(mixerCX, mixerCY, mixerRW + 3, mixerRH + 3, 0, 0, Math.PI * 2); g.fill(); g.stroke();
-  g.shadowBlur = 0; g.restore();
-
-  // Cutaway window — reveal internals
-  g.save();
-  g.beginPath(); g.rect(mixerCX - mixerRW * 0.65, mixerTop, mixerRW * 1.30, mixerRH * 0.88); g.clip();
-
-  // Material fill (dark reddish-brown damp pellet feed)
-  const matFill = g.createLinearGradient(mixerCX, mixerCY - mixerRH * 0.05, mixerCX, mixerCY + mixerRH);
-  matFill.addColorStop(0, '#5a2e14'); matFill.addColorStop(0.5, '#4a2410'); matFill.addColorStop(1, '#362008');
-  g.fillStyle = matFill;
-  g.beginPath(); g.ellipse(mixerCX, mixerCY + mixerRH * 0.08, mixerRW * 0.62, mixerRH * 0.60, 0, 0, Math.PI * 2); g.fill();
-
-  // Material surface texture
-  g.strokeStyle = 'rgba(90,45,15,0.3)'; g.lineWidth = 0.6;
-  for (let rr = 0; rr < 3; rr++) {
-    const yoff = mixerCY + mixerRH * (0.05 - rr * 0.17);
-    g.beginPath(); g.ellipse(mixerCX, yoff, mixerRW * (0.58 - rr * 0.06), mixerRH * 0.10, 0, 0, Math.PI * 2); g.stroke();
+  g.beginPath();
+  g.moveTo(colL + 2, colTop + 3);
+  g.lineTo(colR - 2, colTop + 3);
+  g.lineTo(colCX + colNeckW/2 - 1, colBot - colH*0.11);
+  g.lineTo(colCX - colNeckW/2 + 1, colBot - colH*0.11);
+  g.closePath(); g.clip();
+  const mixInFill = g.createLinearGradient(0, colTop + 3, 0, colBot - 3);
+  mixInFill.addColorStop(0,   'rgba(120,55,25,0.92)');
+  mixInFill.addColorStop(0.4, 'rgba(90,40,15,0.85)');
+  mixInFill.addColorStop(0.7, 'rgba(65,30,10,0.90)');
+  mixInFill.addColorStop(1,   'rgba(45,20,5,0.95)');
+  g.fillStyle = mixInFill; g.fillRect(colL, colTop, colW, colH);
+  // Swirling bentonite streaks
+  for (let s = 0; s < 3; s++) {
+    const sw = frame * 0.022 + s * 2.1;
+    const sy = colTop + colH * (0.20 + s * 0.22) + Math.sin(sw) * colH * 0.06;
+    g.strokeStyle = 'rgba(210,200,180,0.22)'; g.lineWidth = 1.5;
+    g.beginPath();
+    g.moveTo(colL + 4, sy);
+    g.bezierCurveTo(colL + colW*0.3, sy - colH*0.04*Math.cos(sw), colL + colW*0.7, sy + colH*0.04*Math.sin(sw), colR - 4, sy);
+    g.stroke();
   }
+  // Surface ripple
+  const ripY = colTop + colH * 0.11 + Math.sin(frame * 0.04) * 1.5;
+  g.strokeStyle = 'rgba(180,140,90,0.32)'; g.lineWidth = 1;
+  g.beginPath(); g.ellipse(colCX, ripY, colW * 0.32, colH * 0.065, 0, 0, Math.PI * 2); g.stroke();
+  g.restore();
 
-  // Slow leftward-to-rightward material flow particles
-  const flowSpeed = 0.004;
-  for (let fp = 0; fp < 8; fp++) {
-    const ft2 = ((frame * flowSpeed + fp / 8) % 1);
-    const fx2 = mixerCX - mixerRW * 0.55 + ft2 * mixerRW * 1.10;
-    const fy2 = mixerCY + mixerRH * 0.15 + (fp % 3 - 1) * mixerRH * 0.12;
-    g.globalAlpha = 0.35;
-    g.fillStyle = '#7a3a18';
-    g.beginPath(); g.arc(fx2, fy2, 2.5, 0, Math.PI * 2); g.fill();
+  // Top rim
+  const colRimG = g.createLinearGradient(colL - 4, 0, colR + 4, 0);
+  colRimG.addColorStop(0, '#5a6a7a'); colRimG.addColorStop(0.5, '#9ab0c0'); colRimG.addColorStop(1, '#5a6a7a');
+  g.fillStyle = colRimG; g.strokeStyle = 'rgba(120,145,165,0.65)'; g.lineWidth = 1;
+  g.beginPath(); g.roundRect(colL - 5, colTop - 6, colW + 10, 9, 2); g.fill(); g.stroke();
+
+  // ── "Abhitech's O" label badge on collection container ──
+  const badgeW = colW + 10;
+  const badgeH = 22;
+  const badgeX = colCX - badgeW/2;
+  const badgeY = colTop + colH * 0.28;
+  // badge background
+  g.fillStyle = 'rgba(255,248,230,0.92)';
+  g.strokeStyle = 'rgba(200,145,42,0.75)';
+  g.lineWidth = 1.2;
+  g.beginPath(); g.roundRect(badgeX, badgeY, badgeW, badgeH, 3); g.fill(); g.stroke();
+  // gold accent strip on top of badge
+  g.fillStyle = 'rgba(200,145,42,0.85)';
+  g.beginPath(); g.roundRect(badgeX, badgeY, badgeW, 4, [3,3,0,0]); g.fill();
+  // text
+  g.fillStyle = '#c8912a';
+  g.font = 'bold 6.5px JetBrains Mono';
+  g.textAlign = 'center';
+  g.fillText("ABHITECH'S O", colCX, badgeY + 15);
+
+  // Outer label below container
+  g.fillStyle = 'rgba(26,48,87,0.09)'; g.strokeStyle = 'rgba(200,145,42,0.45)'; g.lineWidth = 0.9;
+  g.beginPath(); g.roundRect(colCX - 42, colBot + 4, 84, 13, 2); g.fill(); g.stroke();
+  g.fillStyle = '#7a5a30'; g.font = '600 5.5px JetBrains Mono'; g.textAlign = 'center';
+  g.fillText('COLLECTION', colCX, colBot + 13);
+
+  // ══════════════════
+  // 4) HORIZONTAL CONVEYOR BELT: collection container neck → drum left inlet
+  //    Belt runs horizontally from just below collection → drum left side
+  // ══════════════════
+  // Chute stub from collection neck down to belt level
+  const beltY   = colBot + 36;           // belt top surface Y
+  const beltSX  = colCX - colW * 0.1;   // belt left start
+  const beltEX  = drumL + drumRY - 2;   // belt right end at drum inlet
+  const beltH   = 14;
+
+  // Discharge chute: collection neck → belt start
+  const chuteTopY  = colBot;
+  const chuteBotY  = beltY + beltH/2;
+  g.fillStyle = '#2a3a4a'; g.strokeStyle = 'rgba(55,80,105,0.60)'; g.lineWidth = 1.2;
+  g.beginPath();
+  g.moveTo(colCX - colNeckW/2, chuteTopY);
+  g.lineTo(colCX + colNeckW/2, chuteTopY);
+  g.lineTo(beltSX + beltH*0.5, chuteBotY);
+  g.lineTo(beltSX - beltH*0.5, chuteBotY);
+  g.closePath(); g.fill(); g.stroke();
+
+  // Particles in chute
+  for (let ds = 0; ds < 5; ds++) {
+    const dt = ((frame * 0.032 + ds * 0.2) % 1);
+    if (dt < 0.04) continue;
+    const dsx = colCX + (ds%3-1)*2;
+    const dsy = chuteTopY + dt * (chuteBotY - chuteTopY);
+    g.globalAlpha = Math.min(1, dt*9) * (1-dt*0.45) * 0.88;
+    g.fillStyle = '#6a2e14';
+    g.beginPath(); g.arc(dsx, dsy, 2.3, 0, Math.PI*2); g.fill();
   }
   g.globalAlpha = 1;
-  g.restore();
 
-  // Central shaft
-  const shaftGrad2 = g.createLinearGradient(mixerCX, mixerCY - mixerRH * 0.07, mixerCX, mixerCY + mixerRH * 0.07);
-  shaftGrad2.addColorStop(0, '#b8c8d4'); shaftGrad2.addColorStop(0.5, '#e0eaf0'); shaftGrad2.addColorStop(1, '#8898a8');
-  g.fillStyle = shaftGrad2; g.strokeStyle = 'rgba(110,130,150,0.7)'; g.lineWidth = 0.8;
-  g.beginPath(); g.roundRect(mixerCX - mixerRW * 0.65, mixerCY - mixerRH * 0.07, mixerRW * 1.30, mixerRH * 0.14, 2); g.fill(); g.stroke();
+  // Belt frame undercarriage
+  g.fillStyle = '#1a2a38'; g.strokeStyle = 'rgba(45,75,105,0.60)'; g.lineWidth = 1;
+  g.beginPath(); g.roundRect(beltSX - 3, beltY + beltH + 1, beltEX - beltSX + 6, 5, 1); g.fill(); g.stroke();
 
-  // Rotating paddles
-  g.save(); g.translate(mixerCX, mixerCY);
-  const padRot = frame * 0.050; // ~1 rev / 8s at 60fps
-  g.rotate(padRot);
-  const numP = 8;
-  for (let p = 0; p < numP; p++) {
-    const ang = p * Math.PI * 2 / numP;
-    const px = Math.cos(ang) * mixerRW * 0.30;
-    const py = Math.sin(ang) * mixerRH * 0.52;
-    g.save(); g.translate(px * 0.55, py * 0.55); g.rotate(ang + 0.30);
-    const blG = g.createLinearGradient(-5, 0, 5, 0);
-    blG.addColorStop(0, '#788898'); blG.addColorStop(0.5, '#c0ccd8'); blG.addColorStop(1, '#607080');
-    g.fillStyle = blG; g.strokeStyle = 'rgba(140,160,180,0.6)'; g.lineWidth = 0.7;
-    g.beginPath(); g.roundRect(-4.5, -mixerRH * 0.27, 9, mixerRH * 0.54, 1.5); g.fill(); g.stroke();
-    g.restore();
-  }
-  // Center hub
-  g.fillStyle = 'rgba(160,175,190,0.9)'; g.strokeStyle = 'rgba(130,150,170,0.6)'; g.lineWidth = 0.8;
-  g.beginPath(); g.arc(0, 0, mixerRH * 0.10, 0, Math.PI * 2); g.fill(); g.stroke();
-  g.restore();
+  // Side rails
+  g.strokeStyle = 'rgba(55,85,115,0.55)'; g.lineWidth = 1;
+  g.beginPath(); g.moveTo(beltSX, beltY - 2);       g.lineTo(beltEX, beltY - 2);       g.stroke();
+  g.beginPath(); g.moveTo(beltSX, beltY + beltH + 2); g.lineTo(beltEX, beltY + beltH + 2); g.stroke();
 
-  // Motor (left)
-  const mGrad = g.createLinearGradient(mixerLeft - 18, mixerCY, mixerLeft, mixerCY);
-  mGrad.addColorStop(0, '#1a3057'); mGrad.addColorStop(1, '#2d5fa6');
-  g.fillStyle = mGrad; g.strokeStyle = 'rgba(45,95,166,0.55)'; g.lineWidth = 1;
-  g.beginPath(); g.roundRect(mixerLeft - 16, mixerCY - mixerRH * 0.36, 15, mixerRH * 0.72, 2); g.fill(); g.stroke();
-
-  // Motor shaft coupler
-  g.fillStyle = '#405868'; g.strokeStyle = 'rgba(80,100,120,0.5)'; g.lineWidth = 0.7;
-  g.beginPath(); g.roundRect(mixerLeft - 1, mixerCY - mixerRH * 0.08, 6, mixerRH * 0.16, 1); g.fill(); g.stroke();
-
-  // Feed inlet ports on top of mixer
-  g.fillStyle = '#7a8a9a'; g.strokeStyle = 'rgba(110,130,150,0.55)'; g.lineWidth = 0.8;
-  [-0.30, 0, 0.28].forEach(ox => {
-    g.beginPath(); g.roundRect(mixerCX + mixerRW * ox - 5, mixerTop - 7, 10, 9, 1.5); g.fill(); g.stroke();
-  });
-
-  // ── DISCHARGE CONVEYOR (right side) ──
-  const convStartX = mixerRight + 4;
-  const convStartY = mixerBot - mixerRH * 0.15;
-  const convEndX = W * 0.97;
-  const convEndY = H * 0.58;
-  const convH = 8;
-
-  // Belt bg
-  const convGrad = g.createLinearGradient(convStartX, convStartY, convEndX, convEndY);
-  convGrad.addColorStop(0, '#1a2530'); convGrad.addColorStop(1, '#2a3540');
-  g.fillStyle = convGrad; g.strokeStyle = 'rgba(45,95,166,0.5)'; g.lineWidth = 1;
-  g.save();
-  const convAngle = Math.atan2(convEndY - convStartY, convEndX - convStartX);
-  g.translate(convStartX, convStartY); g.rotate(convAngle);
-  const convLen = Math.hypot(convEndX - convStartX, convEndY - convStartY);
-  g.beginPath(); g.roundRect(0, -convH / 2, convLen, convH, 2); g.fill(); g.stroke();
+  // Belt surface
+  const cvBG = g.createLinearGradient(0, beltY, 0, beltY + beltH);
+  cvBG.addColorStop(0, '#18262e'); cvBG.addColorStop(0.5, '#263848'); cvBG.addColorStop(1, '#18262e');
+  g.fillStyle = cvBG; g.strokeStyle = 'rgba(40,70,95,0.55)'; g.lineWidth = 1;
+  g.beginPath(); g.roundRect(beltSX, beltY, beltEX - beltSX, beltH, 2); g.fill(); g.stroke();
 
   // Animated belt stripes
-  g.strokeStyle = 'rgba(80,100,120,0.4)'; g.lineWidth = 1;
-  const beltOffset = (frame * 1.2) % 18;
-  for (let bl = -convLen; bl < convLen + 18; bl += 18) {
-    g.beginPath(); g.moveTo(bl + beltOffset, -convH / 2); g.lineTo(bl + beltOffset, convH / 2); g.stroke();
+  g.strokeStyle = 'rgba(70,105,135,0.52)'; g.lineWidth = 1;
+  const cvOff = (frame * 1.6) % 20;
+  for (let bl = 0; bl < beltEX - beltSX + 20; bl += 20) {
+    const bx = beltSX + bl - cvOff;
+    if (bx < beltSX || bx > beltEX) continue;
+    g.beginPath(); g.moveTo(bx, beltY + 1); g.lineTo(bx, beltY + beltH - 1); g.stroke();
   }
 
-  // Material on belt
-  for (let mp = 0; mp < 5; mp++) {
-    const mt = (mp / 5 + (frame * 0.006) % 1) % 1;
-    const mx3 = mt * convLen;
-    g.fillStyle = '#5a2e14';
-    g.beginPath(); g.ellipse(mx3, 0, 8, 4, 0, 0, Math.PI * 2); g.fill();
+  // Mixed material lumps on belt
+  const cvMatColors = ['#6a2e14','#4a2208','#9a8860','#2e2e2e','#8a7a40','#7a3520'];
+  const beltLen = beltEX - beltSX;
+  for (let mp = 0; mp < 9; mp++) {
+    const mt = ((mp/9) + (frame * 0.007)) % 1;
+    const mx = beltSX + mt * beltLen;
+    const my = beltY + beltH/2 + (mp%2===0 ? -2 : 2);
+    g.fillStyle = cvMatColors[mp % cvMatColors.length];
+    g.strokeStyle = 'rgba(255,255,255,0.05)'; g.lineWidth = 0.5;
+    g.beginPath(); g.ellipse(mx, my, 6.5, 3.8, 0, 0, Math.PI*2); g.fill(); g.stroke();
   }
 
-  // Rollers
-  g.fillStyle = '#506070'; g.strokeStyle = 'rgba(80,100,120,0.4)'; g.lineWidth = 0.8;
-  [0, 0.25, 0.5, 0.75, 1.0].forEach(rp => {
-    g.beginPath(); g.arc(rp * convLen, 0, 5, 0, Math.PI * 2); g.fill(); g.stroke();
-    // Roller rotation marks
-    g.save(); g.translate(rp * convLen, 0);
-    const rRot = frame * 0.09;
-    g.rotate(rRot);
-    g.strokeStyle = 'rgba(160,180,200,0.4)'; g.lineWidth = 0.7;
-    g.beginPath(); g.moveTo(-4, 0); g.lineTo(4, 0); g.stroke();
+  // Belt rollers
+  const rollerXs = [beltSX, beltSX + beltLen*0.2, beltSX + beltLen*0.4, beltSX + beltLen*0.6, beltSX + beltLen*0.8, beltEX];
+  rollerXs.forEach(rx => {
+    const ry = beltY + beltH/2;
+    g.fillStyle = '#3a5068'; g.strokeStyle = 'rgba(65,95,125,0.5)'; g.lineWidth = 0.8;
+    g.beginPath(); g.arc(rx, ry, 7, 0, Math.PI*2); g.fill(); g.stroke();
+    g.save(); g.translate(rx, ry); g.rotate(frame * 0.11);
+    g.strokeStyle = 'rgba(140,175,200,0.42)'; g.lineWidth = 0.8;
+    g.beginPath(); g.moveTo(-5,0); g.lineTo(5,0); g.stroke();
+    g.beginPath(); g.moveTo(0,-5); g.lineTo(0,5); g.stroke();
+    g.restore();
+  });
+
+  // Belt label
+  const midBX = beltSX + beltLen * 0.5;
+  const midBY = beltY + beltH + 18;
+  g.fillStyle = 'rgba(26,48,87,0.09)'; g.strokeStyle = 'rgba(200,145,42,0.28)'; g.lineWidth = 0.7;
+  g.beginPath(); g.roundRect(midBX - 50, midBY - 8, 100, 12, 2); g.fill(); g.stroke();
+  g.fillStyle = '#7a6a50'; g.font = '500 5px JetBrains Mono'; g.textAlign = 'center';
+  g.fillText('FEED CONVEYOR →', midBX, midBY);
+
+  // Connection stub from belt end into drum
+  g.fillStyle = '#2a3a4a'; g.strokeStyle = 'rgba(55,80,105,0.55)'; g.lineWidth = 1;
+  g.beginPath();
+  g.moveTo(beltEX - 2, beltY - 1);
+  g.lineTo(beltEX + 8, beltY - 1);
+  g.lineTo(beltEX + 8, drumTop + 4);
+  g.lineTo(beltEX - 2, drumTop + 4);
+  g.closePath(); g.fill(); g.stroke();
+
+  // ══════════════════
+  // BINDER TANK (top-right)
+  // ══════════════════
+  const tkX  = W * 0.87;
+  const tkY  = H * 0.02;
+  const tkW  = W * 0.09;
+  const tkH  = H * 0.28;
+  const tkCX = tkX + tkW / 2;
+  const tkShell = g.createLinearGradient(tkX, 0, tkX + tkW, 0);
+  tkShell.addColorStop(0,  '#7090a8'); tkShell.addColorStop(0.3,'#b8d0e0');
+  tkShell.addColorStop(0.7,'#b8d0e0'); tkShell.addColorStop(1,  '#7090a8');
+  g.fillStyle = tkShell; g.strokeStyle = 'rgba(100,130,155,0.7)'; g.lineWidth = 1.3;
+  g.beginPath(); g.roundRect(tkX, tkY + tkH*0.08, tkW, tkH*0.84, 5); g.fill(); g.stroke();
+  const domeG2 = g.createLinearGradient(tkX, tkY, tkX + tkW, tkY);
+  domeG2.addColorStop(0,'#a8c8d8'); domeG2.addColorStop(0.5,'#daeef8'); domeG2.addColorStop(1,'#a8c8d8');
+  g.fillStyle = domeG2; g.strokeStyle = 'rgba(120,160,180,0.6)'; g.lineWidth = 1;
+  g.beginPath(); g.roundRect(tkX + tkW*0.05, tkY, tkW*0.90, tkH*0.14, 4); g.fill(); g.stroke();
+  const liqLvl  = 0.60 + 0.035 * Math.sin(frame * 0.035);
+  const liqTopY2 = tkY + tkH * (0.10 + (1 - liqLvl) * 0.72);
+  const liqGrad2 = g.createLinearGradient(0, liqTopY2, 0, tkY + tkH*0.90);
+  liqGrad2.addColorStop(0,'rgba(80,160,230,0.5)'); liqGrad2.addColorStop(1,'rgba(40,110,190,0.72)');
+  g.fillStyle = liqGrad2;
+  g.save();
+  g.beginPath(); g.roundRect(tkX + 2, tkY + tkH*0.09, tkW - 4, tkH*0.82, 4); g.clip();
+  g.fillRect(tkX + 2, liqTopY2, tkW - 4, tkY + tkH*0.90 - liqTopY2);
+  g.strokeStyle = 'rgba(160,210,255,0.55)'; g.lineWidth = 0.9;
+  const ripple2 = frame * 0.055;
+  g.beginPath(); g.ellipse(tkCX, liqTopY2 + 3, tkW*0.28 + 1.5*Math.sin(ripple2), 2.5, 0, 0, Math.PI*2); g.stroke();
+  g.restore();
+  g.save(); g.translate(tkCX, tkY + tkH*0.07);
+  g.strokeStyle = '#7a90a4'; g.lineWidth = 1.8;
+  g.beginPath(); g.moveTo(0, 0); g.lineTo(0, tkH*0.78); g.stroke();
+  g.save(); g.translate(0, tkH*0.56); g.rotate(frame * 0.045);
+  g.strokeStyle = '#90a8bc'; g.lineWidth = 1.4;
+  [-1,1].forEach(d => { g.beginPath(); g.moveTo(0,0); g.lineTo(d * tkW*0.38, tkH*0.065); g.stroke(); });
+  g.save(); g.rotate(Math.PI/2);
+  [-1,1].forEach(d => { g.beginPath(); g.moveTo(0,0); g.lineTo(d * tkW*0.25, tkH*0.05); g.stroke(); });
+  g.restore(); g.restore(); g.restore();
+  // Pipe from binder tank → drum top-right
+  const pipeX3  = tkCX;
+  const pipeY1b = tkY + tkH * 0.92;
+  const pipeY2b = drumTop - 4;
+  const pipeX2b = drumL + drumW * 0.83;
+  g.strokeStyle = 'rgba(100,125,148,0.65)'; g.lineWidth = 3.5;
+  g.lineCap = 'round'; g.lineJoin = 'round';
+  g.beginPath(); g.moveTo(pipeX3, pipeY1b);
+  g.lineTo(pipeX3, pipeY1b + (pipeY2b-pipeY1b)*0.4);
+  g.arcTo(pipeX3, pipeY2b, pipeX2b, pipeY2b, 8);
+  g.lineTo(pipeX2b, pipeY2b); g.stroke();
+  g.lineCap = 'butt';
+  const bdT2 = ((frame * 0.020) % 1);
+  g.fillStyle = 'rgba(80,155,225,0.88)';
+  g.beginPath(); g.arc(pipeX3, pipeY1b + bdT2 * 14, 2.4, 0, Math.PI*2); g.fill();
+  // Binder inlet port on drum
+  g.fillStyle = '#5a6a7a'; g.strokeStyle = 'rgba(90,110,130,0.5)'; g.lineWidth = 0.9;
+  g.beginPath(); g.roundRect(pipeX2b - 6, drumTop - 6, 12, 7, 1.5); g.fill(); g.stroke();
+  // Binder label
+  g.fillStyle = 'rgba(26,48,87,0.08)'; g.strokeStyle = 'rgba(200,145,42,0.28)'; g.lineWidth = 0.7;
+  g.beginPath(); g.roundRect(tkX - 2, tkY + tkH + 2, tkW + 4, 12, 2); g.fill(); g.stroke();
+  g.fillStyle = '#7a6a50'; g.font = '600 5.5px JetBrains Mono'; g.textAlign = 'center';
+  g.fillText('BINDER TANK', tkCX, tkY + tkH + 10);
+
+  // ══════════════════
+  // DRUM MIXER BODY
+  // ══════════════════
+  // Support legs
+  const legXs = [0.14, 0.33, 0.62, 0.81];
+  legXs.forEach(lx => {
+    const lgx = drumL + drumW * lx;
+    const lgGrad = g.createLinearGradient(lgx - 4, 0, lgx + 4, 0);
+    lgGrad.addColorStop(0,'#1a3057'); lgGrad.addColorStop(0.5,'#3060a0'); lgGrad.addColorStop(1,'#1a3057');
+    g.fillStyle = lgGrad; g.strokeStyle = 'rgba(26,60,120,0.45)'; g.lineWidth = 0.9;
+    g.beginPath(); g.roundRect(lgx - 4, drumBot, 8, H*0.07, 1); g.fill(); g.stroke();
+    g.fillStyle = '#0e1e38'; g.strokeStyle = 'rgba(26,60,90,0.4)'; g.lineWidth = 0.7;
+    g.beginPath(); g.roundRect(lgx - 9, drumBot + H*0.07 - 2, 18, 5, 1); g.fill(); g.stroke();
+  });
+
+  // Drum shell
+  g.save();
+  g.shadowColor = 'rgba(26,48,87,0.22)'; g.shadowBlur = 14; g.shadowOffsetY = 6;
+  const drumOuter = g.createLinearGradient(drumCX, drumTop - 6, drumCX, drumBot + 6);
+  drumOuter.addColorStop(0,   '#505e6a');
+  drumOuter.addColorStop(0.12,'#8a9eae');
+  drumOuter.addColorStop(0.35,'#c4d4de');
+  drumOuter.addColorStop(0.65,'#c4d4de');
+  drumOuter.addColorStop(0.88,'#8a9eae');
+  drumOuter.addColorStop(1,   '#404e58');
+  g.fillStyle = drumOuter; g.strokeStyle = 'rgba(80,105,125,0.65)'; g.lineWidth = 2;
+  g.beginPath();
+  g.moveTo(drumL + drumRY, drumTop);
+  g.lineTo(drumR - drumRY, drumTop);
+  g.arc(drumR - drumRY, drumCY, drumRY, -Math.PI/2, Math.PI/2);
+  g.lineTo(drumL + drumRY, drumBot);
+  g.arc(drumL + drumRY, drumCY, drumRY, Math.PI/2, -Math.PI/2);
+  g.closePath(); g.fill(); g.stroke();
+  g.shadowBlur = 0; g.restore();
+
+  // End caps
+  [drumL + drumRY, drumR - drumRY].forEach((cx2, ei) => {
+    const capG2 = g.createRadialGradient(cx2, drumCY, 0, cx2, drumCY, drumRY);
+    capG2.addColorStop(0,  ei===0 ? '#a0b2c0' : '#8090a0');
+    capG2.addColorStop(0.6,'#6a7a88');
+    capG2.addColorStop(1,  '#404e58');
+    g.fillStyle = capG2; g.strokeStyle = 'rgba(80,100,120,0.5)'; g.lineWidth = 1.2;
+    g.beginPath(); g.ellipse(cx2, drumCY, drumRY*0.18, drumRY, 0, 0, Math.PI*2); g.fill(); g.stroke();
+    g.strokeStyle = 'rgba(120,140,160,0.4)'; g.lineWidth = 0.7;
+    g.beginPath(); g.ellipse(cx2, drumCY, drumRY*0.15, drumRY*0.92, 0, 0, Math.PI*2); g.stroke();
+    for (let b = 0; b < 8; b++) {
+      const ba = b * Math.PI/4;
+      const bx2 = cx2 + Math.cos(ba) * drumRY*0.15*0.7;
+      const by2 = drumCY + Math.sin(ba) * drumRY*0.92*0.85;
+      g.fillStyle = 'rgba(140,160,180,0.5)';
+      g.beginPath(); g.arc(bx2, by2, 1.2, 0, Math.PI*2); g.fill();
+    }
+  });
+
+  // Drum interior cutaway
+  g.save();
+  g.beginPath();
+  g.moveTo(drumL + drumRY + 8, drumTop);
+  g.lineTo(drumR - drumRY - 8, drumTop);
+  g.arc(drumR - drumRY - 8, drumCY, drumRY, -Math.PI/2, Math.PI/2);
+  g.lineTo(drumL + drumRY + 8, drumBot);
+  g.arc(drumL + drumRY + 8, drumCY, drumRY, Math.PI/2, -Math.PI/2);
+  g.closePath(); g.clip();
+
+  // Interior material bed
+  const matBed = g.createLinearGradient(drumCX, drumCY, drumCX, drumBot);
+  matBed.addColorStop(0, '#5a2e14'); matBed.addColorStop(0.5, '#4a2410'); matBed.addColorStop(1, '#321808');
+  g.fillStyle = matBed;
+  g.beginPath(); g.ellipse(drumCX, drumCY + drumRY*0.18, drumRX*0.78, drumRY*0.70, 0, 0, Math.PI*2); g.fill();
+  g.strokeStyle = 'rgba(90,45,15,0.28)'; g.lineWidth = 0.7;
+  for (let rr = 0; rr < 4; rr++) {
+    const sy2 = drumCY + drumRY*(0.10 - rr*0.16);
+    g.beginPath(); g.ellipse(drumCX, sy2, drumRX*(0.74 - rr*0.05), drumRY*0.08, 0, 0, Math.PI*2); g.stroke();
+  }
+
+  // Central shaft
+  const shG2 = g.createLinearGradient(drumCX, drumCY - drumRY*0.09, drumCX, drumCY + drumRY*0.09);
+  shG2.addColorStop(0,'#b0c4d0'); shG2.addColorStop(0.5,'#dceaf4'); shG2.addColorStop(1,'#8898a8');
+  g.fillStyle = shG2; g.strokeStyle = 'rgba(110,130,150,0.65)'; g.lineWidth = 0.9;
+  g.beginPath(); g.roundRect(drumL + drumRY + 6, drumCY - drumRY*0.09, drumW - 2*drumRY - 12, drumRY*0.18, 2); g.fill(); g.stroke();
+
+  // Rotating paddle blades
+  const padRot  = frame * 0.038;
+  const numPads = 12;
+  const padXStep = (drumW - 2*drumRY - 12) / (numPads - 1);
+  for (let p = 0; p < numPads; p++) {
+    const px3 = drumL + drumRY + 8 + p * padXStep;
+    const angOffset = p * (Math.PI * 2 / numPads);
+    const rot3 = padRot + angOffset;
+    g.save(); g.translate(px3, drumCY); g.rotate(rot3);
+    const blGrad = g.createLinearGradient(-5, 0, 5, 0);
+    blGrad.addColorStop(0,'#6a7e8e'); blGrad.addColorStop(0.5,'#b0c8d8'); blGrad.addColorStop(1,'#566878');
+    g.fillStyle = blGrad; g.strokeStyle = 'rgba(130,155,175,0.55)'; g.lineWidth = 0.7;
+    g.beginPath(); g.roundRect(-4, -drumRY*0.50, 8, drumRY*1.00, 1.5); g.fill(); g.stroke();
+    if (p % 2 === 0) {
+      g.strokeStyle = 'rgba(50,130,210,0.35)'; g.lineWidth = 1.5;
+      g.beginPath(); g.arc(0, 0, drumRY*0.42, -Math.PI*0.6, Math.PI*0.6); g.stroke();
+      const arrowAng = Math.PI*0.6;
+      const ax2 = Math.cos(arrowAng)*drumRY*0.42, ay2 = Math.sin(arrowAng)*drumRY*0.42;
+      g.save(); g.translate(ax2, ay2); g.rotate(arrowAng + Math.PI/2);
+      g.strokeStyle = 'rgba(50,130,210,0.45)'; g.lineWidth = 1.5;
+      g.beginPath(); g.moveTo(-3,-4); g.lineTo(0,0); g.lineTo(3,-4); g.stroke();
+      g.restore();
+    }
+    g.restore();
+  }
+
+  // Moving particles inside drum
+  for (let fp = 0; fp < 10; fp++) {
+    const ft3 = ((frame * 0.0035 + fp/10) % 1);
+    const fx3 = drumL + drumRY + 10 + ft3 * (drumW - 2*drumRY - 20);
+    const fy3 = drumCY + drumRY*0.22 + (fp%4 - 1.5) * drumRY*0.13;
+    g.globalAlpha = 0.30;
+    g.fillStyle = '#8a4020';
+    g.beginPath(); g.arc(fx3, fy3, 2.8, 0, Math.PI*2); g.fill();
+  }
+  g.globalAlpha = 1;
+  g.restore(); // end cutaway clip
+
+  // Drum seam rings
+  g.strokeStyle = 'rgba(90,110,130,0.30)'; g.lineWidth = 1;
+  [0.22, 0.44, 0.66].forEach(rx3 => {
+    const sx2 = drumL + drumRY + rx3 * (drumW - 2*drumRY);
+    g.beginPath(); g.moveTo(sx2, drumTop + 2); g.lineTo(sx2, drumBot - 2); g.stroke();
+  });
+
+  // ══════════════════
+  // MOTOR (left of drum)
+  // ══════════════════
+  const motW = W * 0.052, motH = H * 0.17;
+  const motX = drumL - motW - 5, motY = drumCY - motH*0.5;
+  const motGrad2 = g.createLinearGradient(motX, 0, motX + motW, 0);
+  motGrad2.addColorStop(0,'#1a2e4a'); motGrad2.addColorStop(0.4,'#2a4878'); motGrad2.addColorStop(0.6,'#2a4878'); motGrad2.addColorStop(1,'#1a2e4a');
+  g.fillStyle = motGrad2; g.strokeStyle = 'rgba(30,60,110,0.6)'; g.lineWidth = 1.3;
+  g.beginPath(); g.roundRect(motX, motY, motW, motH, 4); g.fill(); g.stroke();
+  g.strokeStyle = 'rgba(50,80,130,0.45)'; g.lineWidth = 0.8;
+  for (let f = 0; f < 6; f++) {
+    const fy2 = motY + motH*0.12 + f * motH*0.13;
+    g.beginPath(); g.moveTo(motX+2, fy2); g.lineTo(motX+motW-2, fy2); g.stroke();
+  }
+  g.fillStyle = '#2d4870'; g.strokeStyle = 'rgba(50,80,130,0.55)'; g.lineWidth = 0.8;
+  g.beginPath(); g.roundRect(motX+motW, drumCY-drumRY*0.10, 5+drumRY, drumRY*0.20, 1); g.fill(); g.stroke();
+  g.fillStyle = '#3a5880'; g.strokeStyle = 'rgba(60,90,140,0.5)'; g.lineWidth = 0.8;
+  g.beginPath(); g.roundRect(drumL + drumRY - 5, drumCY - drumRY*0.14, 10, drumRY*0.28, 2); g.fill(); g.stroke();
+  g.fillStyle = '#111e30'; g.strokeStyle = 'rgba(20,45,80,0.45)'; g.lineWidth = 0.8;
+  g.beginPath(); g.roundRect(motX - 4, motY + motH, motW + 8, H*0.04, 2); g.fill(); g.stroke();
+  g.fillStyle = 'rgba(26,48,87,0.09)'; g.strokeStyle = 'rgba(200,145,42,0.28)'; g.lineWidth = 0.7;
+  g.beginPath(); g.roundRect(motX - 2, motY - 14, motW + 4, 12, 2); g.fill(); g.stroke();
+  g.fillStyle = '#7a6a50'; g.font = '600 5.5px JetBrains Mono'; g.textAlign = 'center';
+  g.fillText('MOTOR', motX + motW/2, motY - 5);
+
+  // ══════════════════
+  // DISCHARGE BELT (from drum bottom-right → corner)
+  // ══════════════════
+  const dcSX2 = drumL + drumW*0.78;
+  const dcSY2 = drumBot + H*0.004;
+  const dcEX2 = W * 0.97;
+  const dcEY2 = H * 0.96;
+  const dcLen2 = Math.hypot(dcEX2 - dcSX2, dcEY2 - dcSY2);
+  const dcAng2 = Math.atan2(dcEY2 - dcSY2, dcEX2 - dcSX2);
+  const dcH2   = 11;
+  g.save();
+  g.translate(dcSX2, dcSY2); g.rotate(dcAng2);
+  g.fillStyle = '#1a2a38'; g.strokeStyle = 'rgba(45,75,105,0.55)'; g.lineWidth = 1;
+  g.beginPath(); g.roundRect(-4, dcH2/2+1, dcLen2+8, 5, 1); g.fill(); g.stroke();
+  g.strokeStyle = 'rgba(50,80,110,0.50)'; g.lineWidth = 0.9;
+  g.beginPath(); g.moveTo(0,-dcH2/2-2); g.lineTo(dcLen2,-dcH2/2-2); g.stroke();
+  g.beginPath(); g.moveTo(0, dcH2/2+2); g.lineTo(dcLen2, dcH2/2+2); g.stroke();
+  const dcBG2 = g.createLinearGradient(0,-dcH2/2,0,dcH2/2);
+  dcBG2.addColorStop(0,'#18262e'); dcBG2.addColorStop(0.5,'#243440'); dcBG2.addColorStop(1,'#18262e');
+  g.fillStyle = dcBG2; g.strokeStyle = 'rgba(40,70,95,0.55)'; g.lineWidth = 1;
+  g.beginPath(); g.roundRect(0,-dcH2/2,dcLen2,dcH2,2); g.fill(); g.stroke();
+  g.strokeStyle = 'rgba(70,105,135,0.5)'; g.lineWidth = 1;
+  const dcOff2 = (frame * 1.6) % 18;
+  for (let bl = 0; bl < dcLen2+18; bl += 18) {
+    g.beginPath(); g.moveTo(bl-dcOff2,-dcH2/2+1); g.lineTo(bl-dcOff2,dcH2/2-1); g.stroke();
+  }
+  const dcMatColors2 = ['#6a2e14','#4a2208','#7a3820','#5a2a10'];
+  for (let mp = 0; mp < 7; mp++) {
+    const mt = ((mp/7)+(frame*0.0065))%1;
+    g.fillStyle = dcMatColors2[mp%dcMatColors2.length];
+    g.strokeStyle = 'rgba(255,255,255,0.06)'; g.lineWidth = 0.5;
+    g.beginPath(); g.ellipse(mt*dcLen2,(mp%2===0)?-1.5:1.5,7,4,0,0,Math.PI*2); g.fill(); g.stroke();
+  }
+  [0,0.18,0.38,0.58,0.78,1.0].forEach(rp => {
+    const rx4 = rp*dcLen2;
+    g.fillStyle='#3a5068'; g.strokeStyle='rgba(65,95,125,0.5)'; g.lineWidth=0.8;
+    g.beginPath(); g.arc(rx4,0,6,0,Math.PI*2); g.fill(); g.stroke();
+    g.save(); g.translate(rx4,0); g.rotate(frame*0.10);
+    g.strokeStyle='rgba(140,175,200,0.42)'; g.lineWidth=0.7;
+    g.beginPath(); g.moveTo(-5,0); g.lineTo(5,0); g.stroke();
+    g.beginPath(); g.moveTo(0,-5); g.lineTo(0,5); g.stroke();
     g.restore();
   });
   g.restore();
 
-  // Discharge stream from mixer to conveyor
-  const dsSpeed = 0.025;
-  for (let ds = 0; ds < 5; ds++) {
-    const dt = ((frame * dsSpeed + ds * 0.2) % 1);
-    const dsx = mixerRight - 4 + dt * 16;
-    const dsy = mixerBot - mixerRH * 0.15 - 5 + dt * 12;
-    g.globalAlpha = Math.min(1, dt * 8) * (1 - dt * 0.6) * 0.9;
-    g.fillStyle = '#5a2e14';
-    g.beginPath(); g.arc(dsx, dsy, 2.8, 0, Math.PI * 2); g.fill();
+  // Discharge chute stub (drum → discharge belt)
+  g.fillStyle = '#2a3a4a'; g.strokeStyle = 'rgba(55,80,105,0.55)'; g.lineWidth = 1;
+  g.beginPath();
+  g.moveTo(dcSX2-10, drumBot); g.lineTo(dcSX2+10, drumBot);
+  g.lineTo(dcSX2+7,  dcSY2);  g.lineTo(dcSX2-7,  dcSY2);
+  g.closePath(); g.fill(); g.stroke();
+  for (let ds=0; ds<5; ds++) {
+    const dt3 = ((frame*0.028+ds*0.2)%1);
+    if (dt3<0.04) continue;
+    g.globalAlpha = Math.min(1,dt3*10)*(1-dt3*0.5)*0.88;
+    g.fillStyle = '#6a2e14';
+    g.beginPath(); g.arc(dcSX2+(ds%3-1)*2.5, drumBot+dt3*(dcSY2-drumBot+4), 2.4, 0, Math.PI*2); g.fill();
   }
   g.globalAlpha = 1;
 
-  // ── LIVE DATA CHIPS ──
-  const binder = stageParams.mix.binder || '—';
-  const moisture = stageParams.mix.mixMoisture || '—';
-  const chips = [
-    { label: 'BINDER', val: binder.length > 10 ? binder.substring(0, 9) + '…' : binder, x: mixerCX - mixerRW * 0.25, y: mixerBot + H * 0.10, bg: '#f5ede0', border: '#c8912a', txt: '#7a4a10' },
-    { label: 'MOISTURE', val: moisture !== '—' ? moisture + '%' : '—', x: mixerCX + mixerRW * 0.25, y: mixerBot + H * 0.10, bg: '#e8f4ff', border: '#2d9fda', txt: '#1a5a80' },
+  // Discharge belt label
+  const midDcX2 = (dcSX2+dcEX2)/2-5, midDcY2 = (dcSY2+dcEY2)/2+14;
+  g.fillStyle='rgba(26,48,87,0.09)'; g.strokeStyle='rgba(200,145,42,0.28)'; g.lineWidth=0.7;
+  g.beginPath(); g.roundRect(midDcX2-46,midDcY2-8,92,12,2); g.fill(); g.stroke();
+  g.fillStyle='#7a6a50'; g.font='500 5px JetBrains Mono'; g.textAlign='center';
+  g.fillText('DISCHARGE BELT →', midDcX2, midDcY2);
+
+  // ══════════════════
+  // LIVE DATA CHIPS
+  // ══════════════════
+  const binder2   = stageParams.mix.binder || '—';
+  const moisture2 = stageParams.mix.mixMoisture || '—';
+  const chips2 = [
+    { label:'BINDER',   val: binder2.length>10 ? binder2.substring(0,9)+'…' : binder2,
+      x: drumCX - drumRX*0.32, y: drumBot + H*0.10, bg:'#f5ede0', border:'#c8912a', txt:'#7a4a10' },
+    { label:'MOISTURE', val: moisture2!=='—' ? moisture2+'%' : '—',
+      x: drumCX + drumRX*0.25, y: drumBot + H*0.10, bg:'#e8f4ff', border:'#2d9fda', txt:'#1a5a80' },
   ];
-  chips.forEach(c => {
-    const cw = 78, ch = 24;
-    g.fillStyle = c.bg; g.strokeStyle = c.border; g.lineWidth = 1;
-    g.beginPath(); g.roundRect(c.x - cw / 2, c.y - ch / 2, cw, ch, 4); g.fill(); g.stroke();
-    g.fillStyle = c.txt; g.font = '500 6px JetBrains Mono'; g.textAlign = 'center';
-    g.fillText(c.label, c.x, c.y - 5);
-    g.font = '700 8px JetBrains Mono';
-    g.fillText(c.val, c.x, c.y + 6);
+  chips2.forEach(c => {
+    const cw=82, ch=26;
+    g.fillStyle=c.bg; g.strokeStyle=c.border; g.lineWidth=1;
+    g.beginPath(); g.roundRect(c.x-cw/2,c.y-ch/2,cw,ch,4); g.fill(); g.stroke();
+    g.fillStyle=c.txt; g.font='500 6px JetBrains Mono'; g.textAlign='center';
+    g.fillText(c.label,c.x,c.y-5);
+    g.font='700 8.5px JetBrains Mono';
+    g.fillText(c.val,c.x,c.y+7);
   });
 
-  // Update shaft bar
-  const shaftFill = document.getElementById('mixShaftFill');
-  if (shaftFill) shaftFill.style.width = (40 + 30 * Math.sin(frame * 0.035)) + '%';
+  // Shaft rotation bar
+  const shaftFill2 = document.getElementById('mixShaftFill');
+  if (shaftFill2) shaftFill2.style.width = (40 + 30*Math.sin(frame*0.035)) + '%';
 
-  // ── SAVE BURST ──
+  // SAVE BURST
   if (burst > 0) {
-    const bAlpha = Math.min(1, burst / 18);
-    g.save(); g.globalAlpha = bAlpha * 0.95;
-    g.shadowColor = '#3aaa6a'; g.shadowBlur = 16;
-    g.strokeStyle = '#3aaa6a'; g.lineWidth = 4; g.lineCap = 'round';
-    g.beginPath(); g.moveTo(W / 2 - 14, H * 0.88); g.lineTo(W / 2 - 3, H * 0.88 + 11); g.lineTo(W / 2 + 16, H * 0.88 - 11); g.stroke();
+    const bAlpha = Math.min(1, burst/18);
+    g.save(); g.globalAlpha = bAlpha*0.95;
+    g.shadowColor='#3aaa6a'; g.shadowBlur=16;
+    g.strokeStyle='#3aaa6a'; g.lineWidth=4; g.lineCap='round';
+    g.beginPath(); g.moveTo(W/2-14,H*0.88); g.lineTo(W/2-3,H*0.88+11); g.lineTo(W/2+16,H*0.88-11); g.stroke();
     g.restore();
   }
 }
+
 
 function mixMiniLoop() {
   if (mixMiniSaveBurst > 0) mixMiniSaveBurst -= 0.5;
@@ -5334,6 +5766,556 @@ function saveMixCard() {
 }
 
 document.getElementById('mixAnimOverlay').addEventListener('click', function(e) { if (e.target === this) closeMixCard(); });
+
+// ═══════════════════════════════════════════════════════════
+// BALLING DISC ANIMATION CARD
+// ═══════════════════════════════════════════════════════════
+let ballDiscFrame=0, ballDiscAnimId=null, ballDiscSaveBurst=0;
+const ballDiscCanvas=document.getElementById('ballDiscCanvas');
+const ballDiscCtx=ballDiscCanvas.getContext('2d');
+
+// Physics balls on disc — top-view perspective
+const BALL_COUNT=60;
+let discBalls=[];
+let conveyorBalls=[];
+
+function initDiscBalls(){
+  discBalls=[];
+  for(let i=0;i<BALL_COUNT;i++){
+    const ang=Math.random()*Math.PI*2;
+    // Distribute across full disc, denser toward outer rim like real balling disc
+    const r=0.12+Math.random()*0.75;
+    discBalls.push({
+      ang, r,
+      vR:(Math.random()-0.5)*0.0012,
+      size:1.5+Math.random()*1.2,   // small realistic pellet sizes
+      phase:Math.random()*Math.PI*2,
+      col:Math.random()             // slight colour variation
+    });
+  }
+  conveyorBalls=[];
+}
+initDiscBalls();
+
+function sizeBallDisc(){
+  const wrap=ballDiscCanvas.parentElement;
+  const W=Math.max(wrap.clientWidth||500,10);
+  const H=Math.max(wrap.clientHeight||460,10);
+  const ratio=window.devicePixelRatio||1;
+  const wPx=Math.round(W*ratio), hPx=Math.round(H*ratio);
+  if(ballDiscCanvas.width!==wPx||ballDiscCanvas.height!==hPx){
+    ballDiscCanvas.width=wPx; ballDiscCanvas.height=hPx;
+    ballDiscCtx.setTransform(ratio,0,0,ratio,0,0);
+  }
+  return{W,H};
+}
+
+function drawBallDisc(frame, burst){
+  const{W,H}=sizeBallDisc();
+  const g=ballDiscCtx;
+  g.clearRect(0,0,W,H);
+
+  // ── WARM CREAM BACKGROUND with grid (matching reference) ──
+  const bg=g.createLinearGradient(0,0,0,H);
+  bg.addColorStop(0,'#f0ebe0'); bg.addColorStop(1,'#e8e2d4');
+  g.fillStyle=bg; g.fillRect(0,0,W,H);
+  g.strokeStyle='rgba(180,165,130,0.22)'; g.lineWidth=0.6;
+  for(let x=0;x<W;x+=20){g.beginPath();g.moveTo(x,0);g.lineTo(x,H);g.stroke();}
+  for(let y=0;y<H;y+=20){g.beginPath();g.moveTo(0,y);g.lineTo(W,y);g.stroke();}
+
+  // ── READ PARAMS ──
+  const angleEl=document.getElementById('m-angle');
+  const discRpmEl=document.getElementById('m-discrpm');
+  const angleVal=angleEl?parseFloat(angleEl.value)||48:48;
+  const rpmVal=discRpmEl?parseFloat(discRpmEl.value)||7:7;
+  const wsEl=document.getElementById('m-wsr');
+  const wsVal=wsEl?parseFloat(wsEl.value)||50:50;
+
+  // ── DISC GEOMETRY — top-down view, tilted as perspective ellipse ──
+  // The disc is tilted ~46-50°. We render it as a top-down slightly angled circle.
+  // tiltFraction: 0=46°(more tilted, flatter ellipse), 1=50°(less tilted, rounder)
+  const tiltFraction=(angleVal-46)/4;
+  const discRx=Math.min(W*0.34, H*0.40); // horizontal radius
+  // At 46° tilt, disc face looks more oval (squashed); at 50° slightly rounder
+  const discRy=discRx*(0.82+0.10*tiltFraction); // nearly circular top-down view
+  const discCX=W*0.33;
+  const discCY=H*0.44;
+
+  // Rotation speed
+  const rotSpeed=(rpmVal/7)*0.016;
+  const rot=frame*rotSpeed;
+
+  // ── DISC SHADOW ──
+  g.save(); g.globalAlpha=0.12;
+  g.fillStyle='#6a5830';
+  g.beginPath(); g.ellipse(discCX+8,discCY+10,discRx*0.96,discRy*0.90,0,0,Math.PI*2); g.fill();
+  g.restore();
+
+  // ── OUTER RIM — warm tan/beige like reference ──
+  const rimW=discRx*0.09;
+  // Outer rim gradient (tan/sand colour matching reference image)
+  const rimOuter=g.createRadialGradient(discCX-discRx*0.25,discCY-discRy*0.25,discRx*0.05,discCX,discCY,discRx*1.02);
+  rimOuter.addColorStop(0,'#d4c8a8');
+  rimOuter.addColorStop(0.55,'#b8a880');
+  rimOuter.addColorStop(0.85,'#9a8a60');
+  rimOuter.addColorStop(1,'#7a6a48');
+  g.beginPath(); g.ellipse(discCX,discCY,discRx,discRy,0,0,Math.PI*2);
+  g.fillStyle=rimOuter; g.fill();
+  g.strokeStyle='rgba(90,75,40,0.55)'; g.lineWidth=2;
+  g.stroke();
+
+  // Inner rim border
+  g.beginPath(); g.ellipse(discCX,discCY,discRx-rimW*0.45,discRy-rimW*0.38,0,0,Math.PI*2);
+  g.strokeStyle='rgba(80,65,35,0.40)'; g.lineWidth=1.2; g.stroke();
+
+  // ── DISC INTERIOR (clip) ──
+  g.save();
+  g.beginPath(); g.ellipse(discCX,discCY,discRx-rimW,discRy-rimW*0.85,0,0,Math.PI*2); g.clip();
+
+  // Disc face — warm earthy brown (ore/pellet mix colour)
+  const faceGrad=g.createRadialGradient(discCX-discRx*0.2,discCY-discRy*0.2,discRx*0.04,discCX,discCY,discRx);
+  faceGrad.addColorStop(0,'#c8a870');
+  faceGrad.addColorStop(0.35,'#a8884e');
+  faceGrad.addColorStop(0.72,'#8a6e38');
+  faceGrad.addColorStop(1,'#6e5428');
+  g.fillStyle=faceGrad; g.fillRect(discCX-discRx,discCY-discRy,discRx*2,discRy*2);
+
+  // ── ROTATING SEGMENT LINES (8 radial lines from centre) ──
+  const segCount=8;
+  g.strokeStyle='rgba(60,44,18,0.40)'; g.lineWidth=1.1;
+  for(let s=0;s<segCount;s++){
+    const segAng=rot+(s/segCount)*Math.PI*2;
+    const ex=discCX+Math.cos(segAng)*(discRx-rimW)*0.97;
+    const ey=discCY+Math.sin(segAng)*(discRy-rimW*0.85)*0.97;
+    g.beginPath(); g.moveTo(discCX,discCY); g.lineTo(ex,ey); g.stroke();
+  }
+
+  // ── CONCENTRIC RINGS ──
+  [0.28,0.55,0.82].forEach(f=>{
+    g.strokeStyle='rgba(55,40,15,0.20)'; g.lineWidth=0.8;
+    g.beginPath();
+    g.ellipse(discCX,discCY,(discRx-rimW)*f,(discRy-rimW*0.85)*f,0,0,Math.PI*2);
+    g.stroke();
+  });
+
+  // Radial highlight (top-left sheen)
+  const sheen=g.createRadialGradient(discCX-discRx*0.35,discCY-discRy*0.35,0,discCX-discRx*0.1,discCY-discRy*0.1,discRx*0.65);
+  sheen.addColorStop(0,'rgba(255,240,200,0.28)'); sheen.addColorStop(1,'rgba(255,240,200,0)');
+  g.fillStyle=sheen; g.fillRect(discCX-discRx,discCY-discRy,discRx*2,discRy*2);
+
+  g.restore(); // end disc clip
+
+  // ── CENTER HUB ──
+  const hubR=discRx*0.12;
+  const hubGrad=g.createRadialGradient(discCX-hubR*0.3,discCY-hubR*0.3,0,discCX,discCY,hubR);
+  hubGrad.addColorStop(0,'#e0d8c0'); hubGrad.addColorStop(0.5,'#b0a880'); hubGrad.addColorStop(1,'#787050');
+  g.save();
+  g.beginPath(); g.ellipse(discCX,discCY,hubR,hubR*(discRy/discRx),0,0,Math.PI*2);
+  g.fillStyle=hubGrad; g.fill();
+  g.strokeStyle='rgba(70,55,25,0.55)'; g.lineWidth=1.5; g.stroke();
+  // Hub bolts (6)
+  for(let b=0;b<6;b++){
+    const ba=rot*1.2+(b/6)*Math.PI*2;
+    const bx=discCX+Math.cos(ba)*hubR*0.68;
+    const by=discCY+Math.sin(ba)*hubR*0.68*(discRy/discRx);
+    g.beginPath(); g.arc(bx,by,hubR*0.14,0,Math.PI*2);
+    g.fillStyle='#c8c0a0'; g.fill();
+    g.strokeStyle='rgba(60,48,20,0.5)'; g.lineWidth=0.6; g.stroke();
+  }
+  // Centre shine
+  g.beginPath(); g.arc(discCX-hubR*0.2,discCY-hubR*0.25,hubR*0.22,0,Math.PI*2);
+  g.fillStyle='rgba(255,248,220,0.55)'; g.fill();
+  g.restore();
+
+  // ── DISC PELLET BALLS (drawn on top of disc face, clipped to disc) ──
+  g.save();
+  g.beginPath(); g.ellipse(discCX,discCY,discRx-rimW*1.05,discRy-rimW*0.9,0,0,Math.PI*2); g.clip();
+
+  const dischargeAng=Math.PI*0.52; // ~94° = right side, slightly below horizontal
+
+  for(let i=discBalls.length-1;i>=0;i--){
+    const b=discBalls[i];
+
+    // Rotate with disc
+    b.ang+=rotSpeed*0.85;
+    // Slow centrifugal drift
+    b.r+=b.vR;
+    b.vR+=(b.r>0.60?0.00018:-0.00008);
+    if(b.r>0.88){b.r=0.88; b.vR*=-0.5;}
+    if(b.r<0.08){b.r=0.08; b.vR*=-0.5;}
+
+    const bx=discCX+Math.cos(b.ang)*(discRx-rimW*1.1)*b.r;
+    const by=discCY+Math.sin(b.ang)*(discRy-rimW*0.95)*b.r;
+
+    // Discharge check — near outer edge, discharge zone angle
+    const normAng=((b.ang%(Math.PI*2))+Math.PI*2)%(Math.PI*2);
+    const normDis=((dischargeAng%(Math.PI*2))+Math.PI*2)%(Math.PI*2);
+    let angDiff=Math.abs(normAng-normDis);
+    if(angDiff>Math.PI) angDiff=Math.PI*2-angDiff;
+    const inDischarge=b.r>0.72 && angDiff<0.38;
+
+    if(inDischarge && Math.random()<0.012){
+      // Shoot onto conveyor
+      const spawnX=discCX+Math.cos(dischargeAng)*(discRx+4);
+      const spawnY=discCY+Math.sin(dischargeAng)*(discRy+4);
+      conveyorBalls.push({
+        x:spawnX, y:spawnY,
+        vx:2.8+Math.random()*1.2, vy:-0.5+Math.random()*1.0,
+        size:b.size, falling:true, settled:false
+      });
+      // Respawn at inner area
+      b.ang=Math.random()*Math.PI*2; b.r=0.08+Math.random()*0.25; b.vR=0;
+      continue;
+    }
+
+    // Draw pellet — warm earthy brown tones like ore pellets
+    const v=0.75+b.col*0.25;
+    const pr=Math.round(160+b.col*30), pg=Math.round(110+b.col*30), pb=Math.round(50+b.col*20);
+    const pelGrad=g.createRadialGradient(bx-b.size*0.32,by-b.size*0.32,0,bx,by,b.size);
+    pelGrad.addColorStop(0,`rgba(${pr+40},${pg+30},${pb+20},0.95)`);
+    pelGrad.addColorStop(0.5,`rgba(${pr},${pg},${pb},0.92)`);
+    pelGrad.addColorStop(1,`rgba(${Math.round(pr*0.55)},${Math.round(pg*0.55)},${Math.round(pb*0.55)},0.88)`);
+    g.beginPath(); g.arc(bx,by,b.size,0,Math.PI*2);
+    g.fillStyle=pelGrad; g.fill();
+    // Tiny specular highlight
+    g.beginPath(); g.arc(bx-b.size*0.28,by-b.size*0.30,b.size*0.22,0,Math.PI*2);
+    g.fillStyle='rgba(255,248,220,0.50)'; g.fill();
+  }
+  g.restore(); // end ball clip
+
+  // ── DISCHARGE CHUTE (right side of disc connecting to conveyor) ──
+  const chuteStartX=discCX+Math.cos(dischargeAng)*(discRx-rimW*0.5);
+  const chuteStartY=discCY+Math.sin(dischargeAng)*(discRy-rimW*0.4);
+  // Conveyor geometry — long narrow belt going right, slightly angled down
+  const convStartX=discCX+discRx*0.78;
+  const convStartY=discCY+discRy*0.32;
+  const convEndX=W*0.98;
+  const convEndY=convStartY+6; // very slight downward angle
+  const convH=H*0.082;
+  const beltMidY=(convStartY+convEndY)/2;
+
+  // ── CONVEYOR SUPPORT LEGS ──
+  const legPositions=[0.18,0.38,0.58,0.78];
+  legPositions.forEach(t=>{
+    const lx=convStartX+(convEndX-convStartX)*t;
+    const ly=beltMidY+(convEndY-convStartY)*t+convH*0.5;
+    const legH=H*0.09+t*H*0.03; // legs get taller toward right (perspective)
+    g.fillStyle='#8a7850'; g.strokeStyle='rgba(60,45,20,0.4)'; g.lineWidth=0.8;
+    // Angled leg pair
+    g.beginPath();
+    g.moveTo(lx-8,ly); g.lineTo(lx-10,ly+legH);
+    g.lineTo(lx-6,ly+legH); g.lineTo(lx-4,ly); g.closePath();
+    g.fill(); g.stroke();
+    g.beginPath();
+    g.moveTo(lx+4,ly); g.lineTo(lx+6,ly+legH);
+    g.lineTo(lx+10,ly+legH); g.lineTo(lx+8,ly); g.closePath();
+    g.fill(); g.stroke();
+    // Base plate
+    g.fillStyle='#6a5838';
+    g.fillRect(lx-12,ly+legH,24,4);
+  });
+
+  // ── CONVEYOR BELT BODY ──
+  // Shadow
+  g.save(); g.globalAlpha=0.10;
+  g.fillStyle='#5a4820';
+  g.beginPath();
+  g.moveTo(convStartX+5, convStartY+convH+5);
+  g.lineTo(convEndX+5, convEndY+convH+5);
+  g.lineTo(convEndX+5, convEndY+convH+12);
+  g.lineTo(convStartX+5, convStartY+convH+12);
+  g.closePath(); g.fill();
+  g.restore();
+
+  // Belt frame (outer border)
+  const beltGrad=g.createLinearGradient(convStartX,(convStartY+convEndY)/2,convStartX,(convStartY+convEndY)/2+convH);
+  beltGrad.addColorStop(0,'#c8b888'); beltGrad.addColorStop(0.18,'#d8c898'); beltGrad.addColorStop(0.5,'#b8a870'); beltGrad.addColorStop(0.85,'#a09060'); beltGrad.addColorStop(1,'#887848');
+  g.beginPath();
+  g.moveTo(convStartX, convStartY);
+  g.lineTo(convEndX, convEndY);
+  g.lineTo(convEndX, convEndY+convH);
+  g.lineTo(convStartX, convStartY+convH);
+  g.closePath();
+  g.fillStyle=beltGrad; g.fill();
+  g.strokeStyle='rgba(80,60,25,0.50)'; g.lineWidth=1.5; g.stroke();
+
+  // Belt moving lines (vertical slats like reference)
+  const slotOffset=(frame*1.8)%22;
+  g.save();
+  g.beginPath();
+  g.moveTo(convStartX,convStartY); g.lineTo(convEndX,convEndY);
+  g.lineTo(convEndX,convEndY+convH); g.lineTo(convStartX,convStartY+convH); g.closePath();
+  g.clip();
+  g.strokeStyle='rgba(90,68,30,0.28)'; g.lineWidth=1;
+  for(let lx=convStartX-slotOffset;lx<convEndX+22;lx+=22){
+    const prog=(lx-convStartX)/(convEndX-convStartX);
+    const ly=convStartY+prog*(convEndY-convStartY);
+    g.beginPath(); g.moveTo(lx,ly); g.lineTo(lx,ly+convH); g.stroke();
+  }
+  // Top rail highlight
+  const topRail=g.createLinearGradient(convStartX,convStartY,convStartX,convStartY+convH*0.28);
+  topRail.addColorStop(0,'rgba(255,248,210,0.28)'); topRail.addColorStop(1,'rgba(255,248,210,0)');
+  g.fillStyle=topRail;
+  g.fillRect(convStartX-2, convStartY-1, convEndX-convStartX+4, convH*0.28);
+  g.restore();
+
+  // Belt side rails
+  g.strokeStyle='rgba(90,68,30,0.65)'; g.lineWidth=2;
+  g.beginPath(); g.moveTo(convStartX,convStartY); g.lineTo(convEndX,convEndY); g.stroke();
+  g.beginPath(); g.moveTo(convStartX,convStartY+convH); g.lineTo(convEndX,convEndY+convH); g.stroke();
+
+  // ── END ROLLER (large drum on right) ──
+  const endRollerR=convH*0.75;
+  const endRollerX=convEndX-2, endRollerY=(convEndY+convEndY+convH)/2;
+  const erGrad=g.createRadialGradient(endRollerX-endRollerR*0.3,endRollerY-endRollerR*0.3,0,endRollerX,endRollerY,endRollerR);
+  erGrad.addColorStop(0,'#d8cc9a'); erGrad.addColorStop(0.45,'#b0a070'); erGrad.addColorStop(0.8,'#8a7850'); erGrad.addColorStop(1,'#6a5830');
+  g.beginPath(); g.arc(endRollerX,endRollerY,endRollerR,0,Math.PI*2);
+  g.fillStyle=erGrad; g.fill();
+  g.strokeStyle='rgba(70,52,20,0.55)'; g.lineWidth=1.5; g.stroke();
+  // Roller cross
+  g.save(); g.translate(endRollerX,endRollerY); g.rotate(frame*0.04);
+  g.strokeStyle='rgba(70,52,20,0.40)'; g.lineWidth=1;
+  g.beginPath(); g.moveTo(-endRollerR*0.7,0); g.lineTo(endRollerR*0.7,0); g.stroke();
+  g.beginPath(); g.moveTo(0,-endRollerR*0.7); g.lineTo(0,endRollerR*0.7); g.stroke();
+  g.restore();
+
+  // ── SMALL INTERMEDIATE ROLLERS ──
+  const numRollers=5;
+  for(let ri=0;ri<numRollers;ri++){
+    const t=(ri+0.5)/numRollers;
+    const rx=convStartX+(convEndX-convStartX)*t;
+    const ry=convStartY+(convEndY-convStartY)*t+convH*0.5;
+    const rr=convH*0.30;
+    const rGrad=g.createRadialGradient(rx-rr*0.3,ry-rr*0.3,0,rx,ry,rr);
+    rGrad.addColorStop(0,'#d0c490'); rGrad.addColorStop(0.5,'#a89860'); rGrad.addColorStop(1,'#706040');
+    g.beginPath(); g.arc(rx,ry,rr,0,Math.PI*2);
+    g.fillStyle=rGrad; g.fill();
+    g.strokeStyle='rgba(70,52,20,0.40)'; g.lineWidth=0.8; g.stroke();
+    g.save(); g.translate(rx,ry); g.rotate(frame*0.05+ri*0.5);
+    g.strokeStyle='rgba(60,44,16,0.35)'; g.lineWidth=0.7;
+    g.beginPath(); g.moveTo(-rr*0.7,0); g.lineTo(rr*0.7,0); g.stroke();
+    g.restore();
+  }
+
+  // ── MOTOR BOX (right of disc, smaller, tan coloured like reference) ──
+  const motorX=discCX+discRx*0.62, motorY=discCY-discRy*0.22;
+  const motorW=discRx*0.22, motorH=discRy*0.28;
+  g.fillStyle='#c8c0a0'; g.strokeStyle='rgba(80,65,30,0.55)'; g.lineWidth=1.2;
+  g.beginPath(); g.roundRect(motorX,motorY,motorW,motorH,3); g.fill(); g.stroke();
+  // Label
+  g.fillStyle='rgba(60,48,18,0.65)'; g.font='bold 7px JetBrains Mono'; g.textAlign='center';
+  g.fillText('MOTOR',motorX+motorW/2,motorY+motorH*0.58);
+  // Spinning dot
+  const mdAng=frame*0.08;
+  g.beginPath(); g.arc(motorX+motorW*0.5+Math.cos(mdAng)*motorW*0.22,motorY+motorH*0.78+Math.sin(mdAng)*motorH*0.10,2.2,0,Math.PI*2);
+  g.fillStyle='rgba(100,80,30,0.7)'; g.fill();
+
+  // ── WATER SPRAY NOZZLE ──
+  if(wsVal>5){
+    // Spray pipe coming diagonally from top-left into disc (like reference)
+    const pipeEndX=discCX-discRx*0.08, pipeEndY=discCY-discRy*0.65;
+    const pipeStartX=discCX-discRx*0.55, pipeStartY=discCY-discRy*1.18;
+    // Pipe line
+    g.strokeStyle='#5a80a8'; g.lineWidth=3; g.lineCap='round';
+    g.beginPath(); g.moveTo(pipeStartX,pipeStartY); g.lineTo(pipeEndX,pipeEndY); g.stroke();
+    g.lineWidth=1;
+    g.strokeStyle='rgba(60,100,150,0.4)';
+    g.beginPath(); g.moveTo(pipeStartX,pipeStartY); g.lineTo(pipeEndX,pipeEndY); g.stroke();
+    // Nozzle tip
+    g.fillStyle='#4a6888'; g.strokeStyle='#2a4860'; g.lineWidth=0.8;
+    g.beginPath(); g.arc(pipeEndX,pipeEndY,4,0,Math.PI*2); g.fill(); g.stroke();
+    // Spray label
+    g.save(); g.globalAlpha=0.7;
+    g.fillStyle='#3a6090'; g.font='bold 7px JetBrains Mono'; g.textAlign='left';
+    const labelAng=Math.atan2(pipeEndY-pipeStartY,pipeEndX-pipeStartX);
+    g.save(); g.translate(pipeStartX-8,pipeStartY-8); g.rotate(labelAng);
+    g.fillText('WATER SPRAY',0,0); g.restore();
+    g.restore();
+    // Droplets
+    const dropCount=Math.min(10,Math.floor(wsVal/20)+2);
+    for(let d=0;d<dropCount;d++){
+      const dt=((frame*1.4+d*8)%36)/36;
+      const sx=pipeEndX+Math.cos(labelAng+Math.PI*0.5)*d*2;
+      const sy=pipeEndY+Math.sin(labelAng+Math.PI*0.5)*d*2;
+      const dx=pipeEndX+(Math.cos(labelAng)*dt*discRx*0.35);
+      const dy=pipeEndY+(Math.sin(labelAng)*dt*discRy*0.35)+dt*8;
+      const alpha=dt<0.15?(dt/0.15):(dt>0.7?(1-(dt-0.7)/0.3):1)*0.65;
+      g.beginPath(); g.arc(dx,dy,1.2,0,Math.PI*2);
+      g.fillStyle=`rgba(70,140,220,${alpha.toFixed(2)})`; g.fill();
+    }
+  }
+
+  // ── FEED CHUTE (left side, ore+binder feed pipe) ──
+  {
+    const feedEndX=discCX-discRx*0.68, feedEndY=discCY-discRy*0.12;
+    const feedStartX=discCX-discRx*1.35, feedStartY=discCY-discRy*0.20;
+    g.strokeStyle='#8a7050'; g.lineWidth=8; g.lineCap='round';
+    g.beginPath(); g.moveTo(feedStartX,feedStartY); g.lineTo(feedEndX,feedEndY); g.stroke();
+    g.strokeStyle='rgba(120,100,60,0.35)'; g.lineWidth=4;
+    g.beginPath(); g.moveTo(feedStartX,feedStartY); g.lineTo(feedEndX,feedEndY); g.stroke();
+    // Label
+    g.save(); g.globalAlpha=0.65;
+    g.fillStyle='#6a5030'; g.font='bold 6.5px JetBrains Mono'; g.textAlign='left';
+    g.fillText('FEED (ORE + BINDER)',feedStartX-2,feedStartY-8);
+    g.restore();
+    // Small ore particles flowing from feed
+    for(let p=0;p<4;p++){
+      const pt=((frame*0.9+p*10)%30)/30;
+      const px=feedStartX+(feedEndX-feedStartX)*pt;
+      const py=feedStartY+(feedEndY-feedStartY)*pt;
+      const pa=pt<0.1?(pt/0.1):(pt>0.8?(1-(pt-0.8)/0.2):1)*0.75;
+      g.beginPath(); g.arc(px,py,2.0,0,Math.PI*2);
+      g.fillStyle=`rgba(150,110,55,${pa.toFixed(2)})`; g.fill();
+    }
+  }
+
+  // ── DISC + CONVEYOR LABEL ──
+  g.save(); g.globalAlpha=0.55;
+  g.fillStyle='#5a4828'; g.font='bold 9px JetBrains Mono'; g.textAlign='center';
+  g.fillText('DISC PELLETIZER',discCX,discCY+discRy*0.18);
+  g.font='bold 7px JetBrains Mono'; g.fillStyle='#4a3818';
+  g.fillText('DISC PELLETIZER',discCX,discCY-discRy*0.12);
+  g.restore();
+
+  g.save(); g.globalAlpha=0.45;
+  g.fillStyle='#5a4828'; g.font='bold 8px JetBrains Mono'; g.textAlign='center';
+  const convMidX=(convStartX+convEndX)/2, convMidY=(convStartY+convEndY)/2-convH*0.12;
+  g.fillText('CONVEYOR BELT',convMidX,convMidY-8);
+  g.restore();
+
+  // ── CONVEYOR BALLS (pellets riding belt) ──
+  // Update physics
+  for(let i=conveyorBalls.length-1;i>=0;i--){
+    const cb=conveyorBalls[i];
+    if(cb.falling){
+      cb.vy+=0.28;
+      cb.x+=cb.vx*0.4;
+      cb.y+=cb.vy;
+      const t=Math.max(0,Math.min(1,(cb.x-convStartX)/(convEndX-convStartX)));
+      const beltSurfaceY=convStartY+t*(convEndY-convStartY)-cb.size;
+      if(cb.y>=beltSurfaceY){
+        cb.y=beltSurfaceY; cb.vy*=-0.20; cb.vx=1.6+Math.random()*0.5; cb.falling=false; cb.settled=false;
+      }
+    } else {
+      // Ride belt — move right along belt angle
+      const angle=Math.atan2(convEndY-convStartY,convEndX-convStartX);
+      cb.x+=Math.cos(angle)*1.7;
+      cb.y+=Math.sin(angle)*1.7;
+    }
+    if(cb.x>convEndX+cb.size*3){ conveyorBalls.splice(i,1); continue; }
+  }
+
+  // Draw conveyor balls
+  g.save();
+  // Clip to belt area with generous padding
+  g.beginPath();
+  g.moveTo(convStartX-8,convStartY-8);
+  g.lineTo(convEndX+endRollerR+8,convEndY-8);
+  g.lineTo(convEndX+endRollerR+8,convEndY+convH+8);
+  g.lineTo(convStartX-8,convStartY+convH+8);
+  g.closePath(); g.clip();
+
+  conveyorBalls.forEach(cb=>{
+    const pelGrad2=g.createRadialGradient(cb.x-cb.size*0.28,cb.y-cb.size*0.28,0,cb.x,cb.y,cb.size);
+    pelGrad2.addColorStop(0,'rgba(210,180,110,0.95)');
+    pelGrad2.addColorStop(0.45,'rgba(165,130,65,0.92)');
+    pelGrad2.addColorStop(1,'rgba(90,70,30,0.88)');
+    g.beginPath(); g.arc(cb.x,cb.y,cb.size,0,Math.PI*2);
+    g.fillStyle=pelGrad2; g.fill();
+    g.beginPath(); g.arc(cb.x-cb.size*0.28,cb.y-cb.size*0.28,cb.size*0.22,0,Math.PI*2);
+    g.fillStyle='rgba(255,248,210,0.45)'; g.fill();
+  });
+  g.restore();
+
+  // ── ANGLE INDICATOR (bottom of disc, like reference) ──
+  {
+    const indX=discCX-discRx*0.30, indY=discCY+discRy*1.05;
+    // Dashed arc for angle
+    g.save(); g.globalAlpha=0.75;
+    g.strokeStyle='#4a80c8'; g.lineWidth=1.5; g.setLineDash([3,4]);
+    g.beginPath(); g.arc(indX+18,indY-5,22,-Math.PI*0.85,-Math.PI*0.15); g.stroke();
+    g.setLineDash([]);
+    // Angle lines
+    g.strokeStyle='#3a6aaa'; g.lineWidth=1.8; g.lineCap='round';
+    g.beginPath(); g.moveTo(indX,indY); g.lineTo(indX+38,indY); g.stroke();
+    g.beginPath(); g.moveTo(indX+8,indY); g.lineTo(indX+8+Math.cos(-Math.PI*0.52)*26,indY+Math.sin(-Math.PI*0.52)*26); g.stroke();
+    // Label
+    g.fillStyle='#3a5a90'; g.font='bold 8px JetBrains Mono'; g.textAlign='center';
+    g.fillText(`${angleVal.toFixed(0)}°`,indX+28,indY+14);
+    g.restore();
+  }
+
+  // ── DISC PELLETIZER TEXT LABELS ──
+  g.save(); g.globalAlpha=0.62;
+  g.fillStyle='#3a5a90'; g.font='bold 8px JetBrains Mono'; g.textAlign='left';
+  g.fillText('DISC',discCX+discRx*0.68, discCY-discRy*0.60);
+  g.fillText('PELLETIZER',discCX+discRx*0.68, discCY-discRy*0.42);
+  g.restore();
+
+  // ── DISCHARGE label ──
+  g.save(); g.globalAlpha=0.50;
+  g.fillStyle='#3a5a90'; g.font='bold 7px JetBrains Mono'; g.textAlign='right';
+  g.fillText('DISC',W-6,H-18);
+  g.restore();
+
+  // ── RPM / ANGLE READOUT ──
+  const hud_x=discCX-discRx*0.95, hud_y=H-28;
+  g.fillStyle='rgba(26,40,70,0.80)';
+  g.beginPath(); g.roundRect(hud_x,hud_y,108,18,4); g.fill();
+  g.fillStyle='#e8c86a'; g.font='bold 7.5px JetBrains Mono'; g.textAlign='center';
+  g.fillText(`α = ${angleVal.toFixed(1)}°  |  ${rpmVal.toFixed(1)} RPM`, hud_x+54, hud_y+12);
+
+  // ── SAVE BURST ──
+  if(burst>0){
+    const bAlpha=Math.min(1,burst/18);
+    g.save(); g.globalAlpha=bAlpha*0.95;
+    g.shadowColor='#3aaa6a'; g.shadowBlur=16;
+    g.strokeStyle='#3aaa6a'; g.lineWidth=4; g.lineCap='round';
+    g.beginPath(); g.moveTo(W/2-14,H*0.88); g.lineTo(W/2-3,H*0.88+11); g.lineTo(W/2+16,H*0.88-11); g.stroke();
+    g.restore();
+  }
+
+  // Update footer bar
+  const barPct=((angleVal-46)/4)*0.45+(rpmVal-6)/2*0.55;
+  const barEl=document.getElementById('ballDiscBarFill');
+  if(barEl) barEl.style.width=(18+barPct*72)+'%';
+}
+function ballDiscLoop(){
+  if(ballDiscSaveBurst>0) ballDiscSaveBurst-=0.5;
+  drawBallDisc(ballDiscFrame, ballDiscSaveBurst);
+  ballDiscFrame++;
+  ballDiscAnimId=requestAnimationFrame(ballDiscLoop);
+}
+
+function openBallCard(){
+  const cfg=MODAL_CONFIGS['ball'];
+  document.getElementById('ballAnimBody').innerHTML=cfg.fields();
+  document.getElementById('ballAnimOverlay').classList.add('open');
+  if(ballDiscAnimId===null) ballDiscLoop();
+  setTimeout(()=>{
+    const inputs=document.querySelectorAll('#ballAnimBody input, #ballAnimBody select');
+    inputs.forEach(inp=>{
+      inp.addEventListener('input',()=>{drawBallDisc(ballDiscFrame,0);});
+      inp.addEventListener('change',()=>{drawBallDisc(ballDiscFrame,0);});
+    });
+  },60);
+}
+
+function closeBallCard(){
+  document.getElementById('ballAnimOverlay').classList.remove('open');
+  if(ballDiscAnimId){cancelAnimationFrame(ballDiscAnimId);ballDiscAnimId=null;}
+}
+
+function saveBallCard(){
+  const cfg=MODAL_CONFIGS['ball'];
+  cfg.save();
+  ballDiscSaveBurst=20;
+  const ind=document.getElementById('ballSaveIndicator');
+  ind.classList.remove('show'); void ind.offsetWidth; ind.classList.add('show');
+  setTimeout(()=>{closeBallCard();updateSummaryParams();},1800);
+}
+
+document.getElementById('ballAnimOverlay').addEventListener('click',function(e){if(e.target===this)closeBallCard();});
 
 // ═══════════════════════════════════════════════════════════
 // CROSS-PAGE STATE SHARING VIA localStorage
@@ -5381,7 +6363,7 @@ function loadStateFromStorage() {
 }
 
 // Patch all save functions to persist state
-['saveModal','saveFeedCard','saveGrindCard','saveThickCard','saveFilterCard','saveMixCard'].forEach(fn => {
+['saveModal','saveFeedCard','saveGrindCard','saveThickCard','saveFilterCard','saveMixCard','saveBallCard'].forEach(fn => {
   if (typeof window[fn] === 'function') {
     const orig = window[fn];
     window[fn] = function() { orig.apply(this, arguments); saveStateToStorage(); };
@@ -5397,6 +6379,21 @@ window.resetAll = function() { _origResetAll(); localStorage.removeItem(STATE_KE
 // Load state on page load
 loadStateFromStorage();
 updateSummaryParams();
+updateImageNodes(0, simStep);
 
+
+// ── HOVER VIDEO PLAY / PAUSE (page 2) ──────────────────────────────
+function playStageVideo2(node) {
+  const video = node.querySelector('.img-stage-hover-video');
+  if (!video) return;
+  video.currentTime = 0;
+  video.play().catch(() => {});
+}
+function pauseStageVideo2(node) {
+  const video = node.querySelector('.img-stage-hover-video');
+  if (!video) return;
+  video.pause();
+  video.currentTime = 0;
+}
 </script>
 </html>
