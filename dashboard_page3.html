@@ -1210,6 +1210,37 @@ input.finp{cursor:text;}
 .stage-arrow{
   display:flex;align-items:center;justify-content:center;flex-shrink:0;
 }
+
+/* -- HOVER VIDEO OVERLAY (image cards) -- */
+.img-stage-hover-video {
+  position:absolute; inset:0; width:100%; height:100%;
+  object-fit:cover; z-index:5; opacity:0;
+  transition:opacity .3s ease; pointer-events:none; border-radius:6px;
+}
+.img-stage-node:hover .img-stage-hover-video { opacity:1; }
+.img-stage-node:hover .img-stage-img { opacity:0; }
+.img-stage-img { transition:opacity .3s ease, transform .3s ease; }
+
+/* -- HOVER VIDEO CARD (canvas stages cool/pellet) -- */
+#canvasHoverVideoCard {
+  position:fixed; z-index:9999; width:180px;
+  background:#0d1b2e; border:1px solid rgba(200,145,42,.45);
+  border-radius:14px; box-shadow:0 8px 40px rgba(0,0,0,.55);
+  overflow:hidden; pointer-events:none;
+  opacity:0; transform:scale(.88) translateY(8px);
+  transition:opacity .2s ease, transform .2s cubic-bezier(.22,1,.36,1);
+  display:flex; flex-direction:column;
+}
+#canvasHoverVideoCard.visible { opacity:1; transform:scale(1) translateY(0); }
+.chvp-label {
+  font-family:'JetBrains Mono',monospace; font-size:.5rem;
+  letter-spacing:2.5px; color:rgba(200,145,42,.9); text-transform:uppercase;
+  padding:9px 12px 6px; border-bottom:1px solid rgba(200,145,42,.15);
+}
+.chvp-video-wrap { width:100%; aspect-ratio:9/16; background:#000; overflow:hidden; }
+.chvp-video-wrap video { width:100%; height:100%; object-fit:cover; display:block; }
+.chvp-hint { font-family:'DM Sans',sans-serif; font-size:.52rem;
+  color:rgba(255,255,255,.35); text-align:center; padding:6px 8px 8px; }
 </style>
 </head>
 <body>
@@ -1759,10 +1790,11 @@ input.finp{cursor:text;}
       <div id="stageNodesWrap" style="display:flex;align-items:center;justify-content:center;flex:0 0 50%;padding:14px 12px 14px 18px;gap:0;position:relative;">
 
         <!-- STAGE 06B–07 Green Ball + Screen -->
-        <div class="img-stage-node" id="node-greenball" onclick="openStageCard('greenball')" title="Green Ball Prop & Screen — click to configure">
+        <div class="img-stage-node" id="node-greenball" onclick="openStageCard('greenball')" title="Green Ball Prop onmouseenter="playStageVideo3(this)" onmouseleave="pauseStageVideo3(this)" & Screen — click to configure">
           <div class="img-stage-tag">STAGE 06B–07</div>
           <div class="img-stage-img-wrap">
             <img src="img7.png" alt="Green Ball + Screen" class="img-stage-img" id="img-greenball">
+            <video class="img-stage-hover-video" id="video-greenball" src="greenball.mp4" muted playsinline loop preload="none"></video>
             <div class="img-stage-status-dot" id="dot-greenball"></div>
           </div>
           <div class="img-stage-label" id="label-greenball">GREEN BALL<br>PROP + SCREEN</div>
@@ -1778,10 +1810,11 @@ input.finp{cursor:text;}
         </div>
 
         <!-- STAGE 08 Induration (furnace or grate) -->
-        <div class="img-stage-node" id="node-indu" onclick="openStageCard('indu')" title="Induration — click to configure">
+        <div class="img-stage-node" id="node-indu" onclick="openStageCard('indu')" title="Induration onmouseenter="playStageVideo3(this)" onmouseleave="pauseStageVideo3(this)" — click to configure">
           <div class="img-stage-tag" id="indu-tag">STAGE 08</div>
           <div class="img-stage-img-wrap">
             <img src="img8.png" alt="Induration Furnace" class="img-stage-img" id="img-indu">
+            <video class="img-stage-hover-video" id="video-indu" src="induration_furnace.mp4" muted playsinline loop preload="none"></video>
             <div class="img-stage-status-dot" id="dot-indu"></div>
           </div>
           <div class="img-stage-label" id="label-indu">INDURATION<br>FURNACE</div>
@@ -2251,6 +2284,8 @@ function updateImageNodes(frame, activeStep){
     const isGrate = stageParams.indu.mode === 'grate';
     if(induImg) induImg.src = isGrate ? 'img9.png' : 'img8.png';
     if(induImg) induImg.alt = isGrate ? 'Grate Kiln' : 'Induration Furnace';
+    const induVid=document.getElementById('video-indu');
+    if(induVid){const nv=isGrate?'grate_kiln.mp4':'induration_furnace.mp4'; if(!induVid.src.endsWith(nv)){induVid.src=nv;induVid.load();}}
     if(induLabel) induLabel.innerHTML = isGrate ? 'TRAVELING<br>GRATE & KILN' : 'INDURATION<br>FURNACE';
     const isActive = 7 === activeStep;
     const isDone = 7 < activeStep;
@@ -3233,9 +3268,9 @@ function drawMachineShape(shape,cx,cy,mW,mH,col,strokeCol,strokeW,isActive,isDon
         const px=cx+pd.ox*Math.cos(ang)-pd.oy*Math.sin(ang)*0.3;
         const py=cy+pd.ox*Math.sin(ang)*0.3+pd.oy*Math.cos(ang);
         const pg=safeRadialGradient(ctx,px-pd.rr*0.35,py-pd.rr*0.35,0,px,py,pd.rr);
-        pg.addColorStop(0,'#9ab8cc'); pg.addColorStop(0.6,'#4a7a9a'); pg.addColorStop(1,'#1a3a5a');
+        pg.addColorStop(0,'#d4a876'); pg.addColorStop(0.6,'#8b5e3c'); pg.addColorStop(1,'#4a2e14');
         ctx.beginPath(); ctx.arc(px,py,pd.rr,0,Math.PI*2); ctx.fillStyle=pg; ctx.fill();
-        ctx.strokeStyle='rgba(140,175,200,0.35)'; ctx.lineWidth=0.7; ctx.stroke();
+        ctx.strokeStyle='rgba(160,110,60,0.35)'; ctx.lineWidth=0.7; ctx.stroke();
       });
       return{x:cx-r,y:cy-r,w:r*2,h:r*2};
     }
@@ -3560,9 +3595,9 @@ function drawPelletBurst(cx,cy,frame,r){
     const pr=5+p%3;
     const px=cx+Math.cos(ang)*dist,py=cy+Math.sin(ang)*dist*0.5;
     const pg=safeRadialGradient(ctx,px-pr*0.4,py-pr*0.4,0,px,py,pr);
-    pg.addColorStop(0,'#9ab8cc'); pg.addColorStop(1,'#1a3a5a');
+    pg.addColorStop(0,'#d4a876'); pg.addColorStop(0.5,'#8b5e3c'); pg.addColorStop(1,'#4a2e14');
     ctx.beginPath(); ctx.arc(px,py,pr,0,Math.PI*2); ctx.fillStyle=pg; ctx.fill();
-    ctx.strokeStyle='rgba(140,175,200,0.4)'; ctx.lineWidth=0.6; ctx.stroke();
+    ctx.strokeStyle='rgba(160,110,60,0.4)'; ctx.lineWidth=0.6; ctx.stroke();
   }
 }
 
@@ -3573,11 +3608,14 @@ canvas.addEventListener('click',function(e){
   for(const z of hitZones){if(mx>=z.x&&mx<=z.x+z.w&&my>=z.y&&my<=z.y+z.h){openModal(z.id);return;}}
 });
 canvas.addEventListener('mousemove',function(e){
-  if(simRunning){canvas.style.cursor='default';return;}
+  if(simRunning){canvas.style.cursor='default';hideCanvasVideoPreview();return;}
   const rect=canvas.getBoundingClientRect();
   const mx=e.clientX-rect.left,my=e.clientY-rect.top;
-  canvas.style.cursor=hitZones.some(z=>mx>=z.x&&mx<=z.x+z.w&&my>=z.y&&my<=z.y+z.h)?'pointer':'default';
+  const hz=hitZones.find(z=>mx>=z.x&&mx<=z.x+z.w&&my>=z.y&&my<=z.y+z.h);
+  canvas.style.cursor=hz?'pointer':'default';
+  if(hz){showCanvasVideoPreview(hz.id,e.clientX,e.clientY);}else{hideCanvasVideoPreview();}
 });
+canvas.addEventListener('mouseleave',function(){hideCanvasVideoPreview();});
 
 // Image node click handler
 function openStageCard(id){
@@ -6629,10 +6667,10 @@ const pelletFallCanvas=document.getElementById('pelletFallCanvas');
 const pelletFallCtx=pelletFallCanvas.getContext('2d');
 
 const PELLET_COLORS=[
-  {h1:'#a8c8e0',h2:'#4a7a9a',h3:'#1a3a5a'},
-  {h1:'#9ab8cc',h2:'#3a6a8a',h3:'#152d4a'},
-  {h1:'#b0c8d8',h2:'#5a8aaa',h3:'#1e3a55'},
-  {h1:'#88aacc',h2:'#2a5a80',h3:'#122545'},
+  {h1:'#d4a876',h2:'#8b5e3c',h3:'#4a2e14'},
+  {h1:'#c49a6c',h2:'#7a4e2c',h3:'#3a2010'},
+  {h1:'#c8a06a',h2:'#7a5030',h3:'#3e2210'},
+  {h1:'#be9060',h2:'#6e4428',h3:'#36180e'},
 ];
 
 function sizePelletCanvas(){
@@ -7491,5 +7529,54 @@ loadStateFromStorage();
 updateSummaryParams();
 updateImageNodes(0, simStep);
 
+
+// -- HOVER VIDEO -- image cards --
+function playStageVideo3(node) {
+  const v = node.querySelector('.img-stage-hover-video');
+  if (!v) return; v.currentTime = 0; v.play().catch(() => {});
+}
+function pauseStageVideo3(node) {
+  const v = node.querySelector('.img-stage-hover-video');
+  if (!v) return; v.pause(); v.currentTime = 0;
+}
+// -- HOVER VIDEO CARD -- canvas stages --
+const CANVAS_VIDEO_MAP = { cool:'cooling.mp4', pellet:'pellet.mp4' };
+const CANVAS_LABEL_MAP = { cool:'COOLING', pellet:'PELLETS' };
+let _chvpActive=null, _chvpTimer=null, _chvpCard=null;
+function getCanvasVPCard() {
+  if (_chvpCard) return _chvpCard;
+  const card = document.createElement('div');
+  card.id = 'canvasHoverVideoCard';
+  card.innerHTML = '<div class="chvp-label" id="chvpLabel"></div>'
+    + '<div class="chvp-video-wrap"><video id="chvpVideo" muted playsinline loop></video></div>'
+    + '<div class="chvp-hint">Hover to preview</div>';
+  document.body.appendChild(card); _chvpCard = card; return card;
+}
+function showCanvasVideoPreview(stageId, clientX, clientY) {
+  clearTimeout(_chvpTimer);
+  const card = getCanvasVPCard();
+  const video = document.getElementById('chvpVideo');
+  const label = document.getElementById('chvpLabel');
+  if (_chvpActive !== stageId) {
+    _chvpActive = stageId;
+    video.pause(); video.src = CANVAS_VIDEO_MAP[stageId] || '';
+    if (video.src) { video.load(); video.play().catch(() => {}); }
+    label.textContent = CANVAS_LABEL_MAP[stageId] || stageId.toUpperCase();
+  }
+  const cardW=180,cardH=340,vw=window.innerWidth,vh=window.innerHeight;
+  let left=clientX+20, top=clientY-cardH/2;
+  if(left+cardW>vw-10) left=clientX-cardW-20;
+  if(top<10) top=10; if(top+cardH>vh-10) top=vh-cardH-10;
+  card.style.left=left+'px'; card.style.top=top+'px';
+  card.classList.add('visible');
+}
+function hideCanvasVideoPreview() {
+  _chvpTimer = setTimeout(() => {
+    const card=document.getElementById('canvasHoverVideoCard');
+    if(card) card.classList.remove('visible');
+    const v=document.getElementById('chvpVideo');
+    if(v) v.pause(); _chvpActive=null;
+  }, 80);
+}
 </script>
 </html>
