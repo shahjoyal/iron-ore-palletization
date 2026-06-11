@@ -3342,12 +3342,12 @@ function drawCoolingKiln(cx, cy, mW, mH, stage, isActive, isDone, frame){
     if(!temp || temp <= 0) return `rgb(160,165,175)`; // silver/steel when no temp
     const t = clamp((temp - 50) / (950 - 50), 0, 1);
     const r = 1 - t;
-    if(r >= 0.75){ // low temp → light blue-green
+    if(r >= 0.75){ // low temp → bright sky blue
       const s = (r - 0.75) / 0.25;
-      return `rgb(${Math.round(140 - s*40)},${Math.round(210 + s*20)},${Math.round(190 + s*40)})`;
-    } else if(r >= 0.45){ // mid-low → yellow-gold to light teal
+      return `rgb(${Math.round(100 - s*20)},${Math.round(220 + s*15)},${Math.round(255)})`;
+    } else if(r >= 0.45){ // mid-low → yellow-gold to light sky blue
       const s = (r - 0.45) / 0.30;
-      return `rgb(${Math.round(250 - s*60)},${Math.round(220 - s*30)},${Math.round(80 + s*80)})`;
+      return `rgb(${Math.round(250 - s*130)},${Math.round(220 - s*10)},${Math.round(80 + s*175)})`;
     } else if(r >= 0.18){ // mid-high → orange to yellow
       const s = (r - 0.18) / 0.27;
       return `rgb(245,${Math.round(140 + s*70)},${Math.round(40 + s*40)})`;
@@ -3363,7 +3363,7 @@ function drawCoolingKiln(cx, cy, mW, mH, stage, isActive, isDone, frame){
     if(!temp || temp <= 0) return `rgb(100,105,115)`;
     const t = clamp((temp - 50) / (950 - 50), 0, 1);
     const r = 1 - t;
-    if(r >= 0.75) return `rgb(60,140,130)`;
+    if(r >= 0.75) return `rgb(40,150,200)`;
     if(r >= 0.45) return `rgb(160,150,40)`;
     if(r >= 0.18) return `rgb(190,100,20)`;
     return `rgb(160,70,15)`;
@@ -3427,52 +3427,35 @@ function drawCoolingKiln(cx, cy, mW, mH, stage, isActive, isDone, frame){
   ctx.closePath();
   ctx.clip();
 
-  // Draw each temperature zone slice
-  for(let z = 0; z < 4; z++){
-    const x0 = left + z * sliceW;
-    const x1 = x0 + sliceW + 1;
-    // Interpolate top/bottom Y for this slice
-    const f0 = z / 4, f1 = (z+1) / 4;
-    const t0 = topL + f0 * (slopeY * 2) - slopeY;
-    const t1 = topL + f1 * (slopeY * 2) - slopeY;
-    const b0 = botL + f0 * (slopeY * 2) - slopeY;
-    const b1 = botL + f1 * (slopeY * 2) - slopeY;
+  // Draw smooth gradient across all zones (no hard partitions)
+  const zoneGrad = ctx.createLinearGradient(left, 0, right, 0);
+  zoneGrad.addColorStop(0,    heatColor(temps[0]));
+  zoneGrad.addColorStop(0.33, heatColor(temps[1]));
+  zoneGrad.addColorStop(0.67, heatColor(temps[2]));
+  zoneGrad.addColorStop(1,    heatColor(temps[3]));
+  ctx.fillStyle = zoneGrad;
+  ctx.beginPath();
+  ctx.moveTo(left,  topL - 2);
+  ctx.lineTo(right, topR - 2);
+  ctx.lineTo(right, botR + 2);
+  ctx.lineTo(left,  botL + 2);
+  ctx.closePath();
+  ctx.fill();
 
-    ctx.fillStyle = heatColor(temps[z]);
-    ctx.beginPath();
-    ctx.moveTo(x0, t0 - 2);
-    ctx.lineTo(x1, t1 - 2);
-    ctx.lineTo(x1, b1 + 2);
-    ctx.lineTo(x0, b0 + 2);
-    ctx.closePath();
-    ctx.fill();
-
-    // Darker lower-half shading for cylindrical depth
-    const shadGrad = ctx.createLinearGradient(x0, t0, x0, b0 + 2);
-    shadGrad.addColorStop(0,   'rgba(255,255,255,0.18)');
-    shadGrad.addColorStop(0.35,'rgba(255,255,255,0.05)');
-    shadGrad.addColorStop(0.60,'rgba(0,0,0,0.0)');
-    shadGrad.addColorStop(1,   'rgba(0,0,0,0.38)');
-    ctx.fillStyle = shadGrad;
-    ctx.beginPath();
-    ctx.moveTo(x0, t0 - 2);
-    ctx.lineTo(x1, t1 - 2);
-    ctx.lineTo(x1, b1 + 2);
-    ctx.lineTo(x0, b0 + 2);
-    ctx.closePath();
-    ctx.fill();
-
-    // Subtle vertical blend seam between zones (softens the hard edge)
-    if(z < 3){
-      const seamX = left + (z+1) * sliceW;
-      const seamGrad = ctx.createLinearGradient(seamX - 6, 0, seamX + 6, 0);
-      seamGrad.addColorStop(0, 'rgba(0,0,0,0)');
-      seamGrad.addColorStop(0.5, 'rgba(0,0,0,0.22)');
-      seamGrad.addColorStop(1, 'rgba(0,0,0,0)');
-      ctx.fillStyle = seamGrad;
-      ctx.fillRect(seamX - 6, topL - 4, 12, (botL - topL) + slopeY * 2 + 8);
-    }
-  }
+  // Cylindrical depth shading overlay
+  const shadGrad = ctx.createLinearGradient(left, topL, left, botL + 2);
+  shadGrad.addColorStop(0,   'rgba(255,255,255,0.18)');
+  shadGrad.addColorStop(0.35,'rgba(255,255,255,0.05)');
+  shadGrad.addColorStop(0.60,'rgba(0,0,0,0.0)');
+  shadGrad.addColorStop(1,   'rgba(0,0,0,0.38)');
+  ctx.fillStyle = shadGrad;
+  ctx.beginPath();
+  ctx.moveTo(left,  topL - 2);
+  ctx.lineTo(right, topR - 2);
+  ctx.lineTo(right, botR + 2);
+  ctx.lineTo(left,  botL + 2);
+  ctx.closePath();
+  ctx.fill();
 
   // Active shimmer trail
   if(isActive){
@@ -6952,8 +6935,8 @@ function drawCoolKilnAnim(frame){
     if(!temp || temp<=0) return `rgb(160,165,175)`;
     const t=clamp((temp-50)/(950-50),0,1);
     const r=1-t;
-    if(r>=0.75){const s=(r-0.75)/0.25; return `rgb(${Math.round(140-s*40)},${Math.round(210+s*20)},${Math.round(190+s*40)})`;}
-    if(r>=0.45){const s=(r-0.45)/0.30; return `rgb(${Math.round(250-s*60)},${Math.round(220-s*30)},${Math.round(80+s*80)})`;}
+    if(r>=0.75){const s=(r-0.75)/0.25; return `rgb(${Math.round(100-s*20)},${Math.round(220+s*15)},${Math.round(255)})`;}
+    if(r>=0.45){const s=(r-0.45)/0.30; return `rgb(${Math.round(250-s*130)},${Math.round(220-s*10)},${Math.round(80+s*175)})`;}
     if(r>=0.18){const s=(r-0.18)/0.27; return `rgb(245,${Math.round(140+s*70)},${Math.round(40+s*40)})`;}
     if(r>0){const s=r/0.18; return `rgb(${Math.round(220+s*20)},${Math.round(100+s*40)},${Math.round(30+s*10)})`;}
     return `rgb(160,165,175)`;
@@ -6962,7 +6945,7 @@ function drawCoolKilnAnim(frame){
     if(!temp||temp<=0) return 'rgb(100,105,115)';
     const t=clamp((temp-50)/(950-50),0,1);
     const r=1-t;
-    if(r>=0.75) return 'rgb(60,140,130)'; if(r>=0.45) return 'rgb(160,150,40)';
+    if(r>=0.75) return 'rgb(40,150,200)'; if(r>=0.45) return 'rgb(160,150,40)';
     if(r>=0.18) return 'rgb(190,100,20)';  return 'rgb(160,70,15)';
   }
 
@@ -6985,40 +6968,22 @@ function drawCoolKilnAnim(frame){
   coolCtx.lineTo(right,botR); coolCtx.lineTo(left,botL);
   coolCtx.closePath(); coolCtx.clip();
 
-  for(let z=0;z<4;z++){
-    const x0=left+z*sliceW, x1=x0+sliceW+1;
-    const f0=z/4, f1=(z+1)/4;
-    const t0=topL+f0*(slopeY*2)-slopeY, t1=topL+f1*(slopeY*2)-slopeY;
-    const b0=botL+f0*(slopeY*2)-slopeY, b1=botL+f1*(slopeY*2)-slopeY;
-    // Base heat fill
-    coolCtx.fillStyle=heatCol(temps[z]);
-    coolCtx.beginPath(); coolCtx.moveTo(x0,t0-2); coolCtx.lineTo(x1,t1-2);
-    coolCtx.lineTo(x1,b1+2); coolCtx.lineTo(x0,b0+2); coolCtx.closePath(); coolCtx.fill();
-    // Cylindrical shading
-    const shGr=safeLinearGradient(coolCtx,x0,t0,x0,b0+2);
-    shGr.addColorStop(0,'rgba(255,255,255,0.18)'); shGr.addColorStop(0.35,'rgba(255,255,255,0.05)');
-    shGr.addColorStop(0.60,'rgba(0,0,0,0)'); shGr.addColorStop(1,'rgba(0,0,0,0.38)');
-    coolCtx.fillStyle=shGr;
-    coolCtx.beginPath(); coolCtx.moveTo(x0,t0-2); coolCtx.lineTo(x1,t1-2);
-    coolCtx.lineTo(x1,b1+2); coolCtx.lineTo(x0,b0+2); coolCtx.closePath(); coolCtx.fill();
-    // Seam blend
-    if(z<3){
-      const sx=left+(z+1)*sliceW;
-      const sGr=safeLinearGradient(coolCtx,sx-7,0,sx+7,0);
-      sGr.addColorStop(0,'rgba(0,0,0,0)'); sGr.addColorStop(0.5,'rgba(0,0,0,0.22)'); sGr.addColorStop(1,'rgba(0,0,0,0)');
-      coolCtx.fillStyle=sGr; coolCtx.fillRect(sx-7,topL-4,14,(botL-topL)+slopeY*2+8);
-    }
-    // Animated heat shimmer for hot zones (temp > 500)
-    if(temps[z]>500 && sliceW>0){
-      const shimAlpha=clamp((temps[z]-500)/450*0.22,0,0.22);
-      const shimX=x0+sliceW*((frame*0.8+z*25)%100/100);
-      coolCtx.save(); coolCtx.globalAlpha=shimAlpha;
-      const shimGr=safeRadialGradient(coolCtx,shimX,cy,0,shimX,cy,sliceW*0.5);
-      shimGr.addColorStop(0,'rgba(255,255,255,0.9)'); shimGr.addColorStop(1,'rgba(255,255,255,0)');
-      coolCtx.fillStyle=shimGr; coolCtx.fillRect(x0,t0-2,sliceW+1,b0-t0+4);
-      coolCtx.restore();
-    }
-  }
+  // Smooth gradient across all zones — no hard partitions
+  const zoneGr=safeLinearGradient(coolCtx,left,0,right,0);
+  zoneGr.addColorStop(0,    heatCol(temps[0]));
+  zoneGr.addColorStop(0.33, heatCol(temps[1]));
+  zoneGr.addColorStop(0.67, heatCol(temps[2]));
+  zoneGr.addColorStop(1,    heatCol(temps[3]));
+  coolCtx.fillStyle=zoneGr;
+  coolCtx.beginPath(); coolCtx.moveTo(left,topL-2); coolCtx.lineTo(right,topR-2);
+  coolCtx.lineTo(right,botR+2); coolCtx.lineTo(left,botL+2); coolCtx.closePath(); coolCtx.fill();
+  // Cylindrical shading overlay
+  const shGr=safeLinearGradient(coolCtx,left,topL,left,botL+2);
+  shGr.addColorStop(0,'rgba(255,255,255,0.18)'); shGr.addColorStop(0.35,'rgba(255,255,255,0.05)');
+  shGr.addColorStop(0.60,'rgba(0,0,0,0)'); shGr.addColorStop(1,'rgba(0,0,0,0.38)');
+  coolCtx.fillStyle=shGr;
+  coolCtx.beginPath(); coolCtx.moveTo(left,topL-2); coolCtx.lineTo(right,topR-2);
+  coolCtx.lineTo(right,botR+2); coolCtx.lineTo(left,botL+2); coolCtx.closePath(); coolCtx.fill();
 
   // Travelling shimmer trail
   const p=(frame%100)/100;
