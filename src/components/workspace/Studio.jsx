@@ -30,9 +30,9 @@ const V = {
 }
 
 /** Input workspace: process route (left), input card (middle), drawing and footage (right). */
-export function Studio({ stage, mode }) {
+export function Studio({ stage, mode, leaving }) {
   return (
-    <motion.div className="studio" variants={V.root} initial="hidden" animate="show" exit="exit">
+    <motion.div className="studio" variants={V.root} initial="hidden" animate={leaving ? 'exit' : 'show'} style={leaving ? { pointerEvents: 'none' } : undefined}>
       <Sidebar variants={V.route} />
       <motion.div className="center" variants={V.inputs}>
         <InputCard stage={stage} />

@@ -1,11 +1,5 @@
 import { useSimStore } from '../../store/useSimStore'
 
-const outOfRange = (v, min, max) => {
-  if (v === '' || v === undefined) return false
-  const n = Number(v)
-  return Number.isFinite(n) && (n < min || n > max)
-}
-
 export function Field({ label, hint, warn, children, htmlFor }) {
   return (
     <div className={`field${warn ? ' is-warn' : ''}`}>
@@ -19,50 +13,38 @@ export function Field({ label, hint, warn, children, htmlFor }) {
 const decimals = (step) => (String(step).split('.')[1] || '').length
 
 /**
- * Percentage fields: label, slider and live value on one line (no input box).
- * A hidden input with the original id keeps the drawing routines, which read
- * their values from the DOM by id, working unchanged.
+ * One-line slider: label, slider and live value (no input box).
+ * When `id` is given, a hidden input with that id mirrors the value, because the
+ * drawing routines read their inputs from the DOM by id.
  */
-function SliderField({ field }) {
-  const { group, key, id, label, min, max, step, unit, hint } = field
-  const value = useSimStore((s) => s.params[group][key])
-  const setParam = useSimStore((s) => s.setParam)
-  const empty = value === '' || value === undefined
+export function InlineSlider({ label, value, onChange, min, max, step, unit, unitSlot, id, hint, className = '' }) {
+  const empty = value === '' || value === undefined || value === null
   const n = empty ? min : Math.min(max, Math.max(min, Number(value)))
-  const pct = ((n - min) / (max - min)) * 100
-  const claim = () => { if (empty) setParam(group, key, String(min)) }
+  const pct = max === min ? 0 : ((n - min) / (max - min)) * 100
+  const claim = () => { if (empty) onChange(String(min)) }
+  const sliderId = id ? `${id}-slider` : undefined
   return (
-    <div className="field field-inline" title={hint || `Range: ${min} – ${max}${unit}`}>
-      <label className="field-label" htmlFor={`${id}-slider`}>{label}</label>
+    <div className={`field field-inline ${className}`} title={hint || `Range: ${min} – ${max}${unit || ''}`}>
+      <label className="field-label" htmlFor={sliderId}>{label}</label>
       <div className={`slider${empty ? ' is-empty' : ''}`} style={{ '--pct': `${pct}%` }}>
-        <input id={`${id}-slider`} type="range" className="slider-range" min={min} max={max} step={step} value={n}
-          onPointerDown={claim} onKeyDown={claim}
-          onChange={(e) => setParam(group, key, Number(e.target.value).toFixed(decimals(step)))} />
+        <input id={sliderId} type="range" className="slider-range" min={min} max={max} step={step} value={n}
+          aria-label={label} onPointerDown={claim} onKeyDown={claim}
+          onChange={(e) => onChange(Number(e.target.value).toFixed(decimals(step)))} />
         <div className="slider-scale mono" aria-hidden="true"><span>{min}</span><span>{max}</span></div>
       </div>
-      <span className="slider-value mono">{empty ? '—' : value}<small>{unit}</small></span>
-      <input id={id} type="hidden" value={value} readOnly />
+      <span className="slider-value mono">{empty ? '—' : value}{unitSlot || (unit && <small>{unit}</small>)}</span>
+      {id && <input id={id} type="hidden" value={value ?? ''} readOnly />}
     </div>
   )
 }
 
+/** A numeric stage field, bound to the store. */
 export function NumberField({ field }) {
-  if (field.unit === '%') return <SliderField field={field} />
   const { group, key, id, label, min, max, step, unit, hint } = field
   const value = useSimStore((s) => s.params[group][key])
   const setParam = useSimStore((s) => s.setParam)
-  const warn = outOfRange(value, min, max)
-  const range = `${min} – ${max}${unit ? ` ${unit}` : ''}`
-  return (
-    <Field label={label} htmlFor={id} warn={warn}
-      hint={warn ? `Outside the usual range (${range})` : hint || `Range: ${range}`}>
-      <div className="input-wrap">
-        <input id={id} className="input mono" type="number" inputMode="decimal" min={min} max={max} step={step}
-          placeholder={`${min} – ${max}`} value={value} onChange={(e) => setParam(group, key, e.target.value)} />
-        {unit && <span className="input-unit">{unit}</span>}
-      </div>
-    </Field>
-  )
+  return <InlineSlider id={id} label={label} min={min} max={max} step={step} unit={unit} hint={hint}
+    value={value} onChange={(v) => setParam(group, key, v)} />
 }
 
 export function SelectControl({ id, value, onChange, options, placeholder = 'Select…' }) {
@@ -90,23 +72,25 @@ export function SelectField({ field }) {
   )
 }
 
+/** Slider whose unit can be switched (the range follows the unit). */
 export function NumberUnitField({ field }) {
-  const { group, key, unitKey, id, unitId, label, units, hint } = field
+  const { group, key, unitKey, id, unitId, label, units, ranges, hint } = field
   const value = useSimStore((s) => s.params[group][key])
   const unit = useSimStore((s) => s.params[group][unitKey])
   const setParam = useSimStore((s) => s.setParam)
+  const [min, max, step] = ranges[unit] || ranges[units[0]]
   return (
-    <Field label={label} htmlFor={id} hint={hint}>
-      <div className="input-row">
-        <input id={id} className="input mono" type="number" min={0} step={0.1} placeholder="Enter value"
-          value={value} onChange={(e) => setParam(group, key, e.target.value)} />
-        <div className="select-wrap select-narrow">
-          <select id={unitId} className="input select" value={unit} onChange={(e) => setParam(group, unitKey, e.target.value)}>
-            {units.map((u) => <option key={u} value={u}>{u}</option>)}
-          </select>
-        </div>
-      </div>
-    </Field>
+    <InlineSlider id={id} label={label} hint={hint} min={min} max={max} step={step}
+      value={value} onChange={(v) => setParam(group, key, v)}
+      unitSlot={<UnitSelect id={unitId} value={unit} units={units} onChange={(u) => setParam(group, unitKey, u)} />} />
+  )
+}
+
+export function UnitSelect({ id, value, units, onChange }) {
+  return (
+    <select id={id} className="unit-select mono" value={value} aria-label="Unit" onChange={(e) => onChange(e.target.value)}>
+      {units.map((u) => <option key={u.value ?? u} value={u.value ?? u}>{u.label ?? u}</option>)}
+    </select>
   )
 }
 

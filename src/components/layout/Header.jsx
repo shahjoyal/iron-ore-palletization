@@ -1,5 +1,5 @@
 import { PLANTS } from '../../data/plants'
-import { SelectControl } from '../fields/Field'
+import { InlineSlider, SelectControl } from '../fields/Field'
 import { useSimStore } from '../../store/useSimStore'
 
 export function Header() {
@@ -18,14 +18,8 @@ export function Header() {
           <span>Plant</span>
           <SelectControl id="plantName" value={plant} options={PLANTS} placeholder="Select plant" onChange={setPlant} />
         </label>
-        <label className="topbar-field topbar-capacity">
-          <span>Capacity</span>
-          <div className="input-wrap">
-            <input id="plantCapacity" className="input mono" type="number" min={1} max={9999} step={0.1} placeholder="—"
-              value={capacity} onChange={(e) => setCapacity(e.target.value)} />
-            <span className="input-unit">TPH</span>
-          </div>
-        </label>
+        <InlineSlider id="plantCapacity" className="topbar-capacity" label="Capacity" min={0} max={2000} step={5} unit="TPH"
+          value={capacity} onChange={setCapacity} />
       </div>
       <nav className="topbar-nav">
         <a href="home.html">Home</a>

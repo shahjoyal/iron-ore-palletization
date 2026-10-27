@@ -2,7 +2,7 @@ import { AnimatePresence, motion } from 'framer-motion'
 import { useSimStore } from '../../store/useSimStore'
 import { ORE_ZONES } from '../../data/oreZones'
 import { Section } from '../fields/Section'
-import { Field, NumberField, SelectControl } from '../fields/Field'
+import { Field, InlineSlider, NumberField, SelectControl } from '../fields/Field'
 import { Segmented } from '../fields/Segmented'
 import { FluxList, FuelList } from '../fields/RowList'
 
@@ -34,25 +34,19 @@ function ChemCard({ data }) {
     <motion.div className="chem-card" initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }}>
       <div className="chem-title">{zone.label}, {feed.location}</div>
       {CHEM_GROUPS.map((g) => (
-        <div key={g.title}>
+        <div key={g.title} className="chem-group-block">
           <div className="chem-group">{g.title}</div>
-          <div className="chem-grid" style={{ '--cols': g.cols }}>
-            {g.cells.map(([key, label, src, dec, unit, accent]) => {
-              const r = data[src]
-              return (
-                <label key={key} className={`chem-cell${accent ? ` accent-${accent}` : ''}`}>
-                  <span className="chem-label">{label}</span>
-                  <input className="chem-input mono" type="number" step={Math.pow(10, -dec).toFixed(dec)}
-                    value={feed[key]} onChange={(e) => setParam('feed', key, e.target.value)} />
-                  <span className="chem-unit">{unit}</span>
-                  <span className="chem-range mono">{r.min.toFixed(dec)} – {r.max.toFixed(dec)}</span>
-                </label>
-              )
-            })}
-          </div>
+          {g.cells.map(([key, label, src, dec, unit, accent]) => {
+            const r = data[src]
+            return (
+              <InlineSlider key={key} className={`chem-row${accent ? ` accent-${accent}` : ''}`} label={label} unit={unit}
+                min={r.min} max={r.max} step={Number(Math.pow(10, -dec).toFixed(dec))}
+                value={feed[key]} onChange={(v) => setParam('feed', key, v)} />
+            )
+          })}
         </div>
       ))}
-      <div className="field-hint">Pre-filled with the midpoint of the typical range. Edit any value.</div>
+      <div className="field-hint">Starts at the midpoint of the typical range for this mine.</div>
     </motion.div>
   )
 }
@@ -105,7 +99,7 @@ export function FeedForm() {
       <Section title="Feed composition">
         <NumberField field={num('orePercent', 'm-ore-pct', 'Iron ore percentage', 55, 65, 0.1, '%')} />
         <NumberField field={num('loi', 'm-loi', 'LOI (loss on ignition)', 1, 12, 0.1, '%')} />
-        <NumberField field={{ ...num('feedRate', 'm-feedrate', 'Feed rate', 1, 9999, 0.1, 'TPH'), hint: 'Tonnes per hour' }} />
+        <NumberField field={{ ...num('feedRate', 'm-feedrate', 'Feed rate', 0, 2000, 1, 'TPH')  }} />
       </Section>
 
       <Section title="Additives and fuel">

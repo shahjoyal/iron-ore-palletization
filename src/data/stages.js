@@ -102,7 +102,7 @@ export const STAGES = [
       { fields: [{
         type: 'numberUnit', group: 'screen', key: 'recycled', unitKey: 'recycledUnit',
         id: 'm-recycled', unitId: 'm-recycled-unit', label: 'Recycled material',
-        units: ['%', 'tph'], min: 0, hint: 'Oversize (> 16 mm) and undersize (< 8 mm)',
+        units: ['%', 'tph'], ranges: { '%': [0, 100, 0.1], tph: [0, 500, 1] }, hint: 'Oversize (> 16 mm) and undersize (< 8 mm)',
       }] },
     ],
   },

@@ -1,6 +1,6 @@
 import { useSimStore } from '../../store/useSimStore'
 import { Section } from '../fields/Section'
-import { Field, NumberField, SelectControl } from '../fields/Field'
+import { Field, InlineSlider, NumberField, SelectControl, UnitSelect } from '../fields/Field'
 import { FluxList } from '../fields/RowList'
 
 const BINDERS = ['OB-1205 Organic', 'OB-1206', 'OB3s', 'OB Pro', 'OB-1205 + Bentonite']
@@ -21,19 +21,11 @@ export function MixForm() {
           <SelectControl id="m-bentonite" value={mix.bentonite} options={['Bentonite (6 kg/t)']}
             placeholder="Select grade" onChange={set('bentonite')} />
         </Field>
-        <Field label="Dosage" htmlFor="m-bento-dose">
-          <div className="input-row">
-            <input id="m-bento-dose" className="input mono" type="number" min={0} step={0.01} placeholder="0.00"
-              value={mix.bentoniteDosageValue} onChange={(e) => set('bentoniteDosageValue')(e.target.value)} />
-            <div className="select-wrap select-narrow">
-              <select id="m-bento-dose-unit" className="input select" value={mix.bentoniteDosageUnit}
-                onChange={(e) => set('bentoniteDosageUnit')(e.target.value)}>
-                <option value="kg">kg/T</option>
-                <option value="%">%</option>
-              </select>
-            </div>
-          </div>
-        </Field>
+        <InlineSlider id="m-bento-dose" label="Dosage"
+          min={0} max={mix.bentoniteDosageUnit === '%' ? 1.5 : 15} step={mix.bentoniteDosageUnit === '%' ? 0.01 : 0.1}
+          value={mix.bentoniteDosageValue} onChange={set('bentoniteDosageValue')}
+          unitSlot={<UnitSelect id="m-bento-dose-unit" value={mix.bentoniteDosageUnit} onChange={set('bentoniteDosageUnit')}
+            units={[{ value: 'kg', label: 'kg/T' }, { value: '%', label: '%' }]} />} />
       </Section>
 
       <Section title="OB binder">
@@ -41,13 +33,8 @@ export function MixForm() {
           <SelectControl id="m-ob-binder" value={mix.binder} options={BINDERS}
             placeholder="Select binder" onChange={set('binder')} />
         </Field>
-        <Field label={mix.binder ? `${mix.binder} dosage` : 'Binder dosage'} htmlFor="m-dose">
-          <div className="input-wrap">
-            <input id="m-dose" className="input mono" type="number" min={0} step={0.01} placeholder="0.00"
-              value={mix.dosageValue} onChange={(e) => set('dosageValue')(e.target.value)} />
-            <span className="input-unit">GPT</span>
-          </div>
-        </Field>
+        <InlineSlider id="m-dose" label={mix.binder ? `${mix.binder} dosage` : 'Binder dosage'} min={0} max={60} step={0.5} unit="GPT"
+          hint="Typical: 20 – 38 GPT" value={mix.dosageValue} onChange={set('dosageValue')} />
       </Section>
 
       <Section title="Flux and moisture">
