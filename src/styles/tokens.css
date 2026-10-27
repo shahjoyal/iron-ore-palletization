@@ -1,0 +1,31 @@
+:root {
+  /* Ink and paper */
+  --ink: #0e1c33;
+  --ink-2: #1a3057;
+  --ink-soft: #4b5b75;
+  --ink-faint: #7b889c;
+  --paper: #e8ecf2;
+  --surface: #ffffff;
+  --surface-2: #f5f7fa;
+  --line: #d6dde8;
+  --line-strong: #bcc7d8;
+
+  /* Brand accent (Abhitech brass) and status colours */
+  --brass: #c8912a;
+  --brass-deep: #94650f;
+  --brass-wash: rgba(200, 145, 42, 0.14);
+  --good: #1f8a5b;
+  --good-wash: rgba(31, 138, 91, 0.12);
+  --warn: #b8660f;
+  --warn-wash: rgba(184, 102, 15, 0.12);
+
+  /* Type */
+  --font: 'Bricolage Grotesque', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --mono: 'JetBrains Mono', ui-monospace, 'SF Mono', Menlo, monospace;
+
+  /* Shape and depth */
+  --r-card: 16px;
+  --r-ctl: 9px;
+  --shadow-card: 0 1px 0 rgba(14, 28, 51, 0.04), 0 10px 30px -12px rgba(14, 28, 51, 0.22);
+  --ease: cubic-bezier(0.22, 1, 0.36, 1);
+}

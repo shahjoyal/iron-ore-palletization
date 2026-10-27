@@ -1,0 +1,72 @@
+.app { height: 100vh; min-height: 640px; display: grid; grid-template-rows: auto minmax(0, 1fr); }
+
+.topbar {
+  display: flex; align-items: center; gap: 28px; padding: 10px 20px; min-height: 62px;
+  background: rgba(255, 255, 255, 0.92); backdrop-filter: blur(14px);
+  border-bottom: 1px solid var(--line); position: relative; z-index: 5;
+}
+.brand { display: flex; align-items: center; gap: 12px; text-decoration: none; }
+.brand img { height: 36px; width: auto; }
+.brand-text { display: grid; line-height: 1.1; }
+.brand-text strong { font-size: 17px; font-weight: 700; letter-spacing: 0.2px; color: var(--ink-2); }
+.brand-text small { font-size: 12px; color: var(--brass-deep); font-weight: 500; }
+.topbar-fields { display: flex; align-items: center; gap: 14px; margin-left: auto; }
+.topbar-field { display: grid; grid-template-columns: auto 1fr; align-items: center; gap: 10px; }
+.topbar-field > span { font-size: 12px; font-weight: 500; color: var(--ink-soft); }
+.topbar-field .select-wrap { width: 260px; }
+.topbar-capacity .input-wrap { width: 132px; }
+.topbar-nav { display: flex; gap: 4px; }
+.topbar-nav a {
+  font-size: 13px; font-weight: 500; text-decoration: none; color: var(--ink-soft);
+  padding: 7px 12px; border-radius: 8px; transition: background 0.2s, color 0.2s;
+}
+.topbar-nav a:hover { background: var(--surface-2); color: var(--ink); }
+
+.workspace { display: grid; grid-template: minmax(0, 1fr) / minmax(0, 1fr); padding: 16px; min-height: 0; }
+.workspace > * { min-width: 0; min-height: 0; }
+.studio { display: grid; gap: 16px; grid-template-columns: clamp(250px, 21vw, 300px) minmax(0, 1fr) minmax(0, 1.12fr); }
+.center { min-height: 0; display: flex; }
+.center > .card { flex: 1; min-width: 0; }
+.run-layer { display: flex; }
+.run-layer > .card { flex: 1; min-width: 0; }
+.results { display: flex; gap: 16px; }
+.panel { flex: none; width: 380px; display: flex; flex-direction: column; gap: 12px; min-height: 0; transition: width 0.6s var(--ease); }
+.panel.is-max { width: clamp(480px, 46vw, 680px); }
+.panel > .card-input { flex: 1; min-height: 0; }
+.output { flex: 1; min-width: 0; display: flex; }
+.output > .card { flex: 1; min-width: 0; }
+.stack { display: grid; grid-template-rows: minmax(0, 1.15fr) minmax(0, 1fr); gap: 16px; min-height: 0; }
+
+.card {
+  display: flex; flex-direction: column; min-height: 0; position: relative;
+  background: var(--surface); border: 1px solid var(--line); border-radius: var(--r-card);
+  box-shadow: var(--shadow-card); overflow: hidden;
+}
+.card-head {
+  display: flex; align-items: center; justify-content: space-between; gap: 12px;
+  padding: 13px 18px; border-bottom: 1px solid var(--line); flex-shrink: 0;
+}
+.card-title { font-size: 15px; font-weight: 600; letter-spacing: -0.1px; }
+.card-meta { font-size: 12px; color: var(--ink-faint); display: flex; align-items: center; }
+.card-body { flex: 1; min-height: 0; display: flex; flex-direction: column; position: relative; }
+.card-foot { flex-shrink: 0; border-top: 1px solid var(--line); padding: 12px 18px; background: var(--surface-2); }
+.scene { flex: 1; min-height: 0; display: flex; flex-direction: column; }
+
+/* Narrow screens: one column, sidebar becomes a strip of stages on top. */
+@media (max-width: 1180px) {
+  .app { height: auto; min-height: 100vh; display: block; }
+  .topbar { flex-wrap: wrap; gap: 12px; }
+  .topbar-fields { margin-left: 0; width: 100%; order: 3; }
+  .topbar-field { flex: 1; }
+  .topbar-field .select-wrap { width: 100%; }
+  .topbar-nav { margin-left: auto; }
+  .studio { grid-template-columns: minmax(0, 1fr); }
+  .results { flex-direction: column; }
+  .panel, .panel.is-max { width: 100%; }
+  .card-input { min-height: 520px; }
+  .size-toggle { display: none; }
+  .stack { grid-template-rows: none; }
+  .card-drawing { min-height: 380px; }
+  .card-video { min-height: 300px; }
+  .card-input .form-scroll { overflow: visible; }
+}

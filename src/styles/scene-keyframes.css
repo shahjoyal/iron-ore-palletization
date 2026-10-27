@@ -1,0 +1,9 @@
+/* Keyframes referenced by the furnace / kiln SVG illustrations. */
+@keyframes pelletSparkle{0%,100%{opacity:0.2;r:1.5;}50%{opacity:1;r:3;}}
+@keyframes furnaceRotate{from{transform:rotate(0deg);}to{transform:rotate(360deg);}}
+@keyframes heatPulse{0%,100%{transform:scale(1);opacity:1;}50%{transform:scale(1.15);opacity:0.85;}}
+@keyframes steamRise{0%{opacity:0;transform:translateY(0);}40%{opacity:0.7;}100%{opacity:0;transform:translateY(-25px);}}
+@keyframes kilnRotate{from{transform:rotate(0deg);}to{transform:rotate(360deg);}}
+@keyframes rollerSpin{from{transform:rotate(0deg);}to{transform:rotate(-360deg);}}
+@keyframes shineSwipe{0%{transform:translateX(-100%);}100%{transform:translateX(200%);}}
+@keyframes heatGlow{0%,100%{opacity:0.6;}50%{opacity:1;}}
