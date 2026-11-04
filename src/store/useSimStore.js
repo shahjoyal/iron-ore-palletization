@@ -20,7 +20,7 @@ function summarise(p) {
     size: moist > 10.5 ? '14–18 mm' : '10–16 mm',
     binder: hasOb ? (p.mix.dosageValue ? `${p.mix.dosageValue} ${p.mix.dosageUnit}` : p.mix.binder) : (p.mix.binder || '—'),
     binderOk: hasOb,
-    yield: p.feed.ore ? `${hasOb ? pick(82) : pick(70)}%` : '—',
+    yield: (p.feed.ore || p.feed.chemFe) ? `${hasOb ? pick(82) : pick(70)}%` : '—',
     basicity: hasFlux ? (0.9 + Math.random() * 0.5).toFixed(2) : '0.35',
     temp,
     moisture: p.filter.cakeMoisture ? `${p.filter.cakeMoisture}%` : '—',
@@ -97,9 +97,30 @@ export const useSimStore = create(
       clearUndo: () => set({ undo: null }),
     }),
     {
-      name: 'abhitech_sim_v2',
-      version: 2,
-      migrate: (s) => ({ ...s, active: STAGE_BY_ID[s.active] ? s.active : ids[0] }),
+      name: 'abhitech_sim_v4',
+      version: 4,
+      migrate: (s) => ({ ...s, active: STAGE_BY_ID[s?.active] ? s.active : ids[0] }),
+      // Old saved data can have a different shape; fill every group/field from the defaults
+      // so the UI never reads from something undefined.
+      merge: (persisted, current) => {
+        const saved = persisted || {}
+        const defaults = initialParams()
+        const params = {}
+        for (const g of Object.keys(defaults)) {
+          params[g] = { ...defaults[g], ...((saved.params && saved.params[g]) || {}) }
+        }
+        const resultsOk = saved.results && Array.isArray(saved.results.sizes) && Array.isArray(saved.results.kpis) && Array.isArray(saved.results.gauges)
+        return {
+          ...current,
+          ...saved,
+          params,
+          saved: saved.saved || {},
+          active: STAGE_BY_ID[saved.active] ? saved.active : ids[0],
+          results: resultsOk ? saved.results : null,
+          summary: resultsOk ? saved.summary || null : null,
+          phase: resultsOk && saved.phase === 'results' ? 'results' : 'inputs',
+        }
+      },
       partialize: (s) => ({
         plant: s.plant, capacity: s.capacity, params: s.params, saved: s.saved, active: s.active,
         phase: s.phase === 'results' && s.results ? 'results' : 'inputs', summary: s.summary, results: s.results,

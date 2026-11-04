@@ -5,18 +5,33 @@ body {
   font-size: 14px;
   line-height: 1.45;
   color: var(--ink);
-  background: var(--paper);
+  background-color: var(--paper);
   background-image:
-    linear-gradient(rgba(14, 28, 51, 0.035) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(14, 28, 51, 0.035) 1px, transparent 1px);
-  background-size: 32px 32px;
+    radial-gradient(70% 55% at 12% 0%, rgba(45, 95, 166, 0.28), transparent 70%),
+    radial-gradient(60% 50% at 100% 100%, rgba(200, 145, 42, 0.13), transparent 70%),
+    linear-gradient(rgba(200, 145, 42, 0.045) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(200, 145, 42, 0.045) 1px, transparent 1px);
+  background-size: auto, auto, 48px 48px, 48px 48px;
+  background-attachment: fixed;
   -webkit-font-smoothing: antialiased;
   overflow-x: hidden;
 }
+/* Slow brass embers drifting behind the app: one ambient layer, nothing else moves on its own */
+body::before {
+  content: ''; position: fixed; inset: -10%; z-index: 0; pointer-events: none;
+  background:
+    radial-gradient(circle at 20% 80%, rgba(232, 184, 75, 0.10) 0, transparent 22%),
+    radial-gradient(circle at 78% 22%, rgba(74, 127, 193, 0.14) 0, transparent 26%),
+    radial-gradient(circle at 55% 55%, rgba(154, 77, 43, 0.10) 0, transparent 24%);
+  animation: drift 26s ease-in-out infinite alternate;
+}
+@keyframes drift { from { transform: translate3d(-2%, 1%, 0) scale(1); } to { transform: translate3d(2%, -2%, 0) scale(1.08); } }
+#root { position: relative; z-index: 1; }
 .mono { font-family: var(--mono); font-feature-settings: 'zero' 1; }
 button { font: inherit; color: inherit; cursor: pointer; border: 0; background: none; }
 a { color: inherit; }
-:focus-visible { outline: 2px solid var(--brass); outline-offset: 2px; }
+:focus-visible { outline: 2px solid var(--brass-light); outline-offset: 2px; }
+::selection { background: rgba(232, 184, 75, 0.35); color: #fff; }
 input::-webkit-outer-spin-button, input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
 input[type='number'] { -moz-appearance: textfield; appearance: textfield; }
 @media (prefers-reduced-motion: reduce) {

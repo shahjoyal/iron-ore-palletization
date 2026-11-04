@@ -253,6 +253,8 @@ body{
 </div>
 
 <script>
+// Already signed in this session: go straight to the simulator.
+try{ if(sessionStorage.getItem('abhitech_auth')) location.replace('index.html'); }catch(e){}
 const vc=document.getElementById('visCanvas');
 if(vc){
   const vctx=vc.getContext('2d');
@@ -287,6 +289,7 @@ function handleLogin(e){
   setTimeout(()=>{
     btn.classList.remove('loading');btn.textContent='Sign In to Platform →';
     document.getElementById('successOverlay').classList.add('show');
+    try{ sessionStorage.setItem('abhitech_auth','1'); }catch(e){}
     setTimeout(()=>{window.location='index.html';},1800);
   },1200);
 }

@@ -12,27 +12,56 @@ export function Field({ label, hint, warn, children, htmlFor }) {
 
 const decimals = (step) => (String(step).split('.')[1] || '').length
 
+// Pellets laid along a slider: spacing is even, size and height wobble a little so the row reads as a bed of pellets.
+const hash = (i) => { const x = Math.sin(i * 127.1 + 311.7) * 43758.5453; return x - Math.floor(x) }
+
+function PelletBed({ count, p, empty }) {
+  const last = count - 1
+  return (
+    <div className="pellet-bed" aria-hidden="true">
+      {Array.from({ length: count }, (_, i) => {
+        const on = !empty && (i === 0 ? p > 0 : i / last <= p + 0.0001)
+        const size = 7 + Math.round(hash(i) * 3)
+        const lift = Math.round((hash(i + 40) - 0.5) * 4)
+        return <i key={i} className={`pellet${on ? ' is-on' : ''}`} style={{ '--s': `${size}px`, '--lift': `${lift}px` }} />
+      })}
+    </div>
+  )
+}
+
 /**
- * One-line slider: label, slider and live value (no input box).
- * When `id` is given, a hidden input with that id mirrors the value, because the
- * drawing routines read their inputs from the DOM by id.
+ * Pellet slider: label and live value on top, then a bed of iron-ore pellets. A glossy pellet is the
+ * handle and rolls as you drag; every pellet it passes is added to the bed, and drops out when you slide back.
+ * When `id` is given, a hidden input with that id mirrors the value, because the drawing routines read
+ * their inputs from the DOM by id.
  */
-export function InlineSlider({ label, value, onChange, min, max, step, unit, unitSlot, id, hint, className = '' }) {
+export function InlineSlider({ label, value, onChange, min, max, step, unit, unitSlot, id, hint, tip, hero, count = 22, className = '' }) {
   const empty = value === '' || value === undefined || value === null
   const n = empty ? min : Math.min(max, Math.max(min, Number(value)))
-  const pct = max === min ? 0 : ((n - min) / (max - min)) * 100
+  const p = max === min ? 0 : (n - min) / (max - min)
   const claim = () => { if (empty) onChange(String(min)) }
   const sliderId = id ? `${id}-slider` : undefined
   return (
-    <div className={`field field-inline ${className}`} title={hint || `Range: ${min} – ${max}${unit || ''}`}>
-      <label className="field-label" htmlFor={sliderId}>{label}</label>
-      <div className={`slider${empty ? ' is-empty' : ''}`} style={{ '--pct': `${pct}%` }}>
-        <input id={sliderId} type="range" className="slider-range" min={min} max={max} step={step} value={n}
+    <div className={`field field-pellet${hero ? ' is-hero' : ''}${empty ? ' is-empty' : ''} ${className}`}
+      style={{ '--fill': empty ? 0 : p }} title={hint || `Range: ${min} – ${max}${unit || ''}`}>
+      <div className="pellet-head">
+        <label className="field-label" htmlFor={sliderId}>{label}</label>
+        <span className="slider-value mono">
+          <span key={empty ? 'empty' : value} className="slider-num">{empty ? '—' : value}</span>
+          {unitSlot || (unit && <small>{unit}</small>)}
+        </span>
+      </div>
+      <div className="pellet-slider" style={{ '--p': p }}>
+        <PelletBed count={count} p={p} empty={empty} />
+        <div className="pellet-rail" aria-hidden="true"><i /></div>
+        <input id={sliderId} type="range" className="pellet-range" min={min} max={max} step={step} value={n}
           aria-label={label} onPointerDown={claim} onKeyDown={claim}
           onChange={(e) => onChange(Number(e.target.value).toFixed(decimals(step)))} />
-        <div className="slider-scale mono" aria-hidden="true"><span>{min}</span><span>{max}</span></div>
+        <span className="pellet-thumb" aria-hidden="true"><b /></span>
       </div>
-      <span className="slider-value mono">{empty ? '—' : value}{unitSlot || (unit && <small>{unit}</small>)}</span>
+      <div className="pellet-scale mono" aria-hidden="true"><span>{min}</span><span>{max}</span></div>
+      {hint && <div className="field-hint">{hint}</div>}
+      {tip && <p className="pellet-tip">{tip}</p>}
       {id && <input id={id} type="hidden" value={value ?? ''} readOnly />}
     </div>
   )
@@ -40,10 +69,10 @@ export function InlineSlider({ label, value, onChange, min, max, step, unit, uni
 
 /** A numeric stage field, bound to the store. */
 export function NumberField({ field }) {
-  const { group, key, id, label, min, max, step, unit, hint } = field
+  const { group, key, id, label, min, max, step, unit, hint, tip, hero } = field
   const value = useSimStore((s) => s.params[group][key])
   const setParam = useSimStore((s) => s.setParam)
-  return <InlineSlider id={id} label={label} min={min} max={max} step={step} unit={unit} hint={hint}
+  return <InlineSlider id={id} label={label} min={min} max={max} step={step} unit={unit} hint={hint} tip={tip} hero={hero}
     value={value} onChange={(v) => setParam(group, key, v)} />
 }
 

@@ -31,7 +31,7 @@ export function CoolForm() {
       </AnimatePresence>
       {count < 4 && (
         <button type="button" className="btn-add" onClick={() => patchGroup('cool', { zoneCount: count + 1 })}>
-          <span aria-hidden="true">+</span> Add cooling zone
+          Add cooling zone
         </button>
       )}
     </Section>

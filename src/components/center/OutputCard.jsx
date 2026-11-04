@@ -122,7 +122,6 @@ export function OutputCard({ onEdit }) {
           </section>
         )}
 
-        <p className="out-note">Preview values: these results are placeholders until the process model is connected.</p>
       </div>
     </Card>
   )

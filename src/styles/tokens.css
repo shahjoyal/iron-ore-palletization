@@ -1,31 +1,42 @@
 :root {
-  /* Ink and paper */
-  --ink: #0e1c33;
-  --ink-2: #1a3057;
-  --ink-soft: #4b5b75;
-  --ink-faint: #7b889c;
-  --paper: #e8ecf2;
-  --surface: #ffffff;
-  --surface-2: #f5f7fa;
-  --line: #d6dde8;
-  --line-strong: #bcc7d8;
+  /* Night-shift palette: the same navy and brass as the home and login pages */
+  --ink: #f6efe0;            /* primary text (warm cream) */
+  --ink-2: #f0c36a;          /* highlight text (light brass) */
+  --ink-soft: #b9c3d6;
+  --ink-faint: #7f8ca8;
+  --paper: #08132a;          /* page */
+  --surface: #0f2042;        /* cards */
+  --surface-2: #0a1830;      /* wells, inputs, footers */
+  --line: rgba(232, 184, 75, 0.15);
+  --line-strong: rgba(232, 184, 75, 0.34);
 
-  /* Brand accent (Abhitech brass) and status colours */
+  /* Brand accent (Abhitech brass), blues and status colours */
   --brass: #c8912a;
-  --brass-deep: #94650f;
-  --brass-wash: rgba(200, 145, 42, 0.14);
-  --good: #1f8a5b;
-  --good-wash: rgba(31, 138, 91, 0.12);
-  --warn: #b8660f;
-  --warn-wash: rgba(184, 102, 15, 0.12);
+  --brass-light: #e8b84b;
+  --brass-deep: #e8b84b;     /* used for small headings on dark, so it is the light brass */
+  --brass-wash: rgba(200, 145, 42, 0.18);
+  --blue: #2d5fa6;
+  --blue-light: #4a7fc1;
+  --navy: #1a3057;
+  --navy-deep: #0f1f3a;
+  --good: #3fd196;
+  --good-wash: rgba(63, 209, 150, 0.14);
+  --warn: #f2a54a;
+  --warn-wash: rgba(242, 165, 74, 0.14);
+
+  /* Iron-ore pellet: hematite red-brown with a brass highlight */
+  --pellet-hi: #e6b184;
+  --pellet-mid: #9a4d2b;
+  --pellet-lo: #3b1b10;
 
   /* Type */
-  --font: 'Bricolage Grotesque', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font: 'Manrope', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --display: 'Manrope', system-ui, -apple-system, 'Segoe UI', sans-serif;
   --mono: 'JetBrains Mono', ui-monospace, 'SF Mono', Menlo, monospace;
 
   /* Shape and depth */
-  --r-card: 16px;
-  --r-ctl: 9px;
-  --shadow-card: 0 1px 0 rgba(14, 28, 51, 0.04), 0 10px 30px -12px rgba(14, 28, 51, 0.22);
+  --r-card: 18px;
+  --r-ctl: 10px;
+  --shadow-card: 0 1px 0 rgba(255, 255, 255, 0.04) inset, 0 18px 44px -18px rgba(0, 0, 0, 0.65);
   --ease: cubic-bezier(0.22, 1, 0.36, 1);
 }

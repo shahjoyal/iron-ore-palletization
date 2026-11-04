@@ -29,7 +29,8 @@ function Footer({ id }) {
       return (
         <div className="stat-row">
           <Stat label="Moisture" id="gbStatMoist" /><Stat label="Drop no." id="gbStatDrop" />
-          <Stat label="GCS" id="gbStatGcs" /><Stat label="Recycle" id="gbStatSize" />
+          <Stat label="GCS" id="gbStatGcs" />
+          {/* <Stat label="Recycle" id="gbStatSize" />  paused with the screening inputs */}
         </div>
       )
     case 'cool':

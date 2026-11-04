@@ -2,6 +2,12 @@ import { PLANTS } from '../../data/plants'
 import { InlineSlider, SelectControl } from '../fields/Field'
 import { useSimStore } from '../../store/useSimStore'
 
+/** Ends the session, so opening the link again starts from the home page. */
+function signOut() {
+  try { sessionStorage.removeItem('abhitech_auth') } catch (e) { /* storage blocked: nothing to clear */ }
+  window.location.href = 'login.html'
+}
+
 export function Header() {
   const { plant, capacity, setPlant, setCapacity } = useSimStore()
   return (
@@ -23,7 +29,7 @@ export function Header() {
       </div>
       <nav className="topbar-nav">
         <a href="home.html">Home</a>
-        <a href="login.html">Sign out</a>
+        <button type="button" className="nav-btn" onClick={signOut}>Sign out</button>
       </nav>
     </header>
   )

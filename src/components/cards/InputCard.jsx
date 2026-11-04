@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { AnimatePresence, motion } from 'framer-motion'
+import { motion } from 'framer-motion'
 import { Card } from './Card'
 import { StageForm } from '../stages'
 import { STAGES } from '../../data/stages'
@@ -14,11 +14,13 @@ const Check = () => (
 )
 
 export function InputCard({ stage, sizeToggle }) {
-  const { saved, saveStage, step, runSimulation } = useSimStore()
+  const { saved, saveStage, step, runSimulation, params } = useSimStore()
   const [justSaved, setJustSaved] = useState(false)
   const pos = STAGES.findIndex((s) => s.id === stage.id)
   const last = pos === STAGES.length - 1
   const isSaved = !!saved[stage.id]
+  // A stage with a single input gets a roomier, centred layout
+  const sparse = !!stage.sections && stage.sections(params).reduce((n, sec) => n + sec.fields.length, 0) <= 1
 
   const save = (then) => {
     saveStage(stage.id)
@@ -55,14 +57,20 @@ export function InputCard({ stage, sizeToggle }) {
           </div>
         </div>
       }>
-      <p className="card-lede">{stage.blurb}</p>
+      <div className="stage-head">
+        <div className="stage-head-text">
+          <p>{stage.blurb}</p>
+          <div className="stage-dots" aria-hidden="true">
+            {STAGES.map((s) => <i key={s.id} className={s.id === stage.id ? 'is-here' : saved[s.id] ? 'is-saved' : ''} />)}
+          </div>
+        </div>
+      </div>
       <div className="form-scroll" onInputCapture={emitTouch} onChangeCapture={emitTouch}>
-        <AnimatePresence mode="wait" initial={false}>
-          <motion.div key={stage.id} className="form" initial={{ opacity: 0, x: 18 }} animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0, x: -12 }} transition={{ duration: 0.26, ease: [0.22, 1, 0.36, 1] }}>
-            <StageForm stage={stage} />
-          </motion.div>
-        </AnimatePresence>
+        {/* Keyed so each stage remounts and slides in. No exit animation: waiting on an exit could leave the form blank when returning to a stage. */}
+        <motion.div key={stage.id} className={`form${sparse ? ' is-sparse' : ' is-dense'}`} initial={{ opacity: 0, x: 18 }} animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.26, ease: [0.22, 1, 0.36, 1] }}>
+          <StageForm stage={stage} />
+        </motion.div>
       </div>
     </Card>
   )

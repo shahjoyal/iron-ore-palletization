@@ -17,7 +17,7 @@ function RemoveButton({ onClick, label }) {
   )
 }
 
-const FLUX_OPTIONS = ['Limestone', 'Dolomite', 'Pyroxenite']
+const FLUX_OPTIONS = ['Limestone', 'Dolomite'] // 'Pyroxenite' paused
 let rowId = 0
 const newRow = (row) => ({ ...row, _id: `r${++rowId}-${Date.now().toString(36)}` })
 
@@ -48,7 +48,7 @@ export function FluxList({ group }) {
           })}
         </AnimatePresence>
         <button type="button" className="btn-add" onClick={() => set([...rows, newRow({ type: '', pct: '' })])}>
-          <span aria-hidden="true">+</span> Add flux or additive
+          Add flux or additive
         </button>
       </div>
     </Field>
@@ -93,7 +93,7 @@ export function FuelList() {
           })}
         </AnimatePresence>
         <button type="button" className="btn-add" onClick={() => set([...rows, newRow({ type: '', qty: '', gcv: '' })])}>
-          <span aria-hidden="true">+</span> Add fuel or reductant
+          Add fuel or reductant
         </button>
       </div>
     </Field>
